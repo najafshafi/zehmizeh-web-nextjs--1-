@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 43 43">
+    <!-- Circle background -->
+    <rect width="43" height="43" rx="21.5" fill="#F2B420"/>
+    
+    <!-- Download arrow and tray -->
+    <path d="M21.5 12v12M16 20l5.5 5.5L27 20" 
+          stroke="white" 
+          stroke-width="2.5" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+          fill="none"/>
+    
+    <!-- Download tray -->
+    <path d="M14 28h15" 
+          stroke="white" 
+          stroke-width="2.5" 
+          stroke-linecap="round"
+          fill="none"/>
+</svg>

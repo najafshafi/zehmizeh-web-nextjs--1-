@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.underline-animation {
+  padding-bottom: 6px;
+  overflow: hidden; 
+}
+
+.underline-animation::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 2px; 
+  background: black; 
+  transition: width 0.3s ease-in-out;
+}
+
+.underline-animation:hover::after {
+  width: 100%;
+}
