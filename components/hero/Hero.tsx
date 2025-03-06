@@ -171,22 +171,17 @@ const VideoSection: React.FC = () => {
 
   return (
     <div
-      className="w-full flex flex-col justify-center bg-[#FEFBF4]  lg:min-h-[110vh] px-4 pt-12 md:pt-20 xl:pt-0 lg:my-0 md:my-20"
+      className="w-full flex flex-col justify-center bg-[#FEFBF4]  lg:min-h-[110vh] pl-3 pr-1 pt-12 md:pt-20 xl:pt-0 lg:my-0 md:my-20"
     >
       {/* Container that reflows from column (mobile) to row (desktop) */}
-      <div className="w-[95vw] flex flex-col xl:flex-row justify-center items-center px-4 sm:px-6 mt-[120px] xl:mt-14">
+      <div className="w-[95vw]  flex flex-col xl:flex-row justify-center items-center mt-[120px] xl:mt-14">
 
-        {/* LEFT SIDE (video + SVG backgrounds) */}
-        {/*
-          Instead of fixed w-[636px] h-[340px],
-          we use "w-full max-w-[636px] aspect-[16/9]" so it scales down on smaller screens.
-        */}
         <div className="relative w-full max-w-[636px] aspect-[16/9] ">
-          {/* Outer border + SVG shapes fill the parent via w-full/h-full */}
+
           <div
             className="relative rounded-lg w-full h-full"
           >
-            {/* Black SVG (top-left) */}
+
             <svg
               width="248"
               height="87"
@@ -313,11 +308,6 @@ const VideoSection: React.FC = () => {
           </div>
         </div>
 
-        {/* RIGHT SIDE (text) */}
-        {/*
-          For responsiveness, remove fixed height [443px].
-          Let it size naturally: "w-full max-w-[636px]".
-        */}
         <div className="w-full max-w-[550px] xl:ml-12 my-20  flex flex-col justify-center lg:mt-20 md:my-20 ">
          <div>
          <h2 className="text-center xl:text-left text-2xl sm:text-2xl md:text-3xl lg:text-4xl text-gray-900 font-medium md:mt-20 lg:mt-20 xl:mt-0">

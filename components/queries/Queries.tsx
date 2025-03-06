@@ -8,9 +8,9 @@ const Queries = () => {
     console.log("Login Clicked");
   };
   return (
-    <div className="w-full bg-primaryLight flex items-center justify-center xl:py-[120px] py-[70px]">
-      <div className="w-full max-w-[1200px]">
-        <div className="grid xl:grid-cols-2 gap-2 xl:px-0 px-16">
+    <div className="w-full bg-primaryLight flex items-center justify-center xl:py-[120px] py-[70px] xl:h-[50vh]">
+      <div className="w-full max-w-[1320px]">
+        <div className="grid xl:grid-cols-2 gap-10   h-full ">
           <div className="flex flex-col gap-6 order-2 justify-center xl:order-1 xl:items-start items-center">
             <p className="font-semibold sm:text-start text-center sm:text-[37px] text-[25px]">
               We love questions. Ask away!

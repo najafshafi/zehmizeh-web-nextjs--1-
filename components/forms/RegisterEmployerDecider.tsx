@@ -50,7 +50,7 @@ const RegisterEmployerDecider = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2 max-w-[730px] w-full mt-[100px] md:px-0 px-10">
+    <div className="flex flex-col gap-2 max-w-[730px] w-full mt-[100px] md:px-0 px-10 h-[110vh]">
       <Link href={"/home"} className="text-customYellow font-normal text-[16px]">
         Go To Home
       </Link>

@@ -25,7 +25,7 @@ const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = ({
   const type = pathname.split("/")[2];
 
   return (
-    <div className="flex flex-col gap-10 md:px-0 px-8  w-full max-w-[600px] sm:mt-0 mt-3">
+    <div className="flex flex-col gap-10 md:px-0 px-8  w-full max-w-[600px] sm:mt-0 mt-3 ">
       <div className="flex items-center justify-center">
         <Image
           src={"/zehmizeh-logo.svg"}
@@ -42,10 +42,10 @@ const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = ({
       </p>
 
       <div className="flex flex-col md:mt-4 mt-0 gap-2">
-        <p className="text-[24px]">
+        <p className="text-[24px] xl:pr-4">
           What type of ZehMizeh account would you like to open?
         </p>
-        <p className="text-[16px]">
+        <p className="text-[16px] xl:pr-4">
           If you would like to post projects and hire freelancers, continue with
           a Client account. If you would like to be hired and paid for your
           work, continue with a Freelancer account.
@@ -53,7 +53,7 @@ const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = ({
         <div className="flex md:flex-row flex-col md:gap-5 gap-2 mt-4">
           <CustomButton
             text="Client - I Want to Hire Freelancers"
-            className={`px-3 py-3 rounded-xl text-black ${
+            className={`px-3 py-4 rounded-2xl text-black ${
               type === "employer"
                 ? "border-2 border-black"
                 : "border border-gray-300"
@@ -62,7 +62,7 @@ const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = ({
           />
           <CustomButton
             text="Freelancer - I Want to Be Hired"
-            className={`px-3 py-3 rounded-xl text-black ${
+            className={`px-3 py-4 rounded-2xl text-black ${
               type === "employer"
                 ? "border border-gray-300"
                 : " border-2 border-black"

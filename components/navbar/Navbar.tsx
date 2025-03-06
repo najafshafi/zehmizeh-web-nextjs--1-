@@ -42,8 +42,8 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="w-full z-40 flex h-[110px] fixed items-center justify-center border-b border-primary py-6 bg-secondary">
-      <div className="w-full max-w-[1200px] lg:px-16 xl:px-0 sm:px-24 px-7 flex flex-row items-center justify-between">
+    <div className="w-full z-40 flex h-[110px] fixed items-center justify-center border-b border-primary py-6 bg-secondary ">
+      <div className="w-full max-w-[1320px]  lg:px-16 xl:px-0 sm:px-24 px-7 flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-6">
           <Image
             src={"/zehmizeh-logo.svg"}

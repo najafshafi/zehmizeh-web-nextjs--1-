@@ -7,7 +7,7 @@ type MatchCardProps = {
 
 const MatchCard: React.FC<MatchCardProps> = ({ title, count }) => {
   return (
-    <div className="flex bg-white flex-col items-center justify-between rounded-md shadow-md">
+    <div className="flex bg-white flex-col items-center justify-between rounded-2xl shadow-md">
       <div className="flex mt-10 flex-col items-center justify-center gap-3">
         <Image
           src={"/match.png"}
@@ -17,9 +17,9 @@ const MatchCard: React.FC<MatchCardProps> = ({ title, count }) => {
           quality={100}
           loading="lazy"
         />
-        <p className="text-[28px] pb-3 text-center">{title}</p>
+        <p className="text-[24px] pb-3 text-center xl:px-8">{title}</p>
       </div>
-      <div className="w-full text-[20px] font-normal bg-lightYellow text-orangeYellow rounded-md py-2 flex items-center justify-center">
+      <div className="w-full text-[16px] font-normal bg-lightYellow text-orangeYellow rounded-md py-2 flex items-center justify-center">
         {count} Freelancers
       </div>
     </div>

@@ -427,7 +427,7 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
         </p>
         <div className="flex flex-row gap-4">
           <button
-            className={`py-3 px-10 rounded-xl border ${
+            className={`py-4 px-10 rounded-xl border ${
               isAgency
                 ? "border-2  border-black text-black"
                 : "border-gray-400 text-gray-500"
@@ -437,7 +437,7 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
             Yes
           </button>
           <button
-            className={`py-3 px-10 rounded-xl border ${
+            className={`py-4 px-10 rounded-xl border ${
               !isAgency
                 ? "border-2 border-black text-black"
                 : "border-gray-400 text-gray-500"
