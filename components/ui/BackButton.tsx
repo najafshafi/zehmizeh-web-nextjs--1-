@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import BackArrow from '/icons/back-arrow.svg';
-import { goBack } from '../../helpers/utils/goBack';
+import BackArrow from "../../public/icons/back-arrow.svg";
+import { goBack } from '@/helpers/utils/goBack';
 
 type Props = {
   className?: string;

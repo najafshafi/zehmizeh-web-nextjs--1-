@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { transition } from 'styles/transitions';
+import { transition } from '@/styles/transitions';
 
 export const MainPortfolioWrapper = styled.div`
   box-shadow: 0px 4px 60px rgba(0, 0, 0, 0.05);
