@@ -22,7 +22,7 @@ const RegisterEmployerQuestion: React.FC<RegisterEmployerQuestionProps> = ({
     router.push("/register/freelancer");
   };
   const pathname = usePathname();
-  const type = pathname.split("/")[2];
+  const type = pathname ? pathname.split("/")[2] : "";
 
   return (
     <div className="flex flex-col gap-10 md:px-0 px-8  w-full max-w-[600px] sm:mt-0 mt-3">

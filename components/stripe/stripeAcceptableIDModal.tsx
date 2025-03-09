@@ -1,6 +1,6 @@
-import { StyledModal } from 'components/styled/StyledModal';
+import { StyledModal } from '@/components/styled/StyledModal';
 import { Modal, Button } from 'react-bootstrap';
-import { IDENTITY_DOCS } from 'helpers/const/constants';
+import { IDENTITY_DOCS } from '@/helpers/const/constants';
 
 const StripeAcceptableIDList = ({ show, toggle, country }: any) => {
   return (

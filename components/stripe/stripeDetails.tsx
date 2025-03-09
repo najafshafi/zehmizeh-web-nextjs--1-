@@ -1,18 +1,18 @@
 import { StripeContainer } from './stripeStyled';
 import './style.css';
-import Tooltip from 'components/ui/Tooltip';
+import Tooltip from '@/components/ui/Tooltip';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
-import { StyledButton } from 'components/forms/Buttons';
-import { getStripeVerificationLink } from 'helpers/http/freelancer';
-import { isUserStripeVerified, pusherApiKey } from 'helpers/utils/helper';
-import StripeActivationModal from 'pages/freelancer-profile-settings/partials/StripeActivationModal';
+import { StyledButton } from '@/components/forms/Buttons';
+import { getStripeVerificationLink } from '@/helpers/http/freelancer';
+import { isUserStripeVerified, pusherApiKey } from '@/helpers/utils/helper';
+import StripeActivationModal from '@/pages/freelancer-profile-settings/partials/StripeActivationModal';
 import toast from 'react-hot-toast';
-import HowToRegisterAccModal from 'pages/freelancer-profile-settings/partials/HowToRegisterAccModal';
-import { TStripeStatus } from 'helpers/types/stripe.type';
+import HowToRegisterAccModal from '@/pages/freelancer-profile-settings/partials/HowToRegisterAccModal';
+import { TStripeStatus } from '@/helpers/types/stripe.type';
 import StripeResetModal from './stripeResetModal';
 import Pusher from 'pusher-js';
-import { IDENTITY_DOCS } from 'helpers/const/constants';
+import { IDENTITY_DOCS } from '@/helpers/const/constants';
 import StripeAcceptableIDModal from './stripeAcceptableIDModal';
 import { Link } from 'react-router-dom';
 
@@ -27,9 +27,9 @@ interface PusherDt {
   updated_status: string;
 }
 
-let pusher;
+let pusher: Pusher | null = null;
 
-const CONSTANTS = {
+const CONSTANTS: { [key: string]: string } = {
   'Ssn last 4': 'Social Security number or Identity document',
   Phone: 'Phone Number',
 };
@@ -183,7 +183,7 @@ const StripeDetails = (props: Prop) => {
       'Ssn last 4',
     ];
 
-    const final_arr = [];
+    const final_arr: string[] = [];
     valid_order.map((or_el) => {
       if (finalRequirementArr.includes(or_el)) final_arr.push(or_el);
     });
@@ -227,13 +227,13 @@ const StripeDetails = (props: Prop) => {
               <div>Please upload one of the following acceptable ID documents:</div>
               <ul className="ps-3 mt-1">
                 {stripe?.country &&
-                  Array.isArray(IDENTITY_DOCS?.[stripe?.country]) &&
-                  IDENTITY_DOCS[stripe.country].slice(0, 3).map((item) => (
+                  Array.isArray(IDENTITY_DOCS?.[stripe?.country as keyof typeof IDENTITY_DOCS]) &&
+                  IDENTITY_DOCS[stripe.country as keyof typeof IDENTITY_DOCS].slice(0, 3).map((item) => (
                     <li className="mt-1" key={item}>
                       {item}
                     </li>
                   ))}
-                {IDENTITY_DOCS[stripe.country]?.length > 3 && (
+                {IDENTITY_DOCS[stripe.country as keyof typeof IDENTITY_DOCS]?.length > 3 && (
                   <div
                     className="d-flex reset-password fs-16 fw-400 pointer"
                     onClick={toggleAcceptableIDModal}
@@ -265,7 +265,7 @@ const StripeDetails = (props: Prop) => {
   const stripeDetailsHandler = () => {
     if (!stripe?.id) return setStripeDetails((prev) => ({ ...prev, status: 'pending' }));
 
-    if (!['verified'].includes(stripeStatus)) return stripeInprogressHandler();
+    if (stripeStatus && !['verified'].includes(stripeStatus)) return stripeInprogressHandler();
     else
       return setStripeDetails({
         ...stripeDetails,

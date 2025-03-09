@@ -267,6 +267,7 @@ const countryStates: CountryData[] = [
     states: ["Vienna", "Tyrol", "Salzburg", "Carinthia", "Upper Austria"],
   },
 ];
+
 const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
   onNext,
   onBack,
