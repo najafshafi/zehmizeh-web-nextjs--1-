@@ -1,0 +1,61 @@
+.custom-select-title-box {
+  height: 100%;
+  display: flex !important;
+  align-items: center;
+}
+.custom-select-title-box .cross-icon {
+  position: absolute;
+  cursor: pointer;
+  right: 6px;
+}
+.custom-select-title-box.showing-cross {
+  background-position: right 1.7rem center !important;
+}
+
+.custom-select-title {
+  margin-right: 1rem;
+}
+
+.custom-container {
+  width: 100px;
+}
+
+.custom-select-container {
+  position: relative;
+  cursor: default;
+}
+
+.custom-select-options {
+  min-width: max-content;
+  position: absolute;
+  width: 100%;
+  background-color: white;
+  cursor: pointer;
+  box-shadow: 0 11px 20px 4px #ededed;
+  z-index: 999;
+}
+
+.custom-select-options div {
+  font-size: 14px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-bottom: 0.4rem;
+  cursor: pointer;
+}
+
+.custom-select-option {
+  display: flex;
+  align-items: center;
+}
+
+.custom-select-option.not-selected {
+  padding-left: 30px;
+}
+
+.custom-select-option.selected span {
+  padding-left: 8px;
+}
+
+.custom-select-options div:hover {
+  background: #eaeaea;
+}

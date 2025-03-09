@@ -1,0 +1,1 @@
+export const DEFAULT_CHAT_TIMEOUT = 15 * 1000;

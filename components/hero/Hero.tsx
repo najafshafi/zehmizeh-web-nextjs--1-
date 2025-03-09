@@ -171,12 +171,12 @@ const VideoSection: React.FC = () => {
 
   return (
     <div
-      className="w-full flex flex-col justify-center bg-[#FEFBF4]  lg:min-h-[110vh] pl-3 pr-1 pt-12 md:pt-20 xl:pt-0 lg:my-0 md:my-20"
+      className="w-full flex flex-col justify-center bg-[#FEFBF4]  lg:min-h-[90vh] pt-12 md:pt-20 xl:pt-0 lg:my-0 "
     >
       {/* Container that reflows from column (mobile) to row (desktop) */}
-      <div className="w-[95vw]  flex flex-col xl:flex-row justify-center items-center mt-[120px] xl:mt-14">
+      <div className="px-8 md:px-0  flex flex-col xl:flex-row justify-center items-center md:my-20 ">
 
-        <div className="relative w-full max-w-[636px] aspect-[16/9] ">
+        <div className="relative w-full max-w-[636px] aspect-[16/9]  ">
 
           <div
             className="relative rounded-lg w-full h-full"

@@ -11,13 +11,17 @@ export default function Home() {
   return (
       <div className="flex flex-col">
           <Navbar />
-          <Hero />
+
+      <div className="pt-[110px]">
+      <Hero />
           <Vision />
           <HiringProcess />
           <WhyUs />
           <Matches />
           <Queries />
           <Footer />
+      </div>
+        
       </div>
   );
 }
