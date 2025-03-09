@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { RetryQueueItem } from 'helpers/types/axios.type';
+import { RetryQueueItem } from '@/helpers/types/axios.type';
 import toast from 'react-hot-toast';
 
 // Create a list to hold the request queue

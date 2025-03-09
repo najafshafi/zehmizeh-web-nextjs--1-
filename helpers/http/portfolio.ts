@@ -1,4 +1,4 @@
-import { IPortFolio } from 'helpers/types/portfolio.type';
+import { IPortFolio } from '@/helpers/types/portfolio.type';
 import { apiClient } from './index';
 
 const API_MANAGE_PORTFOLIO_URL = '/portfolio/manage-portfolio';

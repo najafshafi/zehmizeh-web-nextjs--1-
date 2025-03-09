@@ -8,10 +8,10 @@ import { Modal, Button } from 'react-bootstrap';
 import { components } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import { EditFormWrapper } from './edit-modals.styled';
-import { StyledModal } from 'components/styled/StyledModal';
-import { StyledButton } from 'components/forms/Buttons';
-import { editUser } from 'helpers/http/auth';
-import { getLanguages } from 'helpers/http/common';
+import { StyledModal } from '@/components/styled/StyledModal';
+import { StyledButton } from '@/components/forms/Buttons';
+import { editUser } from '@/helpers/http/auth';
+import { getLanguages } from '@/helpers/http/common';
 import { MultiSelectCustomStyle } from './multiSelectCustomStyle';
 
 type Props = {

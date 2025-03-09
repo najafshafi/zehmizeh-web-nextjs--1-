@@ -1,5 +1,5 @@
-import { CONSTANTS } from 'helpers/const/constants';
-import { IClientDetails } from 'helpers/types/client.type';
+import { CONSTANTS } from '@/helpers/const/constants';
+import { IClientDetails } from '@/helpers/types/client.type';
 import { isPossiblePhoneNumber } from 'react-phone-number-input';
 import { object, string } from 'yup';
 

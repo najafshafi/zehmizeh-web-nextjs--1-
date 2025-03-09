@@ -1,4 +1,4 @@
-import { TJobDetails } from 'helpers/types/job.type';
+import { TJobDetails } from '@/helpers/types/job.type';
 import { apiClient } from './index';
 
 export const submitProposal = (formData: any) => {

@@ -4,7 +4,7 @@ import { generateAwsUrl } from '@/helpers/http/common';
 import { useState } from 'react';
 import { FileUploader } from 'react-drag-drop-files';
 import { transition } from '@/styles/transitions';
-import  PlusIcon  from 'assets/icons/plus-yellow.svg';
+import PlusIcon from "../../public/icons/plus-yellow.svg";
 import { Spinner } from 'react-bootstrap';
 import { showErr } from '@/helpers/utils/misc';
 import { CONSTANTS } from '@/helpers/const/constants';

@@ -1,6 +1,6 @@
-import Delete from "@/assets/icons/trash.svg";
-import Edit from "@/assets/icons/edit.svg";
-import CheckMark from "@/assets/icons/checkmark.svg";
+import Delete from "../../public/icons/trash.svg";
+import Edit from "../../public/icons/edit.svg";
+import CheckMark from "../../public/icons/checkmark.svg";
 
 interface IconButtonProps {
   name: "delete" | "edit" | "check";

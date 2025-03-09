@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
-import { getUser } from 'helpers/http/auth';
-import { IClientDetails } from 'helpers/types/client.type';
-import { queryKeys } from 'helpers/const/queryKeys';
+import { getUser } from '@/helpers/http/auth';
+import { IClientDetails } from '@/helpers/types/client.type';
+import { queryKeys } from '@/helpers/const/queryKeys';
 
 /* This hook will fetch client profile details */
 function useClientProfile() {

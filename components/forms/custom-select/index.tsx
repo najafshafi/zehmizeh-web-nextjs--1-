@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './style.css';
 import { BsCheck2 } from 'react-icons/bs';
-import { ReactComponent as Cross } from 'assets/icons/cross-black.svg';
+import Cross from "../../public/icons/cross-black.svg";
 import classNames from 'classnames';
 
 // Interfaces

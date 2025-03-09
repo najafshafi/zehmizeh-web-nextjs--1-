@@ -2,14 +2,14 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Spinner } from 'react-bootstrap';
 import styled from 'styled-components';
-import { transition } from 'styles/transitions';
+import { transition } from '@/styles/transitions';
 import ErrorMessage from './ErrorMessage';
-import { generateAwsUrl } from 'helpers/http/common';
-import { showErr } from 'helpers/utils/misc';
-import { ReactComponent as AttachIcon } from 'assets/icons/attach.svg';
+import { generateAwsUrl } from '@/helpers/http/common';
+import { showErr } from '@/helpers/utils/misc';
+import AttachIcon from "../../public/icons/attach.svg";
 import AttachmentPreview from './AttachmentPreview';
 import toast from 'react-hot-toast';
-import { CONSTANTS } from 'helpers/const/constants';
+import { CONSTANTS } from '@/helpers/const/constants';
 
 export const Wrapper = styled.div`
   color: #444444;

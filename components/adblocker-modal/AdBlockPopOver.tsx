@@ -2,7 +2,7 @@
 
 import { Popover } from "@headlessui/react";
 import Image from "next/image";
-import IntercomIcon from "@/assets/icons/intercom.svg";
+import IntercomIcon from "../../public/icons/intercom.svg";
 
 type Props = {
   adBlockDetected: boolean;

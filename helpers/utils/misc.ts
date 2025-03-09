@@ -1,4 +1,4 @@
-import { TJobDetails } from 'helpers/types/job.type';
+import { TJobDetails } from '@/helpers/types/job.type';
 import moment from 'moment';
 import toast from 'react-hot-toast';
 

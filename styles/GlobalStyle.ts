@@ -1,4 +1,4 @@
-import { pxToRem } from 'helpers/utils/misc';
+import { pxToRem } from '@/helpers/utils/misc';
 import { createGlobalStyle } from 'styled-components';
 import { myTheme } from './theme';
 export const MyGlobalStyle = createGlobalStyle`

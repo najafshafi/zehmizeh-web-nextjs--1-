@@ -1,9 +1,9 @@
-import { CONSTANTS } from 'helpers/const/constants';
+import { CONSTANTS } from '@/helpers/const/constants';
 import { capitalizeFirstLetter } from './misc';
-import { TJobDetails, TPROPOSAL_ESTIMATION_DURATION } from 'helpers/types/job.type';
-import { IClientDetails } from 'helpers/types/client.type';
+import { TJobDetails, TPROPOSAL_ESTIMATION_DURATION } from '@/helpers/types/job.type';
+import { IClientDetails } from '@/helpers/types/client.type';
 import moment from 'moment';
-import { ChatUser } from 'redux/slices/talkjs.interface';
+import { ChatUser } from '../../store/redux/slices/talkjs.interface';
 
 export const camelCaseToNormalCase = (word) => {
   const result = word && word.replace(/([A-Z])/g, '$1');

@@ -3,18 +3,18 @@
  */
 
 import { Modal, Button, Spinner } from 'react-bootstrap';
-import { StyledModal } from 'components/styled/StyledModal';
+import { StyledModal } from '@/components/styled/StyledModal';
 import { useEffect, useState } from 'react';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import styled from 'styled-components';
-import { StyledButton } from 'components/forms/Buttons';
+import { StyledButton } from '@/components/forms/Buttons';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { generateAwsUrl } from 'helpers/http/common';
-import useResponsive from 'helpers/hooks/useResponsive';
-import LoadingButtons from 'components/LoadingButtons';
-import { ReactComponent as UploadIcon } from 'assets/icons/upload.svg';
+import { generateAwsUrl } from '@/helpers/http/common';
+import useResponsive from '@/helpers/hooks/useResponsive';
+import LoadingButtons from '@/components/LoadingButtons';
+import UploadIcon from "../../public/icons/upload.svg";
 
 const Wrapper = styled.div`
   .upload-btn {

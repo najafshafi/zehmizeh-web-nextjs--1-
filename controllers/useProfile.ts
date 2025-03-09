@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
-import { getUser } from 'helpers/http/auth';
-import { getToken } from 'helpers/services/auth';
-import { queryKeys } from 'helpers/const/queryKeys';
+import { getUser } from '@/helpers/http/auth';
+import { getToken } from '@/helpers/services/auth';
+import { queryKeys } from '@/helpers/const/queryKeys';
 
 function useProfile() {
   const { data, isLoading, refetch, isRefetching } = useQuery(

@@ -1,7 +1,7 @@
 import { Fragment, ReactElement } from "react";
 import Link from "next/link";
 import { Menu, Transition } from "@headlessui/react";
-import DownArrowIcon from "assets/icons/chevronDown.svg";
+import DownArrowIcon from "../../public/icons/chevronDown.svg";
 import Image from "next/image";
 
 interface MenuItem {

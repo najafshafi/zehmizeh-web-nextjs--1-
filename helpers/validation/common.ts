@@ -1,6 +1,6 @@
 import * as yup from 'yup';
-import { getCountries } from 'helpers/http/common';
-import { getPlainText } from 'helpers/utils/misc';
+import { getCountries } from '@/helpers/http/common';
+import { getPlainText } from '@/helpers/utils/misc';
 
 /**
  * Yup schema to validate address details form

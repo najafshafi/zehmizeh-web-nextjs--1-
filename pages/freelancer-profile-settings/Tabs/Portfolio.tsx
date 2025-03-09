@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { MainPortfolioWrapper, PortSkillItem } from '../partials/portfolioStyles';
-import DeleteIcon from 'assets/icons/trash.svg';
-import EditIcon from 'assets/icons/edit-blue.svg';
-import DragIcon from 'assets/icons/drag.svg';
+import DeleteIcon from '../../public/icons/trash.svg';
+import EditIcon from '../../public/icons/edit-blue.svg';
+import DragIcon from '../../public/icons/drag.svg';
 import DeletePrompt from '@/components/ui/DeletePropmpt';
 import { toast } from 'react-hot-toast';
 import { addEditPortfolio, deletePortfolio } from '@/helpers/http/portfolio';

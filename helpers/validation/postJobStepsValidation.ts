@@ -1,6 +1,6 @@
-import { REGEX } from 'helpers/const/regex';
-import { getCategories } from 'helpers/utils/helper';
-import { getPlainText } from 'helpers/utils/misc';
+import { REGEX } from '@/helpers/const/regex';
+import { getCategories } from '@/helpers/utils/helper';
+import { getPlainText } from '@/helpers/utils/misc';
 import moment from 'moment';
 import { array, bool, number, object, string } from 'yup';
 

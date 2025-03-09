@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ReactComponent as NoDataFoundIcon } from 'assets/icons/nodatafound.svg';
+import { ReactComponent as NoDataFoundIcon } from "../../public/icons/nodatafound.svg";
 
 const NoDataWrapper = styled.div`
   .description {

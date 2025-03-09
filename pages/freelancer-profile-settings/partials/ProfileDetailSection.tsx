@@ -2,8 +2,8 @@
  * This component is a skeleton for the different sections in profile - freelancer side,
  * which will have title and add/edit icon at top
  */
-import EditIcon from 'assets/icons/edit-blue-outline.svg';
-import DeleteIcon from 'assets/icons/trash.svg';
+import EditIcon from '../../public/icons/edit-blue-outline.svg';
+import DeleteIcon from '../../public/icons/trash.svg';
 
 const ProfileDetailSection = ({
   title,

@@ -1,4 +1,4 @@
-import SearchIcon from "@/assets/icons/search.svg";
+import SearchIcon from "../../public/icons/search.svg";
 
 interface SearchProps {
   placeholder?: string;

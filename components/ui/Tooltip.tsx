@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ReactComponent as Info } from 'assets/icons/info-circle-gray.svg';
+import  Info from "../../public/icons/info-circle-gray.svg";
 import { useRef } from 'react';
 import Tooltip from 'rc-tooltip';
 

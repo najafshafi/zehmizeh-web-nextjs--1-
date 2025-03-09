@@ -1,10 +1,10 @@
 import { Modal, Button } from 'react-bootstrap';
-import { StyledModal } from 'components/styled/StyledModal';
-import { StyledButton } from 'components/forms/Buttons';
+import { StyledModal } from '@/components/styled/StyledModal';
+import { StyledButton } from '@/components/forms/Buttons';
 import styled from 'styled-components';
 import Select from 'react-select';
 import { useEffect, useState } from 'react';
-import LoadingButtons from 'components/LoadingButtons';
+import LoadingButtons from '@/components/LoadingButtons';
 
 const Wrapper = styled.div`
   .close-btn {

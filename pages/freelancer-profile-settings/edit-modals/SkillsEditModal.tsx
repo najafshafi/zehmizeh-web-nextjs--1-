@@ -6,16 +6,16 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Modal, Button } from 'react-bootstrap';
 import { EditFormWrapper } from './edit-modals.styled';
-import { StyledModal } from 'components/styled/StyledModal';
-import { StyledButton } from 'components/forms/Buttons';
-import { editUser } from 'helpers/http/auth';
-import { CategorySkillSelectModal } from 'components/skills-form/CategorySelectModal';
+import { StyledModal } from '@/components/styled/StyledModal';
+import { StyledButton } from '@/components/forms/Buttons';
+import { editUser } from '@/helpers/http/auth';
+import { CategorySkillSelectModal } from '@/components/skills-form/CategorySelectModal';
 import {
   getCategories,
   getRelevantSkillsBasedOnCategory,
   getSkills,
-} from 'helpers/utils/helper';
-import { IFreelancerDetails } from 'helpers/types/freelancer.type';
+} from '@/helpers/utils/helper';
+import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
 
 type Props = {
   show: boolean;

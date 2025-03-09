@@ -1,4 +1,4 @@
-import { getStorageUser } from 'helpers/services/auth';
+import { getStorageUser } from '@/helpers/services/auth';
 import { NavigateFunction } from 'react-router-dom';
 
 export const goBack = (navigate: NavigateFunction, route?: string) => {

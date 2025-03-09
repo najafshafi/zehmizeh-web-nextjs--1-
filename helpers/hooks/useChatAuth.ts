@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { talkJSAccessTokenApi } from 'helpers/http/common';
-import { isStagingEnv } from 'helpers/utils/helper';
-import { ChatAuthState } from 'helpers/types/chat.type';
+import { talkJSAccessTokenApi } from '@/helpers/http/common';
+import { isStagingEnv } from '@/helpers/utils/helper';
+import { ChatAuthState } from '@/helpers/types/chat.type';
 
 export const useChatAuth = (userId: string) => {
   const [chatAuth, setChatAuth] = useState<ChatAuthState>({
