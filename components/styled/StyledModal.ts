@@ -1,6 +1,6 @@
 import { Modal } from 'react-bootstrap';
 import styled from 'styled-components';
-import { breakpoints } from 'helpers/hooks/useResponsive';
+import { breakpoints } from '@/helpers/hooks/useResponsive';
 
 export const StyledModal = styled(Modal)<{
   maxwidth?: number;

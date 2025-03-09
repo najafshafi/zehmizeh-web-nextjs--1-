@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Dropdown } from 'react-bootstrap';
-import MoreIcon from "../../public/icons/more.svg";
+import MoreIcon from "../../../public/icons/more.svg";
 
 const UserDropdown = styled(Dropdown)`
   .dropdown-toggle {

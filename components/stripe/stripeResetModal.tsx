@@ -1,8 +1,8 @@
 import { Modal, Button, Spinner } from 'react-bootstrap';
-import { StyledModal } from 'components/styled/StyledModal';
-import { StyledButton } from 'components/forms/Buttons';
+import { StyledModal } from '@/components/styled/StyledModal';
+import { StyledButton } from '@/components/forms/Buttons';
 import { useState } from 'react';
-import { resetStripeHandler } from 'helpers/http/freelancer';
+import { resetStripeHandler } from '@/helpers/http/freelancer';
 import toast from 'react-hot-toast';
 
 type Props = {
