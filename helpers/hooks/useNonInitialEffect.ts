@@ -25,7 +25,7 @@ export const useNonInitialEffect = (
     if (initialRender.current) {
       initialRender.current = false;
     } else {
-      effectReturns = effect();
+      effectReturns = effect() as void | (() => void | undefined);
     }
 
     if (effectReturns && typeof effectReturns === 'function') {

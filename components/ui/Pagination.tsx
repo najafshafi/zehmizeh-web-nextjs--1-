@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Pagination } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import useResponsive from 'helpers/hooks/useResponsive';
-import { ReactComponent as ChevronUp } from 'assets/icons/chevronUp.svg';
+import ChevronUp from "../../public/icons/chevronUp.svg";
 
 const Paginationwrap = styled(Pagination)`
   .pagination {

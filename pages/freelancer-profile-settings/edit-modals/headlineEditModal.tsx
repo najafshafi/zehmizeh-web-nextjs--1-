@@ -6,13 +6,13 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { EditFormWrapper, StyledFormGroup } from './edit-modals.styled';
-import { StyledModal } from 'components/styled/StyledModal';
-import { StyledButton } from 'components/forms/Buttons';
-import { editUser } from 'helpers/http/auth';
-import ErrorMessage from 'components/ui/ErrorMessage';
-import { SeeMore } from 'components/ui/SeeMore';
-import { useWebSpellChecker } from 'helpers/hooks/useWebSpellChecker';
-import { CONSTANTS } from 'helpers/const/constants';
+import { StyledModal } from '@/components/styled/StyledModal';
+import { StyledButton } from '@/components/forms/Buttons';
+import { editUser } from '@/helpers/http/auth';
+import ErrorMessage from '@/components/ui/ErrorMessage';
+import { SeeMore } from '@/components/ui/SeeMore';
+import { useWebSpellChecker } from '@/helpers/hooks/useWebSpellChecker';
+import { CONSTANTS } from '@/helpers/const/constants';
 
 type Props = {
   headline: string;
@@ -74,7 +74,7 @@ const HeadlineEditModal = ({ show, headline, onClose, onUpdate }: Props) => {
               <b className="fs-28">Headline</b>
               <p className="fs-base mt-2 mb-0 text-justify text-secondary">
                 Your headline should introduce your work as a freelancer. When
-                clients search for freelancers, they'll see it directly under
+                clients search for freelancers, they&apos;ll see it directly under
                 your name as a personal subtitle or slogan.
               </p>
               {seeMore && (

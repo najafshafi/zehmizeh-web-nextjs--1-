@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { getFreelancerPortfolio, getPortfolio } from 'helpers/http/portfolio';
+import { getFreelancerPortfolio, getPortfolio } from '@/helpers/http/portfolio';
 
 function usePortfolio(freelancer_id?: string) {
   const { data, isLoading, refetch, isRefetching } = useQuery(

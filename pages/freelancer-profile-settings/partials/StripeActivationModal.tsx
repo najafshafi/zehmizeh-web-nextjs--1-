@@ -1,11 +1,11 @@
-import { StyledButton } from 'components/forms/Buttons';
-import Checkbox from 'components/forms/Checkbox';
-import CountryDropdown from 'components/forms/country-dropdown/CountryDropdown';
-import { StyledModal } from 'components/styled/StyledModal';
+import { StyledButton } from '@/components/forms/Buttons';
+import Checkbox from '@/components/forms/Checkbox';
+import CountryDropdown from '@/components/forms/country-dropdown/CountryDropdown';
+import { StyledModal } from '@/components/styled/StyledModal';
 import { useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import styled from 'styled-components';
-import { IDENTITY_DOCS } from 'helpers/const/constants';
+import { IDENTITY_DOCS } from '@/helpers/const/constants';
 
 const A = styled.a`
   color: ${(props) => props.theme.colors.lightBlue};

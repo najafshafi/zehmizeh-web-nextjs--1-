@@ -1,8 +1,8 @@
-import { queryKeys } from 'helpers/const/queryKeys';
-import { useAuth } from 'helpers/contexts/auth-context';
-import { checkUserHasPaymentMethod } from 'helpers/http/client';
-import { checkCardExpiration } from 'helpers/http/common';
-import { getToken } from 'helpers/services/auth';
+import { queryKeys } from '@/helpers/const/queryKeys';
+import { useAuth } from '@/helpers/contexts/auth-context';
+import { checkUserHasPaymentMethod } from '@/helpers/http/client';
+import { checkCardExpiration } from '@/helpers/http/common';
+import { getToken } from '@/helpers/services/auth';
 import { useQuery } from 'react-query';
 
 export const useIsAllowedToPostProject = (): {

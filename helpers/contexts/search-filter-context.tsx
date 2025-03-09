@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useMemo, useState } from 'react';
-import { update_query_parameters } from 'helpers/utils/misc';
+import { update_query_parameters } from '@/helpers/utils/misc';
 import queryString from 'query-string';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -8,8 +8,8 @@ import {
   SEARCH_FREELANCER_INITIAL_FILTERS,
   getCategoriesApi,
   getDefaultParameter,
-} from 'helpers/http/common';
-import { search } from 'helpers/http/search';
+} from '@/helpers/http/common';
+import { search } from '@/helpers/http/search';
 import toast from 'react-hot-toast';
 import { useAuth } from './auth-context';
 

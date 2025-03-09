@@ -1,7 +1,7 @@
-import { FREELANCER_PROFILE_TABS } from 'helpers/const/tabs';
-import { TFreelancerProfileSettingsPathParams } from 'helpers/types/pathParams.type';
+import { FREELANCER_PROFILE_TABS } from '@/helpers/const/tabs';
+import { TFreelancerProfileSettingsPathParams } from '@/helpers/types/pathParams.type';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Tab, TabTitle, TabWrapper } from 'styles/TabStyle';
+import { Tab, TabTitle, TabWrapper } from '@/styles/TabStyle';
 
 export const Tabs = () => {
   const { tabkey } = useParams<TFreelancerProfileSettingsPathParams>();

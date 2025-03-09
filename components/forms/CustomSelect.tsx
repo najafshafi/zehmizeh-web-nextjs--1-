@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { BsCheck2 } from "react-icons/bs";
-import CrossIcon from "assets/icons/cross-black.svg";
+import CrossIcon from "../../public/icons/cross-black.svg";
 import classNames from "classnames";
 
 interface Option {

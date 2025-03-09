@@ -1,4 +1,4 @@
-import { StyledModal } from 'components/styled/StyledModal';
+import { StyledModal } from '@/components/styled/StyledModal';
 import { Modal, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 

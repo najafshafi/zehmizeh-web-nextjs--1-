@@ -1,8 +1,8 @@
 import cns from 'classnames';
 import styled from 'styled-components';
-import Tooltip from 'components/ui/Tooltip';
-import { ReactComponent as Info } from 'assets/icons/info-circle-gray.svg';
-import { breakpoints } from 'helpers/hooks/useResponsive';
+import Tooltip from '@/components/ui/Tooltip';
+import  Info  from "../../public/icons/info-circle-gray.svg";
+import { breakpoints } from '@/helpers/hooks/useResponsive';
 
 const Wrapper = styled.div<{ breakPoint?: string; fontSize?: string }>`
   position: relative;

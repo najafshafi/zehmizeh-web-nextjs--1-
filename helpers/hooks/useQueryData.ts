@@ -4,7 +4,8 @@ import { QueryKey, UseQueryResult, useQueryClient } from 'react-query';
 export const useQueryData = <T>(key: QueryKey): UseQueryResult<T> => {
   const clientQuery = useQueryClient();
 
-  return clientQuery.getQueryData(key);
+  const data = clientQuery.getQueryData(key);
+  return data as UseQueryResult<T>;
 };
 
 export const useRefetch = (key: QueryKey): { refetch: () => void } => {

@@ -1,5 +1,5 @@
-import { CONSTANTS } from 'helpers/const/constants';
-import { IFreelancerDetails } from 'helpers/types/freelancer.type';
+import { CONSTANTS } from '@/helpers/const/constants';
+import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
 import { isPossiblePhoneNumber } from 'react-phone-number-input';
 import { object, string } from 'yup';
 

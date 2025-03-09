@@ -1,16 +1,17 @@
 /*
  * This is edit about me modal
  */
+"use client";
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { Modal, Button } from 'react-bootstrap';
-import { editUser } from 'helpers/http/auth';
-import { StyledButton } from 'components/forms/Buttons';
-import { StyledModal } from 'components/styled/StyledModal';
-import TextEditor from 'components/forms/TextEditor';
+import { editUser } from '@/helpers/http/auth';
+import { StyledButton } from '@/components/forms/Buttons';
+import { StyledModal } from '@/components/styled/StyledModal';
+import TextEditor from '@/components/forms/TextEditor';
 import { EditFormWrapper } from './edit-modals.styled';
-import { getPlainText, showErr } from 'helpers/utils/misc';
-import { CONSTANTS } from 'helpers/const/constants';
+import { getPlainText, showErr } from '@/helpers/utils/misc';
+import { CONSTANTS } from '@/helpers/const/constants';
 
 type Props = {
   show: boolean;

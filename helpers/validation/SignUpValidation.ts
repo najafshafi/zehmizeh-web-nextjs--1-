@@ -1,4 +1,4 @@
-import { CONSTANTS } from 'helpers/const/constants';
+import { CONSTANTS } from '@/helpers/const/constants';
 import * as yup from 'yup';
 
 export const signUpValidationSchema = (location) =>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { ReactComponent as UnfilledStarIcon } from 'assets/icons/unfilled-star.svg';
-import { ReactComponent as FilledStarIcon } from 'assets/icons/starYellow.svg';
+import UnfilledStarIcon from '../../public/icons/unfilled-star.svg';
+import FilledStarIcon from '../../public/icons/starYellow.svg';
 const AnimatedStar = ({
   isFilled,
   onChange,

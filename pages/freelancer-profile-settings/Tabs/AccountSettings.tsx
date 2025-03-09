@@ -1,37 +1,37 @@
-import { useEffect, useState } from 'react';
-import { Col, Form, Row, Spinner } from 'react-bootstrap';
-import { useQueryData, useRefetch } from '@/helpers/hooks/useQueryData';
-import { useNavigate } from 'react-router-dom';
-import AccountClosureModal from '@/components/profile/AccountClosureModal';
-import { StyledButton } from '@/components/forms/Buttons';
-import toast from 'react-hot-toast';
+import { useEffect, useState } from "react";
+import { Col, Form, Row, Spinner } from "react-bootstrap";
+import { useQueryData, useRefetch } from "@/helpers/hooks/useQueryData";
+import { useNavigate } from "react-router-dom";
+import AccountClosureModal from "@/components/profile/AccountClosureModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import toast from "react-hot-toast";
 import {
   accountClosure,
   cancelAccountClosure,
   editUser,
-} from '@/helpers/http/auth';
-import { queryKeys } from '@/helpers/const/queryKeys';
-import { StyledFormGroup } from '../edit-modals/edit-modals.styled';
-import classNames from 'classnames';
-import PhoneInputWrapper from '@/components/styled/PhoneInputWrapper';
-import PhoneNumberInput from '@/components/forms/phone-number-input';
-import AsyncSelect from 'react-select/async';
-import Tooltip from '@/components/ui/Tooltip';
-import { MultiSelectCustomStyle } from '../edit-modals/multiSelectCustomStyle';
-import InfoIcon from 'assets/icons/info-gray-18.svg';
-import { CONSTANTS } from '@/helpers/const/constants';
-import { ContentBox } from '../freelancer-profile-settings.styled';
-import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
-import { TEditUserRequest } from '@/helpers/types/apiRequestResponse';
-import { freelancerAccountProfileValidation } from '@/helpers/validation/freelancerAccountProfileValidation';
-import { getYupErrors } from '@/helpers/utils/misc';
-import ErrorMessage from '@/components/ui/ErrorMessage';
-import EditIcon from 'assets/icons/edit-blue.svg';
-import { myTheme } from '@/styles/theme';
-import EmailEditModal from '@/components/profile/EmailEditModal';
-import CountryDropdown from '@/components/forms/country-dropdown/CountryDropdown';
-import StateDropdown from '@/components/forms/state-picker/StatePicker';
-import AccountClosureDescriptionModal from '@/components/profile/AccountClosureDescriptionModal';
+} from "@/helpers/http/auth";
+import { queryKeys } from "@/helpers/const/queryKeys";
+import { StyledFormGroup } from "../edit-modals/edit-modals.styled";
+import classNames from "classnames";
+import PhoneInputWrapper from "@/components/styled/PhoneInputWrapper";
+import PhoneNumberInput from "@/components/forms/phone-number-input";
+import AsyncSelect from "react-select/async";
+import Tooltip from "@/components/ui/Tooltip";
+import { MultiSelectCustomStyle } from "../edit-modals/multiSelectCustomStyle";
+import InfoIcon from "../../public/icons/info-gray-18.svg";
+import { CONSTANTS } from "@/helpers/const/constants";
+import { ContentBox } from "../freelancer-profile-settings.styled";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+import { TEditUserRequest } from "@/helpers/types/apiRequestResponse";
+import { freelancerAccountProfileValidation } from "@/helpers/validation/freelancerAccountProfileValidation";
+import { getYupErrors } from "@/helpers/utils/misc";
+import ErrorMessage from "@/components/ui/ErrorMessage";
+import EditIcon from "/icons/edit-blue.svg";
+import { myTheme } from "@/styles/theme";
+import EmailEditModal from "@/components/profile/EmailEditModal";
+import CountryDropdown from "@/components/forms/country-dropdown/CountryDropdown";
+import StateDropdown from "@/components/forms/state-picker/StatePicker";
+import AccountClosureDescriptionModal from "@/components/profile/AccountClosureDescriptionModal";
 
 const singleSelectProps = {
   closeMenuOnSelect: true,
@@ -40,12 +40,12 @@ const singleSelectProps = {
 };
 
 const initialState: TFormData = {
-  first_name: '',
-  last_name: '',
+  first_name: "",
+  last_name: "",
   is_agency: 0,
-  u_email_id: '',
-  phone_number: '',
-  formatted_phonenumber: '',
+  u_email_id: "",
+  phone_number: "",
+  formatted_phonenumber: "",
   notification_email: 0,
   new_message_email_notification: 0,
   location: null,
@@ -53,27 +53,27 @@ const initialState: TFormData = {
 
 type TFormData = Pick<
   IFreelancerDetails,
-  | 'first_name'
-  | 'last_name'
-  | 'is_agency'
-  | 'u_email_id'
-  | 'phone_number'
-  | 'formatted_phonenumber'
-  | 'notification_email'
-  | 'new_message_email_notification'
-  | 'location'
+  | "first_name"
+  | "last_name"
+  | "is_agency"
+  | "u_email_id"
+  | "phone_number"
+  | "formatted_phonenumber"
+  | "notification_email"
+  | "new_message_email_notification"
+  | "location"
 >;
 
 type TInputFieldLoading =
-  | 'first name'
-  | 'last name'
-  | 'freelancer type'
-  | 'country'
-  | 'state/region'
-  | 'Frequency of Project Board Emails'
-  | 'Unread Message Notification'
-  | 'phone number'
-  | '';
+  | "first name"
+  | "last name"
+  | "freelancer type"
+  | "country"
+  | "state/region"
+  | "Frequency of Project Board Emails"
+  | "Unread Message Notification"
+  | "phone number"
+  | "";
 
 export const AccountSettings = () => {
   const navigate = useNavigate();
@@ -84,12 +84,13 @@ export const AccountSettings = () => {
 
   const [isAccountClosureModalOpen, setIsAccountClosureModalOpen] =
     useState(false);
-  const [showClosureDescriptionModal, setShowClosureDescriptionModal] = useState<boolean>(false);
+  const [showClosureDescriptionModal, setShowClosureDescriptionModal] =
+    useState<boolean>(false);
   const [showEditEmailModal, setShowEditEmailModal] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<TFormData>(initialState);
   const [inputFieldLoading, setInputFieldLoading] =
-    useState<TInputFieldLoading>('');
+    useState<TInputFieldLoading>("");
   const [errors, setErrors] = useState<TFormData>(undefined);
 
   useEffect(() => {
@@ -115,7 +116,7 @@ export const AccountSettings = () => {
     const promise = cancelAccountClosure();
     setLoading(true);
     toast.promise(promise, {
-      loading: 'Please wait...',
+      loading: "Please wait...",
       success: (res) => {
         setLoading(false);
         refetch();
@@ -123,19 +124,19 @@ export const AccountSettings = () => {
       },
       error: (err) => {
         setLoading(false);
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
 
   const closureDescriptionToggle = () => {
-    setIsAccountClosureModalOpen(!isAccountClosureModalOpen)
+    setIsAccountClosureModalOpen(!isAccountClosureModalOpen);
     setShowClosureDescriptionModal(!showClosureDescriptionModal);
-  }
+  };
 
   const closureDescriptiontoggle = () => {
     setShowClosureDescriptionModal(!showClosureDescriptionModal);
-  }
+  };
 
   const onConfirmAccountDeletion = (message) => {
     const body = {
@@ -144,7 +145,7 @@ export const AccountSettings = () => {
     const promise = accountClosure(body);
     setLoading(true);
     toast.promise(promise, {
-      loading: 'Please wait...',
+      loading: "Please wait...",
       success: (res) => {
         setLoading(false);
         closureDescriptiontoggle();
@@ -154,7 +155,7 @@ export const AccountSettings = () => {
       error: (err) => {
         setLoading(false);
         closureDescriptiontoggle();
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
@@ -181,12 +182,12 @@ export const AccountSettings = () => {
           loading: `updating ${loadingFieldName}`,
           success: (res) => {
             refetch();
-            setInputFieldLoading('');
+            setInputFieldLoading("");
             return res.message;
           },
           error: (err) => {
             refetch();
-            setInputFieldLoading('');
+            setInputFieldLoading("");
             return err.message ?? err.toString();
           },
         });
@@ -206,7 +207,7 @@ export const AccountSettings = () => {
     return (
       <div
         className="position-absolute end-0 me-4 pointer"
-        style={top ? { top: `${top}%` } : { top: '50%' }}
+        style={top ? { top: `${top}%` } : { top: "50%" }}
         onClick={() => {
           if (inputFieldLoading !== loadingKey) {
             handleEditUser(loadingKey, {
@@ -221,7 +222,7 @@ export const AccountSettings = () => {
             {inputFieldLoading === loadingKey ? (
               <Spinner animation="border" size="sm" className="me-1" />
             ) : (
-              'Save'
+              "Save"
             )}
           </div>
         )}
@@ -252,7 +253,7 @@ export const AccountSettings = () => {
                 }}
                 maxLength={35}
               />
-              {SaveButtonUI('first name', 'first_name')}
+              {SaveButtonUI("first name", "first_name")}
             </StyledFormGroup>
             {errors?.first_name && <ErrorMessage message={errors.first_name} />}
           </Col>
@@ -273,7 +274,7 @@ export const AccountSettings = () => {
                 }}
                 maxLength={35}
               />
-              {SaveButtonUI('last name', 'last_name')}
+              {SaveButtonUI("last name", "last_name")}
             </StyledFormGroup>
             {errors?.last_name && <ErrorMessage message={errors.last_name} />}
           </Col>
@@ -290,16 +291,16 @@ export const AccountSettings = () => {
               <div className="d-flex mt-2">
                 <div
                   className={classNames(
-                    'px-4 py-3 border rounded me-4 pointer',
+                    "px-4 py-3 border rounded me-4 pointer",
                     {
-                      'border-dark': formData.is_agency === 0,
+                      "border-dark": formData.is_agency === 0,
                     }
                   )}
-                  style={{ borderColor: 'grey' }}
+                  style={{ borderColor: "grey" }}
                   onClick={() => {
                     if (formData?.is_agency === 1) {
                       setFormData((prev) => ({ ...prev, is_agency: 0 }));
-                      handleEditUser('freelancer type', { is_agency: 0 });
+                      handleEditUser("freelancer type", { is_agency: 0 });
                     }
                   }}
                 >
@@ -307,16 +308,16 @@ export const AccountSettings = () => {
                 </div>
                 <div
                   className={classNames(
-                    'px-4 py-3 border rounded me-4 pointer',
+                    "px-4 py-3 border rounded me-4 pointer",
                     {
-                      'border-dark': formData.is_agency === 1,
+                      "border-dark": formData.is_agency === 1,
                     }
                   )}
-                  style={{ borderColor: 'grey' }}
+                  style={{ borderColor: "grey" }}
                   onClick={() => {
                     if (formData?.is_agency === 0) {
                       setFormData((prev) => ({ ...prev, is_agency: 1 }));
-                      handleEditUser('freelancer type', { is_agency: 1 });
+                      handleEditUser("freelancer type", { is_agency: 1 });
                     }
                   }}
                 >
@@ -341,7 +342,7 @@ export const AccountSettings = () => {
                     }));
                   }}
                 />
-                {SaveButtonUI('phone number', 'formatted_phonenumber', 30, {
+                {SaveButtonUI("phone number", "formatted_phonenumber", 30, {
                   phone_number: formData.phone_number,
                 })}
               </PhoneInputWrapper>
@@ -370,7 +371,7 @@ export const AccountSettings = () => {
                     ...prev,
                     location: newLocation,
                   }));
-                  handleEditUser('country', {
+                  handleEditUser("country", {
                     location: newLocation,
                   });
                 }}
@@ -385,41 +386,41 @@ export const AccountSettings = () => {
           {!CONSTANTS.COUNTRIES_SHORT_NAME_WITHOUT_STATE.includes(
             formData?.location?.country_short_name
           ) && (
-              <Col md={12} lg={6}>
-                <StyledFormGroup>
-                  <div className="fs-sm fw-400 mb-1">
-                    State/Region<span className="mandatory">&nbsp;*</span>
-                  </div>
-                  <StateDropdown
-                    countryCode={formData?.location?.country_short_name}
-                    onSelectState={(item) => {
-                      const newLocation = {
-                        ...formData.location,
-                        state: item,
-                      };
-                      setFormData((prev) => ({
-                        ...prev,
-                        location: newLocation,
-                      }));
-                      handleEditUser('state/region', {
-                        location: newLocation,
-                      });
-                    }}
-                    selectedState={
-                      formData?.location?.state
-                        ? {
+            <Col md={12} lg={6}>
+              <StyledFormGroup>
+                <div className="fs-sm fw-400 mb-1">
+                  State/Region<span className="mandatory">&nbsp;*</span>
+                </div>
+                <StateDropdown
+                  countryCode={formData?.location?.country_short_name}
+                  onSelectState={(item) => {
+                    const newLocation = {
+                      ...formData.location,
+                      state: item,
+                    };
+                    setFormData((prev) => ({
+                      ...prev,
+                      location: newLocation,
+                    }));
+                    handleEditUser("state/region", {
+                      location: newLocation,
+                    });
+                  }}
+                  selectedState={
+                    formData?.location?.state
+                      ? {
                           label: formData?.location?.state,
                           value: formData?.location?.state,
                         }
-                        : null
-                    }
-                  />
-                  {errors?.location?.state && (
-                    <ErrorMessage message={errors.location.state} />
-                  )}
-                </StyledFormGroup>
-              </Col>
-            )}
+                      : null
+                  }
+                />
+                {errors?.location?.state && (
+                  <ErrorMessage message={errors.location.state} />
+                )}
+              </StyledFormGroup>
+            </Col>
+          )}
           {/* END ----------------------------------------- State and region */}
         </Row>
 
@@ -463,12 +464,12 @@ export const AccountSettings = () => {
                 <Form.Control
                   placeholder="Enter your email"
                   className="form-input email-input"
-                  value={'***'}
+                  value={"***"}
                   disabled={true}
                 />
                 <div
                   className="edit-button d-flex align-items-center gap-2 pointer top-50"
-                  onClick={() => navigate('/change-password')}
+                  onClick={() => navigate("/change-password")}
                 >
                   <EditIcon
                     stroke={myTheme.colors.primary}
@@ -489,7 +490,7 @@ export const AccountSettings = () => {
           <Col md={12} lg={6}>
             <StyledFormGroup>
               <div className="fs-sm fw-400 mb-1">
-                Frequency of Project Board Emails{' '}
+                Frequency of Project Board Emails{" "}
                 <Tooltip
                   customTrigger={<InfoIcon />}
                   className="d-inline-block"
@@ -511,7 +512,7 @@ export const AccountSettings = () => {
                     ...prev,
                     notification_email: Number(value),
                   }));
-                  handleEditUser('Frequency of Project Board Emails', {
+                  handleEditUser("Frequency of Project Board Emails", {
                     notification_email: Number(value),
                   });
                 }}
@@ -550,7 +551,7 @@ export const AccountSettings = () => {
                     ...prev,
                     new_message_email_notification: Number(value),
                   }));
-                  handleEditUser('Frequency of Project Board Emails', {
+                  handleEditUser("Frequency of Project Board Emails", {
                     new_message_email_notification: Number(value),
                   });
                 }}

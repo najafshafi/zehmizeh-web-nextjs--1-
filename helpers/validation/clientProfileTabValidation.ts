@@ -1,5 +1,5 @@
-import { CONSTANTS } from 'helpers/const/constants';
-import { IFreelancerDetails } from 'helpers/types/freelancer.type';
+import { CONSTANTS } from '@/helpers/const/constants';
+import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
 import * as yup from 'yup';
 
 export const clientProfileTabValidation = yup

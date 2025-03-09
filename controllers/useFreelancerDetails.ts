@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
-import { queryKeys } from 'helpers/const/queryKeys';
-import { getFreelancerDetails } from 'helpers/http/freelancer';
+import { queryKeys } from '@/helpers/const/queryKeys';
+import { getFreelancerDetails } from '@/helpers/http/freelancer';
 
 export function useFreelancerDetails(freelancerId: string) {
   const { data, refetch, isLoading, isRefetching } = useQuery(

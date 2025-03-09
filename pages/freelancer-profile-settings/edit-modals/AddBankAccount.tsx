@@ -1,17 +1,18 @@
+"use client";
 import { useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { Form, Modal, Button, Row, Col } from 'react-bootstrap';
-import Tooltip from 'components/ui/Tooltip';
-import ErrorMessage from 'components/ui/ErrorMessage';
-import { StyledButton } from 'components/forms/Buttons';
-import { StyledModal } from 'components/styled/StyledModal';
+import Tooltip from '@/components/ui/Tooltip';
+import ErrorMessage from '@/components/ui/ErrorMessage';
+import { StyledButton } from '@/components/forms/Buttons';
+import { StyledModal } from '@/components/styled/StyledModal';
 import { StyledFormGroup, MultiSelectCustomStyle } from './edit-modals.styled';
-import { getYupErrors } from 'helpers/utils/misc';
-import { managePayment } from 'helpers/http/freelancer';
-import { camelCaseToNormalCase } from 'helpers/utils/helper';
-import { useAuth } from 'helpers/contexts/auth-context';
+import { getYupErrors } from '@/helpers/utils/misc';
+import { managePayment } from '@/helpers/http/freelancer';
+import { camelCaseToNormalCase } from '@/helpers/utils/helper';
+import { useAuth } from '@/helpers/contexts/auth-context';
 import Select from 'react-select';
-import { addBankAccountValidationHandler } from 'helpers/validation/common';
+import { addBankAccountValidationHandler } from '@/helpers/validation/common';
 
 const initialState = {
   accountHolderFirstName: '',

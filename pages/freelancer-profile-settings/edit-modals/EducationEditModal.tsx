@@ -6,13 +6,13 @@ import { useEffect, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import { StyledFormGroup, EditFormWrapper } from './edit-modals.styled';
-import { StyledModal } from 'components/styled/StyledModal';
-import { StyledButton } from 'components/forms/Buttons';
-import ErrorMessage from 'components/ui/ErrorMessage';
-import { validateEducation } from 'helpers/validation/common';
-import { getYupErrors } from 'helpers/utils/misc';
-import { manageEducation } from 'helpers/http/freelancer';
-import { REGEX } from 'helpers/const/regex';
+import { StyledModal } from '@/components/styled/StyledModal';
+import { StyledButton } from '@/components/forms/Buttons';
+import ErrorMessage from '@/components/ui/ErrorMessage';
+import { validateEducation } from '@/helpers/validation/common';
+import { getYupErrors } from '@/helpers/utils/misc';
+import { manageEducation } from '@/helpers/http/freelancer';
+import { REGEX } from '@/helpers/const/regex';
 
 const EducationEditModal = ({ show, onClose, data, onUpdate }: any) => {
   const [formState, setFormState] = useState<any>({

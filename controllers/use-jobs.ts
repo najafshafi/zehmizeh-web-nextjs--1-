@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { getMyJobs } from 'helpers/http/post-job';
+import { getMyJobs } from '@/helpers/http/post-job';
 
 function useMyJobs(job_status: string, keyword: string, freelancerId: string) {
   const { data, isLoading, refetch, isRefetching } = useQuery<

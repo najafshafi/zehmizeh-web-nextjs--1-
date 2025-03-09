@@ -63,7 +63,7 @@ const PageWrapper = styled.div`
         color: var(--text) !important;
       }
       &:before {
-        content: '';
+        content: "";
         position: absolute;
         border-left: 1px solid var(--textTinted1);
         height: 100%;
@@ -131,7 +131,7 @@ const PageWrapper = styled.div`
       font-weight: 500;
       width: auto;
       color: var(--text);
-      background-image: url('../../assets/icons/down.svg');
+      background-image: url("../../public/icons/down.svg");
       background-repeat: no-repeat !important;
       background-position-x: 95% !important;
       background-position-y: 50% !important;
@@ -156,7 +156,7 @@ const PageWrapper = styled.div`
       font-size: 0.875rem;
       font-weight: 500;
       color: var(--text);
-      background-image: url('../../assets/icons/filter.svg');
+      background-image: url("../../public/icons/filter.svg");
       background-repeat: no-repeat !important;
       background-position-x: 95% !important;
       background-position-y: 50% !important;
@@ -206,7 +206,7 @@ const PageWrapper = styled.div`
       color: #797979;
       cursor: pointer;
     }
-    input[type='radio'] {
+    input[type="radio"] {
       opacity: 0;
       position: fixed;
       width: 0;

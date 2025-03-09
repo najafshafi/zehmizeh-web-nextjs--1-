@@ -1,4 +1,4 @@
-import { useAuth } from 'helpers/contexts/auth-context';
+import { useAuth } from '@/helpers/contexts/auth-context';
 import queryString from 'query-string';
 import { useEffect, useState } from 'react';
 

@@ -1,7 +1,7 @@
 import { Form, Spinner } from 'react-bootstrap';
 import styled from 'styled-components';
-import { ReactComponent as Search } from 'assets/icons/searchIcon.svg';
-import { ReactComponent as CrossIcon } from 'assets/icons/cross-black.svg';
+import Search from '../../public/icons/searchIcon.svg';
+import CrossIcon from '../../public/icons/cross-black.svg';
 
 const SearchWrapper = styled.div<{
   height?: number;

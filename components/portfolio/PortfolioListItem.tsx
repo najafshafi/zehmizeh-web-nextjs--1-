@@ -6,8 +6,8 @@ import { transition } from 'styles/transitions';
 import DeletePrompt from 'components/ui/DeletePropmpt';
 import { deletePortfolio } from 'helpers/http/portfolio';
 import { capitalizeFirstLetter } from 'helpers/utils/misc';
-import { ReactComponent as GalleryIcon } from 'assets/icons/gallery.svg';
-import { ReactComponent as DeleteIcon } from 'assets/icons/trash.svg';
+import { ReactComponent as GalleryIcon } from '../../public/icons/gallery.svg';
+import { ReactComponent as DeleteIcon } from '../../public/icons/trash.svg';
 import { coverImgHandler } from 'helpers/utils/coverImgHandler';
 
 type Props = {

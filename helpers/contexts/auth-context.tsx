@@ -3,17 +3,17 @@ import { useQuery } from 'react-query';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { apiClient } from 'helpers/http';
-import Loader from 'components/Loader';
-import { getToken, saveAuthStorage } from 'helpers/services/auth';
-import { getUser, editUser, logoutApi } from 'helpers/http/auth';
-import { capitalizeFirstLetter, showErr } from 'helpers/utils/misc';
+import { apiClient } from '@/helpers/http';
+import Loader from '@/components/Loader';
+import { getToken, saveAuthStorage } from '@/helpers/services/auth';
+import { getUser, editUser, logoutApi } from '@/helpers/http/auth';
+import { capitalizeFirstLetter, showErr } from '@/helpers/utils/misc';
 import moment from 'moment-timezone';
 import { useIntercom } from 'react-use-intercom';
-import { IFreelancerDetails } from 'helpers/types/freelancer.type';
-import { IClientDetails } from 'helpers/types/client.type';
-import { isStagingEnv, stripeIntercomStatusHandler } from 'helpers/utils/helper';
-import { getCookie } from 'helpers/utils/cookieHelper';
+import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
+import { IClientDetails } from '@/helpers/types/client.type';
+import { isStagingEnv, stripeIntercomStatusHandler } from '@/helpers/utils/helper';
+import { getCookie } from '@/helpers/utils/cookieHelper';
 
 const BASE_URL = process.env.REACT_APP_BACKEND_API;
 

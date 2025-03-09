@@ -1,7 +1,7 @@
-import { TEditUserRequest } from 'helpers/types/apiRequestResponse';
+import { TEditUserRequest } from '@/helpers/types/apiRequestResponse';
 import { apiClient } from './index';
 
-export default {
+const auth = {
   resetPassword: (payload: { email_id: string; otp_id: string; new_password: string }) =>
     apiClient.post('/auth/reset-password', payload).then((r) => {
       if (!r.data.status) {
@@ -10,6 +10,8 @@ export default {
       return r.data;
     }),
 };
+
+export default auth;
 
 export const forgotPassword = (email: string) => {
   return apiClient.post('/auth/forgot-password', { email_id: email }).then((r) => r.data);

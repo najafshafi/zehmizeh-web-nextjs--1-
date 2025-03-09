@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { fileIsAnImage } from 'helpers/utils/misc';
-import { ReactComponent as CrossIcon } from 'assets/icons/cross-icon.svg';
+import { fileIsAnImage } from '@/helpers/utils/misc';
+import  CrossIcon from "../../public/icons/cross-icon.svg";
 import { useState } from 'react';
 import classNames from 'classnames';
 
