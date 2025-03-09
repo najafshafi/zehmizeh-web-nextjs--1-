@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Modal, Button, Form, Spinner } from 'react-bootstrap';
 import styled from 'styled-components';
-import { StyledButton } from 'components/forms/Buttons';
-import { StyledModal } from 'components/styled/StyledModal';
-import TextEditor from 'components/forms/TextEditor';
+import { StyledButton } from '@/components/forms/Buttons';
+import { StyledModal } from '@/components/styled/StyledModal';
+import TextEditor from '@/components/forms/TextEditor';
 
 type Props = {
   show: boolean;

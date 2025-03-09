@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from 'react';
 import { talkJSAccessTokenApi } from '@/helpers/http/common';
 import { isStagingEnv } from '@/helpers/utils/helper';
@@ -21,7 +22,11 @@ export const useChatAuth = (userId: string) => {
       }
     } catch (error) {
       setChatAuth((prev) => ({ ...prev, loading: false }));
-      throw new Error(error.message);
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error(String(error));
+      }
     }
   };
 

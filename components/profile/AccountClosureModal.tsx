@@ -1,6 +1,6 @@
 import { Modal, Button } from 'react-bootstrap';
-import { StyledModal } from 'components/styled/StyledModal';
-import { StyledButton } from 'components/forms/Buttons';
+import { StyledModal } from '@/components/styled/StyledModal';
+import { StyledButton } from '@/components/forms/Buttons';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -63,7 +63,7 @@ const AccountClosureModal = ({ show, toggle, clousureToggle, loading }: Props) =
               onClick={clousureToggle}
               disabled={loading}
             >
-              I'd like my account to be closed
+              I&apos;d like my account to be closed
             </StyledButton>
           </div>
         </Wrapper>

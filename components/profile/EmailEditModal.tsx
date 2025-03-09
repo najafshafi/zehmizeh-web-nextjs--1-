@@ -10,12 +10,12 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { StyledModal } from 'components/styled/StyledModal';
-import { StyledButton } from 'components/forms/Buttons';
-import LoadingButtons from 'components/LoadingButtons';
-import ErrorMessage from 'components/ui/ErrorMessage';
-import { sendVerifyOTP, changeEmail } from 'helpers/http/auth';
-import { showErr, showMsg } from 'helpers/utils/misc';
+import { StyledModal } from '@/components/styled/StyledModal';
+import { StyledButton } from '@/components/forms/Buttons';
+import LoadingButtons from '@/components/LoadingButtons';
+import ErrorMessage from '@/components/ui/ErrorMessage';
+import { sendVerifyOTP, changeEmail } from '@/helpers/http/auth';
+import { showErr, showMsg } from '@/helpers/utils/misc';
 
 type Props = {
   show: boolean;
@@ -219,7 +219,7 @@ const EmailEditModal = ({
 
   useEffect(() => {
     if (show) {
-      setValue('email_id', existingEmail);
+      setValue('email_id', existingEmail || '');
     }
   }, [existingEmail, setValue, show]);
 
@@ -298,15 +298,15 @@ const EmailEditModal = ({
               className="d-flex flex-column gap-4"
             >
               <div className="fs-15 fw-400 opacity-75">
-                Check your email. We've sent a 6 digit code. Do not share this
+                Check your email. We&apos;ve sent a 6 digit code. Do not share this
                 code with anyone.
               </div>
               <ReactOtpInput
                 value={otp}
                 onChange={onChange}
-                separator={<span style={{ color: '#909090' }}>-</span>}
                 numInputs={6}
-                className="otp-input"
+                containerStyle="otp-input"
+                renderInput={(props) => <input {...props} />}
                 // containerStyle="flex flex-row justify-center mt-8 md:gap-3 gap-2"
                 inputStyle={{
                   maxWidth: '3.5rem',
@@ -315,7 +315,6 @@ const EmailEditModal = ({
                   borderRadius: 7,
                   margin: 8,
                 }}
-                isInputNum={true}
               />
               <div className="d-flex flex-column align-items-md-end align-items-center gap-4">
                 <StyledButton
