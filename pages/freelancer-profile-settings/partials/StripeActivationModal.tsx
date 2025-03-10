@@ -1,5 +1,6 @@
+"use client"; // Ensure this is a client component
 import { StyledButton } from '@/components/forms/Buttons';
-import Checkbox from '@/components/forms/Checkbox';
+import Checkbox from '@/components/forms/CheckBox';
 import CountryDropdown from '@/components/forms/country-dropdown/CountryDropdown';
 import { StyledModal } from '@/components/styled/StyledModal';
 import { useEffect, useState } from 'react';

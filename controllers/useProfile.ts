@@ -1,3 +1,5 @@
+"use client"; // Ensure this is a client component
+
 import { useQuery } from 'react-query';
 import { getUser } from '@/helpers/http/auth';
 import { getToken } from '@/helpers/services/auth';

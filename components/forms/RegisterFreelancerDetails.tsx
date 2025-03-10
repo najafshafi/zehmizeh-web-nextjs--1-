@@ -5,7 +5,7 @@ import { IoEyeOutline } from "react-icons/io5";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css"; // Import default styles
 import CustomButton from "../custombutton/CustomButton";
-
+// import { IFreelancerDetails } from "@/helpers/types/freelancer.type"
 interface RegisterFreelancerDetailsProps {
   onNext: () => void;
   onBack: () => void;
@@ -383,8 +383,10 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
     return isValid;
   };
 
+
   const handleNext = () => {
     if (validateForm()) {
+      console.log("Form is valid", payload);
       onNext();
     }
   };
@@ -405,6 +407,28 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
   const toggleConfirmPasswordVisibility = () => {
     setConfirmPasswordVisible(!confirmPasswordVisible);
   };
+
+
+
+  // const payload: Partial<IFreelancerDetails> = {
+  //   first_name: firstName,
+  //   last_name: lastName,
+  //   u_email_id: email,
+  //   user_type: "freelancer", // Inferred from the URL or context
+  //   is_agency: isAgency ? 1 : 0, // Convert boolean to number (0 or 1) as per interface
+  //   agency_name: isAgency ? agencyName : "", // Only include if isAgency is true
+  //   phone_number: phone || "", // Handle undefined case
+  //   location: {
+  //     label: `${selectedState}, ${selectedCountry}`, // Construct label
+  //     state: selectedState,
+  //     country_name: selectedCountry,
+  //     country_id: 0, // Placeholder; ideally, map from a country list
+  //     country_code: "", // Placeholder; needs mapping
+  //     country_short_name: "", // Placeholder; needs mapping
+  //   },
+  //   password, 
+  //   confirmPassword, 
+  // };
 
   return (
     <div className="flex flex-col gap-10 md:px-0 px-8  w-full max-w-[600px] sm:mt-0 mt-3">

@@ -1,5 +1,6 @@
 import { TEditUserRequest } from '@/helpers/types/apiRequestResponse';
 import { apiClient } from './index';
+// import { apiClient } from '@/lib/apiClient';
 
 const auth = {
   resetPassword: (payload: { email_id: string; otp_id: string; new_password: string }) =>

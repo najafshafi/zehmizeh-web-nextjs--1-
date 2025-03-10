@@ -1,3 +1,4 @@
+"use client"; // Ensure this is a client component
 import { useState } from 'react';
 import ProfileDetailSection from '../partials/ProfileDetailSection';
 import StripeDetails from '@/components/stripe/stripeDetails';

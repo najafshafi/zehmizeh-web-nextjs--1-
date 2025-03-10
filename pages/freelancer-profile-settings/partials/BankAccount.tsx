@@ -1,3 +1,4 @@
+"use client"; // Ensure this is a client component
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { StatusBadge } from '@/components/styled/Badges';

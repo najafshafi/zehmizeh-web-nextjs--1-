@@ -1,6 +1,9 @@
-import { useNavigate } from 'react-router-dom';
+"use client"; // Required for Next.js client components
+
+import { useRouter } from "next/navigation";
 import BackArrow from "../../public/icons/back-arrow.svg";
-import { goBack } from '@/helpers/utils/goBack';
+import { goBack } from "@/helpers/utils/goBack";
+import Image from "next/image";
 
 type Props = {
   className?: string;
@@ -10,22 +13,24 @@ type Props = {
 };
 
 const BackButton = ({ className, children, onBack, route }: Props) => {
-  const navigate = useNavigate();
+  const router = useRouter(); // Use Next.js navigation instead of useNavigate
+
   const handleGoBack = () => {
     if (onBack) {
       onBack();
     } else {
-      goBack(navigate, route);
+      goBack(router, route);
     }
   };
 
   return (
-    <div className={`${className ? className : ''} d-flex`}>
+    <div className={`${className || ""} d-flex`}>
       <div
         className="d-flex back-button d-flex align-items-center pointer"
         onClick={handleGoBack}
       >
-        <BackArrow /> &nbsp;<span className="fs-18 fw-400">Back</span>
+        <Image src={BackArrow} alt="Back" width={24} height={24} />
+         &nbsp;<span className="fs-18 fw-400">Back</span>
         {children}
       </div>
     </div>
