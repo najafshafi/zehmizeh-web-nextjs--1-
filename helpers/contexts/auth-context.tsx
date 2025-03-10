@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { apiClient } from '@/helpers/http';
 import Loader from '@/components/Loader';
-import { getToken, saveAuthStorage } from '@/helpers/services/auth';
+import { getToken, saveAuthStorage } from '@/lib/authStorage';
 import { getUser, editUser, logoutApi } from '@/helpers/http/auth';
 import { capitalizeFirstLetter, showErr } from '@/helpers/utils/misc';
 import moment from 'moment-timezone';
@@ -15,7 +15,7 @@ import { IClientDetails } from '@/helpers/types/client.type';
 import { isStagingEnv, stripeIntercomStatusHandler } from '@/helpers/utils/helper';
 import { getCookie } from '@/helpers/utils/cookieHelper';
 
-const BASE_URL = process.env.REACT_APP_BACKEND_API;
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API;
 
 // NOTE: Whenever api sends "withCredentials in request then api MUST specify exact origin in allowed-origin response
 // wildcard won't work when sending withCredentials in request. So change allowed-origin for request else it'll throw cors error
@@ -160,7 +160,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       const headers: any = {
         Authorization: `Bearer ${formdata}`,
       };
-      const response = await axios.get(`${process.env.REACT_APP_BACKEND_API}user/get`, { headers });
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}user/get`, { headers });
       if (response.data.status) {
         const userAllData = {
           ...response.data?.data,
@@ -351,3 +351,102 @@ function useAuth() {
 }
 
 export { AuthProvider, useAuth };
+
+
+
+
+// import React, { useCallback, useEffect } from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { useQuery } from 'react-query';
+// import axios from 'axios';
+// import toast from 'react-hot-toast';
+// import { useLocation, useNavigate } from 'react-router-dom';
+// import { getUser, editUser, logoutApi } from '@/helpers/http/auth';
+// import { getToken, saveAuthStorage } from '@/lib/authStorage';
+// import { setUser, clearUser } from '@/store/authSlice';
+// import Loader from '@/components/Loader';
+// import moment from 'moment-timezone';
+// import { useIntercom } from 'react-use-intercom';
+// import { capitalizeFirstLetter, showErr } from '@/helpers/utils/misc';
+// import { isStagingEnv, stripeIntercomStatusHandler } from '@/helpers/utils/helper';
+
+// const AuthProvider = ({ children }) => {
+//   const dispatch = useDispatch();
+//   const user = useSelector((state) => state.auth.user);
+//   const isLoading = useSelector((state) => state.auth.isLoading);
+//   const navigate = useNavigate();
+//   const location = useLocation();
+
+//   const signout = useCallback(() => {
+//     logoutApi();
+//     localStorage.removeItem('user');
+//     localStorage.removeItem('token');
+//     dispatch(clearUser());
+//     navigate('/');
+//   }, [dispatch, navigate]);
+
+//   useQuery(['userProfile'], getUser, {
+//     enabled: !!getToken(),
+//     onSuccess: (res) => {
+//       if (res?.data) {
+//         if (res?.data?.is_deleted) {
+//           showErr('Your account has been deleted by the admin.');
+//           signout();
+//         } else {
+//           const currentTimezone = moment.tz.guess();
+//           if (res?.data?.timezone !== currentTimezone) {
+//             editUser({ timezone: currentTimezone });
+//           }
+//           dispatch(setUser(res.data));
+//         }
+//       }
+//     },
+//     onError: (err) => showErr(err.toString()),
+//     retry: 0,
+//   });
+
+//   useEffect(() => {
+//     if (!getToken()) {
+//       dispatch(clearUser());
+//     }
+//   }, [dispatch]);
+
+//   const signin = async (formdata) => {
+//     try {
+//       const token = typeof formdata === 'string' ? formdata : null;
+//       if (token) {
+//         const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}user/get`, {
+//           headers: { Authorization: `Bearer ${token}` },
+//         });
+//         if (response.data.status) {
+//           const userAllData = { ...response.data.data };
+//           saveAuthStorage({ token, user: userAllData });
+//           dispatch(setUser(userAllData));
+//           navigate(userAllData.user_type === 'client' ? '/client/dashboard' : '/dashboard');
+//         } else {
+//           toast.error(response.data.message);
+//         }
+//       } else {
+//         const res = await axios.post('/auth/login', formdata);
+//         if (res.data.status) {
+//           const userAllData = { ...res.data.data.user };
+//           saveAuthStorage({ token: res.data.data.token, user: userAllData });
+//           dispatch(setUser(userAllData));
+//           navigate(userAllData.user_type === 'client' ? '/client/dashboard' : '/dashboard');
+//         } else {
+//           toast.error(res.data.message);
+//         }
+//       }
+//     } catch (err) {
+//       toast.error(err.response?.data?.message || 'Something went wrong, try later!');
+//     }
+//   };
+
+//   return (
+//     <AuthContext.Provider value={{ user, signin, signout, isLoading }}>
+//       {isLoading ? <Loader /> : children}
+//     </AuthContext.Provider>
+//   );
+// };
+
+// export { AuthProvider, AuthContext };

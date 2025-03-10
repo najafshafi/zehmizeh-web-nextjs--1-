@@ -10,7 +10,7 @@ let isRefreshing = false;
 
 // Headers only for ngrok link
 // const ngRokHeader = {};
-// if (process.env.REACT_APP_BACKEND_API.includes('ngrok')) {
+// if (process.env.NEXT_PUBLIC_BACKEND_API.includes('ngrok')) {
 //   ngRokHeader['ngrok-skip-browser-warning'] = 'true';
 // }
 
@@ -44,7 +44,7 @@ const onResponseError = async (error: AxiosError): Promise<unknown> => {
         // Refresh token api call
         const response = await axios({
           method: 'GET',
-          baseURL: process.env.REACT_APP_BACKEND_API,
+          baseURL: process.env.NEXT_PUBLIC_BACKEND_API,
           url: '/auth/refresh',
           // headers: { ...ngRokHeader },
           withCredentials: true,
@@ -106,7 +106,7 @@ const onResponseError = async (error: AxiosError): Promise<unknown> => {
   return Promise.reject(error);
 };
 export const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_BACKEND_API,
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_API,
   // headers: { ...ngRokHeader },
 });
 
