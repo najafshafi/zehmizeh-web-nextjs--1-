@@ -173,7 +173,7 @@ export const signin = async (dispatch: AppDispatch, formdata: any, router: any) 
         user: userData,
       });
       // No need to set headers manually; interceptor handles it
-      const redirectPath = router.state?.from || (userData.user_type === 'client' ? '/client/dashboard' : '/freelancer/account/profile');
+      const redirectPath = router.state?.from || (userData.user_type === 'client' ? '/client/dashboard' : '/');
       router.push(redirectPath);
     } else if (response.data.errorCode === 101) {
       dispatch(setUser({ email_id: response.data.emailId }));

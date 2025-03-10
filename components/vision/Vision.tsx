@@ -35,14 +35,14 @@ const Vision = () => {
               Ready to get started? Dive right in.
             </p>
             <div className="flex sm:flex-row flex-col items-center justify-center xl:justify-start xl:items-start mb:gap-6 gap-2">
-              <Link href={"/auth/register/employer"}>
+              <Link href={"/register/employer"}>
                 <CustomButton
                   text="I'm looking for talent!"
                   className="mb:px-9 px-12 py-4 mb-4 md:mb-0 mx-0 md:mx-3 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
                   onClick={onLoginClick}
                 />
               </Link>
-              <Link href={"/auth/register/freelancer"}>
+              <Link href={"/register/freelancer"}>
                 <CustomButton
                   text="I'm looking for work!"
                   className="mb:px-9 px-12 py-4 mb-4 md:mb-0 mx-0 md:mx-3 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"

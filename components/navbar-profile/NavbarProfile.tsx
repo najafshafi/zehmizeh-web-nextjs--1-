@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
+import { useSelector } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -8,7 +9,9 @@ import { IoClose, IoMenu } from "react-icons/io5";
 import { BsBell } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
 import CustomButton from "../custombutton/CustomButton";
-
+import { useDispatch } from "react-redux"; // Import useDispatch
+import { RootState } from "@/store"; // Import RootState from your store
+import { signoutAction } from "@/lib/auth"; // Import signoutAction from auth.ts
 // Types for better type safety
 interface NavigationItem {
   href: string;
@@ -21,10 +24,12 @@ interface MenuItem {
 }
 
 const NavbarProfile = () => {
+  const { user } = useSelector((state: RootState) => state.auth); // Get user from Redux store
   const pathname = usePathname();
   const url = pathname.split("/")[1];
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch(); // Get dispatch function
 
   // State management with better initial values
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -82,8 +87,7 @@ const NavbarProfile = () => {
   // Handle logout
   const handleLogout = () => {
     setIsProfileDropdownOpen(false);
-    // Add your logout logic here
-    router.push("/logout");
+signoutAction(dispatch, router); // Call signoutAction with dispatch and router
   };
 
   // Navigation link component
@@ -101,6 +105,12 @@ const NavbarProfile = () => {
       <span className="block h-[2px] bg-black mt-[2px] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
     </div>
   );
+
+  useEffect(() => {
+    if (!user) {
+      dispatch(fetchUser()); // Dispatch an action to fetch the user
+    }
+  }, [user, dispatch]);
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-secondary border-b border-primary h-[110px] flex items-center">
@@ -182,7 +192,7 @@ const NavbarProfile = () => {
                 priority
               />
               <p className="flex items-center gap-2 text-lg text-[#212529]">
-                Ammad & Najaf
+             {user?.data?.first_name} 
                 <IoIosArrowDown
                   size={20}
                   className={`transition-transform ${
@@ -206,7 +216,6 @@ const NavbarProfile = () => {
                       </Link>
                     </li>
                   ))}
-                  <hr className="my-1 border-gray-300" />
                   <li role="menuitem">
                     <button
                       onClick={handleLogout}
