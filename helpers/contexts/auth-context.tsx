@@ -50,7 +50,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isBootstrapping, setIsBootstrapping] = useState(true);
 
-  const { boot, shutdown } = useIntercom();
+  // const { boot, shutdown } = useIntercom();
   const router = useRouter(); // Use Next.js router
 
   const signout = useCallback(() => {

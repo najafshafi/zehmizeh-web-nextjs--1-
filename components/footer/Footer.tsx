@@ -1,13 +1,12 @@
-"use client"
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const Footer = () => {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <div className="w-full flex flex-col items-center justify-center pt-6 xl:p-[4rem_8.75rem_0rem]">
-
       <div className="container max-w-[1320px] w-full  flex md:flex-row flex-col items-center justify-between md:gap-0 gap-8 pb-10">
         <Image
           src={"/zehmizeh-logo.svg"}
@@ -28,16 +27,31 @@ const Footer = () => {
       <div className="border-t border-orangeYellow w-full    ">
         <div className="flex md:flex-row flex-col md:gap-0 gap-4 items-center justify-between  py-8">
           <div className="flex flex-row items-center justify-center sm:gap-6 gap-3 md:text-sm  text-xs">
-            <Link href={"#"} className="text-[#212529] ">
+            <Link href={"/terms"} className="text-[#212529] ">
               Terms of Service
             </Link>
-            <Link href={"#"} className="text-[#212529] ">
+            <Link
+              href={
+                "https://app.termly.io/document/privacy-policy/82c240f5-fcef-4182-8a8b-e62b1fa9141a"
+              }
+              className="text-[#212529] "
+            >
               Privacy Policy
             </Link>
-            <Link href={"#"} className="text-[#212529] ">
+            <Link
+              href={
+                "https://app.termly.io/document/cookie-policy/2bf74211-d676-444a-bfaa-5d854a0a1807"
+              }
+              className="text-[#212529] "
+            >
               Cookies
             </Link>
-            <Link href={"/finding-us"} target="_blank" rel="noopener noreferrer" className="text-[#212529] ">
+            <Link
+              href={"/finding-us"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#212529] "
+            >
               Finding Us
             </Link>
           </div>
@@ -46,9 +60,6 @@ const Footer = () => {
           </p>
         </div>
       </div>
-
-     
-      
     </div>
   );
 };
