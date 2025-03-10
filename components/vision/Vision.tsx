@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import CustomButton from "../custombutton/CustomButton";
+import Link from "next/link";
 
 const Vision = () => {
   const onLoginClick = () => {
@@ -15,7 +16,7 @@ const Vision = () => {
               <p className="font-semibold sm:text-[27px] md:text-[32px] text-[25px] xl:text-start text-center">
                 You have a vision. We have the talent.
               </p>
-              <p className= "italic sm:text-[20px] text-[22px] font-semibold xl:text-start text-center">
+              <p className="italic sm:text-[20px] text-[22px] font-semibold xl:text-start text-center">
                 That&apos;s what we call a shidduch!
               </p>
             </div>
@@ -34,16 +35,20 @@ const Vision = () => {
               Ready to get started? Dive right in.
             </p>
             <div className="flex sm:flex-row flex-col items-center justify-center xl:justify-start xl:items-start mb:gap-6 gap-2">
-              <CustomButton
-                text="I'm looking for talent!"
-                className="mb:px-9 px-12 py-4 mb-4 md:mb-0 mx-0 md:mx-3 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
-                onClick={onLoginClick}
-              />
-              <CustomButton
-                text="I'm looking for work!"
-                className="mb:px-9 px-12 py-4 mb-4 md:mb-0 mx-0 md:mx-3 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
-                onClick={onLoginClick}
-              />
+              <Link href={"/auth/register/employer"}>
+                <CustomButton
+                  text="I'm looking for talent!"
+                  className="mb:px-9 px-12 py-4 mb-4 md:mb-0 mx-0 md:mx-3 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+                  onClick={onLoginClick}
+                />
+              </Link>
+              <Link href={"/auth/register/freelancer"}>
+                <CustomButton
+                  text="I'm looking for work!"
+                  className="mb:px-9 px-12 py-4 mb-4 md:mb-0 mx-0 md:mx-3 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+                  onClick={onLoginClick}
+                />
+              </Link>
             </div>
           </div>
           <div className="flex order-1 xl:order-2 items-center justify-center">
