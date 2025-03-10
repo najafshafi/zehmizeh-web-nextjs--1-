@@ -45,7 +45,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isBoostraping, setIsBootstraping] = React.useState(true);
 
-  const { boot, shutdown } = useIntercom();
+  // const { boot, shutdown } = useIntercom();
+  const router = useRouter(); // Use Next.js router
 
   const navigate = useNavigate();
   const location = useLocation();

@@ -7,8 +7,8 @@ type MatchCardProps = {
 
 const MatchCard: React.FC<MatchCardProps> = ({ title, count }) => {
   return (
-    <div className="flex bg-white flex-col items-center justify-between rounded-2xl shadow-md">
-      <div className="flex mt-10 flex-col items-center justify-center gap-3">
+    <div className="w-[306px] flex bg-white flex-col items-center justify-between rounded-2xl shadow-md">
+      <div className="flex mt-10 flex-col items-center justify-center gap-2">
         <Image
           src={"/match.png"}
           alt={title}

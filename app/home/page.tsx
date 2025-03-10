@@ -2,6 +2,7 @@ import Footer from "@/components/footer/Footer";
 import Hero from "@/components/hero/Hero";
 import HiringProcess from "@/components/hiringprocess/HiringProcess";
 import Matches from "@/components/matches/Matches";
+import NavbarProfile from "@/components/navbar-profile/NavbarProfile";
 import Navbar from "@/components/navbar/Navbar";
 import Queries from "@/components/queries/Queries";
 import Vision from "@/components/vision/Vision";
@@ -11,6 +12,7 @@ export default function Home() {
   return (
       <div className="flex flex-col">
           <Navbar />
+          <NavbarProfile/>
 
       <div className="pt-[110px]">
       <Hero />
