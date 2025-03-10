@@ -7,6 +7,7 @@ import { RootState } from '../../store'; // Adjust path
 import { bootstrapUser } from '../../lib/auth'; // Adjust path
 import Loader from '../Loader'; // Adjust path
 import { useEffect } from 'react';
+import ReactQueryProvider from '../ReactQueryProvider/ReactQueryProvider'; // Adjust path
 
 // Inner component to handle bootstrapping logic
 function ClientBootstrap({ children }: { children: React.ReactNode }) {
@@ -26,7 +27,9 @@ function ClientBootstrap({ children }: { children: React.ReactNode }) {
 export default function ClientProvider({ children }: { children: React.ReactNode }) {
   return (
     <Provider store={store}>
+      <ReactQueryProvider>
       <ClientBootstrap>{children}</ClientBootstrap>
+      </ReactQueryProvider>
     </Provider>
   );
 }

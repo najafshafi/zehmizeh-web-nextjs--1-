@@ -1,3 +1,4 @@
+"use client"; // Ensure this is a client component
 import { useState } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { GridContainer, ImagePreviewWrapper, PortfolioBox } from './portfolioStyles';

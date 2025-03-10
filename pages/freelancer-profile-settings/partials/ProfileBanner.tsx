@@ -1,3 +1,4 @@
+"use client"; // Ensure this is a client component
 import { useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import toast from 'react-hot-toast';

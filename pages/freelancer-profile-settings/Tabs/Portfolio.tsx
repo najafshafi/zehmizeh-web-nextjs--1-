@@ -1,3 +1,4 @@
+"use client"; // Ensure this is a client component
 import { useEffect, useState } from 'react';
 import { MainPortfolioWrapper, PortSkillItem } from '../partials/portfolioStyles';
 import DeleteIcon from '../../../public/icons/trash.svg';

@@ -1,3 +1,4 @@
+"use client"; // Ensure this is a client component
 import { useEffect, useState } from "react";
 import { Col, Form, Row, Spinner } from "react-bootstrap";
 import { useQueryData, useRefetch } from "@/helpers/hooks/useQueryData";

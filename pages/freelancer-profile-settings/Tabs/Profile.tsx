@@ -1,3 +1,4 @@
+"use client"; // Ensure this is a client component
 import { useEffect, useState } from 'react';
 import Tooltip from '@/components/ui/Tooltip';
 import { Col, Row, Spinner } from 'react-bootstrap';
