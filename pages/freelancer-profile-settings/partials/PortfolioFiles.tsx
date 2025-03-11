@@ -54,19 +54,23 @@ const PortfolioFiles = (props: Props) => {
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable" direction="horizontal" key={'droppable-key'}>
           {(provided: any) => (
-            <GridContainer ref={provided.innerRef} {...provided.droppableProps}>
-              {filesArr.map((file: any) => (
-                <>
-                  <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                    <PortfolioBox onClick={() => previewHandler(file)} coverImage={coverImgHandler(file)}>
-                      <div className="cover-img">
-                        <div></div>
-                      </div>
-                    </PortfolioBox>
-                  </div>
-                </>
-              ))}
-            </GridContainer>
+        <GridContainer ref={provided.innerRef} {...provided.droppableProps}>
+          {filesArr.map((file: any, index: number) => (
+            <div
+          key={file.id || index}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+            >
+          <PortfolioBox onClick={() => previewHandler(file)} coverImage={coverImgHandler(file)}>
+            <div className="cover-img">
+              <div></div>
+            </div>
+          </PortfolioBox>
+            </div>
+          ))}
+          {provided.placeholder}
+        </GridContainer>
           )}
         </Droppable>
       </DragDropContext>

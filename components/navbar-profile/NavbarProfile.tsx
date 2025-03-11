@@ -112,6 +112,14 @@ signoutAction(dispatch, router); // Call signoutAction with dispatch and router
     }
   }, [user, dispatch]);
 
+  useEffect(() => {
+    if (user) {
+      // Logic to load the page when user data arrives
+      console.log("User data loaded:", user);
+      // You can add more logic here to handle the user data
+    }
+  }, [user]);
+
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-secondary border-b border-primary h-[110px] flex items-center">
       <div className="max-w-[1320px] w-full mx-auto lg:px-16 xl:px-0 sm:px-24 px-7 flex items-center justify-between">

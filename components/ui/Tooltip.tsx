@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import  Info from "../../public/icons/info-circle-gray.svg";
+import Image from 'next/image';
+import Info from "../../public/icons/info-circle-gray.svg";
 import { useRef } from 'react';
 import Tooltip from 'rc-tooltip';
 
@@ -51,7 +52,7 @@ function UITooltip({
             customTrigger
           ) : (
             <>
-              {title ? title : ''} <Info />
+              {title ? title : ''} <Image src={Info} alt="Info" />
             </>
           )}
         </span>

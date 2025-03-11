@@ -1,9 +1,9 @@
 "use client"; // Ensure this is a client component
 import { useEffect, useState } from 'react';
 import { MainPortfolioWrapper, PortSkillItem } from '../partials/portfolioStyles';
-import DeleteIcon from '../../../public/icons/trash.svg';
-import EditIcon from '../../../public/icons/edit-blue.svg';
-import DragIcon from '../../../public/icons/drag.svg';
+// import DeleteIcon from '../../../public/icons/trash.svg';
+// import EditIcon from '../../../public/icons/edit-blue.svg';
+// import DragIcon from '../../../public/icons/drag.svg';
 import DeletePrompt from '@/components/ui/DeletePropmpt';
 import { toast } from 'react-hot-toast';
 import { addEditPortfolio, deletePortfolio } from '@/helpers/http/portfolio';
@@ -13,6 +13,7 @@ import AddPortfolioModal from '@/components/portfolio/AddPortfolioModal';
 import Loader from '@/components/Loader';
 import PortfolioFiles from '../partials/PortfolioFiles';
 import ReArrangePorfolioItems from '../partials/ReArrangePorfolioItems';
+import Image from 'next/image';
 
 export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
   const { refetch, portfolioData: portfolios, isLoading, isRefetching } = usePortfolio(freelancerId);
@@ -128,31 +129,33 @@ export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
 
               {allowEdit && (
                 <>
-                  <div
+                    <div
                     className="delete-btn p-2 pointer d-flex align-items-center"
                     onClick={() => {
                       setSelectedPortfolio(port);
                       toggleAddPortfolioModal();
                     }}
-                  >
-                    <EditIcon stroke="#0067FF" fill="#0067FF" />
-                  </div>
+                    >
+                    <Image src="../../../public/icons/edit-icon.svg" alt="Edit Icon" width={24} height={24}  style={{ stroke: "#0067FF", fill: "#0067FF" }} />
+                    </div>
                   <div
                     className="delete-btn p-2 pointer d-flex align-items-center"
                     onClick={() => {
                       setSelectedPortfolio(port);
                       setIsPorfolioRearrangeModal(true);
                     }}
-                  >
-                    <DragIcon stroke="#0067FF" fill="#0067FF" />
+                    >
+                    <Image src="../../../public/icons/drag-icon.svg" alt="Drag Icon" width={24} height={24} style={{ stroke: "#0067FF", fill: "#0067FF" }} />
+
+                    {/* <DragIcon stroke="#0067FF" fill="#0067FF" /> */}
                   </div>
 
-                  <div
+                    <div
                     className="delete-btn p-2 pointer d-flex align-items-center"
                     onClick={(e) => openDeletePrompt(e, port)}
-                  >
-                    <DeleteIcon />
-                  </div>
+                    >
+                    <Image src="../../../public/icons/delete-icon.svg" alt="Delete Icon" width={24} height={24}  style={{ stroke: "#FF0000", fill: "#FF0000" }} />
+                    </div>
                 </>
               )}
             </div>

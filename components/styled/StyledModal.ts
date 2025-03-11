@@ -13,7 +13,7 @@ export const StyledModal = styled(Modal)<{
   .modal-content {
     border-radius: 12px;
     background: ${(props) =>
-      props.transpatent ? 'transparent' : props.theme.colors.white};
+      props.transpatent ? 'transparent' : (props.theme?.colors?.white || 'white')};
     border: ${(props) => (props.transpatent ? 'transparent' : 'initial')};
     ${(props) => {
       if (props.$hideModal) {
