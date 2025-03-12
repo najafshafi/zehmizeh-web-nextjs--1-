@@ -897,28 +897,13 @@ export const Profile = () => {
                           </div>
                           <div>
                             <div className="button pointer">
-                              <Image
-                              src={EditIcon}
-                              alt="edit-icon"
-                              onClick={() =>
-                                setEditModalType({
-                                modal: 'education',
-                                data: eduItem,
-                                })
-                              }
-                              />
+                              <EditIcon/>
                             </div>
                             <div className="button delete-btn pointer">
                                 {selectedEducationId == eduItem?.education_id.toString() ? (
                                 <Spinner animation="border" size="sm" />
                                 ) : (
-                                <Image
-                                  src={DeleteIcon}
-                                  alt="delete-icon"
-                                  onClick={() =>
-                                  onDeleteEducation(eduItem?.education_id.toString())
-                                  }
-                                />
+                                <DeleteIcon/>
                                 )}
                             </div>
                           </div>
@@ -973,9 +958,7 @@ export const Profile = () => {
                               {selectedCourseId === courseItem?.course_id.toString() ? (
                               <Spinner animation="border" size="sm" />
                               ) : (
-                              <Image
-                                src={DeleteIcon}
-                                alt="delete-icon"
+                              <DeleteIcon
                                 onClick={(e: React.MouseEvent<HTMLImageElement>) => {
                                 e.stopPropagation();
                                 onDeleteCourse(courseItem?.course_id.toString());

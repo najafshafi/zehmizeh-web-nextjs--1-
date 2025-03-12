@@ -213,13 +213,19 @@ import { ProfileBannerWrapper } from "../freelancer-profile-settings.styled";
 import InfoEditModal from "../edit-modals/InfoEditModal";
 import EditPictureModal from "@/components/ui/EditPictureModal";
 import { editUser } from "@/helpers/http/auth";
+import  DollarCircleIcon  from '../../../public/icons/dollar-circle.svg';
+import  LocationIcon  from '../../../public/icons/location-blue.svg';
+import  EditIcon  from '../../../public/icons/edit.svg';
+import  EditBlueIcon  from '../../../public/icons/edit-blue-outline.svg';
+import  BellIcon  from '../../../public/icons/bell.svg';
+import  JobsDoneIcon  from '../../../public/icons/jobs-done.svg';
+import  StarIcon  from '../../../public/icons/star-yellow.svg';
 import {
   numberWithCommas,
   separateValuesWithComma,
 } from "@/helpers/utils/misc";
 import { CONSTANTS } from "@/helpers/const/constants";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
-import EditIcon from "../../../public/icons/edit.svg";
 
 import Image from "next/image";
 import { BsStar } from "react-icons/bs";
@@ -280,12 +286,7 @@ const ProfileBanner = ({ data, refetch }: Props) => {
                     height={100}
                   />
                   <div className="edit-picture-btn  absolute bottom-0 flex items-center justify-center">
-                    <Image
-                      src="/icons/edit-blue-outline.svg"
-                      alt="Edit"
-                      width={24}
-                      height={24}
-                    />
+                    <EditBlueIcon/>
                   </div>
                 </div>
               </div>
@@ -417,13 +418,7 @@ const ProfileBanner = ({ data, refetch }: Props) => {
                 className="edit-button profile-edit-btn flex items-center gap-2 cursor-pointer text-white"
                 onClick={toggleEditModal}
               >
-                <Image
-                  src="/icons/edit-blue-outline.svg"
-                  alt="Edit"
-                  width={20}
-                  height={20}
-                  className="text-white"
-                />
+                <div className="text-white"><EditIcon/></div>
                 <div className="text-base font-normal">Edit</div>
               </div>
             </div>

@@ -71,7 +71,7 @@ const BackButton = ({ className, children, onBack, route }: Props) => {
         className="flex back-button items-center cursor-pointer"
         onClick={handleGoBack}
       >
-        <Image src={BackArrow} alt="Back" width={24} height={24} />
+       <BackArrow />
         <span className="fs-18 fw-400">Back</span>
         {children}
       </div>
