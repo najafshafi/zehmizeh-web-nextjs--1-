@@ -1,8 +1,8 @@
-import { Image } from 'react-bootstrap';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import { StyledButton } from './forms/Buttons';
-import { goBack } from 'helpers/utils/goBack';
+import { Image } from "react-bootstrap";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import { StyledButton } from "./forms/Buttons";
+import { goBack } from "helpers/utils/goBack";
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -28,7 +28,7 @@ function Page404() {
   const navigate = useNavigate();
 
   return (
-    <Wrapper className="d-flex justify-content-center align-items-center flex-column">
+    <Wrapper className="flex justify-content-center items-center flex-column">
       <Image
         src="images/notFound.png"
         width="250px"

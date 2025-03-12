@@ -107,7 +107,7 @@ export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
   return (
     <div className="mb-5">
       {allowEdit && (
-        <div className="d-flex align-items-center justify-content-center mb-5">
+        <div className="flex items-center justify-center mb-5">
           <StyledButton
             onClick={() => {
               setSelectedPortfolio(null);
@@ -122,7 +122,7 @@ export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
       {(!isRefetching || !isLoading) &&
         portfolios?.map((port: any) => (
           <MainPortfolioWrapper key={`port-id-${port.portfolio_id}`}>
-            <div className="d-flex align-items-center mb-2">
+            <div className="flex items-center mb-2">
               <h3 className="line-break  project-name fw-700 text-capitalize mb-1">
                 {port.project_name} {port?.project_year && `(${port?.project_year})`}
               </h3>
@@ -130,7 +130,7 @@ export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
               {allowEdit && (
                 <>
                     <div
-                    className="delete-btn p-2 pointer d-flex align-items-center"
+                    className="delete-btn p-2 pointer flex items-center"
                     onClick={() => {
                       setSelectedPortfolio(port);
                       toggleAddPortfolioModal();
@@ -139,7 +139,7 @@ export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
                     <Image src="../../../public/icons/edit-icon.svg" alt="Edit Icon" width={24} height={24}  style={{ stroke: "#0067FF", fill: "#0067FF" }} />
                     </div>
                   <div
-                    className="delete-btn p-2 pointer d-flex align-items-center"
+                    className="delete-btn p-2 pointer flex items-center"
                     onClick={() => {
                       setSelectedPortfolio(port);
                       setIsPorfolioRearrangeModal(true);
@@ -151,7 +151,7 @@ export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
                   </div>
 
                     <div
-                    className="delete-btn p-2 pointer d-flex align-items-center"
+                    className="delete-btn p-2 pointer flex items-center"
                     onClick={(e) => openDeletePrompt(e, port)}
                     >
                     <Image src="../../../public/icons/delete-icon.svg" alt="Delete Icon" width={24} height={24}  style={{ stroke: "#FF0000", fill: "#FF0000" }} />
@@ -164,7 +164,7 @@ export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
             {port?.project_skills && (
               <div className="mb-4">
                 <p className="fw-bold mb-2">{port?.project_skills !== '[]' && 'Project Skills'}</p>
-                <div className="d-flex">
+                <div className="flex">
                   {typeof port?.project_skills === 'string' ? (
                     port?.project_skills === '[]' ? (
                       <></>

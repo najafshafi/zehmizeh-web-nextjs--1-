@@ -2,17 +2,17 @@
  * This component is a modal to edit headline
  */
 
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { Modal, Button, Form } from 'react-bootstrap';
-import { EditFormWrapper, StyledFormGroup } from './edit-modals.styled';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { StyledButton } from '@/components/forms/Buttons';
-import { editUser } from '@/helpers/http/auth';
-import ErrorMessage from '@/components/ui/ErrorMessage';
-import { SeeMore } from '@/components/ui/SeeMore';
-import { useWebSpellChecker } from '@/helpers/hooks/useWebSpellChecker';
-import { CONSTANTS } from '@/helpers/const/constants';
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { Modal, Button, Form } from "react-bootstrap";
+import { EditFormWrapper, StyledFormGroup } from "./edit-modals.styled";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import { editUser } from "@/helpers/http/auth";
+import ErrorMessage from "@/components/ui/ErrorMessage";
+import { SeeMore } from "@/components/ui/SeeMore";
+import { useWebSpellChecker } from "@/helpers/hooks/useWebSpellChecker";
+import { CONSTANTS } from "@/helpers/const/constants";
 
 type Props = {
   headline: string;
@@ -25,12 +25,12 @@ const HeadlineEditModal = ({ show, headline, onClose, onUpdate }: Props) => {
   useWebSpellChecker(show, [show]);
 
   const [loading, setLoading] = useState(false);
-  const [headlineText, setHeadlineText] = useState(headline || '');
-  const [error, setError] = useState('');
+  const [headlineText, setHeadlineText] = useState(headline || "");
+  const [error, setError] = useState("");
   const [seeMore, setSeeMore] = useState(false);
 
   const handleUpdate = () => {
-    if (!headlineText) return setError('Please enter headline');
+    if (!headlineText) return setError("Please enter headline");
     // Update info api call
     setLoading(true);
     const body: any = {
@@ -38,7 +38,7 @@ const HeadlineEditModal = ({ show, headline, onClose, onUpdate }: Props) => {
     };
     const promise = editUser(body);
     toast.promise(promise, {
-      loading: 'Updating headline - please wait...',
+      loading: "Updating headline - please wait...",
       success: (res: { message: string }) => {
         onUpdate();
         onClose();
@@ -47,13 +47,13 @@ const HeadlineEditModal = ({ show, headline, onClose, onUpdate }: Props) => {
       },
       error: (err) => {
         setLoading(false);
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
 
   const countCharactersWithoutSpaces = (text) => {
-    return text.replace(/\s+/g, '').length;
+    return text.replace(/\s+/g, "").length;
   };
 
   const handleChange = (inputValue) => {
@@ -69,13 +69,13 @@ const HeadlineEditModal = ({ show, headline, onClose, onUpdate }: Props) => {
           &times;
         </Button>
         <EditFormWrapper>
-          <div className="content d-flex flex-column">
+          <div className="content flex flex-column">
             <div className="modal-title">
               <b className="fs-28">Headline</b>
               <p className="fs-base mt-2 mb-0 text-justify text-secondary">
                 Your headline should introduce your work as a freelancer. When
-                clients search for freelancers, they&apos;ll see it directly under
-                your name as a personal subtitle or slogan.
+                clients search for freelancers, they&apos;ll see it directly
+                under your name as a personal subtitle or slogan.
               </p>
               {seeMore && (
                 <p className="fs-base mb-0 mt-2 text-justify text-secondary">
@@ -87,7 +87,7 @@ const HeadlineEditModal = ({ show, headline, onClose, onUpdate }: Props) => {
                 </p>
               )}
               <SeeMore onClick={() => setSeeMore((prev) => !prev)}>
-                {seeMore ? 'See Less' : 'See More'}
+                {seeMore ? "See Less" : "See More"}
               </SeeMore>
             </div>
             <StyledFormGroup>
@@ -108,7 +108,7 @@ const HeadlineEditModal = ({ show, headline, onClose, onUpdate }: Props) => {
               </div>
               {error && <ErrorMessage message={error} />}
             </StyledFormGroup>
-            <div className="bottom-buttons d-flex">
+            <div className="bottom-buttons flex">
               <StyledButton
                 padding="1.125rem 2.25rem"
                 variant="primary"

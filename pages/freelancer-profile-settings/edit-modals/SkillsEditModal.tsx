@@ -2,30 +2,30 @@
  * This component is a modal to edit skills
  */
 
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { Modal, Button } from 'react-bootstrap';
-import { EditFormWrapper } from './edit-modals.styled';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { StyledButton } from '@/components/forms/Buttons';
-import { editUser } from '@/helpers/http/auth';
-import { CategorySkillSelectModal } from '@/components/skills-form/CategorySelectModal';
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { Modal, Button } from "react-bootstrap";
+import { EditFormWrapper } from "./edit-modals.styled";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import { editUser } from "@/helpers/http/auth";
+import { CategorySkillSelectModal } from "@/components/skills-form/CategorySelectModal";
 import {
   getCategories,
   getRelevantSkillsBasedOnCategory,
   getSkills,
-} from '@/helpers/utils/helper';
-import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
+} from "@/helpers/utils/helper";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 
 type Props = {
   show: boolean;
   onClose: () => void;
-  selectedCategories: IFreelancerDetails['skills'];
-  selectedSkills: IFreelancerDetails['skills'];
+  selectedCategories: IFreelancerDetails["skills"];
+  selectedSkills: IFreelancerDetails["skills"];
   onUpdate: () => void;
 };
 
-const initialErrorMessages = { skills: '', categories: '' };
+const initialErrorMessages = { skills: "", categories: "" };
 
 const SkillsEditModal = ({
   show,
@@ -48,13 +48,13 @@ const SkillsEditModal = ({
     if (getCategories(categoryAndSkillData)?.length === 0)
       return setError((prev) => ({
         ...prev,
-        categories: 'Please add at least one skill category.',
+        categories: "Please add at least one skill category.",
       }));
 
     if (getSkills(categoryAndSkillData)?.length === 0)
       return setError((prev) => ({
         ...prev,
-        skills: 'Please add at least one skill for each skill category.',
+        skills: "Please add at least one skill for each skill category.",
       }));
 
     // Edit Skills api call
@@ -63,7 +63,7 @@ const SkillsEditModal = ({
     const promise = editUser({ skills: categoryAndSkillData });
 
     toast.promise(promise, {
-      loading: 'Updating your details - please wait...',
+      loading: "Updating your details - please wait...",
       success: (res) => {
         onUpdate();
         setLoading(false);
@@ -72,7 +72,7 @@ const SkillsEditModal = ({
 
       error: (err) => {
         setLoading(false);
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
@@ -91,7 +91,7 @@ const SkillsEditModal = ({
           &times;
         </Button>
         <EditFormWrapper>
-          <div className="content d-flex flex-column">
+          <div className="content flex flex-column">
             <div className="modal-title fs-28 fw-400">My Skills</div>
             <CategorySkillSelectModal
               type="CATEGORY"
@@ -99,8 +99,8 @@ const SkillsEditModal = ({
               labelClassName="fw-bold fs-20"
               subText={{
                 content:
-                  'Which of the categories listed below include the skills you want to offer on ZMZ? Select all that apply.',
-                className: 'fs-16',
+                  "Which of the categories listed below include the skills you want to offer on ZMZ? Select all that apply.",
+                className: "fs-16",
               }}
               errorMessage={error.categories}
               formData={getCategories(categoryAndSkillData)}
@@ -109,7 +109,7 @@ const SkillsEditModal = ({
                   ...getSkills(categoryAndSkillData),
                   ...categories,
                 ])
-                  .filter((x) => 'skills' in x)
+                  .filter((x) => "skills" in x)
                   .map((x) => x.skills)
                   .flat();
 
@@ -126,8 +126,8 @@ const SkillsEditModal = ({
               labelClassName="fw-bold fs-20"
               subText={{
                 content:
-                  'Select the freelancing skills that you intend to offer as a service on ZMZ. Include all that apply.',
-                className: 'fs-16',
+                  "Select the freelancing skills that you intend to offer as a service on ZMZ. Include all that apply.",
+                className: "fs-16",
               }}
               errorMessage={error.skills}
               categories={getCategories(categoryAndSkillData)}
@@ -142,7 +142,7 @@ const SkillsEditModal = ({
                 setIsSkillCategorySelectModalOpen(value);
               }}
             />
-            <div className="bottom-buttons d-flex">
+            <div className="bottom-buttons flex">
               <StyledButton
                 padding="1.125rem 2.25rem"
                 variant="primary"

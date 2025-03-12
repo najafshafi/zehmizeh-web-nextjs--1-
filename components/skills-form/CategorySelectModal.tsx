@@ -1,19 +1,19 @@
-import { Chip } from '@/components/chip/Chip';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { getCategoriesApi, getSkillsApi } from '@/helpers/http/common';
-import { TJobDetails } from '@/helpers/types/job.type';
-import { useEffect, useState } from 'react';
-import { Button, Form, Modal, Spinner } from 'react-bootstrap';
-import toast from 'react-hot-toast';
-import Tooltip from '@/components/ui/Tooltip';
-import ErrorMessage from '@/components/ui/ErrorMessage';
-import { StyledButton } from '@/components/forms/Buttons';
+import { Chip } from "@/components/chip/Chip";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { getCategoriesApi, getSkillsApi } from "@/helpers/http/common";
+import { TJobDetails } from "@/helpers/types/job.type";
+import { useEffect, useState } from "react";
+import { Button, Form, Modal, Spinner } from "react-bootstrap";
+import toast from "react-hot-toast";
+import Tooltip from "@/components/ui/Tooltip";
+import ErrorMessage from "@/components/ui/ErrorMessage";
+import { StyledButton } from "@/components/forms/Buttons";
 import CrossIcon from "../../public/icons/cross-black.svg";
-import styled from 'styled-components';
-import { getRelevantSkillsBasedOnCategory } from '@/helpers/utils/helper';
-import { CONSTANTS } from '@/helpers/const/constants';
-import { StatusBadge } from '@/components/styled/Badges';
-import useResponsive from '@/helpers/hooks/useResponsive';
+import styled from "styled-components";
+import { getRelevantSkillsBasedOnCategory } from "@/helpers/utils/helper";
+import { CONSTANTS } from "@/helpers/const/constants";
+import { StatusBadge } from "@/components/styled/Badges";
+import useResponsive from "@/helpers/hooks/useResponsive";
 
 const DummyInputBox = styled.div`
   cursor: pointer;
@@ -48,34 +48,34 @@ type Props = {
   label?: string;
   showTooltip?: boolean;
   tooltip?: string;
-  user_type?: 'freelancer' | 'client';
+  user_type?: "freelancer" | "client";
   subText?: {
     isHidden?: boolean;
     className?: string;
     content?: string;
   };
   errorMessage?: string;
-  type: 'CATEGORY' | 'SKILL';
-  formData: TJobDetails['skills'];
-  setFormData: (data: Props['formData']) => void;
-  categories?: TJobDetails['skills'];
+  type: "CATEGORY" | "SKILL";
+  formData: TJobDetails["skills"];
+  setFormData: (data: Props["formData"]) => void;
+  categories?: TJobDetails["skills"];
   isMandatory?: boolean;
   noResultFoundText?: string;
   modalOpenCloseListener?: (value: boolean) => void;
 };
 
-type TSkills = (TJobDetails['skills'][0] & { skills: TJobDetails['skills'] })[];
+type TSkills = (TJobDetails["skills"][0] & { skills: TJobDetails["skills"] })[];
 
-const constantKeys = (type: Props['type']) => {
-  if (type === 'CATEGORY') {
+const constantKeys = (type: Props["type"]) => {
+  if (type === "CATEGORY") {
     return {
-      id: 'category_id',
-      name: 'category_name',
+      id: "category_id",
+      name: "category_name",
     };
   }
   return {
-    id: 'skill_id',
-    name: 'skill_name',
+    id: "skill_id",
+    name: "skill_name",
   };
 };
 
@@ -100,8 +100,8 @@ export const CategorySkillSelectModal = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [allItems, setAllItems] = useState<TSkills>([]);
-  const [search, setSearch] = useState('');
-  const [selectedItems, setSelectedItems] = useState<Props['formData']>([]);
+  const [search, setSearch] = useState("");
+  const [selectedItems, setSelectedItems] = useState<Props["formData"]>([]);
   const [allCategories, setAllCategories] = useState([]);
   const [allSkills, setAllSkills] = useState([]);
 
@@ -126,15 +126,15 @@ export const CategorySkillSelectModal = ({
 
       if (Array.isArray(data)) setAllCategories(data);
     } catch (error) {
-      let errorMessage = 'Failed to load categories';
+      let errorMessage = "Failed to load categories";
       if (
         error?.response?.data?.message &&
-        typeof error?.response?.data?.message === 'string'
+        typeof error?.response?.data?.message === "string"
       )
         errorMessage = error.response.data.message;
-      else if (error?.message && typeof error.message === 'string')
+      else if (error?.message && typeof error.message === "string")
         errorMessage = error.message;
-      else if (error && typeof error === 'string') errorMessage = error;
+      else if (error && typeof error === "string") errorMessage = error;
       toast.error(errorMessage);
       setIsLoading(false);
     }
@@ -147,30 +147,30 @@ export const CategorySkillSelectModal = ({
 
       if (Array.isArray(data)) setAllSkills(data);
     } catch (error) {
-      let errorMessage = 'Failed to load skills';
+      let errorMessage = "Failed to load skills";
       if (
         error?.response?.data?.message &&
-        typeof error?.response?.data?.message === 'string'
+        typeof error?.response?.data?.message === "string"
       )
         errorMessage = error.response.data.message;
-      else if (error?.message && typeof error.message === 'string')
+      else if (error?.message && typeof error.message === "string")
         errorMessage = error.message;
-      else if (error && typeof error === 'string') errorMessage = error;
+      else if (error && typeof error === "string") errorMessage = error;
       toast.error(errorMessage);
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    if (type === 'CATEGORY') getCategories();
-    if (type === 'SKILL') getSkills();
+    if (type === "CATEGORY") getCategories();
+    if (type === "SKILL") getSkills();
   }, [type]);
 
   /* START ----------------------------------------- Search side effect */
   useEffect(() => {
     if (isModalOpen) {
-      if (type === 'CATEGORY') loadAllCategories(search);
-      if (type === 'SKILL') loadAllSkills(search);
+      if (type === "CATEGORY") loadAllCategories(search);
+      if (type === "SKILL") loadAllSkills(search);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, type, isModalOpen, allCategories, allSkills]);
@@ -180,12 +180,12 @@ export const CategorySkillSelectModal = ({
   useEffect(() => {
     return () => {
       setSelectedItems([]);
-      setSearch('');
+      setSearch("");
     };
   }, [isModalOpen]);
   /* END ------------------------------------------- Cleanup */
 
-  const loadAllCategories = async (keyword = '') => {
+  const loadAllCategories = async (keyword = "") => {
     const options = allCategories
       .filter((item) =>
         item?.name?.toLowerCase()?.includes(keyword?.toLowerCase())
@@ -199,7 +199,7 @@ export const CategorySkillSelectModal = ({
     setAllItems(options);
   };
 
-  const loadAllSkills = async (keyword = '') => {
+  const loadAllSkills = async (keyword = "") => {
     const skills = allSkills
       .filter((item) =>
         item?.name?.toLowerCase()?.includes(keyword?.toLowerCase())
@@ -230,13 +230,13 @@ export const CategorySkillSelectModal = ({
         label={item[constantKeys(type).name]}
         onSelect={() => {
           const maxItemsAllowedToSelect =
-            type === 'CATEGORY'
+            type === "CATEGORY"
               ? CONSTANTS.MAX_SELECT_CATEGORY
               : CONSTANTS.MAX_SELECT_SKILLS;
           if (!isActive && selectedItems.length > maxItemsAllowedToSelect - 1) {
             return toast.error(
               `Can't select more than ${maxItemsAllowedToSelect} ${
-                type === 'CATEGORY' ? 'categories' : 'skills'
+                type === "CATEGORY" ? "categories" : "skills"
               }`
             );
           }
@@ -254,7 +254,7 @@ export const CategorySkillSelectModal = ({
                 [constantKeys(type).id]: item[constantKeys(type).id],
                 [constantKeys(type).name]: item[constantKeys(type).name],
               };
-              if (type === 'SKILL') objectToPush.categories = item.categories;
+              if (type === "SKILL") objectToPush.categories = item.categories;
               newItems.push(objectToPush);
             }
             return newItems;
@@ -268,14 +268,14 @@ export const CategorySkillSelectModal = ({
     <div>
       {/* START ----------------------------------------- Inputbox */}
       <div className="form-group" id="category-skills">
-        <div className="d-flex align-items-center gap-1">
+        <div className="flex items-center gap-1">
           <span className={`text-capitalize ${labelClassName}`}>{label}</span>
           {isMandatory && <span className="mandatory">&nbsp;*</span>}
           {showTooltip && (
             <Tooltip>
               {tooltip.length > 0
                 ? tooltip
-                : user_type === 'freelancer'
+                : user_type === "freelancer"
                 ? `If you were to think of the types of services you want to offer on ZMZ,
               which of the listed categories would they fall into? Select all that apply.`
                 : `Think of the skill categories you want your freelancer to have in
@@ -286,15 +286,15 @@ export const CategorySkillSelectModal = ({
         </div>
         {!subText?.isHidden && (
           <div className="my-1 mb-2">
-            <span className={`fs-16 ${subText?.className || ''}`}>
+            <span className={`fs-16 ${subText?.className || ""}`}>
               {subText?.content ||
-                'Which of the categories listed below include the skills you want to offer on ZMZ? Select all that apply.'}
+                "Which of the categories listed below include the skills you want to offer on ZMZ? Select all that apply."}
             </span>
           </div>
         )}
         <DummyInputBox onClick={() => setIsModalOpen(true)}>
           {formData.length > 0 ? (
-            <div className="d-flex flex-row flex-wrap">
+            <div className="flex flex-row flex-wrap">
               {formData.map((item) => {
                 return (
                   <Chip
@@ -307,17 +307,17 @@ export const CategorySkillSelectModal = ({
             </div>
           ) : (
             <div>
-              {type === 'CATEGORY'
-                ? 'Select Skill Categories'
-                : 'Select Skills'}
+              {type === "CATEGORY"
+                ? "Select Skill Categories"
+                : "Select Skills"}
             </div>
           )}
         </DummyInputBox>
-        <div className="d-flex justify-content-between mt-2 suggested-skills">
+        <div className="flex justify-content-between mt-2 suggested-skills">
           <div>{errorMessage && <ErrorMessage message={errorMessage} />}</div>
           <div>
-            {selectedItems?.length || 0} out of{' '}
-            {type === 'CATEGORY'
+            {selectedItems?.length || 0} out of{" "}
+            {type === "CATEGORY"
               ? CONSTANTS.MAX_SELECT_CATEGORY
               : CONSTANTS.MAX_SELECT_SKILLS}
           </div>
@@ -330,11 +330,11 @@ export const CategorySkillSelectModal = ({
         size="xl"
         onHide={() => setIsModalOpen(false)}
         centered
-        maxwidth={isMobile || isTablet ? '90vw' : '80vw'}
+        maxwidth={isMobile || isTablet ? "90vw" : "80vw"}
       >
-        <Modal.Body className="d-flex flex-column justify-content-center align-items-center">
+        <Modal.Body className="flex flex-column justify-content-center items-center">
           <p className="fs-18 fw-bold">
-            {type === 'CATEGORY' ? 'Skill Categories' : 'Skills'}
+            {type === "CATEGORY" ? "Skill Categories" : "Skills"}
           </p>
           {isLoading && allItems?.length === 0 && (
             <Spinner animation="border" size="sm" />
@@ -351,17 +351,17 @@ export const CategorySkillSelectModal = ({
               <StatusBadge
                 color="yellow"
                 className="position-absolute"
-                style={{ right: '20px', top: `${isMobile ? '40px' : '20px'}` }}
+                style={{ right: "20px", top: `${isMobile ? "40px" : "20px"}` }}
               >
-                {selectedItems?.length || 0} /{' '}
-                {type === 'CATEGORY'
+                {selectedItems?.length || 0} /{" "}
+                {type === "CATEGORY"
                   ? CONSTANTS.MAX_SELECT_CATEGORY
                   : CONSTANTS.MAX_SELECT_SKILLS}
               </StatusBadge>
               {/* START ----------------------------------------- Searchbox */}
-              <div className="position-relative flex-1 search-and-dropdown d-flex align-items-center mb-4">
+              <div className="position-relative flex-1 search-and-dropdown flex items-center mb-4">
                 <Form.Control
-                  placeholder={'Search'}
+                  placeholder={"Search"}
                   value={search}
                   onChange={(e) => {
                     setSearch(e.target.value);
@@ -372,16 +372,16 @@ export const CategorySkillSelectModal = ({
                 {search && !isLoading && (
                   <CrossIcon
                     onClick={() => {
-                      setSearch('');
+                      setSearch("");
                     }}
                     className="cursor-pointer position-absolute"
-                    style={{ right: '10px' }}
+                    style={{ right: "10px" }}
                   />
                 )}
                 {isLoading && allItems?.length > 0 && (
                   <Spinner
                     className="position-absolute"
-                    style={{ right: '10px' }}
+                    style={{ right: "10px" }}
                     animation="border"
                     size="sm"
                   />
@@ -393,7 +393,7 @@ export const CategorySkillSelectModal = ({
               <Items>
                 {allItems?.length === 0 ||
                 allItems.every((x) => x.skills?.length === 0) ? (
-                  <div>{noResultFoundText || 'No Results found'}</div>
+                  <div>{noResultFoundText || "No Results found"}</div>
                 ) : (
                   allItems.map((item) => {
                     if (item?.skills?.length > 0) {
@@ -402,7 +402,7 @@ export const CategorySkillSelectModal = ({
                           <b className="text-capitalize mt-2 fs-18">
                             {item.category_name}
                           </b>
-                          <div className="d-flex flex-wrap justify-content-center align-items-center text-center mt-2">
+                          <div className="flex flex-wrap justify-content-center items-center text-center mt-2">
                             {item.skills.map((skill) => {
                               return SkillChip(skill);
                             })}

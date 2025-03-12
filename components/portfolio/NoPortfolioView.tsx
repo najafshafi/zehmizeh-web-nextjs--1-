@@ -1,5 +1,5 @@
-import { ReactComponent as NoPortfolio } from '../../public/icons/no-portfolio.svg';
-import { StyledButton } from 'components/forms/Buttons';
+import { ReactComponent as NoPortfolio } from "../../public/icons/no-portfolio.svg";
+import { StyledButton } from "components/forms/Buttons";
 
 const NoPortfolioView = ({
   onAddProject,
@@ -9,7 +9,7 @@ const NoPortfolioView = ({
   allowEdit: boolean;
 }) => {
   return (
-    <div className="my-5 d-flex flex-column justify-content-center align-items-center gap-5">
+    <div className="my-5 flex flex-column justify-content-center items-center gap-5">
       <NoPortfolio />
 
       {allowEdit && (

@@ -1,13 +1,13 @@
-import axios from 'axios';
-import styled from 'styled-components';
-import { generateAwsUrl } from '@/helpers/http/common';
-import { useState } from 'react';
-import { FileUploader } from 'react-drag-drop-files';
-import { transition } from '@/styles/transitions';
-import  PlusIcon  from '../../public/icons/plus-yellow.svg';
-import { Spinner } from 'react-bootstrap';
-import { showErr } from '@/helpers/utils/misc';
-import { CONSTANTS } from '@/helpers/const/constants';
+import axios from "axios";
+import styled from "styled-components";
+import { generateAwsUrl } from "@/helpers/http/common";
+import { useState } from "react";
+import { FileUploader } from "react-drag-drop-files";
+import { transition } from "@/styles/transitions";
+import PlusIcon from "../../public/icons/plus-yellow.svg";
+import { Spinner } from "react-bootstrap";
+import { showErr } from "@/helpers/utils/misc";
+import { CONSTANTS } from "@/helpers/const/constants";
 
 const Wrapper = styled.div`
   width: 100px;
@@ -39,7 +39,7 @@ const FileUploadToAws = ({
 
     const numberOfFiles = Object.values(files)?.length;
     if ((attachments?.length ?? 0) + numberOfFiles > 25) {
-      showErr('You can upload only 25 files');
+      showErr("You can upload only 25 files");
       return;
     }
     const exceededSizeLimit =
@@ -57,7 +57,7 @@ const FileUploadToAws = ({
     const filesUrls = await Promise.all(
       Object.values(files).map(async (file: any) => {
         const response = await generateAwsUrl({
-          folder: 'job-documents',
+          folder: "job-documents",
           file_name: file.name,
           content_type: file.type,
         });
@@ -70,11 +70,11 @@ const FileUploadToAws = ({
     const uploadedFilesUrls = await Promise.all(
       filesUrls.map(async (uploadFile: any) => {
         const res = await axios.put(uploadFile.uploadURL, uploadFile.file, {
-          headers: { 'Content-Type': uploadFile.contentType },
+          headers: { "Content-Type": uploadFile.contentType },
         });
 
         if (res.status === 200) {
-          const url = uploadFile.uploadURL.split('?')[0];
+          const url = uploadFile.uploadURL.split("?")[0];
           const uploadedFile = {
             fileUrl: url,
             fileName: uploadFile.file.name,
@@ -86,19 +86,24 @@ const FileUploadToAws = ({
     );
 
     // console.log(JSON.stringify(uploadedFilesUrls));
-    onFileUpload(uploadedFilesUrls.filter((file): file is { fileUrl: string; fileName: string } => file !== undefined));
+    onFileUpload(
+      uploadedFilesUrls.filter(
+        (file): file is { fileUrl: string; fileName: string } =>
+          file !== undefined
+      )
+    );
 
     setLoading(false);
   };
 
   return (
-    <Wrapper className="d-flex align-items-center justify-content-center pointer">
+    <Wrapper className="flex items-center justify-content-center pointer">
       <FileUploader
         handleChange={handleChange}
         name="file"
         types={CONSTANTS.PORTFOLIO_ATTACHMENT_SUPPORTED_TYPES}
         multiple
-        classes="upload-layout d-flex align-items-center justify-content-center pointer"
+        classes="upload-layout flex items-center justify-content-center pointer"
       >
         {loading ? <Spinner animation="border" /> : <PlusIcon />}
       </FileUploader>

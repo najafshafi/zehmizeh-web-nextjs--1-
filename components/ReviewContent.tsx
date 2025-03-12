@@ -2,15 +2,15 @@
  * This component displays review card
  */
 
-import moment from 'moment';
-import  FilledStarIconSmall  from '../public/icons/starYellow.svg';
+import moment from "moment";
+import FilledStarIconSmall from "../public/icons/starYellow.svg";
 
 const ReviewContent = ({ review }: any) => {
   return (
     <>
-      <div className="d-flex align-items-center justify-content-between flex-wrap">
-        <div className="given-ratings d-flex">
-          <div className="stars d-flex align-items-center gap-1">
+      <div className="flex items-center justify-content-between flex-wrap">
+        <div className="given-ratings flex">
+          <div className="stars flex items-center gap-1">
             {Array(review?.rate)
               .fill(1)
               ?.map((item: any, i: number) => (
@@ -22,7 +22,7 @@ const ReviewContent = ({ review }: any) => {
           </div>
         </div>
         <div className="ratings-given-on fs-18 fw-300 light-text">
-          {moment(review?.date_created).format('MMM DD, YYYY')}
+          {moment(review?.date_created).format("MMM DD, YYYY")}
         </div>
       </div>
       <div className="review-description fs-20 fw-400">

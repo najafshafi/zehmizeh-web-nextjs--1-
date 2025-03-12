@@ -1,10 +1,10 @@
-import { Modal, Button } from 'react-bootstrap';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { StyledButton } from '@/components/forms/Buttons';
-import styled from 'styled-components';
-import Select from 'react-select';
-import { useEffect, useState } from 'react';
-import LoadingButtons from '@/components/LoadingButtons';
+import { Modal, Button } from "react-bootstrap";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import styled from "styled-components";
+import Select from "react-select";
+import { useEffect, useState } from "react";
+import LoadingButtons from "@/components/LoadingButtons";
 
 const Wrapper = styled.div`
   .close-btn {
@@ -17,15 +17,15 @@ const Wrapper = styled.div`
 `;
 
 const options = [
-  { value: '1', label: 'Once A Week' },
-  { value: '2', label: 'Twice A Week' },
-  { value: '3', label: 'Disable Job Alerts' },
+  { value: "1", label: "Once A Week" },
+  { value: "2", label: "Twice A Week" },
+  { value: "3", label: "Disable Job Alerts" },
 ];
 
 const defaultOptions = {
-  1: { value: '1', label: 'Once A Week' },
-  2: { value: '2', label: 'Twice A Week' },
-  3: { value: '3', label: 'Disable Job Alerts' },
+  1: { value: "1", label: "Once A Week" },
+  2: { value: "2", label: "Twice A Week" },
+  3: { value: "3", label: "Disable Job Alerts" },
 };
 
 type Props = {
@@ -58,7 +58,7 @@ const ManageNotificationModal = ({
           &times;
         </Button>
         <Wrapper>
-          <div className="content d-flex flex-column">
+          <div className="content flex flex-column">
             <div className="modal-title fs-28 fw-400">Manage Notification</div>
             <Select
               defaultValue={selectedOPT}
@@ -68,10 +68,10 @@ const ManageNotificationModal = ({
               onChange={(dt) => setSelectedOPT(dt)}
             />
           </div>
-          <div className="mt-4 d-flex align-items-center justify-content-center">
+          <div className="mt-4 flex items-center justify-content-center">
             <StyledButton
               disabled={loading}
-              style={{ minWidth: '10rem' }}
+              style={{ minWidth: "10rem" }}
               onClick={() => onConfirm(selectedOPT)}
             >
               {loading ? (
@@ -79,7 +79,7 @@ const ManageNotificationModal = ({
                   <LoadingButtons />
                 </>
               ) : (
-                'Save'
+                "Save"
               )}
             </StyledButton>
           </div>
