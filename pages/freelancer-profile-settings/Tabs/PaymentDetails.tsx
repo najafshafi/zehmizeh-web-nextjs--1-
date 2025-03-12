@@ -43,7 +43,7 @@ export const PaymentDetails = () => {
           stripeStatus={stpStatus}
           edit={false}
           title={
-            <div className="d-flex align-items-center gap-2">
+            <div className="flex items-center gap-2">
               Payment Details
               <Tooltip>
                 After registering for Stripe, this is where freelancers can add

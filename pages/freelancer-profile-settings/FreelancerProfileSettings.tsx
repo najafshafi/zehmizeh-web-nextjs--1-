@@ -1,27 +1,26 @@
-
 "use client"; // Ensure this is a client component
 
-import { useEffect } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { Spinner } from 'react-bootstrap';
+import { useEffect } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { Spinner } from "react-bootstrap";
 import {
   FreelancerContent,
   FreelancerProfileWrapper,
   Wrapper,
-} from './freelancer-profile-settings.styled';
-import Loader from '@/components/Loader';
-import BackButton from '@/components/ui/BackButton';
-import useProfile from '@/controllers/useProfile';
-import { useAuth } from '@/helpers/contexts/auth-context';
-import { Tabs } from './Tabs';
-import { Profile } from './Tabs/Profile';
-import { Portfolio } from './Tabs/Portfolio';
-import { Ratings } from '@/components/Ratings';
-import { PaymentDetails } from './Tabs/PaymentDetails';
-import { AccountSettings } from './Tabs/AccountSettings';
-import { FREELANCER_PROFILE_TABS } from '@/helpers/const/tabs';
-import { StyledButton } from '@/components/forms/Buttons';
-import { useTheme } from 'styled-components';
+} from "./freelancer-profile-settings.styled";
+import Loader from "@/components/Loader";
+import BackButton from "@/components/ui/BackButton";
+import useProfile from "@/controllers/useProfile";
+import { useAuth } from "@/helpers/contexts/auth-context";
+import { Tabs } from "./Tabs";
+import { Profile } from "./Tabs/Profile";
+import { Portfolio } from "./Tabs/Portfolio";
+import { Ratings } from "@/components/Ratings";
+import { PaymentDetails } from "./Tabs/PaymentDetails";
+import { AccountSettings } from "./Tabs/AccountSettings";
+import { FREELANCER_PROFILE_TABS } from "@/helpers/const/tabs";
+import { StyledButton } from "@/components/forms/Buttons";
+import { useTheme } from "styled-components";
 
 const INTERCOM_APP_ID = process.env.NEXT_PUBLIC_INTERCOM_APP_ID;
 
@@ -63,9 +62,9 @@ const FreelancerProfileSettings = () => {
         appId: INTERCOM_APP_ID,
         email: user?.u_email_id,
         user_id: user?.user_id,
-        name: user?.first_name + ' ' + user?.last_name,
+        name: user?.first_name + " " + user?.last_name,
         avatar: {
-          type: 'avatar',
+          type: "avatar",
           image_url: user.user_image,
         },
       };
@@ -79,16 +78,16 @@ const FreelancerProfileSettings = () => {
         const anchorCommentId = hash.substring(1);
         const anchorComment = document.getElementById(anchorCommentId);
         if (anchorComment) {
-          anchorComment.scrollIntoView({ behavior: 'smooth' });
+          anchorComment.scrollIntoView({ behavior: "smooth" });
         }
       }
     }
   }, [isLoading]);
 
   const onBack = () => {
-    const fromRegister = searchParams.get('fromRegister');
+    const fromRegister = searchParams.get("fromRegister");
     if (fromRegister) {
-      router.push('/');
+      router.push("/");
     } else {
       router.back();
     }
@@ -126,7 +125,7 @@ const FreelancerProfileSettings = () => {
               background="white"
               variant="light"
               onClick={() => {
-                router.push('/search?type=freelancers');
+                router.push("/search?type=freelancers");
               }}
               style={{ border: `1px solid ${theme.colors.primary}` }}
             >
@@ -144,8 +143,6 @@ const FreelancerProfileSettings = () => {
 };
 
 export default FreelancerProfileSettings;
-
-
 
 // "use client"; // Ensure this is a client component
 
@@ -270,7 +267,7 @@ export default FreelancerProfileSettings;
 //         <Tabs />
 //         <FreelancerContent>
 //           <Wrapper>
-//             <div className="d-flex justify-content-between align-items-center">
+//             <div className="flex justify-content-between items-center">
 //               <BackButton onBack={onBack}>
 //                 {isRefetching ? <Spinner animation="border" size="sm" className="ms-1" /> : null}
 //               </BackButton>
@@ -297,9 +294,6 @@ export default FreelancerProfileSettings;
 // };
 
 // export default FreelancerProfileSettings;
-
-
-
 
 // "use client"; // Ensure this is a client component
 
@@ -421,10 +415,10 @@ export default FreelancerProfileSettings;
 //     <ThemeProvider theme={localTheme}>
 //       <FreelancerProfileWrapper>
 //         <Tabs />
-        
+
 //         <FreelancerContent>
 //           <Wrapper>
-//             <div className="d-flex justify-content-between align-items-center">
+//             <div className="flex justify-content-between items-center">
 //               <BackButton onBack={onBack}>
 //                 {isRefetching ? <Spinner animation="border" size="sm" className="ms-1" /> : null}
 //               </BackButton>
@@ -451,4 +445,3 @@ export default FreelancerProfileSettings;
 // };
 
 // export default FreelancerProfileSettings;
-

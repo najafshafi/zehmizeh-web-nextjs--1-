@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import styled from 'styled-components';
+import { useState } from "react";
+import styled from "styled-components";
 
 type Props = {
   src: string;
@@ -50,7 +50,7 @@ const BlurredImage = ({
   className,
   type,
   overlayText,
-  overlayTextClassName = '',
+  overlayTextClassName = "",
   state,
 }: Props) => {
   const localState = useState<boolean>(false);
@@ -69,16 +69,31 @@ const BlurredImage = ({
 
   return (
     <div className={className}>
-      <ImageWrapper style={{ height: height, width: width }} onClick={toggleBlur} className="pointer">
+      <ImageWrapper
+        style={{ height: height, width: width }}
+        onClick={toggleBlur}
+        className="pointer"
+      >
         <div
-          className={!isShowingImage ? (type === 'small' ? 'blurred-view-small' : 'blurred-view') : ''}
+          className={
+            !isShowingImage
+              ? type === "small"
+                ? "blurred-view-small"
+                : "blurred-view"
+              : ""
+          }
           style={{ height: height, width: width }}
         >
-          <img src={src} className="img" style={{ height: height, width: width }} alt="user-profile-img" />
+          <img
+            src={src}
+            className="img"
+            style={{ height: height, width: width }}
+            alt="user-profile-img"
+          />
         </div>
 
         {allowToUnblur && !isShowingImage && (
-          <div className="overlay d-flex align-items-center justify-content-center">
+          <div className="overlay flex items-center justify-content-center">
             <div className={`overlay-text ${overlayTextClassName}`}>
               {overlayText ?? (
                 <span>

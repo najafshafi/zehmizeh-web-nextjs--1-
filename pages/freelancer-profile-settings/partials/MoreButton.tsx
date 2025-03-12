@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { Dropdown } from 'react-bootstrap';
+import styled from "styled-components";
+import { Dropdown } from "react-bootstrap";
 import MoreIcon from "../../../public/icons/more.svg";
 
 const UserDropdown = styled(Dropdown)`
@@ -49,15 +49,15 @@ const MoreButton = ({ onDelete, onMakeDefault, disabled = false }: Props) => {
   return (
     <UserDropdown>
       <Dropdown.Toggle disabled={disabled}>
-        <div className="d-flex justify-content-center align-items-center pointer">
+        <div className="flex justify-content-center items-center pointer">
           <MoreIcon />
         </div>
       </Dropdown.Toggle>
       <Dropdown.Menu align="end">
-        <Dropdown.Item className="d-flex make-default" onClick={onMakeDefault}>
+        <Dropdown.Item className="flex make-default" onClick={onMakeDefault}>
           Make default
         </Dropdown.Item>
-        <Dropdown.Item className="d-flex" onClick={onDelete}>
+        <Dropdown.Item className="flex" onClick={onDelete}>
           <div className="delete">Delete</div>
         </Dropdown.Item>
       </Dropdown.Menu>

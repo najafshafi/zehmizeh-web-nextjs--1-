@@ -1,20 +1,20 @@
-import { StripeContainer } from './stripeStyled';
-import './style.css';
-import Tooltip from '@/components/ui/Tooltip';
-import { ReactElement, useEffect, useMemo, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
-import { StyledButton } from '@/components/forms/Buttons';
-import { getStripeVerificationLink } from '@/helpers/http/freelancer';
-import { isUserStripeVerified, pusherApiKey } from '@/helpers/utils/helper';
-import StripeActivationModal from '@/pages/freelancer-profile-settings/partials/StripeActivationModal';
-import toast from 'react-hot-toast';
-import HowToRegisterAccModal from '@/pages/freelancer-profile-settings/partials/HowToRegisterAccModal';
-import { TStripeStatus } from '@/helpers/types/stripe.type';
-import StripeResetModal from './stripeResetModal';
-import Pusher from 'pusher-js';
-import { IDENTITY_DOCS } from '@/helpers/const/constants';
-import StripeAcceptableIDModal from './stripeAcceptableIDModal';
-import { Link } from 'react-router-dom';
+import { StripeContainer } from "./stripeStyled";
+import "./style.css";
+import Tooltip from "@/components/ui/Tooltip";
+import { ReactElement, useEffect, useMemo, useState } from "react";
+import { Spinner } from "react-bootstrap";
+import { StyledButton } from "@/components/forms/Buttons";
+import { getStripeVerificationLink } from "@/helpers/http/freelancer";
+import { isUserStripeVerified, pusherApiKey } from "@/helpers/utils/helper";
+import StripeActivationModal from "@/pages/freelancer-profile-settings/partials/StripeActivationModal";
+import toast from "react-hot-toast";
+import HowToRegisterAccModal from "@/pages/freelancer-profile-settings/partials/HowToRegisterAccModal";
+import { TStripeStatus } from "@/helpers/types/stripe.type";
+import StripeResetModal from "./stripeResetModal";
+import Pusher from "pusher-js";
+import { IDENTITY_DOCS } from "@/helpers/const/constants";
+import StripeAcceptableIDModal from "./stripeAcceptableIDModal";
+import { Link } from "react-router-dom";
 
 interface Prop {
   stripe: any;
@@ -30,8 +30,8 @@ interface PusherDt {
 let pusher: Pusher | null = null;
 
 const CONSTANTS: { [key: string]: string } = {
-  'Ssn last 4': 'Social Security number or Identity document',
-  Phone: 'Phone Number',
+  "Ssn last 4": "Social Security number or Identity document",
+  Phone: "Phone Number",
 };
 
 const StripeDetails = (props: Prop) => {
@@ -40,52 +40,54 @@ const StripeDetails = (props: Prop) => {
   const [loading, setLoading] = useState(false);
   const [showBtn, setShowBtn] = useState<boolean>(true);
   const [generatingLink, setGeneratingLink] = useState<boolean>(false);
-  const [messageFromStripe, setMessageFromStripe] = useState<string>('');
+  const [messageFromStripe, setMessageFromStripe] = useState<string>("");
   const [showHowToRegModal, setShowHowToRegModal] = useState<boolean>(false);
   const [stripeResetModal, setStripeResetModal] = useState(false);
-  const [ShowAcceptableIDModal, setAcceptableIDModal] = useState<boolean>(false);
+  const [ShowAcceptableIDModal, setAcceptableIDModal] =
+    useState<boolean>(false);
   const content = useMemo(() => {
     const data = {
-      label: 'Not started (Required)',
-      description: 'Submit your details so you can get paid on ZMZ',
+      label: "Not started (Required)",
+      description: "Submit your details so you can get paid on ZMZ",
       tooltip:
-        'After registering for Stripe, this is where freelancers can add the details of the bank account(s) that their fees will be sent to. These are not visible to any other user.',
+        "After registering for Stripe, this is where freelancers can add the details of the bank account(s) that their fees will be sent to. These are not visible to any other user.",
     };
 
     if (stripeStatus) {
       switch (stripeStatus) {
-        case 'pending':
-          if (!stripe?.id) data.label = 'Not started (Required)';
-          else data.label = 'New Submissions Needed';
+        case "pending":
+          if (!stripe?.id) data.label = "Not started (Required)";
+          else data.label = "New Submissions Needed";
           break;
-        case 'currently_due':
-          data.label = 'New Submissions Needed';
+        case "currently_due":
+          data.label = "New Submissions Needed";
           break;
-        case 'pending_verification':
-          data.label = 'Verifying Info';
-          data.description = 'Verification can take 3-5 days.';
-          data.tooltip = 'Verification can take 3-5 days';
+        case "pending_verification":
+          data.label = "Verifying Info";
+          data.description = "Verification can take 3-5 days.";
+          data.tooltip = "Verification can take 3-5 days";
           break;
-        case 'bank_account_pending':
-          data.label = 'Bank Account Pending';
+        case "bank_account_pending":
+          data.label = "Bank Account Pending";
           data.description =
-            'Complete setting up your payment preferences by adding bank details to the box on the right.';
-          data.tooltip = 'Complete setting up your payment preferences by adding bank details to the box on the right.';
+            "Complete setting up your payment preferences by adding bank details to the box on the right.";
+          data.tooltip =
+            "Complete setting up your payment preferences by adding bank details to the box on the right.";
           break;
-        case 'verified':
-          data.label = 'Verified';
+        case "verified":
+          data.label = "Verified";
           data.description = `You've successfully set up your payment info - you're ready to start freelancing!`;
           data.tooltip =
-            'All required information has been provided to activate your Stripe account. You can now accept payments and receive payments.';
+            "All required information has been provided to activate your Stripe account. You can now accept payments and receive payments.";
           break;
         default:
-          data.label = (stripeStatus as string).replace(/_/g, ' ');
+          data.label = (stripeStatus as string).replace(/_/g, " ");
           data.description = `Submit your details so you can get paid on ZMZ`;
           data.tooltip =
-            'After registering for Stripe, this is where freelancers can add the details of the bank account(s) that their fees will be sent to. These are not visible to any other user.';
+            "After registering for Stripe, this is where freelancers can add the details of the bank account(s) that their fees will be sent to. These are not visible to any other user.";
       }
       if (messageFromStripe) {
-        data.label = 'New Submissions Needed';
+        data.label = "New Submissions Needed";
       }
     }
     return {
@@ -96,8 +98,8 @@ const StripeDetails = (props: Prop) => {
   }, [messageFromStripe, stripe?.id, stripeStatus]);
 
   const [stripeDetails, setStripeDetails] = useState<any>({
-    status: 'pending',
-    message: content['pending'].description,
+    status: "pending",
+    message: content["pending"].description,
   });
 
   const { status, message } = stripeDetails;
@@ -106,11 +108,11 @@ const StripeDetails = (props: Prop) => {
   } = stripe ?? { individual: {} };
 
   const buttonStyle = {
-    fontSize: '15px',
+    fontSize: "15px",
     fontWeight: 500,
-    minHeight: 'unset',
-    padding: '0.4rem 1rem',
-    borderRadius: '6px',
+    minHeight: "unset",
+    padding: "0.4rem 1rem",
+    borderRadius: "6px",
   };
 
   const verificationHandler = async () => {
@@ -136,23 +138,27 @@ const StripeDetails = (props: Prop) => {
 
   const missingDetails = (finalRequirementArr: string[]) => {
     // Date of birth
-    const dob_arr = ['Month', 'Day', 'Year'];
+    const dob_arr = ["Month", "Day", "Year"];
 
     for (let i = 0; i < dob_arr.length; i++) {
       if (finalRequirementArr.includes(dob_arr[i])) {
-        finalRequirementArr = finalRequirementArr.filter((rq) => !dob_arr.includes(rq));
-        finalRequirementArr.push('Birthdate');
+        finalRequirementArr = finalRequirementArr.filter(
+          (rq) => !dob_arr.includes(rq)
+        );
+        finalRequirementArr.push("Birthdate");
         break;
       }
     }
 
     // address
-    const add_arr = ['Postal code', 'City', 'Line1', 'State'];
+    const add_arr = ["Postal code", "City", "Line1", "State"];
 
     for (let i = 0; i < add_arr.length; i++) {
       if (finalRequirementArr.includes(add_arr[i])) {
-        finalRequirementArr = finalRequirementArr.filter((rq) => !add_arr.includes(rq));
-        finalRequirementArr.push('Address');
+        finalRequirementArr = finalRequirementArr.filter(
+          (rq) => !add_arr.includes(rq)
+        );
+        finalRequirementArr.push("Address");
         break;
       }
     }
@@ -165,22 +171,22 @@ const StripeDetails = (props: Prop) => {
     // }
 
     // URL
-    const url = 'Url';
+    const url = "Url";
     if (finalRequirementArr.includes(url)) {
       finalRequirementArr = finalRequirementArr.filter((el) => el !== url);
-      finalRequirementArr.push('URL');
+      finalRequirementArr.push("URL");
     }
 
     // ordering the array
     const valid_order = [
-      'URL',
+      "URL",
       // 'ID Number',
-      'First name',
-      'Last name',
-      'Birthdate',
-      'Address',
-      'Phone',
-      'Ssn last 4',
+      "First name",
+      "Last name",
+      "Birthdate",
+      "Address",
+      "Phone",
+      "Ssn last 4",
     ];
 
     const final_arr: string[] = [];
@@ -203,45 +209,65 @@ const StripeDetails = (props: Prop) => {
     if (finalRequirementArr.length) {
       // This means only document is pending to submit
       // So changing text to inform user that only document is pending and how to add it
-      if (finalRequirementArr.length === 1 && finalRequirementArr[0] === 'Document') {
+      if (
+        finalRequirementArr.length === 1 &&
+        finalRequirementArr[0] === "Document"
+      ) {
         finalMessage = (
           <div className="fs-18">
-            <b>To finish verification - please add a Personal Identity Document.</b>
-            <p className="mb-2">To add: click ‘Go to Stripe’ below, then click ‘Edit’ by your personal details.</p>
+            <b>
+              To finish verification - please add a Personal Identity Document.
+            </b>
+            <p className="mb-2">
+              To add: click ‘Go to Stripe’ below, then click ‘Edit’ by your
+              personal details.
+            </p>
           </div>
         );
       } else {
         finalMessage = (
           <div>
-            <p className="mb-0">To continue your registration with Stripe, click "Go to Stripe" and add this info:</p>
+            <p className="mb-0">
+              To continue your registration with Stripe, click "Go to Stripe"
+              and add this info:
+            </p>
             <ul className="ps-3 mt-1">{missingDetails(finalRequirementArr)}</ul>
           </div>
         );
       }
       finalMessage = stripe?.country &&
         stripe?.individual?.verification?.status &&
-        stripe?.individual?.verification?.status != 'verified' && (
+        stripe?.individual?.verification?.status != "verified" && (
           <>
             {finalMessage}
             <div>
-              <div>Please upload one of the following acceptable ID documents:</div>
+              <div>
+                Please upload one of the following acceptable ID documents:
+              </div>
               <ul className="ps-3 mt-1">
                 {stripe?.country &&
-                  Array.isArray(IDENTITY_DOCS?.[stripe?.country as keyof typeof IDENTITY_DOCS]) &&
-                  IDENTITY_DOCS[stripe.country as keyof typeof IDENTITY_DOCS].slice(0, 3).map((item) => (
-                    <li className="mt-1" key={item}>
-                      {item}
-                    </li>
-                  ))}
-                {IDENTITY_DOCS[stripe.country as keyof typeof IDENTITY_DOCS]?.length > 3 && (
+                  Array.isArray(
+                    IDENTITY_DOCS?.[
+                      stripe?.country as keyof typeof IDENTITY_DOCS
+                    ]
+                  ) &&
+                  IDENTITY_DOCS[stripe.country as keyof typeof IDENTITY_DOCS]
+                    .slice(0, 3)
+                    .map((item) => (
+                      <li className="mt-1" key={item}>
+                        {item}
+                      </li>
+                    ))}
+                {IDENTITY_DOCS[stripe.country as keyof typeof IDENTITY_DOCS]
+                  ?.length > 3 && (
                   <div
-                    className="d-flex reset-password fs-16 fw-400 pointer"
+                    className="flex reset-password fs-16 fw-400 pointer"
                     onClick={toggleAcceptableIDModal}
                     style={{
-                      background: 'none',
-                      border: 'none',
+                      background: "none",
+                      border: "none",
                       padding: 0,
-                      cursor: 'pointer',
+                      cursor: "pointer",
                     }}
                   >
                     See More Options
@@ -252,25 +278,27 @@ const StripeDetails = (props: Prop) => {
           </>
         );
     } else {
-      if (stripeStatus !== 'bank_account_pending') setShowBtn(false);
-      finalMessage = content['inprogress'].description;
+      if (stripeStatus !== "bank_account_pending") setShowBtn(false);
+      finalMessage = content["inprogress"].description;
     }
     return setStripeDetails({
       ...stripeDetails,
-      status: 'inprogress',
+      status: "inprogress",
       message: finalMessage,
     });
   };
 
   const stripeDetailsHandler = () => {
-    if (!stripe?.id) return setStripeDetails((prev) => ({ ...prev, status: 'pending' }));
+    if (!stripe?.id)
+      return setStripeDetails((prev) => ({ ...prev, status: "pending" }));
 
-    if (stripeStatus && !['verified'].includes(stripeStatus)) return stripeInprogressHandler();
+    if (stripeStatus && !["verified"].includes(stripeStatus))
+      return stripeInprogressHandler();
     else
       return setStripeDetails({
         ...stripeDetails,
-        status: 'verified',
-        message: content['verified'].description,
+        status: "verified",
+        message: content["verified"].description,
       });
   };
 
@@ -283,7 +311,7 @@ const StripeDetails = (props: Prop) => {
       errors = stripe?.future_requirements?.errors ?? [];
     }
     const reason = errors[0]?.reason;
-    if (typeof reason !== 'string') return;
+    if (typeof reason !== "string") return;
 
     if (reason) stripeInprogressHandler();
     setMessageFromStripe(reason);
@@ -306,11 +334,11 @@ const StripeDetails = (props: Prop) => {
 
     const pusher_api_key = pusherApiKey();
     pusher = new Pusher(pusher_api_key, {
-      cluster: 'ap2',
+      cluster: "ap2",
     });
 
     const channel = pusher.subscribe(`STRIPE-${stripe?.id}`);
-    channel.bind('stripe-account-updated', (data: PusherDt) => {
+    channel.bind("stripe-account-updated", (data: PusherDt) => {
       if (stripeStatus !== data.updated_status) refetch();
     });
 
@@ -345,28 +373,42 @@ const StripeDetails = (props: Prop) => {
     <StripeContainer className={`stripe-${status}`}>
       {stripe?.id && (
         <>
-          <StripeResetModal show={stripeResetModal} onClose={() => setStripeResetModal(false)} refetch={refetch} />
-          <p className="reset-stripe-btn" onClick={() => setStripeResetModal(true)}>
+          <StripeResetModal
+            show={stripeResetModal}
+            onClose={() => setStripeResetModal(false)}
+            refetch={refetch}
+          />
+          <p
+            className="reset-stripe-btn"
+            onClick={() => setStripeResetModal(true)}
+          >
             Reset Stripe
           </p>
         </>
       )}
 
-      {status === 'pending' && (
+      {status === "pending" && (
         <>
           {/* Strip 3 step activation modal */}
-          <StripeActivationModal step={step} setStep={setStep} onVerify={onVerify} />
+          <StripeActivationModal
+            step={step}
+            setStep={setStep}
+            onVerify={onVerify}
+          />
 
           {/* How to register account modal */}
-          <HowToRegisterAccModal show={showHowToRegModal} toggle={toggleHowToRegModal} />
+          <HowToRegisterAccModal
+            show={showHowToRegModal}
+            toggle={toggleHowToRegModal}
+          />
 
           <div
-            className="d-flex justify-content-end reset-password fs-18 fw-400 pointer"
+            className="flex justify-content-end reset-password fs-18 fw-400 pointer"
             onClick={toggleHowToRegModal}
             style={{
-              position: 'absolute',
-              bottom: '1rem',
-              right: '1rem',
+              position: "absolute",
+              bottom: "1rem",
+              right: "1rem",
             }}
           >
             How to Register?
@@ -375,20 +417,24 @@ const StripeDetails = (props: Prop) => {
       )}
 
       <div>
-        <div className="d-flex align-items-center justify-content-between">
+        <div className="flex items-center justify-content-between">
           <h3>Stripe Account Details</h3>
         </div>
         <div className="mt-4">
-          <div className="d-flex  gap-3">
+          <div className="flex  gap-3">
             <div className=" stripe-tag">
               <span>{content[status].label}</span>
 
-              {content[status].tooltip && <Tooltip className="stripe-tooltip">{content[status].tooltip}</Tooltip>}
+              {content[status].tooltip && (
+                <Tooltip className="stripe-tooltip">
+                  {content[status].tooltip}
+                </Tooltip>
+              )}
             </div>
 
             {stripe?.id && (
               <div className="stripe-tag">
-                <span>{`ACCT: ${stripe?.id.split('_')[1]}`}</span>
+                <span>{`ACCT: ${stripe?.id.split("_")[1]}`}</span>
               </div>
             )}
           </div>
@@ -403,23 +449,23 @@ const StripeDetails = (props: Prop) => {
                     {first_name} {last_name}
                   </>
                 ) : (
-                  '-'
+                  "-"
                 )}
               </td>
             </tr>
             <tr>
               <td>Email</td>
-              <td className="ps-5">{stripe?.email ?? '-'}</td>
+              <td className="ps-5">{stripe?.email ?? "-"}</td>
             </tr>
           </table>
         </div>
 
         <div className="capabilities-container-wrapper mt-4 mb-4">
           <p className="stripe-message my-3">{message}</p>
-          {status == 'pending' && (
+          {status == "pending" && (
             <p className="stripe-message my-3">
-              For Stripe verification, you need to upload a ID document. You can check the acceptable ID documents for
-              your preferred country{' '}
+              For Stripe verification, you need to upload a ID document. You can
+              check the acceptable ID documents for your preferred country{" "}
               <a
                 className="text-primary"
                 target="_blank"
@@ -430,7 +476,7 @@ const StripeDetails = (props: Prop) => {
               </a>
             </p>
           )}
-          {status == 'pending' && (
+          {status == "pending" && (
             <>
               <Link className="d-block text-primary" to="/support/faq/stripe">
                 Help with Stripe
@@ -438,18 +484,34 @@ const StripeDetails = (props: Prop) => {
               <br />
             </>
           )}
-          {messageFromStripe && <p className="stripe-message">Stripe: {messageFromStripe}</p>}
+          {messageFromStripe && (
+            <p className="stripe-message">Stripe: {messageFromStripe}</p>
+          )}
 
           {!stripe && (
-            <StyledButton disabled={generatingLink} style={buttonStyle} onClick={() => setStep(1)}>
-              {generatingLink ? <Spinner animation="border" /> : 'Begin Stripe Activation'}
+            <StyledButton
+              disabled={generatingLink}
+              style={buttonStyle}
+              onClick={() => setStep(1)}
+            >
+              {generatingLink ? (
+                <Spinner animation="border" />
+              ) : (
+                "Begin Stripe Activation"
+              )}
             </StyledButton>
           )}
 
-          {((stripe?.id && ['pending', 'currently_due'].includes(stripeStatus) && showBtn) ||
+          {((stripe?.id &&
+            ["pending", "currently_due"].includes(stripeStatus) &&
+            showBtn) ||
             isUserStripeVerified(stripe).length > 0) && (
-            <StyledButton style={buttonStyle} disabled={loading} onClick={() => verificationHandler()}>
-              {loading ? <Spinner animation="border" /> : 'Go to Stripe'}
+            <StyledButton
+              style={buttonStyle}
+              disabled={loading}
+              onClick={() => verificationHandler()}
+            >
+              {loading ? <Spinner animation="border" /> : "Go to Stripe"}
             </StyledButton>
           )}
         </div>

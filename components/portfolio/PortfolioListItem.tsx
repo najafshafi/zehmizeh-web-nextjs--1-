@@ -1,14 +1,14 @@
-import toast from 'react-hot-toast';
-import { useState } from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import { transition } from 'styles/transitions';
-import DeletePrompt from 'components/ui/DeletePropmpt';
-import { deletePortfolio } from 'helpers/http/portfolio';
-import { capitalizeFirstLetter } from 'helpers/utils/misc';
-import { ReactComponent as GalleryIcon } from '../../public/icons/gallery.svg';
-import { ReactComponent as DeleteIcon } from '../../public/icons/trash.svg';
-import { coverImgHandler } from 'helpers/utils/coverImgHandler';
+import toast from "react-hot-toast";
+import { useState } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import { transition } from "styles/transitions";
+import DeletePrompt from "components/ui/DeletePropmpt";
+import { deletePortfolio } from "helpers/http/portfolio";
+import { capitalizeFirstLetter } from "helpers/utils/misc";
+import { ReactComponent as GalleryIcon } from "../../public/icons/gallery.svg";
+import { ReactComponent as DeleteIcon } from "../../public/icons/trash.svg";
+import { coverImgHandler } from "helpers/utils/coverImgHandler";
 
 type Props = {
   data: {
@@ -76,13 +76,13 @@ const PortfolioListItem = ({ data, onUpdate, allowEdit }: Props) => {
 
     setLoading(true);
     const body = {
-      action: 'delete_portfolio',
+      action: "delete_portfolio",
       portfolio_id: data.portfolio_id,
     };
 
     const promise = deletePortfolio(body);
     toast.promise(promise, {
-      loading: 'Please wait...',
+      loading: "Please wait...",
       success: (res) => {
         onUpdate();
         setLoading(false);
@@ -90,7 +90,7 @@ const PortfolioListItem = ({ data, onUpdate, allowEdit }: Props) => {
       },
       error: (err) => {
         setLoading(false);
-        return (data ? err?.response : err?.message) || 'error';
+        return (data ? err?.response : err?.message) || "error";
       },
     });
   };
@@ -118,13 +118,13 @@ const PortfolioListItem = ({ data, onUpdate, allowEdit }: Props) => {
         className="pointer"
         onClick={goToDetailsPage}
       >
-        <div className="cover-img d-flex align-items-end gap-3">
-          <div className="d-flex justify-content-between align-items-center p-3 gap-3 flex-1">
+        <div className="cover-img flex align-items-end gap-3">
+          <div className="flex justify-content-between items-center p-3 gap-3 flex-1">
             <div className="project-name fs-20 fw-700">
               {data.project_name && capitalizeFirstLetter(data.project_name)}
             </div>
 
-            <div className="project-images-count py-2 px-3 d-flex align-items-center gap-1">
+            <div className="project-images-count py-2 px-3 flex items-center gap-1">
               <GalleryIcon /> {data.image_urls?.length}
             </div>
 

@@ -24,9 +24,9 @@
 //   };
 
 //   return (
-//     <div className={`${className || ""} d-flex`}>
+//     <div className={`${className || ""} flex`}>
 //       <div
-//         className="d-flex back-button d-flex align-items-center pointer"
+//         className="flex back-button flex items-center pointer"
 //         onClick={handleGoBack}
 //       >
 //         <Image src={BackArrow} alt="Back" width={24} height={24} />
@@ -38,8 +38,6 @@
 // };
 
 // export default BackButton;
-
-
 
 "use client"; // Required for Next.js client components
 
@@ -68,7 +66,7 @@ const BackButton = ({ className, children, onBack, route }: Props) => {
   };
 
   return (
-    <div className={`${className || ""} d-flex`}>
+    <div className={`${className || ""} flex`}>
       <div
         className="flex back-button items-center cursor-pointer"
         onClick={handleGoBack}

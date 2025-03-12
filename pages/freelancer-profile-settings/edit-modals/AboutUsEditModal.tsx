@@ -2,16 +2,16 @@
  * This is edit about me modal
  */
 "use client";
-import { useState, useMemo, useEffect, useCallback } from 'react';
-import toast from 'react-hot-toast';
-import { Modal, Button } from 'react-bootstrap';
-import { editUser } from '@/helpers/http/auth';
-import { StyledButton } from '@/components/forms/Buttons';
-import { StyledModal } from '@/components/styled/StyledModal';
-import TextEditor from '@/components/forms/TextEditor';
-import { EditFormWrapper } from './edit-modals.styled';
-import { getPlainText, showErr } from '@/helpers/utils/misc';
-import { CONSTANTS } from '@/helpers/const/constants';
+import { useState, useMemo, useEffect, useCallback } from "react";
+import toast from "react-hot-toast";
+import { Modal, Button } from "react-bootstrap";
+import { editUser } from "@/helpers/http/auth";
+import { StyledButton } from "@/components/forms/Buttons";
+import { StyledModal } from "@/components/styled/StyledModal";
+import TextEditor from "@/components/forms/TextEditor";
+import { EditFormWrapper } from "./edit-modals.styled";
+import { getPlainText, showErr } from "@/helpers/utils/misc";
+import { CONSTANTS } from "@/helpers/const/constants";
 
 type Props = {
   show: boolean;
@@ -25,12 +25,18 @@ type Props = {
   user_type?: string;
 };
 
-const AboutUsEditModal = ({ show, onClose, data, onUpdate, user_type }: Props) => {
+const AboutUsEditModal = ({
+  show,
+  onClose,
+  data,
+  onUpdate,
+  user_type,
+}: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isMaxLimitReached, setIsMaxLimitReached] = useState(false);
   const [formState, setFormState] = useState({
     description: data.aboutMe,
-    link: '',
+    link: "",
   });
 
   const handleChange = useCallback((field, value) => {
@@ -42,7 +48,7 @@ const AboutUsEditModal = ({ show, onClose, data, onUpdate, user_type }: Props) =
   useEffect(() => {
     if (!show) {
       setFormState({
-        description: data.aboutMe ?? '',
+        description: data.aboutMe ?? "",
         link: data.portfolioLink,
       });
     }
@@ -52,12 +58,14 @@ const AboutUsEditModal = ({ show, onClose, data, onUpdate, user_type }: Props) =
     const { description, link } = formState;
     // Edit about me api call
     if (wordCount > CONSTANTS.ABOUT_ME_MAXIMUM_CHARACTERS) {
-      showErr(`Maximum ${CONSTANTS.ABOUT_ME_MAXIMUM_CHARACTERS} characters are allowed.`);
+      showErr(
+        `Maximum ${CONSTANTS.ABOUT_ME_MAXIMUM_CHARACTERS} characters are allowed.`
+      );
       return;
     }
     if (wordCount < CONSTANTS.ABOUT_ME_MINIMUM_CHARACTERS) {
       showErr(
-        `${data?.is_agency ? 'About the Agency' : 'About Me'} needs at least ${
+        `${data?.is_agency ? "About the Agency" : "About Me"} needs at least ${
           CONSTANTS.ABOUT_ME_MINIMUM_CHARACTERS
         } characters.`
       );
@@ -67,11 +75,11 @@ const AboutUsEditModal = ({ show, onClose, data, onUpdate, user_type }: Props) =
       setLoading(true);
       const body = {
         about_me: description,
-        portfolio_link: link ?? '',
+        portfolio_link: link ?? "",
       };
       const promise = editUser(body);
       toast.promise(promise, {
-        loading: 'Updating your details - please wait...',
+        loading: "Updating your details - please wait...",
         success: (res) => {
           onUpdate();
           setLoading(false);
@@ -79,16 +87,16 @@ const AboutUsEditModal = ({ show, onClose, data, onUpdate, user_type }: Props) =
         },
         error: (err) => {
           setLoading(false);
-          return err?.response?.data?.message || 'error';
+          return err?.response?.data?.message || "error";
         },
       });
     } else {
-      toast.error('Please enter a description.');
+      toast.error("Please enter a description.");
     }
   };
 
   const onDescriptionChange = (data: any) => {
-    handleChange('description', data);
+    handleChange("description", data);
     if (data.length <= CONSTANTS.ABOUT_ME_MAXIMUM_CHARACTERS) {
       if (isMaxLimitReached) {
         setIsMaxLimitReached(false);
@@ -101,7 +109,9 @@ const AboutUsEditModal = ({ show, onClose, data, onUpdate, user_type }: Props) =
   };
 
   const wordCount = useMemo(() => {
-    return formState.description ? getPlainText(formState.description).length : 0;
+    return formState.description
+      ? getPlainText(formState.description).length
+      : 0;
   }, [formState.description]);
 
   return (
@@ -111,38 +121,44 @@ const AboutUsEditModal = ({ show, onClose, data, onUpdate, user_type }: Props) =
           &times;
         </Button>
         <EditFormWrapper>
-          <div className="content d-flex flex-column">
+          <div className="content flex flex-column">
             <div className="modal-title fs-28 fw-400">
-              {data?.is_agency ? 'About the Agency' : 'About Me'}
+              {data?.is_agency ? "About the Agency" : "About Me"}
               <span className="mandatory">&nbsp;*</span>
             </div>
 
             {/* Sub text for freelancers and not for agency */}
-            {user_type === 'freelancer' && (
+            {user_type === "freelancer" && (
               <>
                 {data?.is_agency ? (
                   <div>
                     <p className="fs-16 indent-2r">
-                      The “About the Agency" section is the primary place for agencies to introduce themselves. You can
-                      describe your work history and experience, your style, specialties, or unique services. Focus on
-                      making a good impression and demonstrating your expertise.
+                      The “About the Agency" section is the primary place for
+                      agencies to introduce themselves. You can describe your
+                      work history and experience, your style, specialties, or
+                      unique services. Focus on making a good impression and
+                      demonstrating your expertise.
                     </p>
                     <div className="mt-2">
                       <p className="fs-16 indent-2r font-weight-bold">
-                        Links to outside websites and contact information should not be included.
+                        Links to outside websites and contact information should
+                        not be included.
                       </p>
                     </div>
                   </div>
                 ) : (
                   <div>
                     <p className="fs-16 indent-2r">
-                      The “About Me" section is the primary place for freelancers to introduce themselves. You can
-                      describe your work history and experience, your style, specialties, or unique services. Focus on
-                      making a good impression and demonstrating your expertise.
+                      The “About Me" section is the primary place for
+                      freelancers to introduce themselves. You can describe your
+                      work history and experience, your style, specialties, or
+                      unique services. Focus on making a good impression and
+                      demonstrating your expertise.
                     </p>
                     <div className="mt-2">
                       <p className="fs-16 indent-2r font-weight-bold">
-                        Links to outside websites and personal contact information should not be included.
+                        Links to outside websites and personal contact
+                        information should not be included.
                       </p>
                     </div>
                   </div>
@@ -151,14 +167,18 @@ const AboutUsEditModal = ({ show, onClose, data, onUpdate, user_type }: Props) =
             )}
 
             {/* Sub text for client */}
-            {user_type === 'client' && (
+            {user_type === "client" && (
               <div>
                 <h4 className="fs-18 fw-400">
-                  Use this box to introduce yourself to freelancers. Share any details you think may be relevant, like:
+                  Use this box to introduce yourself to freelancers. Share any
+                  details you think may be relevant, like:
                 </h4>
                 <ul className="fs-10 fw-350 mt-3">
                   <li className="mt-1">What type of work do you do?</li>
-                  <li className="mt-1">What expectations would you have for a freelancer you were working with?</li>
+                  <li className="mt-1">
+                    What expectations would you have for a freelancer you were
+                    working with?
+                  </li>
                   <li className="mt-1">What should they know about you?</li>
                 </ul>
               </div>
@@ -171,8 +191,13 @@ const AboutUsEditModal = ({ show, onClose, data, onUpdate, user_type }: Props) =
                 maxChars={CONSTANTS.ABOUT_ME_MAXIMUM_CHARACTERS}
               />
             </div>
-            <div className="bottom-buttons d-flex">
-              <StyledButton padding="1.125rem 2.25rem" variant="primary" disabled={loading} onClick={handleUpdate}>
+            <div className="bottom-buttons flex">
+              <StyledButton
+                padding="1.125rem 2.25rem"
+                variant="primary"
+                disabled={loading}
+                onClick={handleUpdate}
+              >
                 Update
               </StyledButton>
             </div>

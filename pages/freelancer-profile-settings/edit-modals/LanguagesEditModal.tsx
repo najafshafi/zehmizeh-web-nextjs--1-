@@ -2,17 +2,17 @@
  * This component is a modal to edit languages
  */
 
-import { useState, useMemo } from 'react';
-import toast from 'react-hot-toast';
-import { Modal, Button } from 'react-bootstrap';
-import { components } from 'react-select';
-import AsyncSelect from 'react-select/async';
-import { EditFormWrapper } from './edit-modals.styled';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { StyledButton } from '@/components/forms/Buttons';
-import { editUser } from '@/helpers/http/auth';
-import { getLanguages } from '@/helpers/http/common';
-import { MultiSelectCustomStyle } from './multiSelectCustomStyle';
+import { useState, useMemo } from "react";
+import toast from "react-hot-toast";
+import { Modal, Button } from "react-bootstrap";
+import { components } from "react-select";
+import AsyncSelect from "react-select/async";
+import { EditFormWrapper } from "./edit-modals.styled";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import { editUser } from "@/helpers/http/auth";
+import { getLanguages } from "@/helpers/http/common";
+import { MultiSelectCustomStyle } from "./multiSelectCustomStyle";
 
 type Props = {
   show: boolean;
@@ -45,7 +45,7 @@ const LanguagesEditModal = ({
     };
     const promise = editUser(body);
     toast.promise(promise, {
-      loading: 'Updating your details - please wait...',
+      loading: "Updating your details - please wait...",
       success: (res) => {
         onUpdate();
         setLoading(false);
@@ -53,7 +53,7 @@ const LanguagesEditModal = ({
       },
       error: (err) => {
         setLoading(false);
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
@@ -62,7 +62,7 @@ const LanguagesEditModal = ({
     // This will be called when user types and will call languages api with the keyword
 
     const languagesLocal: { label: any; value: any }[] = [];
-    return getLanguages(inputValue || '').then((res) => {
+    return getLanguages(inputValue || "").then((res) => {
       res.data.forEach(function (item: any) {
         const obj = {
           label: item.language_name,
@@ -98,10 +98,10 @@ const LanguagesEditModal = ({
           &times;
         </Button>
         <EditFormWrapper>
-          <div className="content d-flex flex-column">
+          <div className="content flex flex-column">
             <div className="modal-title fs-28 fw-400">My Languages</div>
             <div className="form-group">
-              <div className="d-flex align-items-center mb-2">
+              <div className="flex items-center mb-2">
                 Select all of the languages you can work in.
               </div>
               <AsyncSelect
@@ -114,7 +114,7 @@ const LanguagesEditModal = ({
                 defaultOptions={true}
               />
             </div>
-            <div className="bottom-buttons d-flex">
+            <div className="bottom-buttons flex">
               <StyledButton
                 padding="1.125rem 2.25rem"
                 variant="primary"
@@ -139,7 +139,7 @@ const NoOptionsMessage = (props: any) => {
       <div>
         {props?.selectProps?.inputValue
           ? `No result found for '${props?.selectProps?.inputValue}'`
-          : 'Search...'}
+          : "Search..."}
       </div>
     </components.NoOptionsMessage>
   );

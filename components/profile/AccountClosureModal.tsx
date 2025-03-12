@@ -1,7 +1,7 @@
-import { Modal, Button } from 'react-bootstrap';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { StyledButton } from '@/components/forms/Buttons';
-import styled from 'styled-components';
+import { Modal, Button } from "react-bootstrap";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import styled from "styled-components";
 
 const Wrapper = styled.div`
   .close-btn {
@@ -21,7 +21,12 @@ type Props = {
   loading: boolean;
 };
 
-const AccountClosureModal = ({ show, toggle, clousureToggle, loading }: Props) => {
+const AccountClosureModal = ({
+  show,
+  toggle,
+  clousureToggle,
+  loading,
+}: Props) => {
   return (
     <StyledModal maxwidth={678} show={show} size="sm" onHide={toggle} centered>
       <Modal.Body>
@@ -46,7 +51,7 @@ const AccountClosureModal = ({ show, toggle, clousureToggle, loading }: Props) =
             ZehMizeh will have no record of your personal banking and payment
             details after closure.
           </div>
-          <div className="d-flex flex-column gap-3 mt-md-4 mt-3">
+          <div className="flex flex-column gap-3 mt-md-4 mt-3">
             <StyledButton
               className="fs-16 fw-400"
               variant="primary"

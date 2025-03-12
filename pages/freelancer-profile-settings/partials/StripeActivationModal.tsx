@@ -1,12 +1,12 @@
 "use client"; // Ensure this is a client component
-import { StyledButton } from '@/components/forms/Buttons';
-import Checkbox from '@/components/forms/CheckBox';
-import CountryDropdown from '@/components/forms/country-dropdown/CountryDropdown';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { useEffect, useState } from 'react';
-import { Button, Modal } from 'react-bootstrap';
-import styled from 'styled-components';
-import { IDENTITY_DOCS } from '@/helpers/const/constants';
+import { StyledButton } from "@/components/forms/Buttons";
+import Checkbox from "@/components/forms/CheckBox";
+import CountryDropdown from "@/components/forms/country-dropdown/CountryDropdown";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { useEffect, useState } from "react";
+import { Button, Modal } from "react-bootstrap";
+import styled from "styled-components";
+import { IDENTITY_DOCS } from "@/helpers/const/constants";
 
 const A = styled.a`
   color: ${(props) => props.theme.colors.lightBlue};
@@ -21,12 +21,12 @@ const StripeActivationModal = ({ onVerify, step, setStep }: any) => {
   const modalContent = [
     {
       id: 1,
-      title: 'Getting Paid on ZMZ',
+      title: "Getting Paid on ZMZ",
       content: (
         <div>
           <p>
             To get paid on ZehMizeh, all freelancers have to register for an
-            account with our payment processing service,{' '}
+            account with our payment processing service,{" "}
             <A href="https://stripe.com/" target="_blank">
               Stripe
             </A>
@@ -45,7 +45,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: any) => {
     },
     {
       id: 2,
-      title: 'Preferred Banking Country',
+      title: "Preferred Banking Country",
       content: (
         <div>
           <p>
@@ -65,7 +65,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: any) => {
           <p>
             Select below the country <b>of the bank account</b> where you would
             like your payments to be sent. (If that's the country you live in,
-            select that country.){' '}
+            select that country.){" "}
             <b className="text-danger">This choice cannot be changed later.</b>
           </p>
         </div>
@@ -73,7 +73,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: any) => {
     },
     {
       id: 3,
-      title: 'How to Register',
+      title: "How to Register",
       content: (
         <div>
           <p>
@@ -85,7 +85,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: any) => {
             <li className="mt-1">Name</li>
             <li className="mt-1">Birthdate</li>
             {country?.country_short_name &&
-              country?.country_short_name == 'US' && (
+              country?.country_short_name == "US" && (
                 <span>
                   <li className="mt-1">Address</li>
                   <li className="mt-1">Phone Number</li>
@@ -114,7 +114,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: any) => {
                 )
               )}
           </ul>
-          For more details, please click{' '}
+          For more details, please click{" "}
           <span>
             {country?.country_short_name && (
               <a
@@ -123,7 +123,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: any) => {
                 target="_blank"
                 rel="noreferrer"
               >
-                {' '}
+                {" "}
                 (here) .
               </a>
             )}
@@ -156,7 +156,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: any) => {
 
   const onHide = () => {
     setStep();
-    setCountry('');
+    setCountry("");
     setCheckErr(false);
   };
   return (
@@ -174,7 +174,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: any) => {
         </div>
         <h3
           className="fw-700 mb-3"
-          style={{ fontSize: '2rem', padding: '0.5rem 0' }}
+          style={{ fontSize: "2rem", padding: "0.5rem 0" }}
         >
           {modalContent[currIndex]?.title}
         </h3>
@@ -208,7 +208,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: any) => {
             </div>
             <div className="mt-4">
               <StyledButton
-                style={{ marginRight: '20px' }}
+                style={{ marginRight: "20px" }}
                 onClick={() => setStep((prev: any) => prev - 1)}
               >
                 Previous
@@ -227,13 +227,13 @@ const StripeActivationModal = ({ onVerify, step, setStep }: any) => {
 
         {step === 3 && (
           <>
-            <div className="d-flex align-items-center mt-4">
+            <div className="flex items-center mt-4">
               <Checkbox
                 checked={check}
                 toggle={(e) => setCheck(e.target.checked)}
               />
               <span>
-                &nbsp;&nbsp; I have read these instructions and I understand.{' '}
+                &nbsp;&nbsp; I have read these instructions and I understand.{" "}
               </span>
             </div>
             {checkErr && !check && (
@@ -243,7 +243,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: any) => {
             )}
             <div className="mt-4">
               <StyledButton
-                style={{ marginRight: '20px' }}
+                style={{ marginRight: "20px" }}
                 onClick={() => setStep((prev: any) => prev - 1)}
               >
                 Previous
@@ -264,14 +264,14 @@ const StripeActivationModal = ({ onVerify, step, setStep }: any) => {
         {step === 4 && (
           <div className="mt-4">
             <StyledButton
-              style={{ marginRight: '20px' }}
+              style={{ marginRight: "20px" }}
               onClick={() => setStep((prev: any) => prev - 1)}
             >
               Previous
             </StyledButton>
             <StyledButton
               onClick={() => {
-                if (check && country) onVerify ? onVerify(country) : '';
+                if (check && country) onVerify ? onVerify(country) : "";
               }}
             >
               Continue to Stripe Registration

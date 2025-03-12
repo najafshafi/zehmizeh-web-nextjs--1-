@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Modal, Button, Form, Spinner } from 'react-bootstrap';
-import styled from 'styled-components';
-import { StyledButton } from '@/components/forms/Buttons';
-import { StyledModal } from '@/components/styled/StyledModal';
-import TextEditor from '@/components/forms/TextEditor';
+import { useState, useEffect } from "react";
+import { Modal, Button, Form, Spinner } from "react-bootstrap";
+import styled from "styled-components";
+import { StyledButton } from "@/components/forms/Buttons";
+import { StyledModal } from "@/components/styled/StyledModal";
+import TextEditor from "@/components/forms/TextEditor";
 
 type Props = {
   show: boolean;
@@ -32,15 +32,15 @@ const AccountClosureDescriptionModal = ({
   onConfirm,
   loading,
 }: Props) => {
-  const [message, setMessage] = useState<string>('');
+  const [message, setMessage] = useState<string>("");
   const onCloseModal = () => {
-    setMessage('');
+    setMessage("");
     toggle();
   };
 
   useEffect(() => {
     if (show) {
-      setMessage('');
+      setMessage("");
     }
   }, [show]);
 
@@ -69,7 +69,8 @@ const AccountClosureDescriptionModal = ({
           <Form onSubmit={handleSubmit}>
             <div className="content">
               <div className="fs-20 fw-400">
-                We're sorry to see you go! We can improve with your feedback... please let us know why you're closing your account.
+                We're sorry to see you go! We can improve with your feedback...
+                please let us know why you're closing your account.
               </div>
               <Form.Group className="mt-4">
                 <TextEditor
@@ -80,15 +81,19 @@ const AccountClosureDescriptionModal = ({
                 />
               </Form.Group>
             </div>
-            <div className="bottom-buttons d-flex">
+            <div className="bottom-buttons flex">
               <StyledButton
                 className="fs-16 fw-400"
                 variant="primary"
                 padding="0.8125rem 2rem"
                 type="submit"
-                disabled={message === '' || loading}
+                disabled={message === "" || loading}
               >
-                {loading ? <Spinner animation="border" /> : 'Closed Account Request'}
+                {loading ? (
+                  <Spinner animation="border" />
+                ) : (
+                  "Closed Account Request"
+                )}
               </StyledButton>
             </div>
           </Form>

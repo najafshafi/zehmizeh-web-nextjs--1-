@@ -1,9 +1,9 @@
-import { Modal, Button, Spinner } from 'react-bootstrap';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { StyledButton } from '@/components/forms/Buttons';
-import { useState } from 'react';
-import { resetStripeHandler } from '@/helpers/http/freelancer';
-import toast from 'react-hot-toast';
+import { Modal, Button, Spinner } from "react-bootstrap";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import { useState } from "react";
+import { resetStripeHandler } from "@/helpers/http/freelancer";
+import toast from "react-hot-toast";
 
 type Props = {
   show: boolean;
@@ -19,12 +19,12 @@ const StripeResetModal = ({ show, onClose, refetch }: Props) => {
 
     const promise = resetStripeHandler();
     toast.promise(promise, {
-      loading: 'loading...',
+      loading: "loading...",
       success: (res: any) => {
         setLoading(false);
         onClose();
         refetch();
-        return res?.message ?? 'success';
+        return res?.message ?? "success";
       },
       error: (err) => {
         setLoading(false);
@@ -45,7 +45,7 @@ const StripeResetModal = ({ show, onClose, refetch }: Props) => {
           <h4 className="fs-36 fw-700 text-center">
             Are You Sure You Want to Reset Stripe?
           </h4>
-          <div style={{ fontSize: '18px' }}>
+          <div style={{ fontSize: "18px" }}>
             <p className="mt-4">
               Resetting Stripe means all of your previous Stripe account details
               will be deleted and you will need to restart Stripe activation
@@ -65,9 +65,9 @@ const StripeResetModal = ({ show, onClose, refetch }: Props) => {
           </div>
         </div>
 
-        <div className="d-flex justify-content-center">
+        <div className="flex justify-content-center">
           <StyledButton
-            className="d-flex align-items-center gap-3"
+            className="flex items-center gap-3"
             disabled={loading}
             onClick={() => resetStripe()}
           >

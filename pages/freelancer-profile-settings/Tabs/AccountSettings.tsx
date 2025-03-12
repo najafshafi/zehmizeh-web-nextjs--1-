@@ -289,7 +289,7 @@ export const AccountSettings = () => {
                 Freelancer Type
                 <span className="mandatory">&nbsp;*</span>
               </div>
-              <div className="d-flex mt-2">
+              <div className="flex mt-2">
                 <div
                   className={classNames(
                     "px-4 py-3 border rounded me-4 pointer",
@@ -440,7 +440,7 @@ export const AccountSettings = () => {
                   disabled={true}
                 />
                 <div
-                  className="edit-button d-flex align-items-center gap-2 pointer"
+                  className="edit-button flex items-center gap-2 pointer"
                   onClick={() => setShowEditEmailModal((prev) => !prev)}
                 >
                   <EditIcon
@@ -456,7 +456,7 @@ export const AccountSettings = () => {
 
           {/* START ----------------------------------------- Password */}
           <Col md={12} lg={6}>
-            <StyledFormGroup className="form-group-wapper d-flex align-items-center">
+            <StyledFormGroup className="form-group-wapper flex items-center">
               <div className="email-input-wrapper flex-1">
                 <div className="fs-sm fw-400">
                   Password
@@ -469,7 +469,7 @@ export const AccountSettings = () => {
                   disabled={true}
                 />
                 <div
-                  className="edit-button d-flex align-items-center gap-2 pointer top-50"
+                  className="edit-button flex items-center gap-2 pointer top-50"
                   onClick={() => navigate("/change-password")}
                 >
                   <EditIcon

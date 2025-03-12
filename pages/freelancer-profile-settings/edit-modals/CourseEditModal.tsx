@@ -3,18 +3,18 @@
  */
 
 "use client";
-import { useEffect, useState, useCallback } from 'react';
-import toast from 'react-hot-toast';
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
-import { StyledFormGroup, EditFormWrapper } from './edit-modals.styled';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { StyledButton } from '@/components/forms/Buttons';
-import ErrorMessage from '@/components/ui/ErrorMessage';
-import CustomUploader from '@/components/ui/CustomUploader';
-import { validateCourse } from '@/helpers/validation/common';
-import { getYupErrors } from '@/helpers/utils/misc';
-import { manageCourse } from '@/helpers/http/freelancer';
-import { REGEX } from '@/helpers/const/regex';
+import { useEffect, useState, useCallback } from "react";
+import toast from "react-hot-toast";
+import { Modal, Button, Form, Row, Col } from "react-bootstrap";
+import { StyledFormGroup, EditFormWrapper } from "./edit-modals.styled";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import ErrorMessage from "@/components/ui/ErrorMessage";
+import CustomUploader from "@/components/ui/CustomUploader";
+import { validateCourse } from "@/helpers/validation/common";
+import { getYupErrors } from "@/helpers/utils/misc";
+import { manageCourse } from "@/helpers/http/freelancer";
+import { REGEX } from "@/helpers/const/regex";
 
 const CourseEditModal = ({ show, onClose, data, onUpdate }: any) => {
   const [formState, setFormState] = useState<{
@@ -22,8 +22,8 @@ const CourseEditModal = ({ show, onClose, data, onUpdate }: any) => {
     school_name: string;
     certificate_link: { fileUrl?: string; fileName?: string }[];
   }>({
-    course_name: '',
-    school_name: '',
+    course_name: "",
+    school_name: "",
     certificate_link: [],
   });
   const [errors, setErrors] = useState<any>({});
@@ -40,8 +40,8 @@ const CourseEditModal = ({ show, onClose, data, onUpdate }: any) => {
       });
     } else {
       setFormState({
-        course_name: '',
-        school_name: '',
+        course_name: "",
+        school_name: "",
         certificate_link: [],
       });
       setErrors({});
@@ -61,11 +61,11 @@ const CourseEditModal = ({ show, onClose, data, onUpdate }: any) => {
     file: string;
     fileName?: string;
   }) => {
-    handleChange('certificate_link', [{ fileUrl: file, fileName }]);
+    handleChange("certificate_link", [{ fileUrl: file, fileName }]);
   };
 
   const removeAttachment = () => {
-    handleChange('certificate_link', []);
+    handleChange("certificate_link", []);
   };
 
   const validate = () => {
@@ -89,13 +89,13 @@ const CourseEditModal = ({ show, onClose, data, onUpdate }: any) => {
 
     setLoading(true);
     const body: any = {
-      action: data ? 'edit_course' : 'add_course',
+      action: data ? "edit_course" : "add_course",
       course_name: formState?.course_name,
       school_name: formState?.school_name,
       certificate_link:
         formState?.certificate_link?.length > 0
           ? formState?.certificate_link[0]?.fileUrl
-          : '',
+          : "",
     };
     if (data) {
       body.course_id = data?.course_id;
@@ -103,8 +103,8 @@ const CourseEditModal = ({ show, onClose, data, onUpdate }: any) => {
     const promise = manageCourse(body);
     toast.promise(promise, {
       loading: data
-        ? 'Updating your details - please wait...'
-        : 'Please wait...',
+        ? "Updating your details - please wait..."
+        : "Please wait...",
       success: (res) => {
         onUpdate();
         setLoading(false);
@@ -112,7 +112,7 @@ const CourseEditModal = ({ show, onClose, data, onUpdate }: any) => {
       },
       error: (err) => {
         setLoading(false);
-        return (data ? err?.response : err?.message) || 'error';
+        return (data ? err?.response : err?.message) || "error";
       },
     });
   };
@@ -124,7 +124,7 @@ const CourseEditModal = ({ show, onClose, data, onUpdate }: any) => {
           &times;
         </Button>
         <EditFormWrapper>
-          <div className="content d-flex flex-column">
+          <div className="content flex flex-column">
             <div className="modal-title fs-28 fw-400">
               Courses / Certifications
             </div>
@@ -140,8 +140,8 @@ const CourseEditModal = ({ show, onClose, data, onUpdate }: any) => {
                   value={formState?.course_name}
                   onChange={(e) =>
                     handleChange(
-                      'course_name',
-                      e.target.value.replace(REGEX.TITLE, '')
+                      "course_name",
+                      e.target.value.replace(REGEX.TITLE, "")
                     )
                   }
                   maxLength={100}
@@ -161,8 +161,8 @@ const CourseEditModal = ({ show, onClose, data, onUpdate }: any) => {
                   value={formState?.school_name}
                   onChange={(e) =>
                     handleChange(
-                      'school_name',
-                      e.target.value.replace(REGEX.TITLE, '')
+                      "school_name",
+                      e.target.value.replace(REGEX.TITLE, "")
                     )
                   }
                   maxLength={100}
@@ -209,14 +209,14 @@ const CourseEditModal = ({ show, onClose, data, onUpdate }: any) => {
                 </Col>
               </Row>
             </div>
-            <div className="bottom-buttons d-flex">
+            <div className="bottom-buttons flex">
               <StyledButton
                 padding="1.125rem 2.25rem"
                 variant="primary"
                 disabled={loading}
                 onClick={validate}
               >
-                {data ? 'Update' : 'Add'}
+                {data ? "Update" : "Add"}
               </StyledButton>
             </div>
           </div>

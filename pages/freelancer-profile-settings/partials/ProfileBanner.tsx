@@ -77,7 +77,7 @@
 //           <Col md="10">
 //             <Row className="g-3">
 //               {/* Profile picture */}
-//               <Col md="3" className="d-flex justify-content-center align-items-center">
+//               <Col md="3" className="flex justify-content-center items-center">
 //                 <div className="profile__img pointer" onClick={togglePictureModal}>
 //                   <Image
 //                     className="img"
@@ -86,17 +86,17 @@
 //                     width={100}
 //                     height={100}
 //                   />
-//                   <div className="edit-picture-btn d-flex align-items-center justify-content-center">
+//                   <div className="edit-picture-btn flex items-center justify-content-center">
 //                     <EditBlueIcon />
 //                   </div>
 //                 </div>
 //               </Col>
 //               <Col md="9">
-//                 <div className="profile__details d-flex flex-column">
+//                 <div className="profile__details flex flex-column">
 //                   {/* Name and designation */}
 
 //                   <div className="profile__name-title">
-//                     <div className="d-flex align-items-center gap-2 flex-wrap">
+//                     <div className="flex items-center gap-2 flex-wrap">
 //                       <div className="profile__username fs-24 fw-400 text-capitalize">
 //                         {data.first_name} {data?.last_name}
 //                       </div>
@@ -112,8 +112,8 @@
 //                     )}
 //                   </div>
 
-//                   <div className="budget-and-location d-flex align-items-center flex-wrap">
-//                     <div className="profile__badge d-flex align-items-center">
+//                   <div className="budget-and-location flex items-center flex-wrap">
+//                     <div className="profile__badge flex items-center">
 //                       <DollarCircleIcon />
 //                       {data?.hourly_rate ? (
 //                         <div className="fs-1rem fw-400">
@@ -126,7 +126,7 @@
 //                     </div>
 
 //                     {(data?.location?.state || data?.location?.country_name) && (
-//                       <div className="profile__badge d-flex align-items-center">
+//                       <div className="profile__badge flex items-center">
 //                         <LocationIcon />
 //                         <div className="budget-and-location-gray-text fs-1rem fw-400">
 //                           {separateValuesWithComma([data?.location?.state, data?.location?.country_name])}
@@ -135,7 +135,7 @@
 //                     )}
 
 //                     {data?.notification_email && (
-//                       <div className="profile__badge d-flex align-items-center">
+//                       <div className="profile__badge flex items-center">
 //                         <BellIcon height={25} style={{ marginRight: '0.3rem', width: '20px' }} />
 //                         <div className="budget-and-location-gray-text fs-1rem fw-400">
 //                           {CONSTANTS.NOTIFICATION_EMAIL.find(({ value }) => value === data?.notification_email)
@@ -145,7 +145,7 @@
 //                     )}
 
 //                     {/* START ----------------------------------------- Ratings */}
-//                     <div className="profile__badge d-flex align-items-center">
+//                     <div className="profile__badge flex items-center">
 //                       {data?.count_rating ? <StarIcon /> : <BsStar color="#f2b420" />}
 //                       <div className="budget-and-location-gray-text fs-1rem fw-400">
 //                         <span>{data?.avg_rating?.toFixed(1) ?? 0}</span>
@@ -155,7 +155,7 @@
 //                     {/* END ------------------------------------------- Ratings */}
 
 //                     {/* START ----------------------------------------- Total Jobs Done */}
-//                     <div className="profile__badge d-flex align-items-center">
+//                     <div className="profile__badge flex items-center">
 //                       <JobsDoneIcon />
 //                       <div className="budget-and-location-gray-text fs-1rem fw-400">
 //                         {numberWithCommas(data?.done_jobs) || 0}&nbsp;
@@ -171,9 +171,9 @@
 
 //           {/* Edit button */}
 //           <Col>
-//             <div className="d-flex justify-content-md-end mt-3">
+//             <div className="flex justify-content-md-end mt-3">
 //               <div
-//                 className="edit-button profile-edit-btn d-flex align-items-center gap-2 pointer"
+//                 className="edit-button profile-edit-btn flex items-center gap-2 pointer"
 //                 onClick={toggleEditModal}
 //               >
 //                 <EditIcon stroke="#FFF" />
@@ -205,22 +205,24 @@
 
 // export default ProfileBanner;
 
-
 "use client"; // Ensure this is a client component
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { StatusBadge } from '@/components/styled/Badges';
-import { ProfileBannerWrapper } from '../freelancer-profile-settings.styled';
-import InfoEditModal from '../edit-modals/InfoEditModal';
-import EditPictureModal from '@/components/ui/EditPictureModal';
-import { editUser } from '@/helpers/http/auth';
-import { numberWithCommas, separateValuesWithComma } from '@/helpers/utils/misc';
-import { CONSTANTS } from '@/helpers/const/constants';
-import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
-import  EditIcon  from '../../../public/icons/edit.svg';
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { StatusBadge } from "@/components/styled/Badges";
+import { ProfileBannerWrapper } from "../freelancer-profile-settings.styled";
+import InfoEditModal from "../edit-modals/InfoEditModal";
+import EditPictureModal from "@/components/ui/EditPictureModal";
+import { editUser } from "@/helpers/http/auth";
+import {
+  numberWithCommas,
+  separateValuesWithComma,
+} from "@/helpers/utils/misc";
+import { CONSTANTS } from "@/helpers/const/constants";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+import EditIcon from "../../../public/icons/edit.svg";
 
-import Image from 'next/image';
-import { BsStar } from 'react-icons/bs';
+import Image from "next/image";
+import { BsStar } from "react-icons/bs";
 
 type Props = {
   data: IFreelancerDetails;
@@ -229,7 +231,8 @@ type Props = {
 
 const ProfileBanner = ({ data, refetch }: Props) => {
   const [showEditInfoModal, setShowEditInfoModal] = useState<boolean>(false);
-  const [showEditPictureModal, setShowEditPictureModal] = useState<boolean>(false);
+  const [showEditPictureModal, setShowEditPictureModal] =
+    useState<boolean>(false);
 
   const onUpdate = () => {
     refetch();
@@ -247,13 +250,13 @@ const ProfileBanner = ({ data, refetch }: Props) => {
     const body = { user_image: url };
     const promise = editUser(body);
     toast.promise(promise, {
-      loading: 'Updating your details - please wait...',
+      loading: "Updating your details - please wait...",
       success: (res) => {
         setShowEditPictureModal(false);
         refetch();
         return res.message;
       },
-      error: (err) => err?.response?.data?.message || 'error',
+      error: (err) => err?.response?.data?.message || "error",
     });
   };
 
@@ -265,16 +268,24 @@ const ProfileBanner = ({ data, refetch }: Props) => {
             <div className="flex flex-col md:flex-row gap-3">
               {/* Profile picture */}
               <div className="md:w-3/12 flex justify-center items-center">
-                <div className="profile__img cursor-pointer relative" onClick={togglePictureModal}>
+                <div
+                  className="profile__img cursor-pointer relative"
+                  onClick={togglePictureModal}
+                >
                   <Image
                     className="img"
-                    src={data?.user_image || '/images/default_avatar.png'}
+                    src={data?.user_image || "/images/default_avatar.png"}
                     alt="freelancer-profile"
                     width={100}
                     height={100}
                   />
                   <div className="edit-picture-btn  absolute bottom-0 flex items-center justify-center">
-                    <Image src="/icons/edit-blue-outline.svg" alt="Edit" width={24} height={24} />
+                    <Image
+                      src="/icons/edit-blue-outline.svg"
+                      alt="Edit"
+                      width={24}
+                      height={24}
+                    />
                   </div>
                 </div>
               </div>
@@ -286,10 +297,14 @@ const ProfileBanner = ({ data, refetch }: Props) => {
                       <div className="profile__username text-2xl font-normal capitalize">
                         {data.first_name} {data?.last_name}
                       </div>
-                      {data?.is_agency ?  <StatusBadge color="blue">Agency</StatusBadge> : ""}
+                      {data?.is_agency ? (
+                        <StatusBadge color="blue">Agency</StatusBadge>
+                      ) : (
+                        ""
+                      )}
                     </div>
 
-                    {(data.is_agency && data.agency_name) ? (
+                    {data.is_agency && data.agency_name ? (
                       <div className="profile__description text-lg font-normal capitalize-first mt-2">
                         {data.agency_name}
                       </div>
@@ -304,32 +319,56 @@ const ProfileBanner = ({ data, refetch }: Props) => {
 
                   <div className="budget-and-location flex items-center flex-wrap gap-4">
                     <div className="profile__badge flex items-center gap-2">
-                      <Image src="/icons/dollar-circle.svg" alt="Rate" width={20} height={20} />
+                      <Image
+                        src="/icons/dollar-circle.svg"
+                        alt="Rate"
+                        width={20}
+                        height={20}
+                      />
                       {data?.hourly_rate ? (
                         <div className="text-base font-normal">
                           ${data?.hourly_rate}
-                          <span className="text-gray-500 text-base font-normal">/hr</span>
+                          <span className="text-gray-500 text-base font-normal">
+                            /hr
+                          </span>
                         </div>
                       ) : (
-                        <span className="text-gray-500 text-base font-normal">n/a</span>
+                        <span className="text-gray-500 text-base font-normal">
+                          n/a
+                        </span>
                       )}
                     </div>
 
-                    {(data?.location?.state || data?.location?.country_name) && (
+                    {(data?.location?.state ||
+                      data?.location?.country_name) && (
                       <div className="profile__badge flex items-center gap-2">
-                        <Image src="/icons/location-blue.svg" alt="Location" width={20} height={20} />
+                        <Image
+                          src="/icons/location-blue.svg"
+                          alt="Location"
+                          width={20}
+                          height={20}
+                        />
                         <div className="text-gray-500 text-base font-normal">
-                          {separateValuesWithComma([data?.location?.state, data?.location?.country_name])}
+                          {separateValuesWithComma([
+                            data?.location?.state,
+                            data?.location?.country_name,
+                          ])}
                         </div>
                       </div>
                     )}
 
                     {data?.notification_email && (
                       <div className="profile__badge flex items-center gap-2">
-                        <Image src="/icons/bell.svg" alt="Notifications" width={20} height={20} />
+                        <Image
+                          src="/icons/bell.svg"
+                          alt="Notifications"
+                          width={20}
+                          height={20}
+                        />
                         <div className="text-gray-500 text-base font-normal">
-                          {CONSTANTS.NOTIFICATION_EMAIL.find(({ value }) => value === data?.notification_email)
-                            ?.label ?? ''}
+                          {CONSTANTS.NOTIFICATION_EMAIL.find(
+                            ({ value }) => value === data?.notification_email
+                          )?.label ?? ""}
                         </div>
                       </div>
                     )}
@@ -337,21 +376,32 @@ const ProfileBanner = ({ data, refetch }: Props) => {
                     {/* Ratings */}
                     <div className="profile__badge flex items-center gap-2">
                       {data?.count_rating ? (
-                        <Image src="/icons/star-yellow.svg" alt="Rating" width={20} height={20} />
+                        <Image
+                          src="/icons/star-yellow.svg"
+                          alt="Rating"
+                          width={20}
+                          height={20}
+                        />
                       ) : (
                         <BsStar color="#f2b420" />
                       )}
                       <div className="text-gray-500 text-base font-normal">
-                        <span>{data?.avg_rating?.toFixed(1) ?? 0}</span> Ratings (
-                        {numberWithCommas(data?.count_rating) || 0})
+                        <span>{data?.avg_rating?.toFixed(1) ?? 0}</span> Ratings
+                        ({numberWithCommas(data?.count_rating) || 0})
                       </div>
                     </div>
 
                     {/* Total Jobs Done */}
                     <div className="profile__badge flex items-center gap-2">
-                      <Image src="/icons/jobs-done.svg" alt="Jobs" width={20} height={20} />
+                      <Image
+                        src="/icons/jobs-done.svg"
+                        alt="Jobs"
+                        width={20}
+                        height={20}
+                      />
                       <div className="text-gray-500 text-base font-normal">
-                        {numberWithCommas(data?.done_jobs) || 0} <span>Projects done</span>
+                        {numberWithCommas(data?.done_jobs) || 0}{" "}
+                        <span>Projects done</span>
                       </div>
                     </div>
                   </div>
@@ -367,7 +417,13 @@ const ProfileBanner = ({ data, refetch }: Props) => {
                 className="edit-button profile-edit-btn flex items-center gap-2 cursor-pointer text-white"
                 onClick={toggleEditModal}
               >
-                <Image src="/icons/edit-blue-outline.svg" alt="Edit" width={20} height={20}  className='text-white'/>
+                <Image
+                  src="/icons/edit-blue-outline.svg"
+                  alt="Edit"
+                  width={20}
+                  height={20}
+                  className="text-white"
+                />
                 <div className="text-base font-normal">Edit</div>
               </div>
             </div>

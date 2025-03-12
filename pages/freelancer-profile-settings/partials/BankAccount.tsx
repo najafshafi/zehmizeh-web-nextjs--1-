@@ -1,14 +1,14 @@
 "use client"; // Ensure this is a client component
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { StatusBadge } from '@/components/styled/Badges';
-import MoreButton from './MoreButton';
-import { managePayment } from '@/helpers/http/freelancer';
-import styled from 'styled-components';
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { StatusBadge } from "@/components/styled/Badges";
+import MoreButton from "./MoreButton";
+import { managePayment } from "@/helpers/http/freelancer";
+import styled from "styled-components";
 import {
   formatRoutingNumber,
   formatingAccountNumber,
-} from '@/helpers/utils/helper';
+} from "@/helpers/utils/helper";
 
 const StyledBankItem = styled.div`
   border: ${(props) => `1px solid ${props.theme.colors.gray6}`};
@@ -37,7 +37,7 @@ const BankAccount = ({
     setLoading(true);
 
     const body = {
-      action: 'delete_account',
+      action: "delete_account",
       delete_id: item?.user_bank_id,
     };
 
@@ -45,7 +45,7 @@ const BankAccount = ({
     const promise = managePayment(body);
 
     toast.promise(promise, {
-      loading: 'Loading...',
+      loading: "Loading...",
       success: (res) => {
         setLoading(false);
         refetch();
@@ -53,7 +53,7 @@ const BankAccount = ({
       },
       error: (err) => {
         setLoading(false);
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
@@ -65,7 +65,7 @@ const BankAccount = ({
     setLoading(true);
 
     const body = {
-      action: 'edit_account',
+      action: "edit_account",
       account_id: item?.user_bank_id,
     };
 
@@ -73,7 +73,7 @@ const BankAccount = ({
     const promise = managePayment(body);
 
     toast.promise(promise, {
-      loading: 'Loading...',
+      loading: "Loading...",
       success: (res) => {
         setLoading(false);
         refetch();
@@ -81,14 +81,14 @@ const BankAccount = ({
       },
       error: (err) => {
         setLoading(false);
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
 
   return (
     <StyledBankItem
-      className="d-flex justify-content-between mb-2 gap-2 p-4"
+      className="flex justify-content-between mb-2 gap-2 p-4"
       key={item?.user_bank_id}
     >
       <div>
@@ -112,9 +112,9 @@ const BankAccount = ({
               <span className="acc-info--label">Account Type: &nbsp;</span>
             </td>
             <td className="text-capitalize">
-              {item?.account_holder_type === 'individual'
-                ? 'Individual'
-                : 'Business'}
+              {item?.account_holder_type === "individual"
+                ? "Individual"
+                : "Business"}
             </td>
           </tr>
           <tr className="fs-1rem fw-400">

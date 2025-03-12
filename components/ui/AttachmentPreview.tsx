@@ -1,31 +1,31 @@
-import styled from 'styled-components';
-import { fileIsAnImage } from '@/helpers/utils/misc';
-import  CrossIcon from "../../public/icons/cross-icon.svg";
-import { useState } from 'react';
-import classNames from 'classnames';
+import styled from "styled-components";
+import { fileIsAnImage } from "@/helpers/utils/misc";
+import CrossIcon from "../../public/icons/cross-icon.svg";
+import { useState } from "react";
+import classNames from "classnames";
 
 const FILE_PATHS = {
-  docx: '/images/doc.png',
-  pdf: '/images/pdf.png',
-  xls: '/images/sheet.png',
-  xl: '/images/sheet.png',
-  xlsx: '/images/sheet.png',
-  xlsb: '/images/sheet.png',
-  csv: '/images/sheet.png',
-  doc: '/images/doc.png',
-  webm: '/images/video.png',
-  mp4: '/images/video.png',
-  mov: '/images/video.png',
-  avi: '/images/video.png',
-  mpeg: '/images/video.png',
-  mpg: '/images/video.png',
-  wmv: '/images/video.png',
-  flv: '/images/video.png',
-  mkv: '/images/video.png',
-  ogg: '/images/video.png',
-  ogv: '/images/video.png',
-  mp3: '/images/audio.png',
-  wav: '/images/audio.png',
+  docx: "/images/doc.png",
+  pdf: "/images/pdf.png",
+  xls: "/images/sheet.png",
+  xl: "/images/sheet.png",
+  xlsx: "/images/sheet.png",
+  xlsb: "/images/sheet.png",
+  csv: "/images/sheet.png",
+  doc: "/images/doc.png",
+  webm: "/images/video.png",
+  mp4: "/images/video.png",
+  mov: "/images/video.png",
+  avi: "/images/video.png",
+  mpeg: "/images/video.png",
+  mpg: "/images/video.png",
+  wmv: "/images/video.png",
+  flv: "/images/video.png",
+  mkv: "/images/video.png",
+  ogg: "/images/video.png",
+  ogv: "/images/video.png",
+  mp3: "/images/audio.png",
+  wav: "/images/audio.png",
 };
 
 type Props = {
@@ -37,9 +37,11 @@ type Props = {
 };
 
 const getFileDetails = (file: string) => {
-  const attachedName = file.includes('#docname=') ? file.split('#docname=').pop() : '';
-  const fileExtension = file.split('.').pop() || 'Doc';
-  const fileName = attachedName || file.split('/').pop() || 'File';
+  const attachedName = file.includes("#docname=")
+    ? file.split("#docname=").pop()
+    : "";
+  const fileExtension = file.split(".").pop() || "Doc";
+  const fileName = attachedName || file.split("/").pop() || "File";
   const fileIcon = FILE_PATHS[fileExtension.toLowerCase()] || FILE_PATHS.doc;
   return { fileExtension, fileName, fileIcon };
 };
@@ -102,12 +104,12 @@ const AttachmentPreview = ({
 
     setIsLoading(true);
     fetch(uploadedFile, {
-      method: 'GET',
-      mode: 'cors',
+      method: "GET",
+      mode: "cors",
       headers: {
-        Accept: '*',
-        pragma: 'no-cache',
-        'cache-control': 'no-cache',
+        Accept: "*",
+        pragma: "no-cache",
+        "cache-control": "no-cache",
       },
     })
       .then((res) => {
@@ -115,9 +117,9 @@ const AttachmentPreview = ({
       })
       .then((blob) => {
         const href = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = href;
-        link.setAttribute('download', getFileDetails(uploadedFile)?.fileName);
+        link.setAttribute("download", getFileDetails(uploadedFile)?.fileName);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -125,27 +127,32 @@ const AttachmentPreview = ({
       })
       .catch((err) => {
         setIsLoading(false);
-        return Promise.reject({ Error: 'Something Went Wrong', err });
+        return Promise.reject({ Error: "Something Went Wrong", err });
       });
   };
 
   return (
     <PreviewWrapper
-      className={`d-flex attachment-preview position-relative ${isLoading ? 'shimmer-loading' : ''}`}
-      title={fileName || getFileDetails(uploadedFile)?.fileName || ''}
+      className={`flex attachment-preview position-relative ${
+        isLoading ? "shimmer-loading" : ""
+      }`}
+      title={fileName || getFileDetails(uploadedFile)?.fileName || ""}
     >
       {/* <a href={uploadedFile} target="_blank" rel="noreferrer"> */}
-      <div onClick={downloadSampleFile} className={`pointer ${isLoading ? 'opacity-25' : ''}`}>
+      <div
+        onClick={downloadSampleFile}
+        className={`pointer ${isLoading ? "opacity-25" : ""}`}
+      >
         {fileIsAnImage(uploadedFile) ? (
           <img src={uploadedFile} alt="uploaded" height="100px" width="100px" />
         ) : (
           <div
-            className={classNames('text-center d-flex align-items-center', {
-              'doctype-preview': shouldShowFileNameAndExtension,
+            className={classNames("text-center flex items-center", {
+              "doctype-preview": shouldShowFileNameAndExtension,
             })}
           >
             <img
-              src={getFileDetails(uploadedFile)?.fileIcon || '/images/pdf.png'}
+              src={getFileDetails(uploadedFile)?.fileIcon || "/images/pdf.png"}
               alt="uploaded"
               height="100px"
               width="100px"
@@ -166,7 +173,7 @@ const AttachmentPreview = ({
       {/* </a> */}
       {removable && (
         <div
-          className="delete-preview position-absolute d-flex align-items-center justify-content-center pointer"
+          className="delete-preview position-absolute flex items-center justify-content-center pointer"
           onClick={onDelete}
           title="Delete attachment"
         >

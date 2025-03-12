@@ -2,18 +2,18 @@
  * This component is a modal to edit skills
  */
 
-import { Modal, Button, Spinner } from 'react-bootstrap';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { useEffect, useState } from 'react';
-import Cropper from 'react-cropper';
-import 'cropperjs/dist/cropper.css';
-import styled from 'styled-components';
-import { StyledButton } from '@/components/forms/Buttons';
-import axios from 'axios';
-import toast from 'react-hot-toast';
-import { generateAwsUrl } from '@/helpers/http/common';
-import useResponsive from '@/helpers/hooks/useResponsive';
-import LoadingButtons from '@/components/LoadingButtons';
+import { Modal, Button, Spinner } from "react-bootstrap";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { useEffect, useState } from "react";
+import Cropper from "react-cropper";
+import "cropperjs/dist/cropper.css";
+import styled from "styled-components";
+import { StyledButton } from "@/components/forms/Buttons";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { generateAwsUrl } from "@/helpers/http/common";
+import useResponsive from "@/helpers/hooks/useResponsive";
+import LoadingButtons from "@/components/LoadingButtons";
 import UploadIcon from "../../public/icons/upload.svg";
 
 const Wrapper = styled.div`
@@ -28,7 +28,7 @@ const Wrapper = styled.div`
       stroke: #fff;
     }
   }
-  input[type='file'] {
+  input[type="file"] {
     position: absolute;
     z-index: 2;
     opacity: 0;
@@ -104,8 +104,8 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
   };
 
   function getRoundedCanvas(sourceCanvas) {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
     const width = sourceCanvas.width;
     const height = sourceCanvas.height;
 
@@ -113,7 +113,7 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
     canvas.height = height;
     context.imageSmoothingEnabled = true;
     context.drawImage(sourceCanvas, 0, 0, width, height);
-    context.globalCompositeOperation = 'destination-in';
+    context.globalCompositeOperation = "destination-in";
     context.beginPath();
     context.arc(
       width / 2,
@@ -131,11 +131,11 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
     if (selectedFile) {
       const fileSize = selectedFile.size / 1024 / 1024;
       const fileName = selectedFile.name;
-      const extension = selectedFile.type?.replace(/(.*)\//g, '');
+      const extension = selectedFile.type?.replace(/(.*)\//g, "");
 
       const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
       if (fileSize > 100) {
-        toast.error('File size cannot exceed 100MB.');
+        toast.error("File size cannot exceed 100MB.");
         return;
       } else if (!allowedExtensions.exec(fileName)) {
         toast.error(`.${extension} file type is not supported.`);
@@ -144,7 +144,7 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
         uploadFileToSerever(fileName, extension);
       }
     } else {
-      uploadFileToSerever('profile.png', 'png');
+      uploadFileToSerever("profile.png", "png");
     }
   };
 
@@ -153,17 +153,17 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
 
     const roundedCanvas = getRoundedCanvas(cropper.getCroppedCanvas());
     const dataUrl = await roundedCanvas.toDataURL();
-    const base64Data = dataUrl.replace(/^data:image\/(png|jpg);base64,/, '');
+    const base64Data = dataUrl.replace(/^data:image\/(png|jpg);base64,/, "");
 
     /** This will create the file from the base64 data of the cropper canvas */
     const file = await dataUrlToFileUsingFetch(
-      'data:image/jpeg;base64,' + base64Data,
+      "data:image/jpeg;base64," + base64Data,
       fileName,
       `image/${extension}`
     );
 
     generateAwsUrl({
-      folder: 'job-documents',
+      folder: "job-documents",
       file_name: file.name,
       content_type: file.type,
     }).then((res) => {
@@ -173,16 +173,16 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
       /* This will upload the selected file to the above path */
       axios
         .put(uploadURL, file, {
-          headers: { 'Content-Type': contentType },
+          headers: { "Content-Type": contentType },
         })
         .then(() => {
-          const uploadedUrl = uploadURL.split('?')[0];
+          const uploadedUrl = uploadURL.split("?")[0];
 
           onUpdate(uploadedUrl);
         })
         .catch(() => {
           setUploading(false);
-          toast.error('Error uploading image.');
+          toast.error("Error uploading image.");
         });
     });
   };
@@ -201,11 +201,11 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
           &times;
         </Button>
         <Wrapper>
-          <div className="content d-flex flex-column">
+          <div className="content flex flex-column">
             <div className="modal-title fs-28 fw-400">Edit Profile Picture</div>
           </div>
 
-          <div className="cropper d-flex flex-column justify-content-center align-items-center mt-5 mb-3">
+          <div className="cropper flex flex-column justify-content-center items-center mt-5 mb-3">
             {loadingImage && (
               <Spinner animation="grow" className="spinner mb-3" />
             )}
@@ -219,7 +219,7 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
             )}
             {currentImage && (
               <Cropper
-                style={{ height: 400, width: 400, borderRadius: '50%' }}
+                style={{ height: 400, width: 400, borderRadius: "50%" }}
                 zoomTo={0}
                 initialAspectRatio={1}
                 preview=".img-preview"
@@ -241,10 +241,10 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
               />
             )}
 
-            <div className="d-flex flex-wrap mt-5 gap-3">
+            <div className="flex flex-wrap mt-5 gap-3">
               <StyledButton
                 variant="outline-dark"
-                className={isMobile ? 'upload-btn w-100' : 'upload-btn'}
+                className={isMobile ? "upload-btn w-100" : "upload-btn"}
                 disabled={uploading}
               >
                 <UploadIcon className="me-2" />
@@ -258,7 +258,7 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
               </StyledButton>
               {currentImage && (
                 <StyledButton
-                  className={isMobile ? 'w-100' : null}
+                  className={isMobile ? "w-100" : null}
                   onClick={validateFile}
                   disabled={uploading}
                 >
