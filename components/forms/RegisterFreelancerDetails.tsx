@@ -6,15 +6,32 @@ import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css"; // Import default styles
 import CustomButton from "../custombutton/CustomButton";
 // import { IFreelancerDetails } from "@/helpers/types/freelancer.type"
+
 interface RegisterFreelancerDetailsProps {
-  onNext: () => void;
+  onNext: (data: FreelancerDetailsData) => void;
   onBack: () => void;
+  initialData?: FreelancerDetailsData;
 }
+
 interface CountryData {
   id: string;
   name: string;
   states: string[];
 }
+
+interface FreelancerDetailsData {
+  isAgency: boolean;
+  agencyName?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  country: string;
+  state: string;
+  phone: string;
+}
+
 const countryStates: CountryData[] = [
   {
     id: "US",
@@ -271,18 +288,18 @@ const countryStates: CountryData[] = [
 const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
   onNext,
   onBack,
+  initialData,
 }) => {
-  const [firstName, setFirstName] = useState("");
-  const [isAgency, setIsAgency] = useState(false);
-  const [lastName, setLastName] = useState("");
-  // const [companyName, setCompanyName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [selectedState, setSelectedState] = useState("");
-  const [phone, setPhone] = useState<string | undefined>("");
-  const [agencyName, setAgencyName] = useState("");
+  const [firstName, setFirstName] = useState(initialData?.firstName || "");
+  const [isAgency, setIsAgency] = useState(initialData?.isAgency || false);
+  const [lastName, setLastName] = useState(initialData?.lastName || "");
+  const [email, setEmail] = useState(initialData?.email || "");
+  const [password, setPassword] = useState(initialData?.password || "");
+  const [confirmPassword, setConfirmPassword] = useState(initialData?.confirmPassword || "");
+  const [selectedCountry, setSelectedCountry] = useState(initialData?.country || "");
+  const [selectedState, setSelectedState] = useState(initialData?.state || "");
+  const [phone, setPhone] = useState<string | undefined>(initialData?.phone || "");
+  const [agencyName, setAgencyName] = useState(initialData?.agencyName || "");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
@@ -290,7 +307,6 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
 
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
-  // const companyNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const agencyNameRef = useRef<HTMLInputElement>(null);
 
@@ -301,7 +317,6 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
   const [isFocusedLastName, setIsFocusedLastName] = useState(false);
   const [isFocusedAgencyName, setIsFocusedAgencyName] = useState(false);
 
-  // const [isFocusedCompanyName, setIsFocusedCompanyName] = useState(false);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
   const [isFocusedConfirmPassword, setIsFocusedConfirmPassword] =
@@ -386,8 +401,22 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
 
   const handleNext = () => {
     if (validateForm()) {
-      console.log("Form is valid", payload);
-      onNext();
+      // Prepare data to send back to parent component
+      const detailsData: FreelancerDetailsData = {
+        isAgency,
+        agencyName: isAgency ? agencyName : undefined,
+        firstName,
+        lastName,
+        email,
+        password,
+        confirmPassword,
+        country: selectedCountry,
+        state: selectedState,
+        phone: phone || "",
+      };
+      
+      console.log("Form is valid", detailsData);
+      onNext(detailsData);
     }
   };
 
@@ -407,28 +436,6 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
   const toggleConfirmPasswordVisibility = () => {
     setConfirmPasswordVisible(!confirmPasswordVisible);
   };
-
-
-
-  // const payload: Partial<IFreelancerDetails> = {
-  //   first_name: firstName,
-  //   last_name: lastName,
-  //   u_email_id: email,
-  //   user_type: "freelancer", // Inferred from the URL or context
-  //   is_agency: isAgency ? 1 : 0, // Convert boolean to number (0 or 1) as per interface
-  //   agency_name: isAgency ? agencyName : "", // Only include if isAgency is true
-  //   phone_number: phone || "", // Handle undefined case
-  //   location: {
-  //     label: `${selectedState}, ${selectedCountry}`, // Construct label
-  //     state: selectedState,
-  //     country_name: selectedCountry,
-  //     country_id: 0, // Placeholder; ideally, map from a country list
-  //     country_code: "", // Placeholder; needs mapping
-  //     country_short_name: "", // Placeholder; needs mapping
-  //   },
-  //   password, 
-  //   confirmPassword, 
-  // };
 
   return (
     <div className="flex flex-col gap-10 md:px-0 px-8  w-full max-w-[600px] sm:mt-0 mt-3">
@@ -576,35 +583,6 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
             )}
           </div>
         </div>
-        {/* <div
-          className={`flex-grow p-1 rounded-lg transition-all duration-300 ${
-            isFocusedCompanyName
-              ? "bg-blue-500/40 border"
-              : "border-transparent"
-          }`}
-          onClick={() => companyNameRef.current?.focus()}
-        >
-          <div className="relative p-4 rounded-md border border-gray-300 bg-white cursor-text">
-            <input
-              type="text"
-              placeholder=" "
-              ref={companyNameRef}
-              value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
-              onFocus={() => setIsFocusedCompanyName(true)}
-              onBlur={() => setIsFocusedCompanyName(false)}
-              className="peer block w-full text-gray-900 bg-transparent focus:outline-none placeholder-transparent"
-            />
-            <label
-              className="cursor-text absolute left-4 text-gray-400 transition-all
-            peer-focus:-top-[1px] peer-focus:text-[14px] peer-focus:text-gray-400 
-            peer-placeholder-shown:top-4 peer-placeholder-shown:text-gray-500 peer-placeholder-shown:text-[17px]
-            -top-1 text-[14px] font-light"
-            >
-              Company Name (Optional)
-            </label>
-          </div>
-        </div> */}
 
         <div className="flex md:flex-row flex-col w-full gap-3 mt-2">
           <div className="flex-grow ml-1">

@@ -5,14 +5,63 @@ import RegisterFreelancerQuestion from "./RegisterFreelancerQuestion";
 import RegisterFreelancerDetails from "./RegisterFreelancerDetails";
 import RegisterFreelancerAgreement from "./RegisterFreelancerAgreement";
 
+// Define types for our form data
+interface FreelancerQuestionData {
+  accountType: string;
+}
+
+interface FreelancerDetailsData {
+  isAgency: boolean;
+  agencyName?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  country: string;
+  state: string;
+  phone: string;
+}
+
+interface FreelancerFormData {
+  questionData: FreelancerQuestionData;
+  detailsData: FreelancerDetailsData;
+}
+
 const RegisterFreelancerDecider = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  // State to hold form data from each step
+  const [formData, setFormData] = useState<FreelancerFormData>({
+    questionData: {
+      accountType: "freelancer", // Default value
+    },
+    detailsData: {
+      isAgency: false,
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      country: "",
+      state: "",
+      phone: "",
+    },
+  });
 
-  // const router = useRouter();
+  // Functions to update form data
+  const updateQuestionData = (data: FreelancerQuestionData) => {
+    setFormData({
+      ...formData,
+      questionData: data,
+    });
+  };
 
-  // const onNextClick = () => {
-  //   console.log("SAdsd");
-  // };
+  const updateDetailsData = (data: FreelancerDetailsData) => {
+    setFormData({
+      ...formData,
+      detailsData: data,
+    });
+  };
 
   const goToNextPage = () => {
     if (currentPage < 3) {
@@ -29,23 +78,43 @@ const RegisterFreelancerDecider = () => {
   const renderCurrentPage = () => {
     switch (currentPage) {
       case 1:
-        return <RegisterFreelancerQuestion onNext={goToNextPage} />;
+        return (
+          <RegisterFreelancerQuestion 
+            onNext={(data: FreelancerQuestionData) => {
+              updateQuestionData(data);
+              goToNextPage();
+            }}
+            initialData={formData.questionData}
+          />
+        );
       case 2:
         return (
           <RegisterFreelancerDetails
-            onNext={goToNextPage}
+            onNext={(data: FreelancerDetailsData) => {
+              updateDetailsData(data);
+              goToNextPage();
+            }}
             onBack={goToPreviousPage}
+            initialData={formData.detailsData}
           />
         );
       case 3:
         return (
           <RegisterFreelancerAgreement
             onBack={goToPreviousPage}
-            onNext={goToNextPage}
+            formData={formData}
           />
         );
       default:
-        return <RegisterFreelancerQuestion onNext={goToNextPage} />;
+        return (
+          <RegisterFreelancerQuestion 
+            onNext={(data: FreelancerQuestionData) => {
+              updateQuestionData(data);
+              goToNextPage();
+            }}
+            initialData={formData.questionData}
+          />
+        );
     }
   };
 

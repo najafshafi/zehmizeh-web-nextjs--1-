@@ -1,18 +1,26 @@
 "use client"
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import CustomButton from "../custombutton/CustomButton";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
+interface FreelancerQuestionData {
+  accountType: string;
+}
+
 interface RegisterFreelancerQuestionProps {
-  onNext: () => void;
+  onNext: (data: FreelancerQuestionData) => void;
+  initialData?: FreelancerQuestionData;
 }
 
 const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = ({
   onNext,
+  initialData,
 }) => {
   const router = useRouter();
+  const pathname = usePathname();
+  const type = pathname ? pathname.split("/")[2] : "";
 
   const clientAccount = () => {
     router.push("/register/employer");
@@ -21,8 +29,13 @@ const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = ({
   const freelancerAccount = () => {
     router.push("/register/freelancer");
   };
-  const pathname = usePathname();
-  const type = pathname ? pathname.split("/")[2] : "";
+
+  const handleNext = () => {
+    // Return the account type data to the parent component
+    onNext({
+      accountType: type || "freelancer",
+    });
+  };
 
   return (
     <div className="flex flex-col gap-10 md:px-0 px-8  w-full max-w-[600px] sm:mt-0 mt-3 ">
@@ -80,7 +93,7 @@ const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = ({
           <CustomButton
             text="Next"
             className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
-            onClick={onNext}
+            onClick={handleNext}
           />
         </div>
       </div>
