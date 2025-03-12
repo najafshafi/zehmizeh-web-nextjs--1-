@@ -1,19 +1,186 @@
-import { createSlice } from "@reduxjs/toolkit";
+// src/redux/authSlice.ts
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { apiClient } from '@/helpers/http/index';
+import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
+import { IClientDetails } from '@/helpers/types/client.type';
+import { saveAuthStorage } from '@/helpers/services/auth';
+import toast from 'react-hot-toast';
+import moment from 'moment-timezone';
 
-const initialState = { isAuthenticated: false };
+interface AuthState {
+  user: (IFreelancerDetails & IClientDetails) | null;
+  token: string | null;
+  isLoading: boolean;
+  isBoostraping: boolean;
+}
+
+const initialState: AuthState = {
+  user: null,
+  token: null,
+  isLoading: false,
+  isBoostraping: true,
+};
+
+// Async thunk to fetch user data
+export const fetchUser = createAsyncThunk('auth/fetchUser', async (_, { rejectWithValue }) => {
+  try {
+    const response = await apiClient.get('/user/get');
+    if (response.data.status) {
+      return response.data.data;
+    }
+    throw new Error('Failed to fetch user');
+  } catch (error: any) {
+    return rejectWithValue(error.message || 'Failed to fetch user');
+  }
+});
+
+// Async thunk for login
+export const login = createAsyncThunk('auth/login', async (formdata: any, { rejectWithValue }) => {
+  try {
+    const response = await apiClient.post('/auth/login', formdata);
+    if (response.data.status) {
+      return response.data.data;
+    }
+    return rejectWithValue(response.data.message);
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data?.message || 'Login failed');
+  }
+});
+
+// Async thunk for logout
+export const logout = createAsyncThunk('auth/logout', async () => {
+  await apiClient.get('/auth/logout');
+});
+
+// Async thunk for two-factor authentication
+export const twoFactor = createAsyncThunk(
+  'auth/twoFactor',
+  async ({ formdata, email }: { formdata: any; email: string }, { rejectWithValue }) => {
+    try {
+      formdata.email_id = email;
+      const response = await apiClient.post('/auth/otp', formdata);
+      if (response.data.status) {
+        return response.data.data;
+      }
+      return rejectWithValue(response.data.message);
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Two-factor authentication failed');
+    }
+  }
+);
+
+// Async thunk for registration
+export const registerUser = createAsyncThunk(
+  'auth/register',
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const response = await apiClient.post('/auth/register', payload);
+      if (response.data.status) {
+        return response.data.data;
+      }
+      return rejectWithValue(response.data.message);
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Registration failed');
+    }
+  }
+);
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
-    login: (state) => {
-      state.isAuthenticated = true;
+    setUser: (state, action) => {
+      state.user = action.payload;
     },
-    logout: (state) => {
-      state.isAuthenticated = false;
+    setToken: (state, action) => {
+      state.token = action.payload;
     },
+    setLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
+    setBootstraping: (state, action) => {
+      state.isBoostraping = action.payload;
+    },
+    setEmail: (state, action) => {
+      if (state.user) {
+        state.user.email_id = action.payload;
+      } else {
+        state.user = { email_id: action.payload } as any;
+      }
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      // Fetch User
+      .addCase(fetchUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isLoading = false;
+        state.isBoostraping = false;
+      })
+      .addCase(fetchUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isBoostraping = false;
+        toast.error(action.payload as string);
+      })
+      // Login
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        const { user, token } = action.payload;
+        state.user = user;
+        state.token = token;
+        state.isLoading = false;
+        saveAuthStorage({ token, user });
+        const currentTimezone = moment.tz.guess();
+        if (user.timezone !== currentTimezone) {
+          apiClient.put('/user/edit', { timezone: currentTimezone });
+        }
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        toast.error(action.payload as string);
+      })
+      // Logout
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.token = null;
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      })
+      // Two-Factor
+      .addCase(twoFactor.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(twoFactor.fulfilled, (state, action) => {
+        state.isLoading = false;
+        if (action.meta.arg.formdata.action === 'verify_otp' && action.meta.arg.formdata.type === 'new_registration') {
+          state.token = action.payload.token;
+          localStorage.setItem('token', action.payload.token);
+        }
+        toast.success('Two-factor authentication successful');
+      })
+      .addCase(twoFactor.rejected, (state, action) => {
+        state.isLoading = false;
+        toast.error(action.payload as string);
+      })
+      // Register
+      .addCase(registerUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.token = action.payload.token;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.isLoading = false;
+        toast.error(action.payload as string);
+      });
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { setUser, setToken, setLoading, setBootstraping, setEmail } = authSlice.actions;
 export default authSlice.reducer;

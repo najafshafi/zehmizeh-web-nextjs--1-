@@ -139,7 +139,13 @@ export const stripeIntercomStatusHandler = (stp_account_id: string, stp_account_
   return stripeAccountStatus;
 };
 
-export const isStagingEnv = () => ['beta.zehmizeh.com', 'localhost'].includes(window?.location?.hostname);
+export const isStagingEnv = () => {
+  // Check if window is defined (i.e., running on client)
+  if (typeof window === "undefined") {
+    return false; // Default to false on server-side
+  }
+  return ['beta.zehmizeh.com', 'localhost'].includes(window.location.hostname);
+};
 
 export const pusherApiKey = () =>
   isStagingEnv() ? process.env.REACT_APP_PUSHER_API_KEY : process.env.REACT_APP_PUSHER_API_KEY_PROD;

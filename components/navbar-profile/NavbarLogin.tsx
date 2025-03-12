@@ -1,13 +1,12 @@
 // components/navbar-profile/NavbarLogin.tsx
 "use client";
 
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { useAuth } from "@/helpers/contexts/auth-context";
 import NavbarProfile from "./NavbarProfile";
 import Navbar from "../navbar/Navbar";
 
 const NavbarLogin = () => {
-  const user = useSelector((state: RootState) => state.auth.user);
+const { user } = useAuth();
   return user ? <NavbarProfile /> : <Navbar />;
 };
 

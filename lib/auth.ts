@@ -136,7 +136,7 @@
 
 import { apiClient } from '@/helpers/http/index'; // Only import apiClient since client isn’t defined
 import { setUser, setLoading, setBootstrapping, signout } from '../store/slices/authSlice';
-import { AppDispatch } from '../store';
+import { AppDispatch } from '../store/store';
 import toast from 'react-hot-toast';
 import moment from 'moment-timezone';
 import { getToken, saveAuthStorage } from './authStorage';

@@ -1,7 +1,7 @@
 "use client"; // Mark as a Client Component since it uses Redux hooks
 
 import { useSelector } from "react-redux";
-import { RootState } from "@/store"; // Adjust path to your store
+import { RootState } from "@/store/store"; // Adjust path to your store
 import Footer from "@/components/footer/Footer";
 import Hero from "@/components/hero/Hero";
 import HiringProcess from "@/components/hiringprocess/HiringProcess";

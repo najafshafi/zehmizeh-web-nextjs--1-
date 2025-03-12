@@ -1,6 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
-import { useSelector } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -9,9 +8,8 @@ import { IoClose, IoMenu } from "react-icons/io5";
 import { BsBell } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
 import CustomButton from "../custombutton/CustomButton";
-import { useDispatch } from "react-redux"; // Import useDispatch
-import { RootState } from "@/store"; // Import RootState from your store
-import { signoutAction } from "@/lib/auth"; // Import signoutAction from auth.ts
+import { useAuth } from "@/helpers/contexts/auth-context";
+
 // Types for better type safety
 interface NavigationItem {
   href: string;
@@ -24,26 +22,23 @@ interface MenuItem {
 }
 
 const NavbarProfile = () => {
-  const { user } = useSelector((state: RootState) => state.auth); // Get user from Redux store
+  const { signout, user } = useAuth();
   const pathname = usePathname();
   const url = pathname.split("/")[1];
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const dispatch = useDispatch(); // Get dispatch function
 
-  // State management with better initial values
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState<number | null>(null);
   const [notificationCount, setNotificationCount] = useState(1);
 
-  // Memoized navigation items
   const navigationItems: NavigationItem[] = [
-    { href: "#", label: "Dashboard" },
-    { href: "#", label: "My Projects" },
-    { href: "#", label: "Messages" },
-    { href: "#", label: "Transactions" },
-    { href: "#", label: "Help" },
+    { href: "/dash", label: "Dashboard" },
+    { href: "/pro", label: "My Projects" },
+    { href: "/messa", label: "Messages" },
+    { href: "/trans", label: "Transactions" },
+    { href: "/helphelphelp", label: "Help" },
   ];
 
   const menuItems: MenuItem[] = [
@@ -54,7 +49,6 @@ const NavbarProfile = () => {
     { href: "/settings", label: "My Account Settings" },
   ];
 
-  // Handle window resize with debounce
   const handleResize = useCallback(() => {
     setWindowWidth(window.innerWidth);
     if (window.innerWidth >= 1024) {
@@ -62,35 +56,28 @@ const NavbarProfile = () => {
     }
   }, []);
 
-  // Handle click outside for dropdown
   const handleClickOutside = useCallback((event: MouseEvent) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node)
-    ) {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
       setIsProfileDropdownOpen(false);
     }
   }, []);
 
-  // Initial setup and cleanup
   useEffect(() => {
     setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       window.removeEventListener("resize", handleResize);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [handleResize, handleClickOutside]);
 
-  // Handle logout
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setIsProfileDropdownOpen(false);
-signoutAction(dispatch, router); // Call signoutAction with dispatch and router
+    await signout(); // Ensure signout is async if it involves API calls
+    router.push("/login"); // Redirect to login after signout
   };
 
-  // Navigation link component
   const NavLink = ({ href, label }: NavigationItem) => (
     <div className="relative group">
       <Link href={href}>
@@ -106,24 +93,16 @@ signoutAction(dispatch, router); // Call signoutAction with dispatch and router
     </div>
   );
 
-  useEffect(() => {
-    if (!user) {
-      dispatch(fetchUser()); // Dispatch an action to fetch the user
-    }
-  }, [user, dispatch]);
-
+  // Remove redundant fetchUser effect if handled in signout or auth context
   useEffect(() => {
     if (user) {
-      // Logic to load the page when user data arrives
       console.log("User data loaded:", user);
-      // You can add more logic here to handle the user data
     }
   }, [user]);
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-secondary border-b border-primary h-[110px] flex items-center">
       <div className="max-w-[1320px] w-full mx-auto lg:px-16 xl:px-0 sm:px-24 px-7 flex items-center justify-between">
-        {/* Logo and Navigation */}
         <div className="flex items-center gap-6">
           <Link href="/home" aria-label="Home">
             <Image
@@ -136,12 +115,7 @@ signoutAction(dispatch, router); // Call signoutAction with dispatch and router
               className="cursor-pointer"
             />
           </Link>
-
-          {/* Desktop Navigation */}
-          <nav
-            className="hidden lg:flex items-center gap-6"
-            aria-label="Main navigation"
-          >
+          <nav className="hidden lg:flex items-center gap-6" aria-label="Main navigation">
             <div className="h-[22px] border border-customGray" />
             {navigationItems.map((item) => (
               <NavLink key={item.href} {...item} />
@@ -149,7 +123,6 @@ signoutAction(dispatch, router); // Call signoutAction with dispatch and router
           </nav>
         </div>
 
-        {/* Mobile Menu Toggle */}
         <button
           className="lg:hidden flex items-center"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -165,7 +138,6 @@ signoutAction(dispatch, router); // Call signoutAction with dispatch and router
           </div>
         </button>
 
-        {/* Desktop Profile and Actions */}
         <div className="hidden lg:flex items-center gap-3">
           <div className="relative w-10">
             {notificationCount > 0 && (
@@ -178,13 +150,11 @@ signoutAction(dispatch, router); // Call signoutAction with dispatch and router
               className="cursor-pointer hover:opacity-80 transition-opacity"
             />
           </div>
-
           <CustomButton
             text="Find Projects"
             className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
-            onClick={() => router.push("#")}
+            onClick={() => router.push("/find-projects")} // Update with actual route
           />
-
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
@@ -192,24 +162,15 @@ signoutAction(dispatch, router); // Call signoutAction with dispatch and router
               aria-expanded={isProfileDropdownOpen}
               aria-label="Profile menu"
             >
-              <Image
-                src="/hiring.png"
-                width={50}
-                height={50}
-                alt="User avatar"
-                priority
-              />
+              <Image src="/hiring.png" width={50} height={50} alt="User avatar" priority />
               <p className="flex items-center gap-2 text-lg text-[#212529]">
-             {user?.data?.first_name} 
+                {user?.first_name || "User"}
                 <IoIosArrowDown
                   size={20}
-                  className={`transition-transform ${
-                    isProfileDropdownOpen ? "rotate-180" : ""
-                  }`}
+                  className={`transition-transform ${isProfileDropdownOpen ? "rotate-180" : ""}`}
                 />
               </p>
             </button>
-
             {isProfileDropdownOpen && (
               <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                 <ul className="py-2 text-gray-700" role="menu">
@@ -227,7 +188,7 @@ signoutAction(dispatch, router); // Call signoutAction with dispatch and router
                   <li role="menuitem">
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-red-500"
+                      className="w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
                     >
                       Logout
                     </button>
@@ -236,7 +197,6 @@ signoutAction(dispatch, router); // Call signoutAction with dispatch and router
               </div>
             )}
           </div>
-
           <p className="font-bold text-[22px]">
             <span className="ml-2" dir="rtl">
               בס"ד
@@ -245,7 +205,6 @@ signoutAction(dispatch, router); // Call signoutAction with dispatch and router
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <nav
           className="absolute top-full left-0 w-full bg-secondary shadow-md flex flex-col gap-4 py-4 md:pl-[100px] pl-[15px] border-b border-customYellow animate-slide-down"
@@ -266,7 +225,7 @@ signoutAction(dispatch, router); // Call signoutAction with dispatch and router
             className="px-9 py-4 w-fit mx-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
             onClick={() => {
               setIsMobileMenuOpen(false);
-              router.push("#");
+              router.push("/find-projects"); // Update with actual route
             }}
           />
         </nav>
