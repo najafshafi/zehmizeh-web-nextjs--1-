@@ -15,62 +15,21 @@ const fakeAuth = {
 
 export { fakeAuth };
 
-import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
-import { IClientDetails } from '@/helpers/types/client.type';
-
-type User = IFreelancerDetails & IClientDetails;
-
-const isBrowser = typeof window !== 'undefined';
-
 export const saveAuthStorage = ({
   token,
   user,
 }: {
   token: string;
-  user: User;
+  user: any;
 }) => {
-  if (isBrowser) {
-    try {
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-    } catch (error) {
-      console.error('Error saving auth storage:', error);
-    }
-  }
+  localStorage.setItem('token', token);
+  localStorage.setItem('user', JSON.stringify(user));
 };
 
-export const getToken = (): string | null => {
-  if (isBrowser) {
-    try {
-      return localStorage.getItem('token');
-    } catch (error) {
-      console.error('Error getting token:', error);
-      return null;
-    }
-  }
-  return null;
+export const getToken = () => {
+  return localStorage.getItem('token');
 };
-
-export const getStorageUser = (): User | null => {
-  if (isBrowser) {
-    try {
-      const userStr = localStorage.getItem('user');
-      return userStr ? JSON.parse(userStr) : null;
-    } catch (error) {
-      console.error('Error getting user from storage:', error);
-      return null;
-    }
-  }
-  return null;
-};
-
-export const clearAuthStorage = () => {
-  if (isBrowser) {
-    try {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-    } catch (error) {
-      console.error('Error clearing auth storage:', error);
-    }
-  }
+export const getStorageUser = () => {
+  const usr = localStorage.getItem('user');
+  return usr ? JSON.parse(localStorage.getItem('user')) : null;
 };

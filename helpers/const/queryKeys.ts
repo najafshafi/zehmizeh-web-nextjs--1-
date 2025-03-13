@@ -8,11 +8,11 @@ export const queryKeys = {
     freelancerId,
   ],
   getFreelancerProfile: 'get-freelancer-profile',
-  jobDetails: (jobPostId: string) => ['jobdetails', jobPostId],
+  jobDetails: (jobPostId) => ['jobdetails', jobPostId],
   clientProfile: ['client-profile'],
   clientHasPaymentMethod: 'has-payment-method',
   checkCardExpiration: 'check-expiration-card',
-  getUserList: (searchQuery: string, action: string) => [
+  getUserList: (searchQuery, action) => [
     'message',
     'users',
     searchQuery,

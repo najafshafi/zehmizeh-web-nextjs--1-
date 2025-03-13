@@ -7,14 +7,27 @@ import "react-phone-number-input/style.css"; // Import default styles
 import CustomButton from "../custombutton/CustomButton";
 
 interface RegisterEmployerDetailsProps {
-  onNext: () => void;
+  onNext: (data: EmployerDetailsData) => void;
   onBack: () => void;
 }
+
 interface CountryData {
   id: string;
   name: string;
   states: string[];
 }
+
+interface EmployerDetailsData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  country: string;
+  state: string;
+  phone: string;
+}
+
 const countryStates: CountryData[] = [
   {
     id: "US",
@@ -267,6 +280,7 @@ const countryStates: CountryData[] = [
     states: ["Vienna", "Tyrol", "Salzburg", "Carinthia", "Upper Austria"],
   },
 ];
+
 const RegisterEmployerDetails: React.FC<RegisterEmployerDetailsProps> = ({
   onNext,
   onBack,
@@ -396,7 +410,17 @@ const RegisterEmployerDetails: React.FC<RegisterEmployerDetailsProps> = ({
 
   const handleNext = () => {
     if (validateForm()) {
-      onNext();
+      const formData: EmployerDetailsData = {
+        firstName,
+        lastName,
+        email,
+        password,
+        confirmPassword,
+        country: selectedCountry,
+        state: selectedState,
+        phone: phone || '',
+      };
+      onNext(formData);
     }
   };
 

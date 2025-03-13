@@ -1,4 +1,3 @@
-"use client";
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useMemo, useState } from 'react';
 import { update_query_parameters } from '@/helpers/utils/misc';

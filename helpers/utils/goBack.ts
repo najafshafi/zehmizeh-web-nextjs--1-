@@ -8,7 +8,7 @@ export const goBack = (navigate: NavigateFunction, route?: string) => {
     if (user?.user_type === 'client') {
       defaultRoute = '/client/dashboard';
     } else if (user?.user_type === 'freelancer') {
-      defaultRoute = '/frelancer/account/profile';
+      defaultRoute = '/dashboard';
     } else {
       defaultRoute = '/';
     }

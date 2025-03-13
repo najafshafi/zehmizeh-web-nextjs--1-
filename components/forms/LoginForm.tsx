@@ -1,370 +1,226 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from '@/store/store';
-import { useRouter, useSearchParams } from 'next/navigation';
-import toast from 'react-hot-toast';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { login } from '@/store/redux/slices/authSlice';
-import { AppDispatch } from '@/store/store';
+import { useRef, useState } from "react";
+import { IoEyeOutline } from "react-icons/io5";
+import CustomButton from "../../components/custombutton/CustomButton";
+import {  useSelector } from "react-redux";
+import { RootState } from '@/store/store'; // Adjust path to your store
+import { useAuth } from '@/helpers/contexts/auth-context'; // Adjust path to AuthContext
+const LoginForm = () => {
+  const { signin } = useAuth();
+  // Local state for form inputs and validation errors
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isChecked, setIsChecked] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [checkboxError, setCheckboxError] = useState("");
 
-interface LoginFormProps {
-  redirectTo?: string;
-}
-
-const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [formError, setFormError] = useState("");
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [apiLoaded, setApiLoaded] = useState(false);
-  const [connectionError, setConnectionError] = useState<string | null>(null);
+  // Refs for input focus
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
 
   const { isLoading } = useSelector((state: RootState) => state.auth);
 
-  // Check for redirectUrl from query params
-  useEffect(() => {
-    // Reset form error when component mounts
-    setFormError("");
-    
-    // Check for error message in URL
-    const errorMsg = searchParams?.get('error');
-    if (errorMsg) {
-      setFormError(decodeURIComponent(errorMsg));
+  // Local state for UI interactions
+  const [isFocusedEmail, setIsFocusedEmail] = useState(false);
+  const [isFocusedPassword, setIsFocusedPassword] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  // Handle checkbox toggle
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+    if (!isChecked) {
+      setCheckboxError(""); // Clear error when checked
     }
-  }, [searchParams]);
+  };
 
-  // Check if the API is configured correctly
-  useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API;
-    setApiLoaded(!!apiUrl);
-    
-    if (!apiUrl) {
-      console.error('API URL not configured');
-      setConnectionError('API configuration error - Please contact support');
-    }
-
-    // Check network connectivity
-    const handleOnlineStatus = () => {
-      if (navigator.onLine) {
-        setConnectionError(null);
-      } else {
-        setConnectionError('You are currently offline - Please check your internet connection');
-      }
-    };
-
-    // Initial check
-    handleOnlineStatus();
-
-    // Listen for online/offline events
-    window.addEventListener('online', handleOnlineStatus);
-    window.addEventListener('offline', handleOnlineStatus);
-
-    return () => {
-      window.removeEventListener('online', handleOnlineStatus);
-      window.removeEventListener('offline', handleOnlineStatus);
-    };
-  }, []);
-
+  // Toggle password visibility
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  const formik = useFormik({
-    initialValues: {
-      email_id: '',
-      password: '',
-      stay_signedin: true,
-      terms_agreement: false,
-    },
-    validationSchema: Yup.object({
-      email_id: Yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
-      password: Yup.string()
-        .required('Password is required')
-        .min(8, 'Password must be at least 8 characters'),
-      terms_agreement: Yup.boolean().oneOf(
-        [true],
-        'You must accept the terms and conditions'
-      ),
-    }),
-    onSubmit: async (values) => {
-      await onLoginClick();
-    },
-  });
+  // Handle login submission
+  const onLoginClick = () => {
+    let isValid = true;
 
-  const onLoginClick = async () => {
-    if (!formik.isValid || !formik.values.terms_agreement) {
-      // If form is not valid or terms not agreed, trigger validation
-      formik.validateForm().then((errors) => {
-        if (Object.keys(errors).length > 0) {
-          // Display validation errors
-          Object.values(errors).forEach((error) => {
-            if (typeof error === 'string') {
-              toast.error(error);
-            }
-          });
-        }
-
-        // Specific check for terms agreement
-        if (!formik.values.terms_agreement) {
-          toast.error('You must accept the terms and conditions');
-        }
-      });
-      return;
+    // Local validation
+    if (!email) {
+      setEmailError("Email is required.");
+      isValid = false;
+    } else {
+      setEmailError("");
     }
 
-    if (isLoggingIn) {
-      console.log('Login already in progress, ignoring duplicate request');
-      return;
+    if (!password) {
+      setPasswordError("Password is required.");
+      isValid = false;
+    } else {
+      setPasswordError("");
     }
 
-    // Check if API URL is configured
-    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API;
-    if (!apiUrl) {
-      toast.error('API configuration error - Please contact support');
-      console.error('Cannot login: API URL not configured');
-      return;
+    if (!isChecked) {
+      setCheckboxError("You must accept the payment terms to continue");
+      isValid = false;
+    } else {
+      setCheckboxError("");
     }
 
-    // Check if browser is online
-    if (!navigator.onLine) {
-      toast.error('You appear to be offline - Please check your internet connection');
-      console.error('Cannot login: Browser is offline');
-      return;
-    }
-
-    setIsLoggingIn(true);
-    setConnectionError(null);
-
-    try {
-      console.log('Attempting login:', {
-        email: formik.values.email_id,
-        apiUrl: apiUrl,
-        browserOnline: navigator.onLine,
-      });
-
-      // Get redirect URL from query params
-      const redirect = searchParams?.get('redirect') || redirectTo || '/';
-
-      // Call the sign-in function from auth context and check its result
-      const result = await dispatch(login(formik.values));
-      
-      if (login.fulfilled.match(result)) {
-        console.log('Login successful, redirecting to:', redirect);
-        router.push(redirect);
-      } else {
-        console.log('Login unsuccessful - no redirection');
-        toast.error(result.error.message || 'Login failed');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error('An unexpected error occurred. Please try again.');
-      }
-    } finally {
-      setIsLoggingIn(false);
+    // If valid, dispatch login action via Redux
+    if (isValid) {
+      const formData = {
+        email_id: email, // Match expected API key
+        password,
+        terms_agreement: isChecked,
+        stay_signedin: false, // Default value
+      };
+      signin(formData);
     }
   };
 
   return (
-    <div className="relative mt-8 sm:mx-auto sm:w-full sm:max-w-[400px] p-[24px] bg-[rgb(255,255,255)] rounded-[12px]">
-      {connectionError && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-800 rounded-lg">
-          <div className="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
-            <p>{connectionError}</p>
-          </div>
-        </div>
-      )}
-      
-      <div className="text-center">
-        <h1 className="leading-[1.2] text-[rgb(17,24,39)] text-[24px] font-extrabold">
-          Log in to your account
-        </h1>
-        <div className="mt-3">
-          <p className="text-[rgb(107,114,128)] leading-[1.5]">
-            Don&apos;t have an account?{' '}
-            <Link
-              href="/auth/register"
-              className="text-primary hover:underline"
-            >
-              Sign up
-            </Link>
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-10">
-        <form onSubmit={formik.handleSubmit} className="space-y-6">
-          <div>
-            <label
-              htmlFor="email_id"
-              className="block text-sm font-medium leading-[1.5] text-[rgb(17,24,39)]"
-            >
-              Email address
-            </label>
-            <div className="mt-2">
+    <div className="flex flex-col gap-2 max-w-[730px] w-full mt-[100px] px-0 md:px-10">
+      <Link href={"/home"} className="text-[#f2b420] text-[16px] font-medium">
+        Go To Home
+      </Link>
+      <div className="bg-white rounded-xl py-12 flex flex-col gap-10 items-center justify-center">
+        <Image
+          src={"/zehmizeh-logo.svg"}
+          alt={"logo"}
+          width={70}
+          height={70}
+          quality={100}
+          loading="lazy"
+        />
+        <p className="font-bold text-[30px] leading-none">Log in to ZehMizeh</p>
+        <div className="flex flex-col gap-1 w-full max-w-[600px] md:px-0 px-6">
+          {/* Email Input */}
+          <div
+            className={`p-1 rounded-lg transition-all duration-300 ${
+              isFocusedEmail ? "bg-blue-500/40 border" : "border-transparent"
+            }`}
+            onClick={() => emailRef.current?.focus()}
+          >
+            <div className="relative p-4 rounded-md border border-gray-300 bg-white cursor-text">
               <input
-                id="email_id"
-                name="email_id"
                 type="email"
-                autoComplete="email"
-                required
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.email_id}
-                className="block w-full rounded-lg border-[rgb(209,213,219)] py-[0.5rem] px-[0.75rem] text-[rgb(17,24,39)] shadow-sm placeholder:text-[rgb(107,114,128)]"
-              />
-            </div>
-            {formik.touched.email_id && formik.errors.email_id && (
-              <div className="text-red-500 text-sm mt-1">
-                {formik.errors.email_id}
-              </div>
-            )}
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium leading-[1.5] text-[rgb(17,24,39)]"
-            >
-              Password
-            </label>
-            <div className="mt-2 relative">
-              <input
-                id="password"
-                name="password"
-                type={passwordVisible ? "text" : "password"}
-                autoComplete="current-password"
-                required
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.password}
-                className="block w-full rounded-lg border-[rgb(209,213,219)] py-[0.5rem] px-[0.75rem] text-[rgb(17,24,39)] shadow-sm placeholder:text-[rgb(107,114,128)]"
-              />
-              <button
-                type="button"
-                onClick={togglePasswordVisibility}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-              >
-                {passwordVisible ? "Hide" : "Show"}
-              </button>
-            </div>
-            {formik.touched.password && formik.errors.password && (
-              <div className="text-red-500 text-sm mt-1">
-                {formik.errors.password}
-              </div>
-            )}
-          </div>
-
-          <div className="flex items-center">
-            <input
-              id="stay_signedin"
-              name="stay_signedin"
-              type="checkbox"
-              checked={formik.values.stay_signedin}
-              onChange={formik.handleChange}
-              className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-2"
-            />
-            <label
-              htmlFor="stay_signedin"
-              className="ml-2 text-sm text-gray-600"
-            >
-              Stay signed in
-            </label>
-          </div>
-
-          <div>
-            <div className="flex items-center">
-              <input
-                id="terms_agreement"
-                name="terms_agreement"
-                type="checkbox"
-                checked={formik.values.terms_agreement}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-2"
+                placeholder=" "
+                ref={emailRef}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onFocus={() => setIsFocusedEmail(true)}
+                onBlur={() => setIsFocusedEmail(false)}
+                className="peer block w-full text-gray-900 bg-transparent focus:outline-none placeholder-transparent"
               />
               <label
-                htmlFor="terms_agreement"
-                className="ml-2 text-sm text-gray-600"
+                className="cursor-text absolute left-4 text-gray-400 transition-all
+                peer-focus:-top-[1px] peer-focus:text-[14px] peer-focus:text-gray-400 
+                peer-placeholder-shown:top-4 peer-placeholder-shown:text-gray-500 peer-placeholder-shown:text-[17px]
+                -top-1 text-[14px] font-light"
               >
-                I agree to the{' '}
-                <Link
-                  href="/terms-conditions"
-                  className="text-primary hover:underline"
-                  target="_blank"
-                >
-                  Terms and Conditions
-                </Link>
+                Email Address
               </label>
             </div>
-            {formik.touched.terms_agreement &&
-              formik.errors.terms_agreement && (
-                <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.terms_agreement}
-                </div>
-              )}
+          </div>
+          {emailError && (
+            <p className="text-red-600 text-[15px] pl-1">{emailError}</p>
+          )}
+
+          {/* Password Input */}
+          <div
+            className={`p-1 rounded-lg transition-all duration-300 ${
+              isFocusedPassword ? "bg-blue-500/40 border" : "border-transparent"
+            }`}
+            onClick={() => passwordRef.current?.focus()}
+          >
+            <div className="flex flex-row items-center justify-between relative p-4 rounded-md border border-gray-300 bg-white cursor-text">
+              <input
+                type={passwordVisible ? "text" : "password"}
+                placeholder=" "
+                ref={passwordRef}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onFocus={() => setIsFocusedPassword(true)}
+                onBlur={() => setIsFocusedPassword(false)}
+                className="peer block w-full text-gray-900 bg-transparent focus:outline-none placeholder-transparent"
+              />
+              <IoEyeOutline
+                onClick={togglePasswordVisibility}
+                className={`cursor-pointer text-[24px] ${
+                  passwordVisible ? "text-black" : "text-gray-400"
+                }`}
+              />
+              <label
+                className="cursor-text absolute left-4 text-gray-400 transition-all
+                peer-focus:-top-[1px] peer-focus:text-[14px] peer-focus:text-gray-400 
+                peer-placeholder-shown:top-4 peer-placeholder-shown:text-gray-500 peer-placeholder-shown:text-[17px]
+                -top-1 text-[14px] font-light"
+              >
+                Password
+              </label>
+            </div>
+          </div>
+          {passwordError && (
+            <p className="text-red-600 text-[15px] pl-1">{passwordError}</p>
+          )}
+
+          <div className="flex justify-end mt-3">
+            <Link href={"/forgot-password"}>Forgot Password?</Link>
           </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={isLoggingIn || !apiLoaded}
-              className="flex w-full justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoggingIn ? (
-                <>
-                  <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Logging in...
-                </>
-              ) : (
-                'Log in'
-              )}
-            </button>
+          {/* Checkbox */}
+          <div className="bg-[#F8F9FA] p-4 rounded-lg border-gray-200 border mt-4 flex items-center justify-center">
+            <div className="flex flex-row relative w-fit">
+              <input
+                type="checkbox"
+                id="agreePayments"
+                name="agreePayments"
+                checked={isChecked}
+                onChange={handleCheckboxChange}
+                className="h-6 w-6 text-yellow-500 border-gray-300 rounded focus:ring-yellow-500 md:absolute left-0 top-1 accent-customYellow"
+              />
+              <div className="flex items-center flex-col w-fit">
+                <label
+                  htmlFor="agreePayments"
+                  className="ml-2 text-[#7d7777] font-base text-sm md:text-base"
+                >
+                  I agree that all payments will be processed through ZehMizeh.
+                </label>
+                <p className="text-[#7d7777] mt-1 text-md font-semibold text-sm md:text-base text-center">
+                  Paying outside ZehMizeh is against Halacha and violates our{" "}
+                  <span className="text-yellow-500 cursor-pointer font-light">
+                    Terms
+                  </span>
+                </p>
+              </div>
+            </div>
           </div>
-        </form>
+          {checkboxError && (
+            <p className="text-red-600 text-[15px] text-center pb-2 pt-1">
+              {checkboxError}
+            </p>
+          )}
 
-        <div className="mt-6">
-          <div className="text-sm text-center">
-            <Link
-              href="/auth/reset-password"
-              className="text-primary hover:underline"
-            >
-              Forgot your password?
+          {/* Login Button */}
+          <div className="flex flex-col items-center justify-center">
+            <CustomButton
+              text={isLoading ? "Logging In..." : "Log In"}
+              className="px-9 py-4 w-full max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5"
+              onClick={onLoginClick}
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-[20px]">Don't have an account?</p>
+          <p className="text-[20px]">
+            Register{" "}
+            <Link href={"/register/employer"} className="text-customYellow">
+              here!
             </Link>
-          </div>
+          </p>
         </div>
       </div>
     </div>
@@ -372,3 +228,225 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => {
 };
 
 export default LoginForm;
+
+// "use client";
+
+// import Image from "next/image";
+// import Link from "next/link";
+// import { useRef, useState } from "react";
+// import { IoEyeOutline } from "react-icons/io5";
+// import CustomButton from "../../components/custombutton/CustomButton";
+// import { useRouter } from "next/navigation";
+// import { useDispatch, useSelector } from "react-redux";
+// import { signin } from "../../lib/auth";
+// import { RootState } from "../../store";
+
+// const LoginForm = () => {
+//   const [email, setEmail] = useState("");
+//   const [password, setPassword] = useState("");
+//   const emailRef = useRef<HTMLInputElement>(null);
+//   const passwordRef = useRef<HTMLInputElement>(null);
+//   const [emailError, setEmailError] = useState("");
+//   const [passwordError, setPasswordError] = useState("");
+//   const [checkboxError, setCheckboxError] = useState("");
+
+//   const router = useRouter();
+//   const dispatch = useDispatch();
+//   const { isLoading } = useSelector((state: RootState) => state.auth);
+
+//   const [isChecked, setIsChecked] = useState(false);
+//   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
+//   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
+//   const [passwordVisible, setPasswordVisible] = useState(false);
+
+//   const handleCheckboxChange = () => {
+//     setIsChecked(!isChecked);
+//     if (!isChecked) {
+//       setCheckboxError("");
+//     }
+//   };
+
+//   const togglePasswordVisibility = () => {
+//     setPasswordVisible(!passwordVisible);
+//   };
+
+//   const onLoginClick = () => {
+//     let isValid = true;
+
+//     if (!email) {
+//       setEmailError("Email is required.");
+//       isValid = false;
+//     } else {
+//       setEmailError("");
+//     }
+
+//     if (!password) {
+//       setPasswordError("Password is required.");
+//       isValid = false;
+//     } else {
+//       setPasswordError("");
+//     }
+
+//     if (!isChecked) {
+//       setCheckboxError("You must accept the payment terms to continue");
+//       isValid = false;
+//     } else {
+//       setCheckboxError("");
+//     }
+
+//     if (isValid) {
+//       // Match the previous payload structure
+//       const formData = {
+//         email_id: email, // Changed from email to email_id
+//         password,
+//         terms_agreement: isChecked, // Map isChecked to terms_agreement
+//         stay_signedin: false, // Optional, set to false as in previous code
+//       };
+//       signin(dispatch, formData, router);
+//     }
+//   };
+
+//   return (
+//     <div className="flex flex-col gap-2 max-w-[730px] w-full mt-[100px] px-0 md:px-10">
+//       <Link href={"/home"} className="text-[#f2b420] text-[16px] font-medium">
+//         Go To Home
+//       </Link>
+//       <div className="bg-white rounded-xl py-12 flex flex-col gap-10 items-center justify-center">
+//         <Image
+//           src={"/zehmizeh-logo.svg"}
+//           alt={"logo"}
+//           width={70}
+//           height={70}
+//           quality={100}
+//           loading="lazy"
+//         />
+//         <p className="font-bold text-[30px] leading-none">Log in to ZehMizeh</p>
+//         <div className="flex flex-col gap-1 w-full max-w-[600px] md:px-0 px-6">
+//           <div
+//             className={`p-1 rounded-lg transition-all duration-300 ${
+//               isFocusedEmail ? "bg-blue-500/40 border" : "border-transparent"
+//             }`}
+//             onClick={() => emailRef.current?.focus()}
+//           >
+//             <div className="relative p-4 rounded-md border border-gray-300 bg-white cursor-text">
+//               <input
+//                 type="email"
+//                 placeholder=" "
+//                 ref={emailRef}
+//                 value={email}
+//                 onChange={(e) => setEmail(e.target.value)}
+//                 onFocus={() => setIsFocusedEmail(true)}
+//                 onBlur={() => setIsFocusedEmail(false)}
+//                 className="peer block w-full text-gray-900 bg-transparent focus:outline-none placeholder-transparent"
+//               />
+//               <label
+//                 className="cursor-text absolute left-4 text-gray-400 transition-all
+//                 peer-focus:-top-[1px] peer-focus:text-[14px] peer-focus:text-gray-400 
+//                 peer-placeholder-shown:top-4 peer-placeholder-shown:text-gray-500 peer-placeholder-shown:text-[17px]
+//                 -top-1 text-[14px] font-light"
+//               >
+//                 Email Address
+//               </label>
+//             </div>
+//           </div>
+//           {emailError && (
+//             <p className="text-red-600 text-[15px] pl-1">{emailError}</p>
+//           )}
+
+//           <div
+//             className={`p-1 rounded-lg transition-all duration-300 ${
+//               isFocusedPassword ? "bg-blue-500/40 border" : "border-transparent"
+//             }`}
+//             onClick={() => passwordRef.current?.focus()}
+//           >
+//             <div className="flex flex-row items-center justify-between relative p-4 rounded-md border border-gray-300 bg-white cursor-text">
+//               <input
+//                 type={passwordVisible ? "text" : "password"}
+//                 placeholder=" "
+//                 ref={passwordRef}
+//                 value={password}
+//                 onChange={(e) => setPassword(e.target.value)}
+//                 onFocus={() => setIsFocusedPassword(true)}
+//                 onBlur={() => setIsFocusedPassword(false)}
+//                 className="peer block w-full text-gray-900 bg-transparent focus:outline-none placeholder-transparent"
+//               />
+//               <IoEyeOutline
+//                 onClick={togglePasswordVisibility}
+//                 className={`cursor-pointer text-[24px] ${
+//                   passwordVisible ? "text-black" : "text-gray-400"
+//                 }`}
+//               />
+//               <label
+//                 className="cursor-text absolute left-4 text-gray-400 transition-all
+//                 peer-focus:-top-[1px] peer-focus:text-[14px] peer-focus:text-gray-400 
+//                 peer-placeholder-shown:top-4 peer-placeholder-shown:text-gray-500 peer-placeholder-shown:text-[17px]
+//                 -top-1 text-[14px] font-light"
+//               >
+//                 Password
+//               </label>
+//             </div>
+//           </div>
+//           {passwordError && (
+//             <p className="text-red-600 text-[15px] pl-1">{passwordError}</p>
+//           )}
+
+//           <div className="flex justify-end mt-3">
+//             <Link href={"/forgot-password"}>Forgot Password?</Link>
+//           </div>
+//           <div className="">
+//             <div className="bg-[#F8F9FA] p-4 rounded-lg border-gray-200 border mt-4 flex items-center justify-center">
+//               <div className="flex flex-row relative w-fit">
+//                 <input
+//                   type="checkbox"
+//                   id="agreePayments"
+//                   name="agreePayments"
+//                   checked={isChecked}
+//                   onChange={handleCheckboxChange}
+//                   className="h-6 w-6 text-yellow-500 border-gray-300 rounded focus:ring-yellow-500 md:absolute left-0 top-1 accent-customYellow"
+//                 />
+//                 <div className="flex items-center flex-col w-fit">
+//                   <label
+//                     htmlFor="agreePayments"
+//                     className="ml-2 text-[#7d7777] font-base text-sm md:text-base"
+//                   >
+//                     I agree that all payments will be processed through ZehMizeh.
+//                   </label>
+//                   <p className="text-[#7d7777] mt-1 text-md font-semibold text-sm md:text-base text-center">
+//                     Paying outside ZehMizeh is against Halacha and violates our{" "}
+//                     <span className="text-yellow-500 cursor-pointer font-light">
+//                       Terms
+//                     </span>
+//                   </p>
+//                 </div>
+//               </div>
+//             </div>
+//             {checkboxError && (
+//               <p className="text-red-600 text-[15px] text-center pb-2 pt-1">
+//                 {checkboxError}
+//               </p>
+//             )}
+//           </div>
+//           <div className="flex flex-col items-center justify-center">
+//             <CustomButton
+//               text={isLoading ? "Logging In..." : "Log In"}
+//               className="px-9 py-4 w-full max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5"
+//               onClick={onLoginClick}
+//               disabled={isLoading}
+//             />
+//           </div>
+//         </div>
+//         <div className="flex flex-col items-center justify-center">
+//           <p className="text-[20px]">Don't have an account?</p>
+//           <p className="text-[20px]">
+//             Register{" "}
+//             <Link href={"/register/employer"} className="text-customYellow">
+//               here!
+//             </Link>
+//           </p>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LoginForm;

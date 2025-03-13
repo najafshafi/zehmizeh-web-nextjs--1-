@@ -1,6 +1,6 @@
 import { CancelToken } from 'axios';
 import { apiClient } from './index';
-import { PusherNewMessage, SeenMessagePayload } from '../../store/redux/slices/chat.interface';
+import { PusherNewMessage, SeenMessagePayload } from 'redux/slices/chat.interface';
 
 const manageMessage = (data?: any, cancelToken?: CancelToken) =>
   apiClient.post('/message/manage-message', data, { cancelToken }).then((res) => {

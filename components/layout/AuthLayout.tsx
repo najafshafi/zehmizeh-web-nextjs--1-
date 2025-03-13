@@ -1,4 +1,4 @@
-import logo from '@/public/icons/logo.svg';
+import logo from '@/public/logo.png';
 import { Card, CardWrapper } from '@/components/styled/Auth.styled';
 import BackButton from '@/components/ui/BackButton';
 import { Link } from 'react-router-dom';
@@ -14,7 +14,7 @@ export default function AuthLayout({
 }: {
   children?: React.ReactNode;
   center?: boolean;
-  small?: any;
+  small?: boolean;
   logoClass?: string;
   showNavigationHeader?: boolean;
   onlyhomebtn?: boolean;
@@ -29,7 +29,7 @@ export default function AuthLayout({
     >
       <CardWrapper>
         {showNavigationHeader && (
-          <div className="header mb-2 d-flex align-items-center justify-content-between">
+          <div className=" mb-2 flex items-center justify-between">
             <BackButton />
             <Link to="/" className="yellow-link">
               Go to Home
@@ -38,7 +38,7 @@ export default function AuthLayout({
         )}
 
         {onlyhomebtn && (
-          <div className="header mb-2 d-flex align-items-center justify-content-start">
+          <div className=" mb-2 flex items-center justify-start">
             <Link to="/" className="yellow-link">
               Go to Home
             </Link>

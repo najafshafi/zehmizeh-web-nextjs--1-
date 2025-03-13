@@ -9,14 +9,15 @@ import { signUpValidationSchema } from '@/helpers/validation/SignUpValidation';
 import React, { Dispatch, SetStateAction } from 'react';
 import { Col, FloatingLabel, Form, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { Link, useParams } from 'react-router-dom';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import styled from 'styled-components';
 import Tooltip from '@/components/ui/Tooltip';
-import InfoIcon  from '@/public/icons/info-gray-18.svg'
+import InfoIcon from '@/public/icons/info-gray-32.svg';
 import cns from 'classnames';
 import { CONSTANTS } from '@/helpers/const/constants';
 import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
-import Eye from '@/public/icons/eye.svg';
+import Eye  from '@/public/icons/eye.svg';
 import toast from 'react-hot-toast';
 import { verifyEmailAndPhone } from '@/helpers/http/auth';
 import { StyledButton } from '@/components/forms/Buttons';
@@ -75,11 +76,12 @@ type Props = {
 } & TRegisterProps;
 
 export const AccountDetails = ({ setStep, setPayload, shouldShow }: Props) => {
-  const { userType } = useParams();
+  const params = useParams();
+  const userType = params?.type as string;
   const isClient = userType === 'employer';
 
   const [agency, setAgency] = React.useState(false);
-  const [location, setLocation] = React.useState<IFreelancerDetails['location']>(null);
+  const [location, setLocation] = React.useState<IFreelancerDetails['location'] | null>(null);
   const [phoneInput, setPhoneInput] = React.useState({
     value: '',
     error: '',
@@ -88,13 +90,25 @@ export const AccountDetails = ({ setStep, setPayload, shouldShow }: Props) => {
   const [locationError, setLocationError] = React.useState<{
     country: string;
     state: string;
-  }>(null);
+  } | null>(null);
   const [passwordPreview, setPasswordPreview] = React.useState({
     password: false,
   });
   const [verifyingEmailPhone, setVerifyingEmailPhone] = React.useState<boolean>(false);
 
-  const { register, handleSubmit, formState, setValue, trigger, clearErrors } = useForm({
+  const { register, handleSubmit, formState, setValue, trigger, clearErrors } = useForm<{
+    first_name: string;
+    last_name: string;
+    email_id: string;
+    password: string;
+    confirm: string;
+    phone_number: string;
+    country: string;
+    state?: string;
+    company_name?: string;
+    agency_name?: string;
+    user_type: string;
+  }>({
     resolver: yupResolver(signUpValidationSchema(location)),
     mode: 'onTouched',
   });
@@ -111,10 +125,8 @@ export const AccountDetails = ({ setStep, setPayload, shouldShow }: Props) => {
       shouldValidate: false,
     });
 
-    // Clear the error for phone_number field
     clearErrors('phone_number');
 
-    // If the phone number is valid length, trigger validation
     if (phone.length >= 11 && phone.length <= 15) {
       const isValid = !validatePhoneNumber(phone);
       if (isValid) {
@@ -130,27 +142,43 @@ export const AccountDetails = ({ setStep, setPayload, shouldShow }: Props) => {
 
   const isCountryHaveState = !CONSTANTS.COUNTRIES_SHORT_NAME_WITHOUT_STATE.includes(location?.country_short_name);
 
-  const togglePasswordPreview = (field) => {
+  const togglePasswordPreview = (field: 'password') => {
     setPasswordPreview((prevFormState) => {
-      return { ...prevFormState, [field]: !passwordPreview[field] };
+      return { ...prevFormState, [field]: !prevFormState[field] };
     });
   };
 
   /** @function This function will set the selected country in the form (state variable) */
-  const onSelectCountry = (item: typeof location) => {
-    setLocation(item);
-    setValue('country', item.country_name, { shouldValidate: true });
+  const onSelectCountry = (item: IFreelancerDetails['location']) => {
+    if (item) {
+      setLocation(item);
+      setValue('country', item.country_name || '', { shouldValidate: true });
+    }
   };
 
   /** @function This function will set the selected state in the form (state variable) */
   const onSelectState = (item: string) => {
-    const currentLocation = { ...location };
-    currentLocation.state = item;
-    setLocation(currentLocation);
-    setValue('state', currentLocation.state, { shouldValidate: true });
+    if (location) {
+      const currentLocation = { ...location };
+      currentLocation.state = item;
+      setLocation(currentLocation);
+      setValue('state', currentLocation.state, { shouldValidate: true });
+    }
   };
 
-  const handleNext = async (data: IFreelancerDetails & { email_id: string }) => {
+  const handleNext = async (data: {
+    first_name: string;
+    last_name: string;
+    email_id: string;
+    password: string;
+    confirm: string;
+    phone_number: string;
+    country: string;
+    state?: string;
+    company_name?: string;
+    agency_name?: string;
+    user_type: string;
+  }) => {
     const res = validatePhoneNumber(phoneInput.value);
     if (res) {
       setPhoneInput((prev) => ({
@@ -163,8 +191,8 @@ export const AccountDetails = ({ setStep, setPayload, shouldShow }: Props) => {
 
     if (!location?.country_name) {
       setLocationError({
-        ...locationError,
         country: 'Please select your country',
+        state: '',
       });
       return;
     }
@@ -422,7 +450,7 @@ export const AccountDetails = ({ setStep, setPayload, shouldShow }: Props) => {
         <br />
         <h4 className="align-self-center">
           Already have an account?{' '}
-          <Link to="/login" className="yellow-link">
+          <Link href="/login" className="yellow-link">
             Log in
           </Link>
         </h4>

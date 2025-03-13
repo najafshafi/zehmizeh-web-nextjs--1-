@@ -1,5 +1,5 @@
 import { apiClient } from './index';
-import { chatType } from '../../store/redux/slices/talkjs.interface';
+import { chatType } from '@/store/redux/slices/talkjs.interface';
 
 export const getSkills = (query: string) => {
   return apiClient.get(`/general/skills/list?q=${query}`).then((r) => r.data);

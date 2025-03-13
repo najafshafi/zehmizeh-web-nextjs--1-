@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { isClosedorDeclined } from '@/helpers/utils/helper';
 import { ChatFilters, UseChatMessagesReturn } from '@/helpers/types/chat.type';
-import { ChatUser } from "../../store/redux/slices/talkjs.interface";
+import { ChatUser } from '@/store/redux/slices/talkjs.interface';
 
 export const useChatMessages = (chatlist: ChatUser[], filters: ChatFilters): UseChatMessagesReturn => {
   const chatUsers = useMemo(() => {

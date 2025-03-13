@@ -5,12 +5,18 @@ import { useAuth } from '@/helpers/contexts/auth-context';
 import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { TRegisterProps } from '../types/commonProp';
 
 type Props = {
   payload: Partial<IFreelancerDetails>;
 } & TRegisterProps;
+
+type CheckboxState = {
+  box1: boolean;
+  box2: boolean;
+  box3: boolean;
+};
 
 const RegistrationCheckboxes = ({ shouldShow, payload, setStep }: Props) => {
   const { submitRegisterUser, isLoading } = useAuth();
@@ -18,13 +24,13 @@ const RegistrationCheckboxes = ({ shouldShow, payload, setStep }: Props) => {
   const [termsChecked, setTermsChecked] = useState<boolean>(false);
   const [isAllBoxesChecked, setIsAllBoxesChecked] = useState(false);
 
-  const [checked, setChecked] = useState({
+  const [checked, setChecked] = useState<CheckboxState>({
     box1: false,
     box2: false,
     box3: false,
   });
 
-  const toggleCheckBoxHandler = (key: string) => {
+  const toggleCheckBoxHandler = (key: keyof CheckboxState) => {
     setChecked({ ...checked, [key]: !checked[key] });
   };
 
@@ -54,8 +60,8 @@ const RegistrationCheckboxes = ({ shouldShow, payload, setStep }: Props) => {
       <div className="d-flex align-items-center mt-4">
         <Checkbox checked={termsChecked} toggle={() => setTermsChecked((prev) => !prev)} />
         <span className="ms-2">
-          I agree to all of ZehMizeh’s
-          <Link className="yellow-link" to="/terms-of-service" target="_blank">
+          I agree to all of ZehMizeh's
+          <Link href="/terms-of-service" className="yellow-link" target="_blank">
             {' '}
             Terms & Conditions.
           </Link>
@@ -81,7 +87,7 @@ const RegistrationCheckboxes = ({ shouldShow, payload, setStep }: Props) => {
       <div className="d-flex align-items-center mt-4">
         <Checkbox toggle={() => toggleCheckBoxHandler('box3')} checked={checked.box3} />
         <span className="ms-2">
-          I understand that payment for projects found on ZMZ <b>must be made through ZMZ’s payment system</b> and that
+          I understand that payment for projects found on ZMZ <b>must be made through ZMZ's payment system</b> and that
           payment through any other method constitutes theft from the company (a violation of our Terms of Service and
           Halacha).
         </span>
@@ -92,7 +98,7 @@ const RegistrationCheckboxes = ({ shouldShow, payload, setStep }: Props) => {
         <br />
         <h4 className="align-self-center">
           Already have an account?{' '}
-          <Link to="/login" className="yellow-link">
+          <Link href="/login" className="yellow-link">
             Log in
           </Link>
         </h4>

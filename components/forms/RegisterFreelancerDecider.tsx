@@ -101,8 +101,16 @@ const RegisterFreelancerDecider = () => {
       case 3:
         return (
           <RegisterFreelancerAgreement
+            onNext={(data) => {
+              // Handle the final submission with all data
+              console.log("Final submission data:", {
+                ...formData,
+                detailsData: data
+              });
+              // You can add your API call here
+            }}
             onBack={goToPreviousPage}
-            formData={formData}
+            detailsData={formData.detailsData}
           />
         );
       default:

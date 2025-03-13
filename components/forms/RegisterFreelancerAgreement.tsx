@@ -3,20 +3,76 @@ import Image from "next/image";
 import Link from "next/link";
 import CustomButton from "../custombutton/CustomButton";
 import { useState } from "react";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+import { useAuth } from "@/helpers/contexts/auth-context";
+import toast from "react-hot-toast";
+
+interface FreelancerDetailsData {
+  isAgency: boolean;
+  agencyName?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  country: string;
+  state: string;
+  phone: string;
+}
 
 interface RegisterFreelancerAgreementProps {
-  onNext: () => void;
+  onNext: (data: FreelancerDetailsData) => void;
   onBack: () => void;
+  detailsData: FreelancerDetailsData;
 }
 
 const RegisterFreelancerAgreement: React.FC<RegisterFreelancerAgreementProps> = ({
   onNext,
   onBack,
+  detailsData,
 }) => {
+  const { submitRegisterUser } = useAuth();
   const [isCheckedFirst, setIsCheckedFirst] = useState(false);
   const [isCheckedSecond, setIsCheckedSecond] = useState(false);
   const [isCheckedThird, setIsCheckedThird] = useState(false);
   const [isCheckedFourth, setIsCheckedFourth] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!isCheckedFirst || !isCheckedSecond || !isCheckedThird || !isCheckedFourth) {
+      toast.error("Please accept all terms and conditions to continue.");
+      return;
+    }
+
+    // Prepare the registration payload
+    const registrationPayload: Partial<IFreelancerDetails> = {
+      u_email_id: detailsData.email,
+      first_name: detailsData.firstName,
+      last_name: detailsData.lastName,
+      phone_number: detailsData.phone,
+      formatted_phonenumber: detailsData.phone,
+      is_agency: detailsData.isAgency ? 1 : 0,
+      agency_name: detailsData.agencyName || '',
+      user_type: 'freelancer' as const,
+      location: {
+        label: `${detailsData.country}, ${detailsData.state}`,
+        country_name: detailsData.country,
+        state: detailsData.state,
+        country_id: 0, // These will be set by the backend
+        country_code: '',
+        country_short_name: ''
+      }
+    };
+
+    console.log("Registration payload:", registrationPayload);
+    
+    try {
+      await submitRegisterUser(registrationPayload);
+      onNext(detailsData);
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error("Registration failed. Please try again.");
+    }
+  };
 
   return (
     <div className="flex flex-col gap-10 md:px-0 px-8  w-full max-w-[600px] sm:mt-0 mt-3">
@@ -126,7 +182,7 @@ const RegisterFreelancerAgreement: React.FC<RegisterFreelancerAgreementProps> = 
           <CustomButton
             text="Submit"
             className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
-            onClick={onNext}
+            onClick={handleSubmit}
           />
         </div>
       </div>

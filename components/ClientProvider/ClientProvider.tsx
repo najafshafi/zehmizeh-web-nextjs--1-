@@ -292,13 +292,13 @@ export default function ClientProvider({ children }: { children: React.ReactNode
   return (
     <Provider store={store}>
       <IntercomProvider appId={INTERCOM_APP_ID} autoBoot={isClient && !isStagingEnv()}>
+      <ReactQueryProvider>
         <ClientOnly>
           <AuthProvider>
-            <ReactQueryProvider>
               <ClientBootstrap>{children}</ClientBootstrap>
-            </ReactQueryProvider>
           </AuthProvider>
         </ClientOnly>
+        </ReactQueryProvider>
       </IntercomProvider>
     </Provider>
   );

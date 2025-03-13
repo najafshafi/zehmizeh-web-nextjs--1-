@@ -1,4 +1,5 @@
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import css from 'classnames';
 import { StyledButton } from '@/components/forms/Buttons';
 import { TRegisterProps } from '../types/commonProp';
@@ -6,8 +7,9 @@ import { TRegisterProps } from '../types/commonProp';
 type Props = TRegisterProps;
 
 export const AccountType = ({ shouldShow, setStep }: Props) => {
-  const { userType } = useParams();
-  const isClient = userType === 'employer';
+  const params = useParams();
+  const type = params?.type as string;
+  const isClient = type === 'employer';
 
   if (!shouldShow) return <></>;
 
@@ -20,10 +22,9 @@ export const AccountType = ({ shouldShow, setStep }: Props) => {
         hired and paid for your work, continue with a Freelancer account.
       </p>
       <div>
-        <div className="d-flex mt-4 planing flex-wrap gap-md-4 gap-3">
+        <div className="flex mt-4 planing flex-wrap gap-md-4 gap-3">
           <Link
-            to="/register/employer"
-            replace={true}
+            href="/register/employer"
             className={css('text-start d-flex align-items-center justify-content-center option-button', {
               'active-button': isClient,
             })}
@@ -32,11 +33,10 @@ export const AccountType = ({ shouldShow, setStep }: Props) => {
           </Link>
 
           <Link
-            to="/register/freelancer"
-            className={css('text-start d-flex align-items-center justify-content-center option-button', {
+            href="/register/freelancer"
+            className={css('text-start flex align-items-center justify-content-center option-button', {
               'active-button': !isClient,
             })}
-            replace={true}
           >
             <span>Freelancer - I Want to Be Hired</span>
           </Link>
@@ -48,12 +48,12 @@ export const AccountType = ({ shouldShow, setStep }: Props) => {
         <br />
         <h4 className="align-self-center">
           Already have an account?{' '}
-          <Link to="/login" className="yellow-link">
+          <Link href="/login" className="yellow-link">
             Log in
           </Link>
         </h4>
       </div>
-      <div className="d-flex flex-row justify-content-between">
+      <div className="flex flex-row justify-between">
         <div></div>
         <StyledButton onClick={() => setStep(2)}>Next</StyledButton>
       </div>

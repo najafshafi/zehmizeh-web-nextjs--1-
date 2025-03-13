@@ -5,8 +5,20 @@ import RegisterEmployerQuestion from "./RegisterEmployerQuestion";
 import RegisterEmployerDetails from "./RegisterEmployerDetails";
 import RegisterEmployerAgreement from "./RegisterEmployerAgreement";
 
+interface EmployerDetailsData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  country: string;
+  state: string;
+  phone: string;
+}
+
 const RegisterEmployerDecider = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [formData, setFormData] = useState<EmployerDetailsData | null>(null);
 
   // const router = useRouter();
 
@@ -26,6 +38,16 @@ const RegisterEmployerDecider = () => {
     }
   };
 
+  const handleDetailsSubmit = (data: EmployerDetailsData) => {
+    setFormData(data);
+    goToNextPage();
+  };
+
+  const handleAgreementSubmit = (data: EmployerDetailsData) => {
+    console.log("Final submission data:", data);
+    // Handle any post-registration logic here
+  };
+
   const renderCurrentPage = () => {
     switch (currentPage) {
       case 1:
@@ -33,7 +55,7 @@ const RegisterEmployerDecider = () => {
       case 2:
         return (
           <RegisterEmployerDetails
-            onNext={goToNextPage}
+            onNext={handleDetailsSubmit}
             onBack={goToPreviousPage}
           />
         );
@@ -41,7 +63,8 @@ const RegisterEmployerDecider = () => {
         return (
           <RegisterEmployerAgreement
             onBack={goToPreviousPage}
-            onNext={goToNextPage}
+            onNext={handleAgreementSubmit}
+            detailsData={formData!}
           />
         );
       default:

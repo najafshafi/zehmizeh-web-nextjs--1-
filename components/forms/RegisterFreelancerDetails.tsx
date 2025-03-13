@@ -5,6 +5,9 @@ import { IoEyeOutline } from "react-icons/io5";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css"; // Import default styles
 import CustomButton from "../custombutton/CustomButton";
+import PhoneInputWrapper from "../styled/PhoneInputWrapper";
+import PhoneNumberInput from "./phone-number-input";
+import ErrorMessage from "../ui/ErrorMessage";
 // import { IFreelancerDetails } from "@/helpers/types/freelancer.type"
 
 interface RegisterFreelancerDetailsProps {
@@ -646,7 +649,7 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
           />
           <style jsx>{`
             .PhoneInputCountryIcon {
-              width: 15px !important; /* Smaller flag */
+              width: 15px !important; 
               height: 15px !important;
             }
             input {
@@ -660,10 +663,19 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
               box-shadow: none !important;
             }
           `}</style>
+           
         </div>
         {phoneError && (
           <p className="text-red-600 text-[15px] pl-1">{phoneError}</p>
         )}
+
+        {/* <div className="flex flex-row w-full gap-3 mt-2">
+        <PhoneInputWrapper>
+            <label>Enter Phone Number</label>
+            <PhoneNumberInput initialValue={phone}     onChange={(value) => setPhone(value)} />
+          </PhoneInputWrapper>
+          <ErrorMessage>{phoneError}</ErrorMessage>
+        </div> */}
 
         <div
           className={`flex-grow p-1 rounded-lg transition-all duration-300 ${

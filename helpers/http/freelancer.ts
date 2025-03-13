@@ -1,4 +1,4 @@
-import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
+import { IFreelancerDetails } from 'helpers/types/freelancer.type';
 import { apiClient } from './index';
 
 export const getFreelancerDetails: (freelancerId: string) => Promise<{ data: IFreelancerDetails }> = (
