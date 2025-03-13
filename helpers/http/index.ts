@@ -1,19 +1,19 @@
 // src/helpers/http/index.ts
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { RetryQueueItem } from '@/helpers/types/axios.type';
 import toast from 'react-hot-toast';
-import { store } from '@/store/redux/store';
-import { setToken, logout } from '@/store/redux/authSlice';
+import { store } from '@/store/store';
+import { setToken, logout } from '@/store/redux/slices/authSlice';
 
 const refreshAndRetryQueue: RetryQueueItem[] = [];
 let isRefreshing = false;
 
-function onRequest(config: AxiosRequestConfig) {
+function onRequest(config: InternalAxiosRequestConfig) {
   const token = store.getState().auth.token || localStorage.getItem('token');
   if (token) {
-    config.headers['Authorization'] = `Bearer ${token}`;
+    config.headers.Authorization = `Bearer ${token}`;
   } else {
-    config.headers['Authorization'] = '';
+    config.headers.Authorization = '';
   }
   return config;
 }
@@ -21,7 +21,11 @@ function onRequest(config: AxiosRequestConfig) {
 const onResponse = (response: AxiosResponse): AxiosResponse => response;
 
 const onResponseError = async (error: AxiosError): Promise<unknown> => {
-  const originalRequest: AxiosRequestConfig = error.config;
+  if (!error.config) {
+    return Promise.reject(error);
+  }
+
+  const originalRequest = error.config;
 
   if (error?.response?.status === 401) {
     if (!isRefreshing) {
@@ -33,15 +37,23 @@ const onResponseError = async (error: AxiosError): Promise<unknown> => {
           url: '/auth/refresh',
           withCredentials: true,
         });
-        if (!response?.data?.data?.token) throw new Error('Unauthorized');
+        
+        if (!response?.data?.data?.token) {
+          throw new Error('Unauthorized');
+        }
 
         const newToken = response.data.data.token;
         store.dispatch(setToken(newToken));
-        localStorage.setItem('token', newToken); // Optional: Keep localStorage as backup
-        originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+        localStorage.setItem('token', newToken);
+        
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        }
 
         refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
-          config.headers['Authorization'] = `Bearer ${newToken}`;
+          if (config.headers) {
+            config.headers.Authorization = `Bearer ${newToken}`;
+          }
           apiClient(config).then(resolve).catch(reject);
         });
         refreshAndRetryQueue.length = 0;
@@ -55,6 +67,7 @@ const onResponseError = async (error: AxiosError): Promise<unknown> => {
         setTimeout(() => {
           window.location.replace('/login');
         }, 1000);
+        return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
       }
@@ -63,13 +76,17 @@ const onResponseError = async (error: AxiosError): Promise<unknown> => {
     return new Promise((resolve, reject) => {
       refreshAndRetryQueue.push({ config: originalRequest, resolve, reject });
     });
-  } else if (!axios.isCancel(error)) {
-    if (error.response?.status === 502) window.location.reload();
-    console.log('error', error);
   }
 
-  if (error?.message?.toLowerCase?.() === 'network error') {
-    error.message = 'Network Error - Switch wifi/web network to continue';
+  if (!axios.isCancel(error)) {
+    if (error.response?.status === 502) {
+      window.location.reload();
+    }
+    console.error('API Error:', error);
+  }
+
+  if (error?.message?.toLowerCase() === 'network error') {
+    error.message = 'Network Error - Please check your internet connection';
   }
 
   return Promise.reject(error);
@@ -77,6 +94,7 @@ const onResponseError = async (error: AxiosError): Promise<unknown> => {
 
 export const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_API,
+  withCredentials: true,
 });
 
 apiClient.interceptors.request.use(onRequest);

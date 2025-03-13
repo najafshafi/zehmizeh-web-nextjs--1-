@@ -1,4 +1,4 @@
-import { breakpoints } from 'helpers/hooks/useResponsive';
+import { breakpoints } from '@/helpers/hooks/useResponsive';
 import styled, { css } from 'styled-components';
 
 export const RegisterWrapper = styled.div`

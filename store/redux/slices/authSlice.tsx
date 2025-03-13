@@ -1,5 +1,5 @@
 // src/redux/authSlice.ts
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { apiClient } from '@/helpers/http/index';
 import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
 import { IClientDetails } from '@/helpers/types/client.type';
@@ -12,6 +12,37 @@ interface AuthState {
   token: string | null;
   isLoading: boolean;
   isBoostraping: boolean;
+}
+
+interface LoginPayload {
+  email_id: string;
+  password: string;
+  terms_agreement: boolean;
+  stay_signedin?: boolean;
+}
+
+interface TwoFactorPayload {
+  formdata: {
+    action: 'send_otp' | 'verify_otp';
+    type: 'new_registration' | 'login';
+    otp?: string;
+  };
+  email: string;
+}
+
+interface RegisterPayload {
+  email_id: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  terms_agreement: boolean;
+  user_type: 'freelancer' | 'client';
+}
+
+interface AuthResponse {
+  user: IFreelancerDetails & IClientDetails;
+  token: string;
 }
 
 const initialState: AuthState = {
@@ -35,17 +66,23 @@ export const fetchUser = createAsyncThunk('auth/fetchUser', async (_, { rejectWi
 });
 
 // Async thunk for login
-export const login = createAsyncThunk('auth/login', async (formdata: any, { rejectWithValue }) => {
-  try {
-    const response = await apiClient.post('/auth/login', formdata);
-    if (response.data.status) {
-      return response.data.data;
+export const login = createAsyncThunk<AuthResponse, LoginPayload, { rejectValue: string }>(
+  'auth/login',
+  async (formdata, { rejectWithValue }) => {
+    try {
+      const response = await apiClient.post<{ status: boolean; data: AuthResponse; message: string }>(
+        '/auth/login',
+        formdata
+      );
+      if (response.data.status) {
+        return response.data.data;
+      }
+      return rejectWithValue(response.data.message);
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Login failed');
     }
-    return rejectWithValue(response.data.message);
-  } catch (error: any) {
-    return rejectWithValue(error.response?.data?.message || 'Login failed');
   }
-});
+);
 
 // Async thunk for logout
 export const logout = createAsyncThunk('auth/logout', async () => {
@@ -89,23 +126,23 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setUser: (state, action) => {
+    setUser: (state, action: PayloadAction<(IFreelancerDetails & IClientDetails) | null>) => {
       state.user = action.payload;
     },
-    setToken: (state, action) => {
+    setToken: (state, action: PayloadAction<string | null>) => {
       state.token = action.payload;
     },
-    setLoading: (state, action) => {
+    setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
-    setBootstraping: (state, action) => {
+    setBootstraping: (state, action: PayloadAction<boolean>) => {
       state.isBoostraping = action.payload;
     },
-    setEmail: (state, action) => {
+    setEmail: (state, action: PayloadAction<string>) => {
       if (state.user) {
         state.user.email_id = action.payload;
       } else {
-        state.user = { email_id: action.payload } as any;
+        state.user = { email_id: action.payload } as IFreelancerDetails & IClientDetails;
       }
     },
   },

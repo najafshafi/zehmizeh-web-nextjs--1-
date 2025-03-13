@@ -134,7 +134,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
             } else if (data.data.user_type === 'client') {
               router.push('/client/dashboard');
             } else {
-              router.push('/dashboard');
+              router.push('/frelancer/account/profile');
             }
           } else {
             if (data?.errorCode === 101) {
@@ -162,7 +162,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
           } else if (userType === 'client') {
             router.push('/client/dashboard');
           } else {
-            router.push('/dashboard');
+            router.push('/frelancer/account/profile');
           }
         } else if (action.payload?.errorCode === 101) {
           dispatch(setEmail(action.payload.emailId));
