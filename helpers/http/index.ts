@@ -2,23 +2,39 @@
 import axios, { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { RetryQueueItem } from '@/helpers/types/axios.type';
 import toast from 'react-hot-toast';
-import { store } from '@/store/store';
-import { setToken, logout } from '@/store/redux/slices/authSlice';
 
 const refreshAndRetryQueue: RetryQueueItem[] = [];
 let isRefreshing = false;
 
 function onRequest(config: InternalAxiosRequestConfig) {
-  const token = store.getState().auth.token || localStorage.getItem('token');
+  // Get token from localStorage directly
+  const token = localStorage.getItem('token');
+  
+  // Set headers
+  config.headers['Content-Type'] = 'application/json';
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-  } else {
-    config.headers.Authorization = '';
   }
+  
+  // Only set withCredentials for same-origin requests
+  if (typeof window !== 'undefined') {
+    const currentOrigin = window.location.origin;
+    const apiOrigin = process.env.NEXT_PUBLIC_BACKEND_API;
+    if (apiOrigin && currentOrigin === apiOrigin) {
+      config.withCredentials = true;
+    }
+  }
+  
   return config;
 }
 
-const onResponse = (response: AxiosResponse): AxiosResponse => response;
+const onResponse = (response: AxiosResponse): AxiosResponse => {
+  // Log successful responses in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('API Response:', response.data);
+  }
+  return response;
+};
 
 const onResponseError = async (error: AxiosError): Promise<unknown> => {
   if (!error.config) {
@@ -27,7 +43,8 @@ const onResponseError = async (error: AxiosError): Promise<unknown> => {
 
   const originalRequest = error.config;
 
-  if (error?.response?.status === 401) {
+  // Handle 401 Unauthorized
+  if (error.response?.status === 401) {
     if (!isRefreshing) {
       isRefreshing = true;
       try {
@@ -35,7 +52,9 @@ const onResponseError = async (error: AxiosError): Promise<unknown> => {
           method: 'GET',
           baseURL: process.env.NEXT_PUBLIC_BACKEND_API,
           url: '/auth/refresh',
-          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+          },
         });
         
         if (!response?.data?.data?.token) {
@@ -43,7 +62,6 @@ const onResponseError = async (error: AxiosError): Promise<unknown> => {
         }
 
         const newToken = response.data.data.token;
-        store.dispatch(setToken(newToken));
         localStorage.setItem('token', newToken);
         
         if (originalRequest.headers) {
@@ -60,7 +78,6 @@ const onResponseError = async (error: AxiosError): Promise<unknown> => {
 
         return axios(originalRequest);
       } catch (refreshError) {
-        store.dispatch(logout());
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         toast.error('Session expired - please login again.');
@@ -78,15 +95,27 @@ const onResponseError = async (error: AxiosError): Promise<unknown> => {
     });
   }
 
-  if (!axios.isCancel(error)) {
-    if (error.response?.status === 502) {
-      window.location.reload();
-    }
-    console.error('API Error:', error);
+  // Handle other errors
+  if (error.response?.status === 500) {
+    toast.error('Server error - Please try again later');
+    return Promise.reject(error);
   }
 
-  if (error?.message?.toLowerCase() === 'network error') {
-    error.message = 'Network Error - Please check your internet connection';
+  if (error.response?.status === 502) {
+    window.location.reload();
+    return Promise.reject(error);
+  }
+
+  // Handle network errors
+  if (!error.response) {
+    toast.error('Network error - Please check your connection');
+    return Promise.reject(error);
+  }
+
+  // Handle non-JSON responses
+  if (error.response.headers['content-type']?.includes('text/html')) {
+    toast.error('Server error - Please try again later');
+    return Promise.reject(error);
   }
 
   return Promise.reject(error);
@@ -94,7 +123,10 @@ const onResponseError = async (error: AxiosError): Promise<unknown> => {
 
 export const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_API,
-  withCredentials: true,
+  timeout: 10000, // 10 second timeout
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 apiClient.interceptors.request.use(onRequest);

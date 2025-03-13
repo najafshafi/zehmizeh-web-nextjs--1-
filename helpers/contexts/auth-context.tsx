@@ -10,7 +10,7 @@ import {
   setBootstraping,
   setEmail,
   setUser,
-} from '@/store/redux/authSlice';
+} from '@/store/redux/slices/authSlice';
 import Loader from '@/components/Loader';
 import { useIntercom } from 'react-use-intercom';
 import { capitalizeFirstLetter } from '@/helpers/utils/misc';
@@ -22,6 +22,7 @@ import { RootState } from '@/store/store';
 import toast from 'react-hot-toast';
 import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
 import { IClientDetails } from '@/helpers/types/client.type';
+import { apiClient } from '@/helpers/http';
 
 interface AuthContextType {
   user: (IFreelancerDetails & IClientDetails) | null;
@@ -104,23 +105,22 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     // Handle token-based login (e.g., OAuth)
     if (typeof formdata === 'string') {
       dispatch(setLoading(true));
-      fetch(`${process.env.REACT_APP_BACKEND_API}user/get`, {
+      apiClient.get('/user/get', {
         headers: {
           Authorization: `Bearer ${formdata}`,
         },
       })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.status) {
+        .then((response) => {
+          if (response.data.status) {
             const userAllData = {
-              ...data.data,
-              user_type: data.data.user_type,
-              user_id: data.data.user_id,
+              ...response.data.data,
+              user_type: response.data.data.user_type,
+              user_id: response.data.data.user_id,
             };
 
             // Update timezone if needed
             const currentTimezone = moment.tz.guess();
-            if (data.data && 'timezone' in data.data && currentTimezone !== data.data.timezone) {
+            if (response.data.data && 'timezone' in response.data.data && currentTimezone !== response.data.data.timezone) {
               apiClient.put('/user/edit', { timezone: currentTimezone });
             }
 
@@ -131,18 +131,18 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
             const from = router.query?.from as string;
             if (from) {
               router.push(from);
-            } else if (data.data.user_type === 'client') {
+            } else if (response.data.data.user_type === 'client') {
               router.push('/client/dashboard');
             } else {
               router.push('/frelancer/account/profile');
             }
           } else {
-            if (data?.errorCode === 101) {
-              dispatch(setEmail(data.emailId));
+            if (response.data?.errorCode === 101) {
+              dispatch(setEmail(response.data.emailId));
               router.push('/2fa');
-              toast.error(data.response);
+              toast.error(response.data.response);
             } else {
-              toast.error(data.message);
+              toast.error(response.data.message);
             }
           }
           dispatch(setLoading(false));

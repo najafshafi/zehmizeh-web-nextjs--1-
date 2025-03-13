@@ -172,7 +172,7 @@ import { Provider } from 'react-redux';
 import { store } from '@/store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { bootstrapUser } from '@/store/redux/authSlice';
+import { bootstrapUser } from '@/store/redux/slices/authSlice';
 import Loader from '../Loader';
 import ReactQueryProvider from '../ReactQueryProvider/ReactQueryProvider';
 import { useEffect, useState } from 'react'; // Add useState
