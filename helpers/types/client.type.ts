@@ -18,20 +18,27 @@ export interface IClientDetails {
   agency_name: string;
   u_email_id: string;
   date_created: string;
-  location: Location;
-  settings: Settings;
+  location: {
+    label: string;
+    state: string;
+    country_id: number;
+    country_code: string;
+    country_name: string;
+    country_short_name: string;
+  };
+  settings: Record<string, unknown>;
   is_deleted: number;
   new_message_email_notification: number;
-  timezone: string;
+  timezone?: string;
   done_jobs: number;
   avg_rating: number;
   count_rating: number;
-  carddata: Carddaum[];
-  account: Account[];
+  carddata: Array<Record<string, unknown>>;
+  account: Array<Record<string, unknown>>;
   jobData: unknown[];
-  review: Review[];
-  email_id: string; // NOT_VERIFIED
-  id: string; // NOT_VERIFIED
+  review: Array<Record<string, unknown>>;
+  email_id: string;
+  id: string;
 }
 
 interface Review {

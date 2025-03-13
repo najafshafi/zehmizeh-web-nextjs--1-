@@ -2,7 +2,7 @@
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/redux/store";
-import { login, logout } from "@/store/redux/slices/authSlice";
+import { login, logout } from "@/store/redux/authSlice";
 
 const AuthStatus = () => {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);

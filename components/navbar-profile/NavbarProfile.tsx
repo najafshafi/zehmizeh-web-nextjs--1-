@@ -9,6 +9,8 @@ import { BsBell } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
 import CustomButton from "../custombutton/CustomButton";
 import { useAuth } from "@/helpers/contexts/auth-context";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 // Types for better type safety
 interface NavigationItem {
@@ -23,6 +25,7 @@ interface MenuItem {
 
 const NavbarProfile = () => {
   const { signout, user } = useAuth();
+  const { isLoading } = useSelector((state: RootState) => state.auth);
   const pathname = usePathname();
   const url = pathname.split("/")[1];
   const router = useRouter();
@@ -93,12 +96,18 @@ const NavbarProfile = () => {
     </div>
   );
 
-  // Remove redundant fetchUser effect if handled in signout or auth context
-  useEffect(() => {
-    if (user) {
-      console.log("User data loaded:", user);
+  // Display name with loading state
+  const renderUserName = () => {
+    if (isLoading) {
+      return <span className="animate-pulse bg-gray-200 rounded h-6 w-20 inline-block"></span>;
     }
-  }, [user]);
+    
+    if (user?.first_name) {
+      return <span className="font-medium">{user.first_name}</span>;
+    }
+    
+    return "User";
+  };
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-secondary border-b border-primary h-[110px] flex items-center">
@@ -162,9 +171,15 @@ const NavbarProfile = () => {
               aria-expanded={isProfileDropdownOpen}
               aria-label="Profile menu"
             >
-              <Image src="/hiring.png" width={50} height={50} alt="User avatar" priority />
+              <Image 
+                src={user?.user_image || "/hiring.png"} 
+                width={50} 
+                height={50} 
+                alt="User avatar" 
+                priority 
+              />
               <p className="flex items-center gap-2 text-lg text-[#212529]">
-                {user?.first_name || "User"}
+                {renderUserName()}
                 <IoIosArrowDown
                   size={20}
                   className={`transition-transform ${isProfileDropdownOpen ? "rotate-180" : ""}`}
@@ -220,6 +235,16 @@ const NavbarProfile = () => {
               {item.label}
             </Link>
           ))}
+          <div className="flex items-center gap-2 p-3 border-b border-gray-300">
+            <Image 
+              src={user?.user_image || "/hiring.png"} 
+              width={40} 
+              height={40} 
+              alt="User avatar" 
+              className="rounded-full"
+            />
+            <p className="text-[16px]">Welcome, {renderUserName()}</p>
+          </div>
           <CustomButton
             text="Find Projects"
             className="px-9 py-4 w-fit mx-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
@@ -228,6 +253,15 @@ const NavbarProfile = () => {
               router.push("/find-projects"); // Update with actual route
             }}
           />
+          <button
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              handleLogout();
+            }}
+            className="text-red-500 py-3 px-4 text-left text-[16px]"
+          >
+            Logout
+          </button>
         </nav>
       )}
     </header>
