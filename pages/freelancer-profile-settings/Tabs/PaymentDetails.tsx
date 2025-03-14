@@ -38,7 +38,7 @@ export const PaymentDetails = () => {
       <Col md={12} lg={6} style={{ padding: '0 0 32px 0' }}>
         <ProfileDetailSection
           onEdit={() => setIsModalOpen(true)}
-          fullWidth={true}
+          fullwidth={true}
           add={showAddBankButton(data)}
           stripeStatus={stpStatus}
           edit={false}

@@ -1,8 +1,8 @@
-import styled from 'styled-components';
-import Image from 'next/image';
-import Info from "../../public/icons/info-circle-gray.svg";
 import { useRef } from 'react';
 import Tooltip from 'rc-tooltip';
+import styled from 'styled-components';
+import Info from "../../public/icons/info-circle-gray.svg";
+import 'rc-tooltip/assets/bootstrap.css';
 
 const TooltipContent = styled.div`
   box-shadow: 0px 4px 22px rgba(0, 0, 0, 0.25);
@@ -16,6 +16,7 @@ const TooltipContent = styled.div`
     color: ${(props) => props.theme.colors.primary};
   }
 `;
+
 const Wrapper = styled.div`
   .title {
     padding: 0px !important;
@@ -40,20 +41,22 @@ function UITooltip({
   className?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+
   return (
     <Wrapper className={className} ref={containerRef}>
       <Tooltip
         placement="top"
         overlay={<TooltipContent>{children}</TooltipContent>}
         arrowContent={<div className="rc-tooltip-arrow-inner"></div>}
+        destroyTooltipOnHide={true}
       >
-        <span className="title pointer d-block">
+        <span className="cursor-pointer inline-block">
           {customTrigger ? (
             customTrigger
           ) : (
-            <>
-              {title ? title : ''} <Image src={Info} alt="Info" />
-            </>
+            <span className="flex items-center">
+              {title || ''} <Info />
+            </span>
           )}
         </span>
       </Tooltip>

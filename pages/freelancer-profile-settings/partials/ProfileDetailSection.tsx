@@ -9,32 +9,32 @@
 // const ProfileDetailSection = ({
 //   title,
 //   details,
-//   fullWidth = false,
+//   fullwidth = false,
 //   onEdit,
 //   add,
 //   onDelete,
 //   deleteOption,
 //   edit = true,
-//   isRequired = false,
+//   isrequired = false,
 //   stripeStatus,
 // }: {
 //   title: React.ReactNode;
 //   details?: React.ReactNode;
-//   fullWidth?: boolean;
+//   fullwidth?: boolean;
 //   onEdit?: () => void;
 //   onDelete?: () => void;
 //   deleteOption?: boolean;
 //   add?: boolean;
 //   edit?: boolean;
-//   isRequired?: boolean;
+//   isrequired?: boolean;
 //   stripeStatus?: string;
 // }) => {
 //   return (
-//     <div className={`${fullWidth ? 'w-full' : ''}`}>
+//     <div className={`${fullwidth ? 'w-full' : ''}`}>
 //       <div
 //         className={`
 //           flex flex-col gap-3 bg-white/70 h-full p-6 rounded-lg shadow-[0_4px_24px_rgba(0,0,0,0.05)]
-//           ${isRequired ? 'border border-gray-500' : ''}
+//           ${isrequired ? 'border border-gray-500' : ''}
 //           ${stripeStatus === 'pending' ? 'stripe-pending' : ''}
 //           ${stripeStatus === 'inprogress' ? 'stripe-inprogress' : ''}
 //           ${stripeStatus === 'stripe-verified' ? 'stripe-verified' : ''}
@@ -43,7 +43,7 @@
 //         <div className="flex items-center justify-between">
 //           <div className="text-2xl font-normal">{title}</div>
 //           <div className="flex items-center gap-2">
-//             {isRequired && (
+//             {isrequired && (
 //               <div className="w-fit px-6 py-1.5 rounded-md text-[13px] font-medium uppercase flex items-center justify-center text-gray-500 bg-gray-100">
 //                 Required
 //               </div>
@@ -105,18 +105,17 @@
 import styled from "styled-components";
 import EditIcon from "../../../public/icons/edit-blue-outline.svg";
 import DeleteIcon from "../../../public/icons/trash.svg";
-import Image from "next/image";
 
 const ProfileDetailSectionStyled = styled.div<{
-  fullWidth: boolean;
-  isRequired?: boolean;
+  fullwidth: boolean;
+  isrequired?: boolean;
 }>`
   background: rgba(255, 255, 255, 0.7);
   height: 100%;
   padding: 2rem;
   border-radius: 0.875rem;
   box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
-  border: ${(props) => (props?.isRequired ? "1px solid #888" : "")};
+  border: ${(props) => (props?.isrequired ? "1px solid #888" : "")};
   .button {
     transition: all 0.2s ease-in-out;
     &:hover {
@@ -184,30 +183,29 @@ const RequiredTag = styled.div`
 const ProfileDetailSection = ({
   title,
   details,
-  fullWidth = false,
+  fullwidth,
   onEdit,
   add,
   onDelete,
   deleteOption,
   edit = true,
-  isRequired = false,
+  isrequired ,
   stripeStatus,
 }: {
   title: React.ReactNode;
   details?: React.ReactNode;
-  fullWidth?: boolean;
+  fullwidth?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
   deleteOption?: boolean;
   add?: boolean;
   edit?: boolean;
-  isRequired?: boolean;
+  isrequired?: boolean;
   stripeStatus?: string;
 }) => {
   return (
-    // <div>
     <ProfileDetailSectionStyled
-      fullWidth={fullWidth}
+      fullwidth={fullwidth}
       className={`flex flex-col gap-3 ${
         stripeStatus === "pending"
           ? "stripe-pending"
@@ -215,12 +213,12 @@ const ProfileDetailSection = ({
           ? "stripe-inprogress"
           : "stripe-verified"
       }`}
-      isRequired={isRequired}
+      isrequired={isrequired}
     >
       <div className="flex items-center justify-between">
         <div className="fs-24 fw-400">{title}</div>
         <div className="flex items-center gap-2">
-          {isRequired && <RequiredTag>Required</RequiredTag>}
+          {isrequired && <RequiredTag>Required</RequiredTag>}
           {add ? (
             <div
               className="button add-btn pointer fs-1rem fw-400"
@@ -229,17 +227,13 @@ const ProfileDetailSection = ({
               Add
             </div>
           ) : edit ? (
-            <Image
-              src={EditIcon}
-              alt="Edit Icon"
+            <EditIcon
               className="cursor-pointer"
               onClick={onEdit}
             />
           ) : null}
           {deleteOption && (
-            <Image
-              src={DeleteIcon}
-              alt="Delete Icon"
+            <DeleteIcon
               className="cursor-pointer"
               onClick={onDelete}
             />
@@ -248,7 +242,6 @@ const ProfileDetailSection = ({
       </div>
       {details}
     </ProfileDetailSectionStyled>
-    // </div>
   );
 };
 

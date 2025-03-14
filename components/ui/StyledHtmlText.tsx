@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 
-const Wrapper = styled.div<{ minLines: number }>`
+const Wrapper = styled.div<{ minlines: number }>`
   p {
     margin-bottom: 0px;
     word-break: break-word;
@@ -23,9 +23,9 @@ const Wrapper = styled.div<{ minLines: number }>`
     display: -webkit-box;
     font-size: 1.125rem; /* fallback */
     line-height: 1.8755rem;
-    max-height: ${(props) => props.minLines * 3}rem; /* fallback */
+    max-height: ${(props) => props.minlines * 3}rem; /* fallback */
     -webkit-line-clamp: ${(props) =>
-      props.minLines}; /* number of lines to show */
+      props.minlines}; /* number of lines to show */
     -webkit-box-orient: vertical;
   }
 `;
@@ -34,7 +34,7 @@ type Props = {
   needToBeShorten?: boolean;
   id?: string;
   className?: string;
-  minLines?: number;
+  minlines?: number;
 };
 
 const StyledHtmlText = ({
@@ -42,7 +42,7 @@ const StyledHtmlText = ({
   needToBeShorten,
   id,
   className,
-  minLines = 3,
+  minlines = 3,
 }: Props) => {
   const [showViewMore, setShowViewMore] = useState<boolean>(false);
   const [viewMore, setViewMore] = useState<boolean>(false);
@@ -69,7 +69,7 @@ const StyledHtmlText = ({
       if (element) {
         element.innerHTML = htmlString;
         const totalLines = getLinesCount(element);
-        if (totalLines > minLines) {
+        if (totalLines > minlines) {
           if (needToBeShorten) {
             setShowViewMore(true);
             element.classList.toggle('description');
@@ -79,7 +79,7 @@ const StyledHtmlText = ({
         }
       }
     },
-    [id, minLines, needToBeShorten]
+    [id, minlines, needToBeShorten]
   );
 
   useEffect(() => {
@@ -103,7 +103,7 @@ const StyledHtmlText = ({
   };
 
   return (
-    <Wrapper className={className} minLines={minLines}>
+    <Wrapper className={className} minlines={minlines}>
       <span id={id || 'htmlString'}></span>
       {showViewMore == true && (
         <>

@@ -15,21 +15,34 @@ const fakeAuth = {
 
 export { fakeAuth };
 
+interface User {
+  id: string;
+  email: string;
+  [key: string]: any;
+}
+
+const isBrowser = typeof window !== 'undefined';
+
 export const saveAuthStorage = ({
   token,
   user,
 }: {
   token: string;
-  user: any;
+  user: User;
 }) => {
-  localStorage.setItem('token', token);
-  localStorage.setItem('user', JSON.stringify(user));
+  if (isBrowser) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+  }
 };
 
 export const getToken = () => {
+  if (!isBrowser) return null;
   return localStorage.getItem('token');
 };
+
 export const getStorageUser = () => {
+  if (!isBrowser) return null;
   const usr = localStorage.getItem('user');
-  return usr ? JSON.parse(localStorage.getItem('user')) : null;
+  return usr ? JSON.parse(usr) : null;
 };

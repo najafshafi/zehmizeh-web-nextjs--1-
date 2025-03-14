@@ -16,6 +16,7 @@ interface EmployerDetailsData {
   country: string;
   state: string;
   phone: string;
+  companyName?: string;
 }
 
 interface RegisterEmployerAgreementProps {
@@ -42,21 +43,24 @@ const RegisterEmployerAgreement: React.FC<RegisterEmployerAgreementProps> = ({
     }
 
     // Prepare the registration payload
-    const registrationPayload: Partial<IFreelancerDetails> = {
-      u_email_id: detailsData.email,
+    const registrationPayload = {
       first_name: detailsData.firstName,
       last_name: detailsData.lastName,
+      email_id: detailsData.email,
+      password: detailsData.password,
+      confirm: detailsData.confirmPassword,
       phone_number: detailsData.phone,
       formatted_phonenumber: detailsData.phone,
-      is_agency: 0,
       user_type: 'client' as const,
+      is_agency: 0,
+      company_name: detailsData.companyName || '',
       location: {
-        label: `${detailsData.country}, ${detailsData.state}`,
         country_name: detailsData.country,
         state: detailsData.state,
-        country_id: 0, // These will be set by the backend
-        country_code: '',
-        country_short_name: ''
+        country_id: 305, // These will be set by the backend
+        country_code: "1",
+        country_short_name: "US",
+        label: detailsData.country
       }
     };
 
