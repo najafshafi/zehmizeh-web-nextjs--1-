@@ -26,6 +26,7 @@ export const StyledModal = styled(Modal)<{
       return '';
     }}
   }
+
   .modal-body {
     /* overflow-x: hidden; */
     @media ${breakpoints.mobile} {
@@ -33,9 +34,11 @@ export const StyledModal = styled(Modal)<{
     }
     padding: 3rem;
   }
+
   .content {
     gap: 1rem !important;
   }
+    
   .close {
     position: absolute;
     top: 0;

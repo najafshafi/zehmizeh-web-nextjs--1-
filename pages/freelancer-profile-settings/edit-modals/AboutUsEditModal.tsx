@@ -4,12 +4,9 @@
 "use client";
 import { useState, useMemo, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
-import { Modal, Button } from "react-bootstrap";
+import { VscClose } from "react-icons/vsc";
 import { editUser } from "@/helpers/http/auth";
-import { StyledButton } from "@/components/forms/Buttons";
-import { StyledModal } from "@/components/styled/StyledModal";
 import TextEditor from "@/components/forms/TextEditor";
-import { EditFormWrapper } from "./edit-modals.styled";
 import { getPlainText, showErr } from "@/helpers/utils/misc";
 import { CONSTANTS } from "@/helpers/const/constants";
 
@@ -35,28 +32,39 @@ const AboutUsEditModal = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [isMaxLimitReached, setIsMaxLimitReached] = useState(false);
   const [formState, setFormState] = useState({
-    description: data.aboutMe,
-    link: "",
+    description: data.aboutMe ?? "",
+    link: data.portfolioLink ?? "",
   });
 
-  const handleChange = useCallback((field, value) => {
-    setFormState((prevFormState: any) => {
-      return { ...prevFormState, [field]: value };
-    });
+  const handleChange = useCallback((field: string, value: string) => {
+    setFormState((prevFormState) => ({
+      ...prevFormState,
+      [field]: value,
+    }));
   }, []);
 
   useEffect(() => {
     if (!show) {
       setFormState({
         description: data.aboutMe ?? "",
-        link: data.portfolioLink,
+        link: data.portfolioLink ?? "",
       });
     }
   }, [data.aboutMe, data.portfolioLink, show]);
 
+  useEffect(() => {
+    if (show) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [show]);
+
   const handleUpdate = () => {
     const { description, link } = formState;
-    // Edit about me api call
     if (wordCount > CONSTANTS.ABOUT_ME_MAXIMUM_CHARACTERS) {
       showErr(
         `Maximum ${CONSTANTS.ABOUT_ME_MAXIMUM_CHARACTERS} characters are allowed.`
@@ -75,13 +83,14 @@ const AboutUsEditModal = ({
       setLoading(true);
       const body = {
         about_me: description,
-        portfolio_link: link ?? "",
+        portfolio_link: link,
       };
       const promise = editUser(body);
       toast.promise(promise, {
         loading: "Updating your details - please wait...",
         success: (res) => {
           onUpdate();
+          onClose();
           setLoading(false);
           return res.message;
         },
@@ -95,7 +104,7 @@ const AboutUsEditModal = ({
     }
   };
 
-  const onDescriptionChange = (data: any) => {
+  const onDescriptionChange = (data: string) => {
     handleChange("description", data);
     if (data.length <= CONSTANTS.ABOUT_ME_MAXIMUM_CHARACTERS) {
       if (isMaxLimitReached) {
@@ -114,66 +123,74 @@ const AboutUsEditModal = ({
       : 0;
   }, [formState.description]);
 
-  return (
-    <StyledModal maxwidth={678} show={show} size="sm" onHide={onClose} centered>
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={onClose}>
-          &times;
-        </Button>
-        <EditFormWrapper>
-          <div className="content flex flex-column">
-            <div className="modal-title fs-28 fw-400">
-              {data?.is_agency ? "About the Agency" : "About Me"}
-              <span className="mandatory">&nbsp;*</span>
-            </div>
+  if (!show) return null;
 
-            {/* Sub text for freelancers and not for agency */}
+  return (
+    <div className="fixed inset-0 flex items-center bg-black/40 justify-center z-50">
+      <div
+        className="w-screen h-screen fixed inset-0 backdrop-blur-sm z-40 p-0 m-0"
+        onClick={onClose}
+      ></div>
+
+      <div className="bg-white rounded-xl max-w-[678px] max-h-[683px] w-full py-8 px-4 md:p-12 relative z-50 m-2">
+        <VscClose
+          type="button"
+          className="absolute top-4 md:top-0 right-4 md:-right-8 text-2xl text-black md:text-white hover:text-gray-200 cursor-pointer"
+          onClick={onClose}
+        />
+        <div className="space-y-6">
+          <h3
+            className="font-normal mb-0 text-[1.75rem]"
+            style={{ lineHeight: 1.5 }}
+          >
+            {data?.is_agency ? "About the Agency" : "About Me"}
+            <span className="text-red-500">*</span>
+          </h3>
+
+          <div className="space-y-4">
+            {/* Sub text for freelancers */}
             {user_type === "freelancer" && (
-              <>
+              <div className="space-y-4">
                 {data?.is_agency ? (
-                  <div>
-                    <p className="fs-16 indent-2r">
-                      The “About the Agency" section is the primary place for
-                      agencies to introduce themselves. You can describe your
-                      work history and experience, your style, specialties, or
-                      unique services. Focus on making a good impression and
-                      demonstrating your expertise.
+                  <>
+                    <p className="font-normal indent-8">
+                      The &quot;About the Agency&quot; section is the primary
+                      place for agencies to introduce themselves. You can
+                      describe your work history and experience, your style,
+                      specialties, or unique services. Focus on making a good
+                      impression and demonstrating your expertise.
                     </p>
-                    <div className="mt-2">
-                      <p className="fs-16 indent-2r font-weight-bold">
-                        Links to outside websites and contact information should
-                        not be included.
-                      </p>
-                    </div>
-                  </div>
+                    <p className="font-medium indent-8 mt-4">
+                      Links to outside websites and contact information should
+                      not be included.
+                    </p>
+                  </>
                 ) : (
-                  <div>
-                    <p className="fs-16 indent-2r">
-                      The “About Me" section is the primary place for
+                  <>
+                    <p className=" font-normal indent-8">
+                      The &quot;About Me&quot; section is the primary place for
                       freelancers to introduce themselves. You can describe your
                       work history and experience, your style, specialties, or
                       unique services. Focus on making a good impression and
                       demonstrating your expertise.
                     </p>
-                    <div className="mt-2">
-                      <p className="fs-16 indent-2r font-weight-bold">
-                        Links to outside websites and personal contact
-                        information should not be included.
-                      </p>
-                    </div>
-                  </div>
+                    <p className=" font-bold indent-8 mt-4">
+                      Links to outside websites and personal contact information
+                      should not be included.
+                    </p>
+                  </>
                 )}
-              </>
+              </div>
             )}
 
             {/* Sub text for client */}
             {user_type === "client" && (
-              <div>
-                <h4 className="fs-18 fw-400">
+              <div className="space-y-3">
+                <h4 className="text-base font-normal">
                   Use this box to introduce yourself to freelancers. Share any
                   details you think may be relevant, like:
                 </h4>
-                <ul className="fs-10 fw-350 mt-3">
+                <ul className="text-xs font-normal list-disc pl-5">
                   <li className="mt-1">What type of work do you do?</li>
                   <li className="mt-1">
                     What expectations would you have for a freelancer you were
@@ -183,28 +200,31 @@ const AboutUsEditModal = ({
                 </ul>
               </div>
             )}
+
+            {/* Text Editor */}
             <div>
               <TextEditor
                 value={formState.description}
                 onChange={onDescriptionChange}
-                placeholder=""
+                placeholder="Enter your description"
                 maxChars={CONSTANTS.ABOUT_ME_MAXIMUM_CHARACTERS}
               />
             </div>
-            <div className="bottom-buttons flex">
-              <StyledButton
-                padding="1.125rem 2.25rem"
-                variant="primary"
-                disabled={loading}
-                onClick={handleUpdate}
-              >
-                Update
-              </StyledButton>
-            </div>
           </div>
-        </EditFormWrapper>
-      </Modal.Body>
-    </StyledModal>
+
+          <div className="flex justify-center md:justify-end mt-6">
+            <button
+              className="bg-[#F2B420] text-[#212529] px-10 py-[1.15rem] hover:scale-105 duration-300 text-lg rounded-full disabled:bg-[#F2A420]"
+              style={{ lineHeight: 1.6875 }}
+              disabled={loading}
+              onClick={handleUpdate}
+            >
+              Update
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
