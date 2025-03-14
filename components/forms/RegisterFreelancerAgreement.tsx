@@ -44,33 +44,37 @@ const RegisterFreelancerAgreement: React.FC<RegisterFreelancerAgreementProps> = 
     }
 
     // Prepare the registration payload
-    const registrationPayload: Partial<IFreelancerDetails> = {
-      u_email_id: detailsData.email,
+    const registrationPayload = {
       first_name: detailsData.firstName,
       last_name: detailsData.lastName,
+      email_id: detailsData.email,
+      password: detailsData.password,
+      confirm: detailsData.confirmPassword,
       phone_number: detailsData.phone,
       formatted_phonenumber: detailsData.phone,
+      user_type: 'freelancer' as const,
       is_agency: detailsData.isAgency ? 1 : 0,
       agency_name: detailsData.agencyName || '',
-      user_type: 'freelancer' as const,
       location: {
-        label: `${detailsData.country}, ${detailsData.state}`,
         country_name: detailsData.country,
         state: detailsData.state,
-        country_id: 0, // These will be set by the backend
-        country_code: '',
-        country_short_name: ''
+        country_id: 305,
+        country_code: "1",
+        country_short_name: "US",
+        label: detailsData.country
       }
     };
 
-    console.log("Registration payload:", registrationPayload);
-    
     try {
       await submitRegisterUser(registrationPayload);
+      toast.success("Registration successful! Please check your email for verification.");
       onNext(detailsData);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Registration error:", error);
-      toast.error("Registration failed. Please try again.");
+      const errorMessage = error && typeof error === 'object' && 'response' in error 
+        ? (error.response as { data?: { message?: string } })?.data?.message || "Registration failed. Please try again."
+        : "Registration failed. Please try again.";
+      toast.error(errorMessage);
     }
   };
 

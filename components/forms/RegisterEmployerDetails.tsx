@@ -26,6 +26,7 @@ interface EmployerDetailsData {
   country: string;
   state: string;
   phone: string;
+  companyName?: string;
 }
 
 const countryStates: CountryData[] = [
@@ -419,6 +420,7 @@ const RegisterEmployerDetails: React.FC<RegisterEmployerDetailsProps> = ({
         country: selectedCountry,
         state: selectedState,
         phone: phone || '',
+        companyName: companyName || undefined
       };
       onNext(formData);
     }

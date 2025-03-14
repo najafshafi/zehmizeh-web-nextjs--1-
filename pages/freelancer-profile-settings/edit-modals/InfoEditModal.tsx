@@ -1,9 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
+import { VscClose } from "react-icons/vsc";
 import toast from "react-hot-toast";
-import { Modal, Button, Container, Row, Col, Form } from "react-bootstrap";
-import { StyledFormGroup, EditFormWrapper } from "./edit-modals.styled";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { StyledButton } from "@/components/forms/Buttons";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import CountryDropdown from "@/components/forms/country-dropdown/CountryDropdown";
 import StateDropdown from "@/components/forms/state-picker/StatePicker";
@@ -51,7 +48,6 @@ const InfoEditModal = ({ show, onClose, onUpdate, data, refetch }: Props) => {
   const [showEditEmailModal, setShowEditEmailModal] = useState<boolean>(false);
 
   const toggleEditModal = () => {
-    // This function will toggle the Add / Edit modal
     setShowEditEmailModal(!showEditEmailModal);
   };
 
@@ -59,6 +55,17 @@ const InfoEditModal = ({ show, onClose, onUpdate, data, refetch }: Props) => {
     handleChange("u_email_id", value);
     refetch();
   };
+
+  useEffect(() => {
+    if (show) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [show]);
 
   useEffect(() => {
     if (data && show) {
@@ -89,7 +96,6 @@ const InfoEditModal = ({ show, onClose, onUpdate, data, refetch }: Props) => {
     freelancerProfileTabValidation
       .validate(formState, { abortEarly: false })
       .then(() => {
-        // Update info api call
         setLoading(true);
         const body = {
           user_image: formState?.user_image,
@@ -121,187 +127,186 @@ const InfoEditModal = ({ show, onClose, onUpdate, data, refetch }: Props) => {
       });
   };
 
-  const onSelectState = (item: string) => {
-    const formData = { ...formState };
-    formData.location.state = item;
-    setFormState(formData);
+  const onSelectState = (item: { label: string; value: string } | null) => {
+    console.log("Selected state:", item);
+    setFormState((prevFormState) => {
+      const newState = {
+        ...prevFormState,
+        location: {
+          ...prevFormState.location,
+          state: item ? item.value : null,
+        },
+      };
+      console.log("Updated formState:", newState);
+      return newState;
+    });
   };
 
   const onSelectCountry = (item: TFormState["location"]) => {
     handleChange("location", item);
   };
 
+  if (!show) return null;
+
   return (
-    <StyledModal maxwidth={678} show={show} size="sm" onHide={onClose} centered>
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={onClose}>
-          &times;
-        </Button>
-        <EditFormWrapper>
-          <div className="content">
-            <h3 className="fs-36 fw-700">Edit Profile Details</h3>
-            <Container className="form">
-              {/* START ----------------------------------------- Username */}
-              <Row>
-                <Col>
-                  <StyledFormGroup>
-                    <div className="fs-sm fw-400">
-                      First Name<span className="mandatory">&nbsp;*</span>
-                    </div>
-                    <Form.Control
-                      placeholder="Enter first name"
-                      className="form-input"
-                      value={formState?.first_name}
-                      onChange={(e) =>
-                        handleChange(
-                          "first_name",
-                          onlyCharacters(e.target.value)
-                        )
-                      }
-                      maxLength={35}
-                    />
-                    {errors?.first_name && (
-                      <ErrorMessage message={errors.first_name} />
-                    )}
-                  </StyledFormGroup>
-                </Col>
-                <Col>
-                  <StyledFormGroup>
-                    <div className="fs-sm fw-400">
-                      Last Name<span className="mandatory">&nbsp;*</span>
-                    </div>
-                    <Form.Control
-                      placeholder="Enter last name"
-                      className="form-input"
-                      value={formState?.last_name}
-                      onChange={(e) =>
-                        handleChange(
-                          "last_name",
-                          onlyCharacters(e.target.value)
-                        )
-                      }
-                      maxLength={35}
-                    />
-                    {errors?.last_name && (
-                      <ErrorMessage message={errors.last_name} />
-                    )}
-                  </StyledFormGroup>
-                </Col>
-              </Row>
-              {/* END ------------------------------------------- Username */}
+    <div className="fixed inset-0 flex items-center bg-black/40  justify-center z-50">
+      <div
+        className="w-screen h-screen fixed inset-0 backdrop-blur-sm z-40 p-0 m-0"
+        onClick={onClose}
+      ></div>
 
-              {/* START ----------------------------------------- Hourly rate */}
-              <Row>
-                <Col>
-                  <StyledFormGroup>
-                    <div className="fs-sm fw-400">
-                      Hourly Rate<span className="mandatory">&nbsp;*</span>{" "}
-                      <Tooltip
-                        customTrigger={<InfoIcon />}
-                        className="d-inline-block"
-                      >
-                        The purpose here is to share your standard hourly rate
-                        if you have one. If you have different rates for
-                        different projects, or no standard at all, leave this
-                        section empty.
-                      </Tooltip>
-                    </div>
-                    <span className="input-symbol-euro">
-                      <Form.Control
-                        placeholder="Enter your hourly rate"
-                        className="form-input rate-input"
-                        value={formState?.hourly_rate}
-                        onChange={(e) =>
-                          handleChange(
-                            "hourly_rate",
-                            e.target.value.replace(/\D/g, "")
-                          )
-                        }
-                        maxLength={3}
-                      />
-                    </span>
-                    {errors?.hourly_rate && (
-                      <ErrorMessage message={errors.hourly_rate.toString()} />
-                    )}
-                  </StyledFormGroup>
-                </Col>
-              </Row>
-              {/* END ------------------------------------------- Hourly rate */}
-              <Row>
-                {/* START ----------------------------------------- Country */}
-                <Col>
-                  <StyledFormGroup>
-                    <div className="fs-sm fw-400 mb-1">
-                      Country<span className="mandatory">&nbsp;*</span>
-                    </div>
-                    <CountryDropdown
-                      selectedCountry={formState?.location}
-                      onSelectCountry={onSelectCountry}
-                    />
-                    {errors?.location?.country_name && (
-                      <ErrorMessage message={errors?.location?.country_name} />
-                    )}
-                  </StyledFormGroup>
-                </Col>
-                {/* END ------------------------------------------- Country */}
-              </Row>
-
-              {/* START ----------------------------------------- State and region */}
-              {/* If selected country dont have states then not showing states dropdown as well as removing validation */}
-              {!CONSTANTS.COUNTRIES_SHORT_NAME_WITHOUT_STATE.includes(
-                formState?.location?.country_short_name
-              ) && (
-                <Row>
-                  <Col>
-                    <StyledFormGroup>
-                      <div className="fs-sm fw-400 mb-1">
-                        State/Region<span className="mandatory">&nbsp;*</span>
-                      </div>
-                      <StateDropdown
-                        countryCode={formState?.location?.country_short_name}
-                        onSelectState={onSelectState}
-                        selectedState={
-                          formState?.location?.state
-                            ? {
-                                label: formState?.location?.state,
-                                value: formState?.location?.state,
-                              }
-                            : null
-                        }
-                        borderColor="#000"
-                      />
-                      {errors?.location?.state && (
-                        <ErrorMessage message={errors.location.state} />
-                      )}
-                    </StyledFormGroup>
-                  </Col>
-                </Row>
-              )}
-              {/* END ------------------------------------------- State and region */}
-            </Container>
-
-            <div className="bottom-buttons flex">
-              <StyledButton
-                padding="1.125rem 2.25rem"
-                variant="primary"
-                disabled={loading}
-                onClick={handleUpdate}
-              >
-                Update
-              </StyledButton>
-            </div>
-          </div>
-        </EditFormWrapper>
-        {/* Edit Info modal */}
-
-        <EmailEditModal
-          show={showEditEmailModal}
-          existingEmail={data?.u_email_id}
-          onClose={toggleEditModal}
-          onUpdateEmail={onUpdateEmail}
+      <div className="bg-white rounded-xl max-w-[678px] max-h-[643px] w-full py-8 px-4 md:p-12 relative z-50 m-2">
+        <VscClose
+          type="button"
+          className="absolute top-4 md:top-0 right-4 md:-right-8 text-2xl text-black md:text-white hover:text-gray-200 cursor-pointer"
+          onClick={onClose}
         />
-      </Modal.Body>
-    </StyledModal>
+        <div className="space-y-6">
+          <h3
+            className="font-bold mb-2"
+            style={{ lineHeight: 1.2, fontSize: "calc(1rem + .6vw)" }}
+          >
+            Edit Profile Details
+          </h3>
+
+          <div className="space-y-5 px-3">
+            {/* Username Section */}
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <label className="text-sm font-normal">
+                  First Name<span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter first name"
+                  className="mt-1.5 w-full p-4 border border-black rounded-lg"
+                  value={formState?.first_name}
+                  onChange={(e) =>
+                    handleChange("first_name", onlyCharacters(e.target.value))
+                  }
+                  maxLength={35}
+                />
+                {errors?.first_name && (
+                  <ErrorMessage message={errors.first_name} />
+                )}
+              </div>
+              <div className="flex-1">
+                <label className="text-sm font-normal">
+                  Last Name<span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter last name"
+                  className="mt-1.5 w-full p-4 border border-black rounded-lg"
+                  value={formState?.last_name}
+                  onChange={(e) =>
+                    handleChange("last_name", onlyCharacters(e.target.value))
+                  }
+                  maxLength={35}
+                />
+                {errors?.last_name && (
+                  <ErrorMessage message={errors.last_name} />
+                )}
+              </div>
+            </div>
+
+            {/* Hourly Rate Section */}
+            <div>
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-normal">
+                  Hourly Rate<span className="text-red-500">*</span>
+                </label>
+                <Tooltip customTrigger={<InfoIcon />} className="inline-block">
+                  The purpose here is to share your standard hourly rate if you
+                  have one. If you have different rates for different projects,
+                  or no standard at all, leave this section empty.
+                </Tooltip>
+              </div>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 pt-1 text-gray-500">
+                  $
+                </span>
+                <input
+                  type="text"
+                  placeholder="Enter your hourly rate"
+                  className="mt-1.5 w-full p-4 pl-7 border border-black rounded-lg"
+                  value={formState?.hourly_rate}
+                  onChange={(e) =>
+                    handleChange(
+                      "hourly_rate",
+                      e.target.value.replace(/\D/g, "")
+                    )
+                  }
+                  maxLength={3}
+                />
+              </div>
+              {errors?.hourly_rate && (
+                <ErrorMessage message={errors.hourly_rate.toString()} />
+              )}
+            </div>
+
+            {/* Country Section */}
+            <div>
+              <label className="text-sm font-normal mb-1 block">
+                Country<span className="text-red-500">*</span>
+              </label>
+              <CountryDropdown
+                selectedCountry={formState?.location}
+                onSelectCountry={onSelectCountry}
+              />
+              {errors?.location?.country_name && (
+                <ErrorMessage message={errors?.location?.country_name} />
+              )}
+            </div>
+
+            {/* State/Region Section */}
+            {!CONSTANTS.COUNTRIES_SHORT_NAME_WITHOUT_STATE.includes(
+              formState?.location?.country_short_name
+            ) && (
+              <div>
+                <label className="text-sm font-normal mb-1 block">
+                  State/Region<span className="text-red-500">*</span>
+                </label>
+                <StateDropdown
+                  countryCode={formState?.location?.country_short_name}
+                  onSelectState={onSelectState}
+                  selectedState={
+                    formState?.location?.state
+                      ? {
+                          label: formState?.location?.state,
+                          value: formState?.location?.state,
+                        }
+                      : null
+                  }
+                  borderColor="#000"
+                />
+                {errors?.location?.state && (
+                  <ErrorMessage message={errors.location.state} />
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="flex justify-center md:justify-end mt-6">
+            <button
+              className="bg-[#F2B420] text-[#212529] px-10 py-[1.15rem] hover:scale-105 duration-300 text-lg rounded-full disabled:bg-[#F2A420]"
+              style={{ lineHeight: 1.6875 }}
+              disabled={loading}
+              onClick={handleUpdate}
+            >
+              Update
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <EmailEditModal
+        show={showEditEmailModal}
+        existingEmail={data?.u_email_id}
+        onClose={toggleEditModal}
+        onUpdateEmail={onUpdateEmail}
+      />
+    </div>
   );
 };
 

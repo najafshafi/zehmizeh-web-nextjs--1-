@@ -33,7 +33,9 @@ const CustomSelect = ({
         value={selectedValue}
         onChange={(selected) => {
           if (isMulti) {
-            onSelect(selected ? [...(selected as MultiValue<OptionType>)] : null);
+            onSelect(
+              selected ? [...(selected as MultiValue<OptionType>)] : null
+            );
           } else {
             onSelect(selected as SingleValue<OptionType>);
           }
@@ -41,14 +43,18 @@ const CustomSelect = ({
         getOptionValue={getOptionValue}
         getOptionLabel={getOptionLabel}
         components={{ NoOptionsMessage }}
-        className="text-black"
+        className="text-black rounded-lg"
         classNames={{
           control: () =>
-            "min-h-[60px] rounded-lg border border-gray-300 shadow-sm px-3 bg-white focus:ring-2 focus:ring-blue-400 focus:border-blue-400",
-          menu: () => "z-50 bg-white border border-gray-200 rounded-md shadow-lg",
+            "!rounded-lg border-2 shadow-sm p-2 bg-white focus:ring-2 focus:ring-blue-400 focus:border-blue-400",
+          menu: () =>
+            "z-50 bg-white border border-gray-200 rounded-lg shadow-lg",
           option: ({ isSelected }) =>
-            `px-4 py-2 cursor-pointer ${isSelected ? "bg-blue-100" : "hover:bg-gray-100"}`,
-          multiValue: () => "flex items-center bg-blue-100 rounded-md px-2 py-1 m-1",
+            `px-4 py-2 cursor-pointer ${
+              isSelected ? "bg-blue-100" : "hover:bg-gray-100"
+            }`,
+          multiValue: () =>
+            "flex items-center bg-blue-100 rounded-lg px-2 py-1 m-1",
           multiValueLabel: () => "text-sm",
           multiValueRemove: () => "cursor-pointer hover:bg-blue-200 rounded",
         }}
@@ -59,12 +65,12 @@ const CustomSelect = ({
 
 export default CustomSelect;
 
-const NoOptionsMessage = (props: NoticeProps<OptionType, boolean, GroupBase<OptionType>>) => {
+const NoOptionsMessage = (
+  props: NoticeProps<OptionType, boolean, GroupBase<OptionType>>
+) => {
   const { selectProps } = props;
   return (
-    <components.NoOptionsMessage
-      {...props}
-    >
+    <components.NoOptionsMessage {...props}>
       <div className="text-gray-500 text-sm">
         {selectProps?.inputValue
           ? `No result found for "${selectProps?.inputValue}"`
