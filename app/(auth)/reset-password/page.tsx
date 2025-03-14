@@ -1,10 +1,10 @@
-
+import ResetPassword from '@/components/forms/ResetPassword'
 import React from 'react'
-import TwoFactor from '@/components/forms/authComp/2fa'
+
 const page = () => {
   return (
     <div className="flex flex-col w-full h-screen items-center bg-secondary">
-      <TwoFactor />
+      <ResetPassword />
     </div>
   )
 }

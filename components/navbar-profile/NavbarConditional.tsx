@@ -6,7 +6,7 @@ import NavbarLogin from "./NavbarLogin";
 
 const NavbarConditional = () => {
   const pathname = usePathname();
-  if (pathname === "/login" || pathname.startsWith("/register")) {
+  if (pathname === "/login"|| pathname === "/reset-password" || pathname === "/forgot-password" || pathname === "/2fa" || pathname.startsWith("/register")) {
     return null;
   }
   return <NavbarLogin />;

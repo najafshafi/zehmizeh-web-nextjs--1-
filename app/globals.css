@@ -19,3 +19,9 @@
 .underline-animation:hover::after {
   width: 100%;
 }
+
+
+/* Add this to your global CSS */
+:root {
+  --toastify-z-index: 9999;
+}
