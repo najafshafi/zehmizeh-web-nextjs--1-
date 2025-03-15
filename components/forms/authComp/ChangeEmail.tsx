@@ -5,12 +5,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import * as yup from 'yup';
 import toast from 'react-hot-toast';
-import { Modal, Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import styled from 'styled-components';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { StyledButton } from '@/components/forms/Buttons';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import { showErr } from '@/helpers/utils/misc';
 import { editUser } from '@/helpers/http/auth';
@@ -20,36 +16,11 @@ type Props = {
   show: boolean;
   onClose: () => void;
   existingEmail?: string;
-  // onUpdateEmail: (email: string) => void;
 };
 
-const Wrapper = styled(StyledModal)`
-  backdrop-filter: blur(3px);
-  background-color: rgba(0, 0, 0, 0.4);
-  .form-input {
-    margin-top: 6px;
-    padding: 1rem 1.25rem;
-    border-radius: 7px;
-    border: ${(props) => `1px solid ${props.theme.colors.black}`};
-  }
-  .edit-button {
-    position: absolute;
-    right: 1.25rem;
-    top: 36%;
-  }
-  .resend-button {
-    min-height: initial;
-  }
-  .otp-input {
-    input {
-      border: 0 !important;
-      outline: 0 !important;
-      background: ${(props) => props.theme.colors.lightGray};
-      font-family: ${(props) => props.theme.font.primary};
-      font-size: 1.5rem;
-    }
-  }
-`;
+type FormData = {
+  email_id: string;
+};
 
 const schema = yup
   .object({
@@ -64,7 +35,7 @@ const ChangeEmailModal = ({ show, onClose, existingEmail }: Props) => {
   const { setEmail } = useAuth();
 
   const { register, handleSubmit, formState, reset, getValues, setValue } =
-    useForm({
+    useForm<FormData>({
       resolver: yupResolver(schema),
     });
 
@@ -73,7 +44,7 @@ const ChangeEmailModal = ({ show, onClose, existingEmail }: Props) => {
   }, []);
 
   useEffect(() => {
-    let otpTimer;
+    let otpTimer: NodeJS.Timeout;
     if (timer > 0) {
       otpTimer = setTimeout(timeOutCallback, 1000);
     }
@@ -91,7 +62,6 @@ const ChangeEmailModal = ({ show, onClose, existingEmail }: Props) => {
 
   /** @function Once the email is submitted, this will send an OTP */
   const updateEmail = () => {
-    // Update languages api call
     setLoading(true);
     const body = {
       action: 'change_email',
@@ -104,7 +74,6 @@ const ChangeEmailModal = ({ show, onClose, existingEmail }: Props) => {
       success: (res) => {
         setEmail(body.new_email);
         handleModalClose();
-        //  onUpdate();
         setLoading(false);
         return res.message;
       },
@@ -123,13 +92,13 @@ const ChangeEmailModal = ({ show, onClose, existingEmail }: Props) => {
   };
 
   useEffect(() => {
-    if (show) {
+    if (show && existingEmail) {
       setValue('email_id', existingEmail);
     }
   }, [existingEmail, setValue, show]);
 
   /** @function This function will submit the form and call send OTP api function */
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: FormData) => {
     if (data.email_id === existingEmail) {
       showErr('The new email is same as current email');
       return;
@@ -140,51 +109,51 @@ const ChangeEmailModal = ({ show, onClose, existingEmail }: Props) => {
 
   const { errors } = formState;
 
+  if (!show) return null;
+
   return (
-    <Wrapper
-      maxwidth={578}
-      show={show}
-      size="sm"
-      onHide={handleModalClose}
-      centered
-    >
-      <Modal.Body>
-        <Button
-          variant="transparent"
-          className="close"
+    <div className="fixed inset-0 z-500 flex items-center justify-center">
+      <div className="fixed inset-0 bg-black" onClick={handleModalClose} />
+      <div className="relative w-full max-w-[578px]">
+        <button
+          className="absolute -right-6 -top-6 text-3xl text-white hover:opacity-70"
           onClick={handleModalClose}
         >
-          &times;
-        </Button>
-
-        <div className="d-flex flex-column gap-4">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <label className="d-flex align-items-center opacity-75">
-              New Email<span className="mandatory">&nbsp;*</span>
-            </label>
-            <div className="d-flex flex-md-row flex-column align-item-center position-relative gap-3">
-              <Form.Control
-                placeholder="Enter new email"
-                className="form-input full-width"
-                maxLength={255}
-                {...register('email_id')}
-              />
-              <StyledButton
-                type="submit"
-                padding="1.125rem 2.25rem"
-                variant="primary"
-                disabled={loading}
-              >
-                Submit
-              </StyledButton>
-            </div>
-            {errors?.email_id && (
-              <ErrorMessage message={errors.email_id.message as string} />
-            )}
-          </form>
+          ×
+        </button>
+        <div className="rounded-[20px] bg-white shadow-lg p-8">
+          <div className="flex flex-col">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="w-full">
+                <label className="block text-left text-[16px] font-normal text-[#000000]">
+                  New Email <span className="text-red-500">*</span>
+                </label>
+                <div className="mt-3 flex flex-col gap-4 md:flex-row md:items-center">
+                  <input
+                    type="email"
+                    placeholder="Enter new email"
+                    className="w-full rounded-[10px] border border-[#E5E7EB] bg-white px-4 py-3.5 text-[16px] text-black placeholder:text-[#9CA3AF] focus:border-[#E5E7EB] focus:outline-none focus:ring-0"
+                    maxLength={255}
+                    {...register('email_id')}
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className={`rounded-full bg-[#F5B544] px-12 py-3.5 text-[16px] font-medium text-black transition-all hover:bg-[#F5B544]/90 disabled:cursor-not-allowed disabled:opacity-50
+                      ${loading ? 'cursor-not-allowed opacity-50' : ''}`}
+                  >
+                    Submit
+                  </button>
+                </div>
+                {errors?.email_id && (
+                  <ErrorMessage message={errors.email_id.message as string} />
+                )}
+              </div>
+            </form>
+          </div>
         </div>
-      </Modal.Body>
-    </Wrapper>
+      </div>
+    </div>
   );
 };
 

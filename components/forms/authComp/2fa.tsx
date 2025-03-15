@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // Replace useNavigate from react-router-dom
-import { Form } from "react-bootstrap";
+import { form } from "react-bootstrap";
 import ReactOtpInput from "react-otp-input";
 import styled from "styled-components";
 import Image from "next/image"; // Use Next.js Image component for optimized images
@@ -50,6 +50,7 @@ const MobileWrapper = styled.div`
 `;
 
 const OtpInputWrapper = styled.div`
+  margin: 1rem;
   display: flex;
   gap: 1rem;
   justify-content: center;
@@ -82,7 +83,7 @@ export default function TwoFactor() {
   }, []);
 
   useEffect(() => {
-    let otpTimer;
+    let otpTimer: NodeJS.Timeout;
     if (timer > 0) {
       otpTimer = setTimeout(timeOutCallback, 1000);
     }
@@ -144,7 +145,7 @@ export default function TwoFactor() {
   }
 
   return isMobile ? (
-    <div className="mt-4 d-flex p-2">
+    <div className="mt-4  p-2 ">
       <MobileWrapper>
         <Image
           className="logo"
@@ -155,7 +156,7 @@ export default function TwoFactor() {
         />
         <h1 className="h1">Two-Factor Authentication</h1>
         <h2 className="h3">
-          We've sent a 6-digit code to{" "}
+          We&apos;ve sent a 6-digit code to{" "}
           <strong>{user?.email_id || "your email address"}</strong>. If this
           email address is incorrect, you can update it by clicking{" "}
           <span
@@ -171,58 +172,51 @@ export default function TwoFactor() {
             onClose={toggleEditModal}
           />
         </h2>
-        <Form
-          className="d-flex flex-column justify-content-center align-items-center mt-2"
+        <form
+         className=" mt-4"
           onSubmit={handleOTP}
         >
           <OtpInputWrapper>
-            <ReactOtpInput
-              value={otp}
-              onChange={onChange}
-              numInputs={6}
-              renderSeparator={<span style={{ color: "#909090" }}>-</span>}
-              renderInput={(props) => (
-                <input
-                  {...props}
-                  className="otp-input"
-                  style={{
-                    maxWidth: "3.5rem",
-                    width: "100%",
-                    height: "3.5rem",
-                    borderRadius: 7,
-                    margin: 8,
-                    background: "#f5f5f5",
-                    border: "none",
-                    outline: "none",
-                    fontSize: "1.5rem",
-                    ...props.style
-                  }}
-                />
-              )}
-              inputType="number"
-            />
+          <ReactOtpInput
+            value={otp}
+            onChange={onChange}
+            renderSeparator={<span style={{ color: '#909090' }}>-</span>}
+            numInputs={6}
+            containerStyle="otp-input"
+            inputStyle={{
+              maxWidth: '3.5rem',
+              width: '100%',
+              height: '3.5rem',
+              borderRadius: 7,
+              margin: 8,
+            }}
+            shouldAutoFocus
+            renderInput={(props) => <input {...props} />}
+          />
           </OtpInputWrapper>
 
           <StyledButton
-            className="mt-4"
-            type="submit"
-            disabled={isLoading}
+            className="mt-10"
             width={200}
             height={56}
+            type="submit"
+            padding="0"
+            disabled={isLoading}
+            background="#F2B420"
           >
-            {isLoading ? <LoadingButtons /> : "Verify"}
+            {isLoading ? <LoadingButtons /> : 'Verify'}
           </StyledButton>
 
           {timer > 0 ? (
-            <h4 className="h4 mt-5 d-flex align-items-center justify-content-center">
+            <h4 className="h4 mt-5 flex items-center justify-center">
               You can resend a new OTP in{" "}
               <span className="fw-700">
                 00:{timer > 9 ? timer : `0${timer}`}
               </span>
             </h4>
           ) : (
-            <h4 className="h4 mt-4 d-flex align-items-center justify-content-center g-1">
-              Didn't receive your code?{" "}
+            <h4 className="h4 mt-4 flex items-center justify-center g-1">
+              Didn&apos;t receive your code?{" "}
               <StyledButton
                 onClick={onResend}
                 variant="link"
@@ -236,14 +230,14 @@ export default function TwoFactor() {
               </StyledButton>
             </h4>
           )}
-        </Form>
+        </form>
       </MobileWrapper>
     </div>
   ) : (
     <AuthLayout center>
       <h1>Two-Factor Authentication</h1>
       <LimitedH2>
-        We've sent a 6-digit code to{" "}
+        We&apos;ve sent a 6-digit code to{" "}
         <strong>{user?.email_id || "your email address"}</strong>. If this email
         address is incorrect, you can update it by clicking{" "}
         <span
@@ -251,7 +245,7 @@ export default function TwoFactor() {
           className="yellow-link pointer"
           style={{ color: "#f2b420" }}
         >
-          <strong>here.</strong>
+          <strong className="cursor-pointer">here.</strong>
         </span>
         <ChangeEmailModal
           show={showEditEmailModal}
@@ -259,57 +253,54 @@ export default function TwoFactor() {
           onClose={toggleEditModal}
         />
       </LimitedH2>
-      <Form
-        className="d-flex flex-column justify-content-center align-items-center mt-4"
+      <form
+        className="  mt-4   "
         onSubmit={handleOTP}
-      >
+      > 
         <OtpInputWrapper>
-          <ReactOtpInput
+        <ReactOtpInput
             value={otp}
             onChange={onChange}
+            renderSeparator={<span style={{ color: '#909090' }}>-</span>}
             numInputs={6}
-            renderSeparator={<span style={{ color: "#909090" }}>-</span>}
-            renderInput={(props) => (
-              <input
-                {...props}
-                className="otp-input"
-                style={{
-                  maxWidth: "3.5rem",
-                  width: "100%",
-                  height: "3.5rem",
-                  borderRadius: 7,
-                  margin: 8,
-                  background: "#f5f5f5",
-                  border: "none",
-                  outline: "none",
-                  fontSize: "1.5rem",
-                  ...props.style
-                }}
-              />
-            )}
-            inputType="number"
+            containerStyle="otp-input"
+            inputStyle={{
+              maxWidth: '3.5rem',
+              width: '100%',
+              height: '3.5rem',
+              borderRadius: 7,
+              margin: 8,
+            }}
+            shouldAutoFocus
+            renderInput={(props) => <input {...props} />}
           />
         </OtpInputWrapper>
 
         <StyledButton
-          className="mt-4"
-          type="submit"
-          disabled={isLoading}
-          width={200}
-          padding="0"
-          height={56}
-        >
-          {isLoading ? <LoadingButtons /> : "Verify"}
-        </StyledButton>
+            className="mt-2"
+            width={200}
+            height={56}
+            type="submit"
+            padding="0"
+            disabled={isLoading}
+            background="#F2B420"
+            style={{ 
+              marginTop: '0.5rem',
+              width: '200px',
+              height: '56px',
+            }}
+          >
+            {isLoading ? <LoadingButtons /> : 'Verify'}
+          </StyledButton>
 
         {timer > 0 ? (
-          <h4 className="mt-5 d-flex align-items-center justify-content-center">
+          <h4 className="mt-5 flex items-center justify-center ">
             You can resend a new OTP in{" "}
             <span className="fw-700">00:{timer > 9 ? timer : `0${timer}`}</span>
           </h4>
         ) : (
-          <h4 className="mt-4 d-flex align-items-center justify-content-center g-1">
-            Didn't receive your code?{" "}
+          <h4 className="mt-4 flex items-center justify-center g-1">
+              Didn&apos;t receive your code?{" "}
             <StyledButton
               onClick={onResend}
               variant="link"
@@ -321,7 +312,7 @@ export default function TwoFactor() {
             </StyledButton>
           </h4>
         )}
-      </Form>
+      </form>
     </AuthLayout>
   );
 }
