@@ -8,6 +8,8 @@ import CustomButton from "../../components/custombutton/CustomButton";
 import {  useSelector } from "react-redux";
 import { RootState } from '@/store/store'; // Adjust path to your store
 import { useAuth } from '@/helpers/contexts/auth-context'; // Adjust path to AuthContext
+import ErrorMessage from '@/components/ui/ErrorMessage';
+
 const LoginForm = () => {
   const { signin } = useAuth();
   // Local state for form inputs and validation errors
@@ -122,11 +124,13 @@ const LoginForm = () => {
               >
                 Email Address
               </label>
+              
             </div>
           </div>
           {emailError && (
             <p className="text-red-600 text-[15px] pl-1">{emailError}</p>
           )}
+
 
           {/* Password Input */}
           <div
@@ -214,7 +218,7 @@ const LoginForm = () => {
           </div>
         </div>
         <div className="flex flex-col items-center justify-center">
-          <p className="text-[20px]">Don't have an account?</p>
+          <p className="text-[20px]">Don&apos;t have an account?</p>
           <p className="text-[20px]">
             Register{" "}
             <Link href={"/register/employer"} className="text-customYellow">
@@ -227,9 +231,7 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
-
-// "use client";
+export default LoginForm;// "use client";
 
 // import Image from "next/image";
 // import Link from "next/link";
@@ -450,3 +452,4 @@ export default LoginForm;
 // };
 
 // export default LoginForm;
+

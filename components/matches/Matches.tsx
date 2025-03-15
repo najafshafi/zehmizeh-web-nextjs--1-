@@ -28,7 +28,7 @@ const Matches = ({ data, user }: { data: any, user: any }) => {
         {user && (
             <div className="flex justify-center mt-10">
               <Link href="/search?type=freelancers">
-              <div className="border border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white"
+              <div className="border border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white rounded-full"
               >
                 <StyledButton variant="outline-dark">Search for Freelancers</StyledButton>
               </div>

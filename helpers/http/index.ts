@@ -27,11 +27,40 @@ function onRequest(config: AxiosRequestConfig) {
 }
 
 const onResponse = (response: AxiosResponse): AxiosResponse => {
+  // Check if response contains a message to display
+  if (response?.data && typeof response.data === 'object') {
+    // If the response has status=false and a message, show an error toast
+    if (response.data.status === false && response.data.message) {
+      // Add a small timeout to ensure toast is shown after component updates
+      setTimeout(() => {
+        toast.error(response.data.message, {
+          duration: 4000, // Show for 4 seconds
+          position: 'top-center',
+        });
+        // Log for debugging
+        console.log('Toast error shown:', response.data.message);
+      }, 100);
+    }
+  }
   return response;
 };
 
 const onResponseError = async (error: AxiosError): Promise<unknown> => {
   const originalRequest: AxiosRequestConfig = error.config;
+
+  // Display error message from API response if available
+  if (error?.response?.data) {
+    const errorData = error.response.data as any;
+    if (errorData && typeof errorData === 'object' && errorData.message) {
+      setTimeout(() => {
+        toast.error(errorData.message, {
+          duration: 4000,
+          position: 'top-center',
+        });
+        console.log('Toast error shown from error response:', errorData.message);
+      }, 100);
+    }
+  }
 
   // If user is unauthorized
   if (error?.response?.status === 401) {

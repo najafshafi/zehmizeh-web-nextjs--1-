@@ -1,101 +1,121 @@
 "use client";
-import Image from "next/image";
+import React from 'react';
 import Link from "next/link";
-import { useRef, useState } from "react";
-import CustomButton from "../custombutton/CustomButton";
 import { useRouter } from "next/navigation";
-import { IoIosArrowRoundBack } from "react-icons/io";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { StyledButton } from '@/components/forms/Buttons';
+import AuthLayout from '@/components/layout/AuthLayout';
+import ErrorMessage from '@/components/ui/ErrorMessage';
+import { useAuth } from '@/helpers/contexts/auth-context';
+import { forgotPassword } from '@/helpers/http/auth';
+import { showErr, showMsg } from '@/helpers/utils/misc';
 
-const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
-  const emailRef = useRef<HTMLInputElement>(null);
+interface ForgotPasswordFormData {
+  email_id: string;
+}
+
+const CustomSpinner = () => (
+  <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full ml-2"/>
+);
+
+export default function ForgotPassword() {
+  const [loading, setLoading] = React.useState(false);
   const router = useRouter();
+  const { setEmail } = useAuth();
 
-  const [isFocusedEmail, setIsFocusedEmail] = useState(false);
+  const schema = yup.object({
+    email_id: yup
+      .string()
+      .required('Email is required.')
+      .email('Please enter a valid email.'),
+  });
 
-  const onLoginClick = () => {
-    router.push("/login");
+  const { register, handleSubmit, formState: { errors } } = useForm<ForgotPasswordFormData>({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = async (data: ForgotPasswordFormData) => {
+    setLoading(true);
+    try {
+      const res = await forgotPassword(data.email_id);
+      setLoading(false);
+      if (!res.status) {
+        showErr(res.message);
+        return;
+      }
+      showMsg(res.message);
+      setEmail(data.email_id);
+      router.push('/reset-password');
+    } catch (error) {
+      if (error instanceof Error) {
+        showErr(error.message);
+      } else {
+        showErr('Something went wrong');
+      }
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="flex flex-col gap-2 max-w-[730px] w-full mt-[100px] md:px-0 px-10">
-      <div className="flex flex-row justify-between">
-        <Link
-          href={"/login"}
-          className="text-black flex  items-center font-normal text-[18px]"
-        >
-          <IoIosArrowRoundBack className="text-[27px] font-light" />
-          Back
-        </Link>
-        <Link href={"/home"} className="text-customYellow font-normal text-[18px]">
-          Go To Home
-        </Link>
-      </div>
-      <div className="bg-white rounded-xl pt-12 pb-16 flex flex-col gap-4 items-center justify-center">
-        <Image
-          src={"/zehmizeh-logo.svg"}
-          alt={"logo"}
-          width={70}
-          height={70}
-          quality={100}
-          loading="lazy"
-        />
+    <AuthLayout center small showNavigationHeader>
+      <h1 className="text-[30px] font-bold">Forgot Password</h1>
+      <p className="text-[20px] font-light text-muted my-2">
+        Enter the email address attached to your account and we&apos;ll send you a
+        code to reset your password.
+      </p>
 
-        <p className="font-bold mt-6 text-[30px] leading-none">
-          Forgot Password
-        </p>
-        <p className="text-center w-full max-w-[600px]  md:px-0 px-6 text-[22px] font-normal text-[#757E7D]">
-          Enter the email address attached to your account and we&apos;ll send you a
-          code to reset your password.
-        </p>
-        <div className="flex flex-col gap-1 w-full max-w-[600px] md:px-0 px-6 mt-2">
-          <div
-            className={`p-1 rounded-lg transition-all duration-300 ${
-              isFocusedEmail ? "bg-blue-500/40 border" : "border-transparent"
-            }`}
-            onClick={() => emailRef.current?.focus()}
-          >
-            <div className="relative p-4 rounded-md border border-gray-300 bg-white cursor-text">
-              <input
-                type="email"
-                placeholder=" "
-                ref={emailRef}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onFocus={() => setIsFocusedEmail(true)}
-                onBlur={() => setIsFocusedEmail(false)}
-                className="peer block w-full text-gray-900 bg-transparent focus:outline-none placeholder-transparent"
-              />
-              <label
-                className="cursor-text absolute left-4 text-gray-400 transition-all
-            peer-focus:-top-[1px] peer-focus:text-[14px] peer-focus:text-gray-400 
-            peer-placeholder-shown:top-4 peer-placeholder-shown:text-gray-500 peer-placeholder-shown:text-[17px]
-            -top-1 text-[14px] font-light"
-              >
-                Email Address
-              </label>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center justify-center">
-            <CustomButton
-              text="Submit"
-              className="px-9 py-4 w-full max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5"
-              onClick={onLoginClick}
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-[600px] md:px-0 px-6 mt-4">
+        <div className="relative mb-4">
+          <div className="relative">
+            <input
+              type="email"
+              {...register('email_id')}
+              placeholder=" "
+              className="peer w-full px-4 py-4 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-transparent"
             />
+            <label
+              className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600
+                     transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base
+                     peer-focus:-top-2.5 peer-focus:text-sm"
+            >
+              Email Address
+            </label>
           </div>
+          {errors.email_id && (
+            <ErrorMessage className="text-start mt-1 text-red-500">
+              {errors.email_id.message}
+            </ErrorMessage>
+          )}
         </div>
-        <div className="flex flex-col items-center justify-center">
-          <Link
-            href={"/register/employer"}
-            className="text-[20px] text-customYellow"
-          >
-            Back to login
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-};
 
-export default ForgotPassword;
+        <div className="flex justify-center ">
+          <div className="hover:scale-110 transition-all duration-300">
+          <StyledButton
+            className="mt-2 "
+            width={200}
+            height={56}
+            type="submit"
+            padding="0"
+            disabled={loading}
+            background="#F2B420"
+          >
+            <span className="flex items-center justify-center">
+              Submit
+              {loading && <CustomSpinner />}
+            </span>
+          </StyledButton>
+          </div>
+         
+        </div>
+      </form>
+
+      <h4 className="align-self-center mt-4">
+        <Link href="/login" className="yellow-link">
+          Back to login
+        </Link>
+      </h4>
+    </AuthLayout>
+  );
+}
