@@ -96,14 +96,14 @@ const HeadlineEditModal = ({ show, headline, onClose, onUpdate }: Props) => {
           className="absolute top-4 md:top-0 right-4 md:-right-8 text-2xl text-black md:text-white hover:text-gray-200 cursor-pointer"
           onClick={onClose}
         />
-        <div className="space-y-6">
-          <div className="space-y-2">
-            <h3
+        <div className="space-y-8">
+          <div className="space-y-[13px]">
+            <span
               className="font-bold text-[1.75rem]"
               style={{ lineHeight: 1.5 }}
             >
               Headline
-            </h3>
+            </span>
             <p className="text-base text-gray-600">
               Your headline should introduce your work as a freelancer. When
               clients search for freelancers, they’ll see it directly under your
@@ -123,9 +123,9 @@ const HeadlineEditModal = ({ show, headline, onClose, onUpdate }: Props) => {
             </SeeMore>
           </div>
 
-          <div className="space-y-5 px-3">
+          <div className="space-y-5">
             <div>
-              <label className="text-sm font-normal mb-1 block">
+              <label className="text-sm font-normal block">
                 Add headline below<span className="text-red-500">*</span>
               </label>
               <input
@@ -137,7 +137,7 @@ const HeadlineEditModal = ({ show, headline, onClose, onUpdate }: Props) => {
                 onChange={(e) => handleChange(e.target.value)}
                 maxLength={150}
               />
-              <div className="text-right text-sm text-[#F2B420] mt-2">
+              <div className="text-right text-base text-[#F2B420] mt-2">
                 {150 - countCharactersWithoutSpaces(headlineText)}/150
                 characters
               </div>

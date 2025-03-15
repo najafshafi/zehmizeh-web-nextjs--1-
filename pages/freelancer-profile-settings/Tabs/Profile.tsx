@@ -1,28 +1,28 @@
 "use client"; // Ensure this is a client component
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import Tooltip from '@/components/ui/Tooltip';
-import ProfileDetailSection from '../partials/ProfileDetailSection';
-import StyledHtmlText from '@/components/ui/StyledHtmlText';
-import { useQueryData, useRefetch } from '@/helpers/hooks/useQueryData';
-import { convertToTitleCase } from '@/helpers/utils/misc';
-import styled from 'styled-components';
-import EditIcon from '../../../public/icons/edit-blue-outline.svg';
-import DeleteIcon from '../../../public/icons/trash.svg';
-import cns from 'classnames';
-import toast from 'react-hot-toast';
-import { manageCourse, manageEducation } from '@/helpers/http/freelancer';
-import HeadlineEditModal from '@/pages/freelancer-profile-settings/edit-modals/headlineEditModal';
-import AboutUsEditModal from '@/pages/freelancer-profile-settings/edit-modals/AboutUsEditModal';
-import SkillsEditModal from '@/pages/freelancer-profile-settings/edit-modals/SkillsEditModal';
-import LanguagesEditModal from '@/pages/freelancer-profile-settings/edit-modals/LanguagesEditModal';
-import EducationEditModal from '@/pages/freelancer-profile-settings/edit-modals/EducationEditModal';
-import CourseEditModal from '@/pages/freelancer-profile-settings/edit-modals/CourseEditModal';
-import ProfileBanner from '../partials/ProfileBanner';
-import { queryKeys } from '@/helpers/const/queryKeys';
-import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
-import { getCategories, getSkills } from '@/helpers/utils/helper';
-import Image from 'next/image';
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import Tooltip from "@/components/ui/Tooltip";
+import ProfileDetailSection from "../partials/ProfileDetailSection";
+import StyledHtmlText from "@/components/ui/StyledHtmlText";
+import { useQueryData, useRefetch } from "@/helpers/hooks/useQueryData";
+import { convertToTitleCase } from "@/helpers/utils/misc";
+import styled from "styled-components";
+import EditIcon from "../../../public/icons/edit-blue-outline.svg";
+import DeleteIcon from "../../../public/icons/trash.svg";
+import cns from "classnames";
+import toast from "react-hot-toast";
+import { manageCourse, manageEducation } from "@/helpers/http/freelancer";
+import HeadlineEditModal from "@/pages/freelancer-profile-settings/edit-modals/headlineEditModal";
+import AboutUsEditModal from "@/pages/freelancer-profile-settings/edit-modals/AboutUsEditModal";
+import SkillsEditModal from "@/pages/freelancer-profile-settings/edit-modals/SkillsEditModal";
+import LanguagesEditModal from "@/pages/freelancer-profile-settings/edit-modals/LanguagesEditModal";
+import EducationEditModal from "@/pages/freelancer-profile-settings/edit-modals/EducationEditModal";
+import CourseEditModal from "@/pages/freelancer-profile-settings/edit-modals/CourseEditModal";
+import ProfileBanner from "../partials/ProfileBanner";
+import { queryKeys } from "@/helpers/const/queryKeys";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+import { getCategories, getSkills } from "@/helpers/utils/helper";
+import Image from "next/image";
 
 const SkillItem = styled.div`
   padding: 0.625rem 0.75rem;
@@ -67,13 +67,15 @@ export const Profile = () => {
   );
   const { refetch } = useRefetch(queryKeys.getFreelancerProfile);
 
-  const [selectedCourseId, setSelectedCourseId] = useState<string>('');
-  const [selectedEducationId, setSelectedEducationId] = useState<string>('');
+  const [selectedCourseId, setSelectedCourseId] = useState<string>("");
+  const [selectedEducationId, setSelectedEducationId] = useState<string>("");
   const [categories, setCategories] = useState<Category[]>([]);
-  const [editModalType, setEditModalType] = useState<EditModalType>({ modal: '' });
+  const [editModalType, setEditModalType] = useState<EditModalType>({
+    modal: "",
+  });
 
   const searchParams = useSearchParams();
-  const tab = searchParams?.get('openModal')?.toLowerCase() || '';
+  const tab = searchParams?.get("openModal")?.toLowerCase() || "";
 
   // Open popup when user clicks from "Profile [X] Complete" button
   useEffect(() => {
@@ -81,52 +83,52 @@ export const Profile = () => {
   }, [tab]);
 
   const onUpdate = () => {
-    setEditModalType({ modal: '' });
+    setEditModalType({ modal: "" });
     refetch();
   };
 
   const onDeleteEducation = (id: string) => {
     setSelectedEducationId(id);
-    const body = { action: 'delete_education', education_id: id };
+    const body = { action: "delete_education", education_id: id };
 
     const promise = manageEducation(body);
 
     toast.promise(promise, {
-      loading: 'Please wait...',
+      loading: "Please wait...",
       success: (res) => {
         onUpdate();
-        setSelectedEducationId('');
+        setSelectedEducationId("");
         return data ? res.response : res.message;
       },
       error: (err) => {
-        setSelectedEducationId('');
-        return (data ? err?.response : err?.message) || 'error';
+        setSelectedEducationId("");
+        return (data ? err?.response : err?.message) || "error";
       },
     });
   };
 
   const openCertificate = (link: string) => {
     if (link) {
-      window.open(link, '_blank');
+      window.open(link, "_blank");
     }
   };
 
   const onDeleteCourse = (id: string) => {
     setSelectedCourseId(id);
-    const body = { action: 'delete_course', course_id: id };
+    const body = { action: "delete_course", course_id: id };
 
     const promise = manageCourse(body);
 
     toast.promise(promise, {
-      loading: 'Please wait...',
+      loading: "Please wait...",
       success: (res) => {
         onUpdate();
-        setSelectedCourseId('');
+        setSelectedCourseId("");
         return data ? res.response : res.message;
       },
       error: (err) => {
-        setSelectedCourseId('');
-        return (data ? err?.response : err?.message) || 'error';
+        setSelectedCourseId("");
+        return (data ? err?.response : err?.message) || "error";
       },
     });
   };
@@ -135,7 +137,10 @@ export const Profile = () => {
     let categories: Category[] = [];
 
     data?.skills?.forEach(({ category_name }) => {
-      if (category_name && !categories.some((cat) => cat.category_name === category_name))
+      if (
+        category_name &&
+        !categories.some((cat) => cat.category_name === category_name)
+      )
         categories.push({ category_name });
     });
 
@@ -162,7 +167,7 @@ export const Profile = () => {
         <div className="col-span-1">
           {/* START ----------------------------------------- Headline */}
           <ProfileDetailSection
-            onEdit={() => setEditModalType({ modal: 'headline' })}
+            onEdit={() => setEditModalType({ modal: "headline" })}
             isrequired={!data?.job_title}
             title={
               <div className="flex items-center gap-2">
@@ -172,15 +177,17 @@ export const Profile = () => {
                     <p>
                       Your headline is meant to be the space where you can
                       introduce what you do professionally. When clients are
-                      doing a freelancer search, they&apos;ll see it displayed just
-                      below your name as a sort of personal subtitle or tagline.
+                      doing a freelancer search, they&apos;ll see it displayed
+                      just below your name as a sort of personal subtitle or
+                      tagline.
                     </p>
                     <p>
                       The simplest ways to introduce yourself would be to name
-                      your project title, (&quot;Ghostwriter&quot; or &quot;Accountant&quot;). You
-                      could list your main freelancing skills, (&quot;Photoshop |
-                      Adobe | FinalCut Pro&quot;). Or you could share a slogan that
-                      makes it clear what you do, (&quot;Editing You Can Count On&quot;)
+                      your project title, (&quot;Ghostwriter&quot; or
+                      &quot;Accountant&quot;). You could list your main
+                      freelancing skills, (&quot;Photoshop | Adobe | FinalCut
+                      Pro&quot;). Or you could share a slogan that makes it
+                      clear what you do, (&quot;Editing You Can Count On&quot;)
                     </p>
                   </div>
                 </Tooltip>
@@ -210,27 +217,27 @@ export const Profile = () => {
         {/* START ----------------------------------------- About me */}
         <div className="col-span-1">
           <ProfileDetailSection
-            onEdit={() => setEditModalType({ modal: 'about_me' })}
+            onEdit={() => setEditModalType({ modal: "about_me" })}
             isrequired={!data?.about_me}
             title={
               <div className="flex items-center gap-2">
-                {data?.is_agency ? 'About the Agency' : 'About Me'}
+                {data?.is_agency ? "About the Agency" : "About Me"}
                 <Tooltip>
                   {data?.is_agency ? (
                     <div>
-                      The &quot;About the Agency&quot; section is the primary place for
-                      agencies to introduce themselves. You can describe your work
-                      history and experience, your style, specialties, or unique
-                      services. Focus on making a good impression and
-                      demonstrating your expertise.
+                      The &quot;About the Agency&quot; section is the primary
+                      place for agencies to introduce themselves. You can
+                      describe your work history and experience, your style,
+                      specialties, or unique services. Focus on making a good
+                      impression and demonstrating your expertise.
                     </div>
                   ) : (
                     <div>
-                      The &quot;About Me&quot; section is the primary place for freelancers
-                      to introduce themselves. You can describe your work history
-                      and experience, your style, specialties, or unique services.
-                      Focus on making a good impression and demonstrating your
-                      expertise.
+                      The &quot;About Me&quot; section is the primary place for
+                      freelancers to introduce themselves. You can describe your
+                      work history and experience, your style, specialties, or
+                      unique services. Focus on making a good impression and
+                      demonstrating your expertise.
                     </div>
                   )}
                 </Tooltip>
@@ -261,14 +268,14 @@ export const Profile = () => {
           <div className="col-span-1">
             {/* START ----------------------------------------- Skills */}
             <ProfileDetailSection
-              onEdit={() => setEditModalType({ modal: 'skills' })}
+              onEdit={() => setEditModalType({ modal: "skills" })}
               isrequired={!categories || categories?.length === 0}
               title={
                 <div className="flex items-center gap-2">
                   Skills
                   <Tooltip>
-                    Click the edit button to the right to add your skills and let
-                    clients know what talents you can provide!
+                    Click the edit button to the right to add your skills and
+                    let clients know what talents you can provide!
                   </Tooltip>
                 </div>
               }
@@ -311,7 +318,7 @@ export const Profile = () => {
                   </Tooltip>
                 </div>
               }
-              onEdit={() => setEditModalType({ modal: 'languages' })}
+              onEdit={() => setEditModalType({ modal: "languages" })}
               details={
                 <div className="flex flex-wrap items-center gap-2.5">
                   {data?.languages?.map((language) => (
@@ -332,7 +339,7 @@ export const Profile = () => {
               <ProfileDetailSection
                 add={true}
                 onEdit={() =>
-                  setEditModalType({ modal: 'education', data: null })
+                  setEditModalType({ modal: "education", data: null })
                 }
                 title="Education"
                 details={
@@ -359,7 +366,7 @@ export const Profile = () => {
                                 {convertToTitleCase(eduItem?.school_name)}
                               </div>
                               {eduItem?.education_year &&
-                                eduItem?.education_year !== '-' && (
+                                eduItem?.education_year !== "-" && (
                                   <div className="opacity-70 font-normal">
                                     {eduItem?.education_year}
                                   </div>
@@ -367,25 +374,30 @@ export const Profile = () => {
                             </div>
                           </div>
                           <div className="flex flex-col gap-2">
-                            <button 
+                            <button
                               className="p-2 hover:-translate-y-0.5 transition-transform"
                               onClick={() => {
                                 setEditModalType({
-                                  modal: 'education',
+                                  modal: "education",
                                   data: eduItem,
                                 });
                               }}
                             >
-                              <EditIcon className="w-5 h-5"/>
+                              <EditIcon className="w-5 h-5" />
                             </button>
-                            <button 
+                            <button
                               className="p-2 hover:-translate-y-0.5 transition-transform"
-                              onClick={() => onDeleteEducation(eduItem?.education_id.toString())}
+                              onClick={() =>
+                                onDeleteEducation(
+                                  eduItem?.education_id.toString()
+                                )
+                              }
                             >
-                              {selectedEducationId === eduItem?.education_id.toString() ? (
-                                <div className="w-5 h-5 border-2 border-gray-600 border-t-transparent rounded-full animate-spin"/>
+                              {selectedEducationId ===
+                              eduItem?.education_id.toString() ? (
+                                <div className="w-5 h-5 border-2 border-gray-600 border-t-transparent rounded-full animate-spin" />
                               ) : (
-                                <DeleteIcon className="w-5 h-5"/>
+                                <DeleteIcon className="w-5 h-5" />
                               )}
                             </button>
                           </div>
@@ -399,7 +411,7 @@ export const Profile = () => {
 
             <div className="col-span-1">
               <ProfileDetailSection
-                onEdit={() => setEditModalType({ modal: 'course', data: null })}
+                onEdit={() => setEditModalType({ modal: "course", data: null })}
                 fullwidth={true}
                 add={true}
                 title="Courses and Certifications"
@@ -409,8 +421,8 @@ export const Profile = () => {
                       {data?.certificate_course?.map((courseItem) => (
                         <EducationItem
                           className={cns(
-                            'p-4 flex justify-between items-center gap-2',
-                            { 'cursor-pointer': courseItem?.certificate_link }
+                            "p-4 flex justify-between items-center gap-2",
+                            { "cursor-pointer": courseItem?.certificate_link }
                           )}
                           key={courseItem?.course_id}
                           onClick={() =>
@@ -426,29 +438,32 @@ export const Profile = () => {
                             </div>
                           </div>
                           <div className="flex flex-col gap-2">
-                            <button 
+                            <button
                               className="p-2 hover:-translate-y-0.5 transition-transform"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setEditModalType({
-                                  modal: 'course',
+                                  modal: "course",
                                   data: courseItem,
                                 });
                               }}
                             >
-                              <EditIcon className="w-5 h-5"/>
+                              <EditIcon className="w-5 h-5" />
                             </button>
-                            <button 
+                            <button
                               className="p-2 hover:-translate-y-0.5 transition-transform"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                onDeleteCourse(courseItem?.course_id.toString());
+                                onDeleteCourse(
+                                  courseItem?.course_id.toString()
+                                );
                               }}
                             >
-                              {selectedCourseId === courseItem?.course_id.toString() ? (
-                                <div className="w-5 h-5 border-2 border-gray-600 border-t-transparent rounded-full animate-spin"/>
+                              {selectedCourseId ===
+                              courseItem?.course_id.toString() ? (
+                                <div className="w-5 h-5 border-2 border-gray-600 border-t-transparent rounded-full animate-spin" />
                               ) : (
-                                <DeleteIcon className="w-5 h-5"/>
+                                <DeleteIcon className="w-5 h-5" />
                               )}
                             </button>
                           </div>
@@ -464,44 +479,44 @@ export const Profile = () => {
 
         {/* START ----------------------------------------- Modals */}
         <HeadlineEditModal
-          headline={data?.job_title || ''}
-          show={editModalType?.modal === 'headline'}
-          onClose={() => setEditModalType({ modal: '' })}
+          headline={data?.job_title || ""}
+          show={editModalType?.modal === "headline"}
+          onClose={() => setEditModalType({ modal: "" })}
           onUpdate={onUpdate}
         />
         <AboutUsEditModal
-          show={editModalType?.modal === 'about_me'}
+          show={editModalType?.modal === "about_me"}
           data={{
             is_agency: !!data?.is_agency,
-            aboutMe: data?.about_me || '',
-            portfolioLink: data?.portfolio_link || '',
+            aboutMe: data?.about_me || "",
+            portfolioLink: data?.portfolio_link || "",
           }}
-          onClose={() => setEditModalType({ modal: '' })}
+          onClose={() => setEditModalType({ modal: "" })}
           onUpdate={onUpdate}
           user_type={data?.user_type}
         />
         <SkillsEditModal
-          show={editModalType?.modal === 'skills'}
+          show={editModalType?.modal === "skills"}
           selectedCategories={getCategories(data?.skills || [])}
           selectedSkills={getSkills(data?.skills || [])}
-          onClose={() => setEditModalType({ modal: '' })}
+          onClose={() => setEditModalType({ modal: "" })}
           onUpdate={onUpdate}
         />
         <LanguagesEditModal
           languagesProps={data?.languages || []}
-          show={editModalType?.modal === 'languages'}
-          onClose={() => setEditModalType({ modal: '' })}
+          show={editModalType?.modal === "languages"}
+          onClose={() => setEditModalType({ modal: "" })}
           onUpdate={onUpdate}
         />
         <EducationEditModal
-          show={editModalType?.modal === 'education'}
-          onClose={() => setEditModalType({ modal: '' })}
+          show={editModalType?.modal === "education"}
+          onClose={() => setEditModalType({ modal: "" })}
           data={editModalType?.data}
           onUpdate={onUpdate}
         />
         <CourseEditModal
-          show={editModalType?.modal === 'course'}
-          onClose={() => setEditModalType({ modal: '' })}
+          show={editModalType?.modal === "course"}
+          onClose={() => setEditModalType({ modal: "" })}
           data={editModalType?.data}
           onUpdate={onUpdate}
         />

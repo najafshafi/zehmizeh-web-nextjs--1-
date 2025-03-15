@@ -57,7 +57,10 @@ const NavbarProfile = () => {
   }, []);
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
       setIsProfileDropdownOpen(false);
     }
   }, []);
@@ -89,7 +92,7 @@ const NavbarProfile = () => {
           {label}
         </p>
       </Link>
-      <span className="block h-[2px] bg-black mt-[2px] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+      <span className="block h-[2px] bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
     </div>
   );
 
@@ -101,22 +104,25 @@ const NavbarProfile = () => {
   }, [user]);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-secondary border-b border-primary h-[110px] flex items-center">
-      <div className="max-w-[1320px] w-full mx-auto lg:px-16 xl:px-0 sm:px-24 px-7 flex items-center justify-between">
-        <div className="flex items-center gap-6">
+    <header className="fixed top-0 left-0 w-full z-50 bg-secondary border-b border-primary h-[110px] flex items-center p-6">
+      <div className="max-w-[1320px] w-full mx-auto lg:px-16 xl:px-0 sm:px-24 !px-4 flex items-center justify-between">
+        <div className="flex items-center gap-5">
           <Link href="/home" aria-label="Home">
             <Image
               src="/zehmizeh-logo.svg"
               alt="Zehmizeh Logo"
-              width={55}
-              height={55}
-              quality={100}
+              width={48}
+              height={48}
               priority
               className="cursor-pointer"
             />
           </Link>
-          <nav className="hidden lg:flex items-center gap-6" aria-label="Main navigation">
-            <div className="h-[22px] border border-customGray" />
+
+          <div className="ml-1 h-5 border border-customGray" />
+          <nav
+            className="hidden lg:flex items-center gap-8"
+            aria-label="Main navigation"
+          >
             {navigationItems.map((item) => (
               <NavLink key={item.href} {...item} />
             ))}
@@ -138,13 +144,13 @@ const NavbarProfile = () => {
           </div>
         </button>
 
-        <div className="hidden lg:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-4 px-4">
           <div className="relative w-10">
-            {notificationCount > 0 && (
+            {/* {notificationCount > 0 && (
               <span className="w-5 h-5 rounded-full absolute -top-3 right-0 bg-primary text-center text-sm">
                 {notificationCount}
               </span>
-            )}
+            )} */}
             <BsBell
               size={30}
               className="cursor-pointer hover:opacity-80 transition-opacity"
@@ -152,7 +158,7 @@ const NavbarProfile = () => {
           </div>
           <CustomButton
             text="Find Projects"
-            className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+            className="px-8 py-[15px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
             onClick={() => router.push("/find-projects")} // Update with actual route
           />
           <div className="relative" ref={dropdownRef}>
@@ -162,18 +168,31 @@ const NavbarProfile = () => {
               aria-expanded={isProfileDropdownOpen}
               aria-label="Profile menu"
             >
-              <Image src="/hiring.png" width={50} height={50} alt="User avatar" priority />
+              <Image
+                src="/hiring.png"
+                width={50}
+                height={50}
+                alt="User avatar"
+                priority
+              />
               <p className="flex items-center gap-2 text-lg text-[#212529]">
-                {user?.data?.first_name || user?.first_name ||  "User"}
+                {user?.data?.first_name ||
+                  user?.first_name + " " + user?.last_name ||
+                  "User"}
                 <IoIosArrowDown
                   size={20}
-                  className={`transition-transform ${isProfileDropdownOpen ? "rotate-180" : ""}`}
+                  className={`transition-transform ${
+                    isProfileDropdownOpen ? "rotate-180" : ""
+                  }`}
                 />
               </p>
             </button>
             {isProfileDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                <ul className="py-2 text-gray-700" role="menu">
+              <div
+                className="absolute right-0 mt-[0.125rem] w-[200px] bg-white rounded-md z-50"
+                style={{ boxShadow: "rgba(0, 0, 0, 0.25) 0px 0px 15px" }}
+              >
+                <ul className="py-[14px] px-1 text-gray-700" role="menu">
                   {menuItems.map((item) => (
                     <li key={item.href} role="menuitem">
                       <Link
@@ -197,10 +216,8 @@ const NavbarProfile = () => {
               </div>
             )}
           </div>
-          <p className="font-bold text-[22px]">
-            <span className="ml-2" dir="rtl">
-              בס"ד
-            </span>
+          <p className="font-bold text-xl">
+            <span dir="rtl">בס"ד</span>
           </p>
         </div>
       </div>
