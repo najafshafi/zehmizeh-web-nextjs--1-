@@ -1,4 +1,4 @@
-import { breakpoints } from 'helpers/hooks/useResponsive';
+import { breakpoints } from '@/helpers/hooks/useResponsive';
 import styled from 'styled-components';
 
 const PageTitle = styled.h1<{ fontSize?: string }>`

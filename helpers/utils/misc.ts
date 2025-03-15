@@ -2,7 +2,13 @@ import { TJobDetails } from '@/helpers/types/job.type';
 import moment from 'moment';
 import toast from 'react-hot-toast';
 
-const EXPECTED_HOURS_REMAP = {
+interface ExpectedHoursRemap {
+  simple: string;
+  bigger: string;
+  ongoing: string;
+}
+
+const EXPECTED_HOURS_REMAP: ExpectedHoursRemap = {
   simple: 'Short Project (<10 hours)',
   bigger: 'Medium Project (>10 hours)',
   ongoing: 'Ongoing Project',
@@ -44,13 +50,21 @@ export function formatLocalDate(date: string, format?: string) {
     .format(format || 'Do MMM YYYY hh:mm a');
 }
 
-export const getYupErrors = (error: {
-  inner: { path: string; message: string }[];
-}) => {
-  const errors = error.inner.reduce((acc: Record<string, string>, error) => {
+interface YupError {
+  inner: Array<{ path: string; message: string }>;
+}
+
+interface ErrorRecordValue {
+  [key: string]: string | ErrorRecordValue;
+}
+
+type ErrorRecord = Record<string, string | ErrorRecordValue>;
+
+export const getYupErrors = (error: YupError): ErrorRecord => {
+  const errors = error.inner?.reduce((acc: ErrorRecord, error) => {
     if (error.path.includes('.')) {
       const [first, ...rest] = error.path.split('.');
-      const existingFirst = acc?.[first] || {};
+      const existingFirst = (acc[first] as ErrorRecordValue) || {};
       return {
         ...acc,
         [first]: {
@@ -143,14 +157,9 @@ export const formatPhoneNumber = (phoneNumberString: string) => {
   return formattedNumber;
 };
 
-export const convertToPlain = (html) => {
-  // Create a new div element
+export const convertToPlain = (html: string): string => {
   const tempDivElement = document.createElement('div');
-
-  // Set the HTML content with the given value
   tempDivElement.innerHTML = html;
-
-  // Retrieve the text property of the element
   return tempDivElement.textContent || tempDivElement.innerText || '';
 };
 
@@ -162,42 +171,35 @@ export const separateValuesWithComma = (params: string[]) => {
     .join(', ');
 };
 
-export const showFormattedBudget = (budget: TJobDetails['budget']) => {
+export const showFormattedBudget = (budget: TJobDetails['budget']): string => {
   let amount = '';
   if (budget) {
-    if (budget?.type == 'fixed' || budget?.type == 'hourly') {
-      // If budget has both min and max amount
+    if (budget?.type === 'fixed' || budget?.type === 'hourly') {
       if (Number(budget?.max_amount) > 1 && Number(budget?.min_amount) > 1) {
-        // If both are equal then show only one
-        if (budget?.max_amount === budget?.min_amount)
-          amount = numberWithCommas(budget?.min_amount, 'USD');
-        // show range
-        else
-          amount = `${numberWithCommas(
-            budget?.min_amount,
-            'USD'
-          )} - ${numberWithCommas(budget?.max_amount, 'USD')}`;
+        if (budget?.max_amount === budget?.min_amount) {
+          amount = numberWithCommas(Number(budget?.min_amount), 'USD');
+        } else {
+          amount = `${numberWithCommas(Number(budget?.min_amount), 'USD')} - ${numberWithCommas(Number(budget?.max_amount), 'USD')}`;
+        }
       } else {
-        // if min max not there then show amount
-        if (budget?.amount) amount = numberWithCommas(budget?.amount, 'USD');
-        // show max amuount if it exists
-        else if (budget?.max_amount)
-          amount = numberWithCommas(budget?.max_amount, 'USD');
+        if (budget?.amount) amount = numberWithCommas(Number(budget?.amount), 'USD');
+        else if (budget?.max_amount) amount = numberWithCommas(Number(budget?.max_amount), 'USD');
       }
-      return `${amount}${budget?.type == 'hourly' ? '/hr' : ''}`;
+      return `${amount}${budget?.type === 'hourly' ? '/hr' : ''}`;
     }
-    return ' - '; // If there is no budget
+    return ' - ';
   }
+  return '';
 };
 
-export function getPlainText(strSrc) {
+export function getPlainText(strSrc: string): string {
   const divElement = document.createElement('DIV');
   divElement.innerHTML = strSrc;
   const plain = divElement.textContent || divElement.innerText || '';
   return plain;
 }
 
-export function update_query_parameters(key, val) {
+export function update_query_parameters(key: string, val: string): void {
   let newurl = window.location.href
     .replace(
       RegExp('([?&]' + key + '(?=[=&#]|$)[^#&]*|(?=#|$))'),
@@ -208,8 +210,9 @@ export function update_query_parameters(key, val) {
   newurl = newurl?.replace(/[^=&]+=(&|$)/g, '').replace(/&$/, '');
   window.history.pushState({ path: newurl }, '', newurl);
 }
-export const fileIsAnImage = (url) => {
-  return url.match(/\.(jpeg|jpg|gif|png|webp|avif)$/);
+
+export const fileIsAnImage = (url: string): boolean | null => {
+  return url.match(/\.(jpeg|jpg|gif|png|webp|avif)$/) !== null;
 };
 
 export const convertToTitleCase = (str: string) => {
@@ -269,7 +272,7 @@ export const getUtcDate = (date: string, format?: string) => {
     .format(format || 'Do MMM YYYY hh:mm a');
 };
 
-export const adjustTimezone = (date) => {
+export const adjustTimezone = (date: Date): string | Date => {
   if (!date) return '';
   const offSetDate = new Date(
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
@@ -277,7 +280,7 @@ export const adjustTimezone = (date) => {
   return new Date(offSetDate.setHours(23, 58, 59, 999));
 };
 
-export const expectedHoursRemap = (value: string) => {
+export const expectedHoursRemap = (value: keyof ExpectedHoursRemap): string => {
   return EXPECTED_HOURS_REMAP[value];
 };
 

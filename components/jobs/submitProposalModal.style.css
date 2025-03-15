@@ -1,0 +1,47 @@
+.step-one-enter {
+  transform: translate3d(-200px, 0, 0);
+  opacity: 0;
+  display: block;
+}
+.step-one-enter-done {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  transition: transform 500ms ease, opacity 500ms ease;
+  display: block;
+}
+.step-one-exit {
+  transform: translate3d(200px, 0, 0);
+  opacity: 0;
+}
+.step-one-exit-done {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  transition: transform 500ms ease, opacity 500ms ease;
+  display: none;
+}
+
+.step-two-enter {
+  opacity: 0;
+  transform: translate3d(200px, 0, 0);
+  display: block;
+}
+.step-two-enter-done {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition: transform 500ms ease, opacity 500ms ease;
+  display: block;
+}
+.step-two-exit {
+  opacity: 0;
+  transform: translate3d(-200px, 0, 0);
+}
+.step-two-exit-done {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition: transform 500ms ease, opacity 500ms ease;
+  display: none;
+}
+
+.proposal-heading{
+  font-size: 1.2rem;
+}

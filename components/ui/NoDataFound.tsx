@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ReactComponent as NoDataFoundIcon } from "../../public/icons/nodatafound.svg";
+import NoDataFoundIcon from "@/public/icons/nodatafound.svg";
 
 const NoDataWrapper = styled.div`
   .description {
@@ -15,11 +15,11 @@ interface Prop {
 const NoDataFound = ({ className, title }: Prop) => {
   return (
     <NoDataWrapper
-      className={`flex flex-column justify-content-center items-center ${className}`}
+      className={`flex flex-col justify-center items-center ${className}`}
     >
       <NoDataFoundIcon />
 
-      <div className="description fs-16 fw-400 text-center">
+      <div className="description text-base font-normal text-center">
         {title || "No data found"}
       </div>
     </NoDataWrapper>

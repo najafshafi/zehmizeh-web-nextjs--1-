@@ -176,6 +176,7 @@ const NavbarProfile = () => {
                 priority
               />
               <p className="flex items-center gap-2 text-lg text-[#212529]">
+
                 {user?.data?.first_name ||
                   user?.first_name + " " + user?.last_name ||
                   "User"}

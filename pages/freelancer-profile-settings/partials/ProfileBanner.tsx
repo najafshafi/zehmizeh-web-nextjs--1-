@@ -213,13 +213,8 @@ import { ProfileBannerWrapper } from "../freelancer-profile-settings.styled";
 import InfoEditModal from "../edit-modals/InfoEditModal";
 import EditPictureModal from "@/components/ui/EditPictureModal";
 import { editUser } from "@/helpers/http/auth";
-import  DollarCircleIcon  from '../../../public/icons/dollar-circle.svg';
-import  LocationIcon  from '../../../public/icons/location-blue.svg';
-import  EditIcon  from '../../../public/icons/edit.svg';
 import  EditBlueIcon  from '../../../public/icons/edit-blue-outline.svg';
-import  BellIcon  from '../../../public/icons/bell.svg';
-import  JobsDoneIcon  from '../../../public/icons/jobs-done.svg';
-import  StarIcon  from '../../../public/icons/star-yellow.svg';
+
 import {
   numberWithCommas,
   separateValuesWithComma,
@@ -418,7 +413,7 @@ const ProfileBanner = ({ data, refetch }: Props) => {
                 className="edit-button profile-edit-btn flex items-center gap-2 cursor-pointer text-white"
                 onClick={toggleEditModal}
               >
-                <div className="text-white"><EditIcon/></div>
+                <div className="text-white"><EditBlueIcon/></div>
                 <div className="text-base font-normal">Edit</div>
               </div>
             </div>
