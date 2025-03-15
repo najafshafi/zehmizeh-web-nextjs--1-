@@ -1,4 +1,4 @@
-import { pxToRem } from 'helpers/utils/misc';
+import { pxToRem } from '@/helpers/utils/misc';
 import styled from 'styled-components';
 
 const GradientText = styled.span<{ size?: number }>`

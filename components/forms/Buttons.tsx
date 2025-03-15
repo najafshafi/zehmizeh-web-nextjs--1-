@@ -1,7 +1,7 @@
 import { Button, ButtonProps } from 'react-bootstrap';
-import Delete from '../../public/icons/trash.svg';
-import Edit from '../../public/icons/edit.svg';
-import CheckMark from '../../public/icons/checkmark.svg';
+import Delete from '@/public/icons/trash.svg';
+import Edit from '@/public/icons/edit.svg';
+import CheckMark from '@/public/icons/checkmark.svg';
 import { pxToRem } from '@/helpers/utils/misc';
 
 // Interface for IconButton props
@@ -113,3 +113,7 @@ export const TransparentButton = (props: ButtonProps) => (
     {...props}
   />
 );
+
+
+
+

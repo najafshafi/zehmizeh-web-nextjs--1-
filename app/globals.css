@@ -20,6 +20,24 @@
   width: 100%;
 }
 
+
+
+/* Add this to your global CSS */
+:root {
+  --toastify-z-index: 9999;
+}
+
+
+
+
+
+
+
+
+
+
 .css-1wy0on6 {
   display: none !important;
 }
+
+
