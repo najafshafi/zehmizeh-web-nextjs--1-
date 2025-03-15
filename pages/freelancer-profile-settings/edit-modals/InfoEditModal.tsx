@@ -44,7 +44,7 @@ const initialState: TFormState = {
 const InfoEditModal = ({ show, onClose, onUpdate, data, refetch }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [formState, setFormState] = useState<TFormState>(initialState);
-  const [errors, setErrors] = useState<TFormState>(undefined);
+  const [errors, setErrors] = useState<Partial<TFormState>>({});
   const [showEditEmailModal, setShowEditEmailModal] = useState<boolean>(false);
 
   const toggleEditModal = () => {
@@ -68,67 +68,70 @@ const InfoEditModal = ({ show, onClose, onUpdate, data, refetch }: Props) => {
   }, [show]);
 
   useEffect(() => {
-    if (data && show) {
+    if (show) {
+      document.body.style.overflow = "hidden";
       setFormState({
-        user_image: data?.user_image,
-        first_name: data?.first_name,
-        last_name: data?.last_name,
-        location: data?.location,
-        hourly_rate: data?.hourly_rate,
-        u_email_id: data?.u_email_id,
+        user_image: data?.user_image || "",
+        first_name: data?.first_name || "",
+        last_name: data?.last_name || "",
+        location: data?.location || null,
+        hourly_rate: data?.hourly_rate || 0,
+        u_email_id: data?.u_email_id || "",
       });
     } else {
+      document.body.style.overflow = "auto";
       setFormState(initialState);
+      setErrors({});
     }
-  }, [data, show]);
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [show, data]);
 
-  const handleChange = useCallback(
-    (field: keyof TFormState, value: TFormState[keyof TFormState]) => {
-      setFormState((prevFormState) => {
-        return { ...prevFormState, [field]: value };
-      });
-    },
-    []
-  );
+  const handleChange = useCallback((field: keyof TFormState, value: any) => {
+    setFormState((prev) => ({ ...prev, [field]: value }));
+  }, []);
 
-  const handleUpdate = () => {
-    setErrors(undefined);
-    freelancerProfileTabValidation
-      .validate(formState, { abortEarly: false })
-      .then(() => {
-        setLoading(true);
-        const body = {
-          user_image: formState?.user_image,
-          first_name: formState?.first_name?.trim(),
-          last_name: formState?.last_name?.trim(),
-          hourly_rate: formState?.hourly_rate
-            ? parseFloat(formState?.hourly_rate?.toString())
-            : 0,
-          location: formState?.location,
-        };
-        const promise = editUser(body);
-        toast.promise(promise, {
-          loading: "Updating your details - please wait...",
-          success: (res) => {
-            onUpdate();
-            onClose();
-            setLoading(false);
-            return res.message;
-          },
-          error: (err) => {
-            setLoading(false);
-            return err?.response?.data?.message || "error";
-          },
-        });
-      })
-      .catch((err) => {
-        const errors = getYupErrors(err);
-        setErrors({ ...errors });
+  const handleUpdate =  () => {
+   
+    try {
+      setErrors({});
+      setLoading(true);
+      // Validate form
+       freelancerProfileTabValidation.validate(formState, { abortEarly: false });
+  
+      const body = {
+        user_image: formState.user_image,
+        first_name: formState.first_name.trim(),
+        last_name: formState.last_name.trim(),
+        hourly_rate: formState.hourly_rate ? parseFloat(formState.hourly_rate.toString()) : 0,
+        location: formState.location,
+      };
+
+      // Execute update
+      const promise = editUser(body);
+
+      toast.promise(promise, {
+        loading: "Updating your details - please wait...",
+        success: (res) => {
+          setLoading(false);
+          onUpdate();
+          onClose();
+          return res.message || "Profile updated successfully";
+        },
+        error: (err) => {
+          setLoading(false);
+          return err?.response?.data?.message || "Failed to update profile";
+        },
       });
+    } catch (err) {
+      setLoading(false);
+      const validationErrors = getYupErrors(err);
+      setErrors(validationErrors);
+    }
   };
 
   const onSelectState = (item: { label: string; value: string } | null) => {
-    console.log("Selected state:", item);
     setFormState((prevFormState) => {
       const newState = {
         ...prevFormState,
@@ -137,7 +140,6 @@ const InfoEditModal = ({ show, onClose, onUpdate, data, refetch }: Props) => {
           state: item ? item.value : null,
         },
       };
-      console.log("Updated formState:", newState);
       return newState;
     });
   };

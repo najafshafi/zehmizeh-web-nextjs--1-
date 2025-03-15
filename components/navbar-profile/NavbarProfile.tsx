@@ -164,7 +164,7 @@ const NavbarProfile = () => {
             >
               <Image src="/hiring.png" width={50} height={50} alt="User avatar" priority />
               <p className="flex items-center gap-2 text-lg text-[#212529]">
-                {user?.data?.first_name || user?.first_name ||  "User"}
+                {user?.data?.first_name || user?.first_name ||  "User"}  {user?.data?.last_name || user?.last_name ||  "User"}
                 <IoIosArrowDown
                   size={20}
                   className={`transition-transform ${isProfileDropdownOpen ? "rotate-180" : ""}`}
