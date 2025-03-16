@@ -1,18 +1,13 @@
-/*
- * This component is a modal to edit a freelancer's skills, allowing selection of categories
- * and specific skills, with validation and API integration for updates.
- */
-
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
 import { VscClose } from "react-icons/vsc";
-import { editUser } from "@/helpers/http/auth";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import {
   getCategories,
   getRelevantSkillsBasedOnCategory,
   getSkills,
 } from "@/helpers/utils/helper";
+import { editUser } from "@/helpers/http/auth";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 import { CategorySkillSelectModal } from "@/components/skills-form/CategorySelectModal";
 
@@ -39,9 +34,20 @@ const SkillsEditModal = ({
   >([...selectedCategories, ...selectedSkills]);
   const [error, setError] =
     useState<typeof initialErrorMessages>(initialErrorMessages);
-
   const [isSkillCategorySelectModalOpen, setIsSkillCategorySelectModalOpen] =
     useState(false);
+
+  // Prevent scrolling when modal is open
+  useEffect(() => {
+    if (show) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [show]);
 
   // Memoized handleUpdate to avoid recreation on every render
   const handleUpdate = useCallback(() => {
@@ -73,7 +79,7 @@ const SkillsEditModal = ({
       success: (res) => {
         onUpdate();
         setLoading(false);
-        onClose(); // Automatically close modal on success
+        onClose();
         return res.message || "Skills updated successfully!";
       },
       error: (err) => {
@@ -94,7 +100,7 @@ const SkillsEditModal = ({
       ></div>
 
       {/* Modal Content */}
-      <div className="bg-white rounded-xl max-w-[678px] max-h-[643px] w-full py-8 px-4 md:p-12 relative z-50 m-2 overflow-y-auto">
+      <div className="bg-white rounded-xl max-w-[678px] max-h-[90vh] w-full py-8 px-4 md:p-12 relative z-50 m-2">
         {/* Close Button */}
         <VscClose
           className="absolute top-4 md:top-0 right-4 md:-right-8 text-2xl text-black md:text-white hover:text-gray-200 cursor-pointer"
@@ -102,71 +108,80 @@ const SkillsEditModal = ({
         />
 
         {/* Modal Content */}
-        <div className="flex flex-col gap-6">
-          <h2 className="text-2xl sm:text-[28px] font-normal text-center sm:text-left">
+        <div className="space-y-5">
+          <h2 className="text-[#212529] text-2xl sm:text-[28px] font-normal text-center sm:text-left">
             My Skills
           </h2>
 
-          {/* Skill Categories Section */}
-          <CategorySkillSelectModal
-            type="CATEGORY"
-            label="Skill Categories"
-            labelClassName="font-bold text-xl"
-            subText={{
-              content:
-                "Which categories include the skills you offer on ZMZ? Select all that apply.",
-              className: "text-base text-gray-600",
-            }}
-            errorMessage={error.categories}
-            formData={getCategories(categoryAndSkillData)}
-            setFormData={(categories) => {
-              const updatedSkills = getRelevantSkillsBasedOnCategory([
-                ...getSkills(categoryAndSkillData),
-                ...categories,
-              ])
-                .filter((x) => "skills" in x)
-                .map((x) => x.skills)
-                .flat();
-              setCategoryAndSkillData([...updatedSkills, ...categories]);
-            }}
-            isMandatory
-            modalOpenCloseListener={(value) =>
-              setIsSkillCategorySelectModalOpen(value)
-            }
-          />
+          <div className="space-y-5">
+            {/* Skill Categories Section */}
+            <div>
+              <CategorySkillSelectModal
+                type="CATEGORY"
+                label="Skill Categories"
+                labelClassName="font-bold text-xl"
+                subText={{
+                  content:
+                    "Which of the categories listed below include the skills you want to offer on ZMZ? Select all that apply.",
+                  className: "text-base text-[#212529]",
+                }}
+                errorMessage={error.categories}
+                formData={getCategories(categoryAndSkillData)}
+                setFormData={(categories) => {
+                  const updatedSkills = getRelevantSkillsBasedOnCategory([
+                    ...getSkills(categoryAndSkillData),
+                    ...categories,
+                  ])
+                    .filter((x) => "skills" in x)
+                    .map((x) => x.skills)
+                    .flat();
+                  setCategoryAndSkillData([...updatedSkills, ...categories]);
+                }}
+                isMandatory
+                modalOpenCloseListener={(value) =>
+                  setIsSkillCategorySelectModalOpen(value)
+                }
+              />
+              {error.categories && <ErrorMessage message={error.categories} />}
+            </div>
 
-          {/* Skills Section */}
-          <CategorySkillSelectModal
-            type="SKILL"
-            label="Add Skills"
-            labelClassName="font-bold text-xl"
-            subText={{
-              content:
-                "Which of the categories listed below include the skills you want to offer on ZMZ? Select all that apply.",
-              className: "text-base text-gray-600",
-            }}
-            errorMessage={error.skills}
-            categories={getCategories(categoryAndSkillData)}
-            formData={getSkills(categoryAndSkillData)}
-            setFormData={(skills) => {
-              const categories = getCategories(categoryAndSkillData);
-              setCategoryAndSkillData([...categories, ...skills]);
-            }}
-            noResultFoundText="No skills available. Please select a category first."
-            isMandatory
-            modalOpenCloseListener={(value) =>
-              setIsSkillCategorySelectModalOpen(value)
-            }
-          />
+            {/* Skills Section */}
+            <div>
+              <CategorySkillSelectModal
+                type="SKILL"
+                label="Add Skills"
+                labelClassName="font-bold text-xl"
+                subText={{
+                  content:
+                    "Select the freelancing skills that you intend to offer as a service on ZMZ. Include all that apply.",
+                  className: "text-base text-[#212529]",
+                }}
+                errorMessage={error.skills}
+                categories={getCategories(categoryAndSkillData)}
+                formData={getSkills(categoryAndSkillData)}
+                setFormData={(skills) => {
+                  const categories = getCategories(categoryAndSkillData);
+                  setCategoryAndSkillData([...categories, ...skills]);
+                }}
+                noResultFoundText="No skills available. Please select a category first."
+                isMandatory
+                modalOpenCloseListener={(value) =>
+                  setIsSkillCategorySelectModalOpen(value)
+                }
+              />
+              {error.skills && <ErrorMessage message={error.skills} />}
+            </div>
+          </div>
 
           {/* Update Button */}
-          <div className="flex justify-end mt-5">
+          <div className="flex justify-center md:justify-end">
             <button
               onClick={handleUpdate}
               disabled={loading}
-              className={`px-9 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors ${
+              className={`bg-[#F2B420] text-[#212529] mt-[18px] px-9 py-[1.15rem] hover:scale-105 duration-300 text-lg rounded-full disabled:bg-[#F2A420] ${
                 loading ? "opacity-50 cursor-not-allowed" : ""
               }`}
+              style={{ lineHeight: 1.6875 }}
             >
               {loading ? "Updating..." : "Update"}
             </button>

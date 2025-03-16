@@ -286,7 +286,7 @@ export const CategorySkillSelectModal = ({
         </div>
         {!subText?.isHidden && (
           <div className="my-1 mb-2">
-            <span className={`fs-16 ${subText?.className || ""}`}>
+            <span className={`text-base ${subText?.className || ""}`}>
               {subText?.content ||
                 "Which of the categories listed below include the skills you want to offer on ZMZ? Select all that apply."}
             </span>
@@ -294,7 +294,7 @@ export const CategorySkillSelectModal = ({
         )}
         <DummyInputBox onClick={() => setIsModalOpen(true)}>
           {formData.length > 0 ? (
-            <div className="flex flex-row flex-wrap">
+            <div className="flex flex-row flex-wrap gap-3 p-[6px] capitalize">
               {formData.map((item) => {
                 return (
                   <Chip
@@ -313,7 +313,7 @@ export const CategorySkillSelectModal = ({
             </div>
           )}
         </DummyInputBox>
-        <div className="flex justify-content-between mt-2 suggested-skills">
+        <div className="flex justify-between mt-2 suggested-skills text-[#656565]">
           <div>{errorMessage && <ErrorMessage message={errorMessage} />}</div>
           <div>
             {selectedItems?.length || 0} out of{" "}
@@ -332,8 +332,8 @@ export const CategorySkillSelectModal = ({
         centered
         maxwidth={isMobile || isTablet ? "90vw" : "80vw"}
       >
-        <Modal.Body className="flex flex-column justify-content-center items-center">
-          <p className="fs-18 fw-bold">
+        <Modal.Body className="flex flex-col justify-center items-center">
+          <p className="text-lg font-bold">
             {type === "CATEGORY" ? "Skill Categories" : "Skills"}
           </p>
           {isLoading && allItems?.length === 0 && (
@@ -350,7 +350,7 @@ export const CategorySkillSelectModal = ({
               </Button>
               <StatusBadge
                 color="yellow"
-                className="position-absolute"
+                className="absolute"
                 style={{ right: "20px", top: `${isMobile ? "40px" : "20px"}` }}
               >
                 {selectedItems?.length || 0} /{" "}
@@ -359,7 +359,7 @@ export const CategorySkillSelectModal = ({
                   : CONSTANTS.MAX_SELECT_SKILLS}
               </StatusBadge>
               {/* START ----------------------------------------- Searchbox */}
-              <div className="position-relative flex-1 search-and-dropdown flex items-center mb-4">
+              <div className="relative flex-1 search-and-dropdown flex items-center mb-4">
                 <Form.Control
                   placeholder={"Search"}
                   value={search}
@@ -367,20 +367,20 @@ export const CategorySkillSelectModal = ({
                     setSearch(e.target.value);
                   }}
                   autoFocus={true}
-                  className="custom-search fs-16 fw-300 w-100"
+                  className="custom-search text-base font-light w-[100px]"
                 />
                 {search && !isLoading && (
                   <CrossIcon
                     onClick={() => {
                       setSearch("");
                     }}
-                    className="cursor-pointer position-absolute"
+                    className="cursor-pointer absolute"
                     style={{ right: "10px" }}
                   />
                 )}
                 {isLoading && allItems?.length > 0 && (
                   <Spinner
-                    className="position-absolute"
+                    className="absolute"
                     style={{ right: "10px" }}
                     animation="border"
                     size="sm"
@@ -398,11 +398,11 @@ export const CategorySkillSelectModal = ({
                   allItems.map((item) => {
                     if (item?.skills?.length > 0) {
                       return (
-                        <div key={item.category_id} className="mb-2r">
-                          <b className="text-capitalize mt-2 fs-18">
+                        <div key={item.category_id} className="mb-[2rem]">
+                          <b className="capitalize mt-2 text-lg">
                             {item.category_name}
                           </b>
-                          <div className="flex flex-wrap justify-content-center items-center text-center mt-2">
+                          <div className="flex flex-wrap justify-center items-center text-center mt-2">
                             {item.skills.map((skill) => {
                               return SkillChip(skill);
                             })}
