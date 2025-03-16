@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { Spinner } from "react-bootstrap";
+// import { Spinner } from "react-bootstrap";
+import Spinner from "@/components/forms/Spin/Spinner"
 import {
   FreelancerContent,
   FreelancerProfileWrapper,
@@ -118,7 +119,7 @@ const FreelancerProfileSettings = () => {
           <div className="flex justify-between items-center">
             <BackButton onBack={onBack}>
               {isRefetching ? (
-                <Spinner animation="border" size="sm" className="ms-1" />
+                <Spinner  className="ms-1" />
               ) : null}
             </BackButton>
             <StyledButton

@@ -2,7 +2,8 @@
  * This component serves the stats the logged in freelancer
  */
 
-import { Spinner, Row, Col } from 'react-bootstrap';
+// import { Spinner } from 'react-bootstrap';
+import Spinner from '@/components/forms/Spin/Spinner';
 import styled from 'styled-components';
 import StarIcon from '@/public/icons/starYellow.svg';
 import { numberWithCommas } from '@/helpers/utils/misc';
@@ -40,35 +41,35 @@ const DashboardStats = ({ dashboardStats, isLoading }: Props) => {
     <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-center">
     <div className="xs:w-full md:w-full lg:w-full">
       <StatBlock className="flex flex-col justify-between bg-white rounded-xl shadow-sm p-4">
-        <div className="stat-label text-lg text-gray-700 font-normal">Total Projects Done</div>
+        <div className="stat-label text-lg text-gray-800 font-normal">Total Projects Done</div>
         {!isLoading ? (
           <div className="stat-value text-3xl font-bold text-gray-900">
             {numberWithCommas(dashboardStats?.donejob)}
           </div>
         ) : (
           <div className="mt-3">
-            <Spinner animation="border" />
+            <Spinner />
           </div>
         )}
       </StatBlock>
     </div>
     <div className="xs:w-full md:w-full lg:w-full">
       <StatBlock className="flex flex-col justify-between bg-white rounded-xl shadow-sm p-4">
-        <div className="stat-label  text-lg text-gray-700 font-normal">Total Earnings</div>
+        <div className="stat-label  text-lg text-gray-800 font-normal">Total Earnings</div>
         {!isLoading ? (
           <div className="stat-value text-3xl font-bold text-gray-900">
             {numberWithCommas(dashboardStats?.totalEarnings, 'USD')}
           </div>
         ) : (
           <div className="mt-3">
-            <Spinner animation="border" />
+            <Spinner />
           </div>
         )}
       </StatBlock>
     </div>
     <div className="xs:w-full md:w-full lg:w-full sm:col-span-2 lg:col-span-1">
       <StatBlock className="flex flex-col justify-between bg-white rounded-xl shadow-sm p-4">
-        <div className="stat-label text-lg text-gray-700 font-normal">Ratings</div>
+        <div className="stat-label text-lg text-gray-800 font-normal">Ratings</div>
         {!isLoading ? (
           <div className="stat-value flex items-center gap-1">
             <StarIcon className=" text-yellow-400" />
@@ -77,7 +78,7 @@ const DashboardStats = ({ dashboardStats, isLoading }: Props) => {
                 ? dashboardStats?.ratings?.average?.toFixed(1)
                 : 0}
             </div>
-            <div className="text-2xl font-normal text-gray-600">
+            <div className="text-lg font-medium text-gray-800">
               (
               {dashboardStats?.ratings?.count
                 ? numberWithCommas(dashboardStats?.ratings?.count)
@@ -87,7 +88,7 @@ const DashboardStats = ({ dashboardStats, isLoading }: Props) => {
           </div>
         ) : (
           <div className="mt-3">
-            <Spinner animation="border" />
+            <Spinner />
           </div>
         )}
       </StatBlock>

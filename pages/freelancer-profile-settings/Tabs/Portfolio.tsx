@@ -1,20 +1,18 @@
 "use client"; // Ensure this is a client component
 import { useEffect, useState } from 'react';
 import { MainPortfolioWrapper, PortSkillItem } from '../partials/portfolioStyles';
-// import DeleteIcon from '../../../public/icons/trash.svg';
-// import EditIcon from '../../../public/icons/edit-blue.svg';
-// import DragIcon from '../../../public/icons/drag.svg';
+import DeleteIcon from '@/public/icons/trash.svg';
+import EditIcon from '@/public/icons/edit-blue-outline.svg';
+import DragIcon from '@/public/icons/drag.svg';
 import DeletePrompt from '@/components/ui/DeletePropmpt';
 import { toast } from 'react-hot-toast';
 import { addEditPortfolio, deletePortfolio } from '@/helpers/http/portfolio';
 import usePortfolio from '@/controllers/usePortfolio';
-import { StyledButton } from '@/components/forms/Buttons';
 import AddPortfolioModal from '@/components/portfolio/AddPortfolioModal';
 import Loader from '@/components/Loader';
 import PortfolioFiles from '../partials/PortfolioFiles';
 import ReArrangePorfolioItems from '../partials/ReArrangePorfolioItems';
-import Image from 'next/image';
-
+import CustomButton from "@/components/custombutton/CustomButton";
 export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
   const { refetch, portfolioData: portfolios, isLoading, isRefetching } = usePortfolio(freelancerId);
 
@@ -108,14 +106,14 @@ export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
     <div className="mb-5">
       {allowEdit && (
         <div className="flex items-center justify-center mb-5">
-          <StyledButton
+          <CustomButton
+          className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
             onClick={() => {
               setSelectedPortfolio(null);
               toggleAddPortfolioModal();
             }}
-          >
-            Add New Portfolio Album
-          </StyledButton>
+            text="Add New Portfolio Album"
+          />
         </div>
       )}
 
@@ -123,38 +121,38 @@ export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
         portfolios?.map((port: any) => (
           <MainPortfolioWrapper key={`port-id-${port.portfolio_id}`}>
             <div className="flex items-center mb-2">
-              <h3 className="line-break  project-name fw-700 text-capitalize mb-1">
+              <h3 className="line-break  project-name font-bold text-capitalize mb-1 text-[28px]">
                 {port.project_name} {port?.project_year && `(${port?.project_year})`}
               </h3>
 
               {allowEdit && (
                 <>
                     <div
-                    className="delete-btn p-2 pointer flex items-center"
+                    className="delete-btn p-2 cursor-pointer flex items-center"
                     onClick={() => {
                       setSelectedPortfolio(port);
                       toggleAddPortfolioModal();
                     }}
                     >
-                    <Image src="../../../public/icons/edit-icon.svg" alt="Edit Icon" width={24} height={24}  style={{ stroke: "#0067FF", fill: "#0067FF" }} />
+                    <EditIcon />
                     </div>
                   <div
-                    className="delete-btn p-2 pointer flex items-center"
+                    className="delete-btn p-2 cursor-pointer flex items-center"
                     onClick={() => {
                       setSelectedPortfolio(port);
                       setIsPorfolioRearrangeModal(true);
                     }}
                     >
-                    <Image src="../../../public/icons/drag-icon.svg" alt="Drag Icon" width={24} height={24} style={{ stroke: "#0067FF", fill: "#0067FF" }} />
+                    <DragIcon />
 
                     {/* <DragIcon stroke="#0067FF" fill="#0067FF" /> */}
                   </div>
 
                     <div
-                    className="delete-btn p-2 pointer flex items-center"
+                    className="delete-btn p-2 cursor-pointer flex items-center"
                     onClick={(e) => openDeletePrompt(e, port)}
                     >
-                    <Image src="../../../public/icons/delete-icon.svg" alt="Delete Icon" width={24} height={24}  style={{ stroke: "#FF0000", fill: "#FF0000" }} />
+                    <DeleteIcon />
                     </div>
                 </>
               )}
@@ -163,7 +161,7 @@ export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
             {/* Portfolio Skills */}
             {port?.project_skills && (
               <div className="mb-4">
-                <p className="fw-bold mb-2">{port?.project_skills !== '[]' && 'Project Skills'}</p>
+                <p className="font-bold mb-2">{port?.project_skills !== '[]' && 'Project Skills'}</p>
                 <div className="flex">
                   {typeof port?.project_skills === 'string' ? (
                     port?.project_skills === '[]' ? (
@@ -192,7 +190,7 @@ export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
 
             {port?.project_description && (
               <div className="mb-4">
-                <p className="fw-bold mb-2">Project Description</p>
+                <p className="font-bold mb-2">Project Description</p>
                 <p className="line-break">{port?.project_description}</p>
               </div>
             )}

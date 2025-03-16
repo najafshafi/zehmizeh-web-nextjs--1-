@@ -1,7 +1,8 @@
+"use client"
 import { useEffect, useState } from 'react';
 import './style.css';
 import { BsCheck2 } from 'react-icons/bs';
-import Cross from "../../public/icons/cross-black.svg";
+import Cross from "@/public/icons/cross-black.svg";
 import classNames from 'classnames';
 
 // Interfaces
@@ -64,7 +65,7 @@ const CustomSelect = ({ onChange = () => null, options = [], title = '', selecte
   return (
     <div className={`${elemId} custom-select-container`}>
       <div
-        className={classNames('custom-select-title-box form-select position-relative', {
+        className={classNames('custom-select-title-box block w-full px-3 py-2 md:py-0 border border-gray-300 rounded-md shadow-sm focus:outline-none position-relative', {
           'showing-cross': defaultValue && defaultValue.value !== selectedOption.value,
         })}
         onClick={() => setShow(!show)}
@@ -81,7 +82,7 @@ const CustomSelect = ({ onChange = () => null, options = [], title = '', selecte
         )}
       </div>
       {show && (
-        <div className="custom-select-options">
+        <div className="custom-select-options ">
           {options?.map((option) => (
             <div
               className={`custom-select-option ${selectedOption.value !== option.value ? 'not-selected' : 'selected'}`}

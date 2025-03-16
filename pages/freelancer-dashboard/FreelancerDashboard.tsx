@@ -1,7 +1,6 @@
 // app/freelancer/dashboard/page.tsx
 'use client';
 
-import { Row, Col } from 'react-bootstrap';
 import DashboardStats from './DashboardStats';
 import Proposals from './proposals';
 import Jobs from './jobs';
