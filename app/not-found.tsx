@@ -1,8 +1,10 @@
-import { Image, Button } from "react-bootstrap";
-// import { useRouter } from "next/router";
+"use client";
+import { Image } from "react-bootstrap";
+
+import CustomButton from "@/components/custombutton/CustomButton";
 
 const Page404: React.FC = () => {
-//   const router = useRouter();
+
 
   return (
     <div className="h-screen flex justify-center items-center flex-col">
@@ -18,7 +20,11 @@ const Page404: React.FC = () => {
       <div className="text-black text-center text-lg mb-10">
         The page you are looking for doesn’t exist or is unavailable.
       </div>
-      <Button>Go back</Button>
+      <CustomButton
+            text="Go back"
+            className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+            onClick={() => console.log("clicked")} // Update with actual route
+          />
     </div>
   );
 };

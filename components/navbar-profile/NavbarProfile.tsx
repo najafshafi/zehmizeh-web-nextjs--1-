@@ -34,19 +34,19 @@ const NavbarProfile = () => {
   const [notificationCount, setNotificationCount] = useState(1);
 
   const navigationItems: NavigationItem[] = [
-    { href: "/dash", label: "Dashboard" },
-    { href: "/pro", label: "My Projects" },
-    { href: "/messa", label: "Messages" },
-    { href: "/trans", label: "Transactions" },
-    { href: "/helphelphelp", label: "Help" },
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/jobs", label: "My Projects" },
+    { href: "/messages-new", label: "Messages" },
+    { href: "/payments", label: "Transactions" },
+    { href: "/support", label: "Help" },
   ];
 
   const menuItems: MenuItem[] = [
-    { href: "/profile", label: "My Profile" },
-    { href: "/portfolio", label: "My Portfolio" },
-    { href: "/ratings", label: "My Ratings" },
-    { href: "/payments", label: "My Payment Details" },
-    { href: "/settings", label: "My Account Settings" },
+    { href: "/freelancer/account/Profile", label: "My Profile" },
+    { href: "/freelancer/account/Portfolio", label: "My Portfolio" },
+    { href: "/freelancer/account/Ratings", label: "My Ratings" },
+    { href: "/freelancer/account/Payments", label: "My Payment Details" },
+    { href: "/freelancer/account/Settings", label: "My Account Settings" },
   ];
 
   const handleResize = useCallback(() => {
