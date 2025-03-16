@@ -213,7 +213,8 @@ import { ProfileBannerWrapper } from "../freelancer-profile-settings.styled";
 import InfoEditModal from "../edit-modals/InfoEditModal";
 import EditPictureModal from "@/components/ui/EditPictureModal";
 import { editUser } from "@/helpers/http/auth";
-import  EditBlueIcon  from '../../../public/icons/edit-blue-outline.svg';
+import EditBlueIcon from "../../../public/icons/edit-blue-outline.svg";
+import EditWhiteIcon from "../../../public/icons/editWhiteIcon.svg";
 
 import {
   numberWithCommas,
@@ -264,11 +265,11 @@ const ProfileBanner = ({ data, refetch }: Props) => {
   return (
     <>
       <ProfileBannerWrapper className="p-2">
-        <div className="flex flex-col md:flex-row p-4 gap-3">
+        <div className="flex flex-col md:flex-row py-6 px-4 gap-3">
           <div className="flex-1 md:w-10/12">
             <div className="flex flex-col md:flex-row gap-3">
               {/* Profile picture */}
-              <div className="md:w-3/12 flex justify-center items-center">
+              <div className="md:w-[228px] flex justify-center items-center">
                 <div
                   className="profile__img cursor-pointer relative"
                   onClick={togglePictureModal}
@@ -281,15 +282,15 @@ const ProfileBanner = ({ data, refetch }: Props) => {
                     height={100}
                   />
                   <div className="edit-picture-btn  absolute bottom-0 flex items-center justify-center">
-                    <EditBlueIcon/>
+                    <EditBlueIcon />
                   </div>
                 </div>
               </div>
               <div className="md:w-9/12">
                 <div className="profile__details flex flex-col">
                   {/* Name and designation */}
-                  <div className="profile__name-title">
-                    <div className="flex items-center gap-2 flex-wrap">
+                  <div className="profile__name-title space-y-4">
+                    <div className="flex items-center gap-4 flex-wrap">
                       <div className="profile__username text-2xl font-normal capitalize">
                         {data.first_name} {data?.last_name}
                       </div>
@@ -407,13 +408,15 @@ const ProfileBanner = ({ data, refetch }: Props) => {
           </div>
 
           {/* Edit button */}
-          <div className="mt-3 md:mt-0">
+          <div className="my-[14px] mx-2">
             <div className="flex justify-end">
               <div
                 className="edit-button profile-edit-btn flex items-center gap-2 cursor-pointer text-white"
                 onClick={toggleEditModal}
               >
-                <div className="text-white"><EditBlueIcon/></div>
+                <div className="text-white">
+                  <EditWhiteIcon />
+                </div>
                 <div className="text-base font-normal">Edit</div>
               </div>
             </div>

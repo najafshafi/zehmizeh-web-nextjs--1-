@@ -68,11 +68,11 @@ const BackButton = ({ className, children, onBack, route }: Props) => {
   return (
     <div className={`${className || ""} flex`}>
       <div
-        className="flex back-button items-center cursor-pointer"
+        className="flex gap-1 back-button items-center cursor-pointer"
         onClick={handleGoBack}
       >
-       <BackArrow />
-        <span className="fs-18 fw-400">Back</span>
+        <BackArrow />
+        <span className="text-lg font-normal">Back</span>
         {children}
       </div>
     </div>
