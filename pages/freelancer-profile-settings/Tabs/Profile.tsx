@@ -246,7 +246,10 @@ export const Profile = () => {
             details={
               <div>
                 {data?.about_me ? (
-                  <div className="leading-9">
+                  <div
+                    className="text-lg text-[#212529]"
+                    style={{ lineHeight: 2.25 }}
+                  >
                     <StyledHtmlText
                       htmlString={data?.about_me}
                       needToBeShorten={true}

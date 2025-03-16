@@ -1,9 +1,10 @@
-import { Container } from 'react-bootstrap';
-import styled from 'styled-components';
-import { transition } from '@/styles/transitions';
+import { Container } from "react-bootstrap";
+import styled from "styled-components";
+import { transition } from "@/styles/transitions";
 
 export const Wrapper = styled(Container)`
   max-width: 1170px;
+  padding: 0px 13px;
   .reset-password {
     transition: all 0.2s ease-in-out;
     color: ${(props) => props.theme.colors.lightBlue};
@@ -137,6 +138,8 @@ export const FreelancerContent = styled.div`
   width: 100%;
   background: transparent;
   padding: 1rem;
+  display: flex;
+  justify-content: center;
 `;
 
 export const ContentBox = styled.div`

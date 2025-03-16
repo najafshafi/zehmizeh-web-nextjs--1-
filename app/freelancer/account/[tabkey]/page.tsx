@@ -7,7 +7,7 @@ const page = () => {
     <div>
       <div className="flex flex-col">
         <Navbar />
-        <div className="pt-[110px]">
+        <div className="pt-[110px] bg-[#fefbf4]">
           <FreelancerProfileSettings />
         </div>
         <Footer />
