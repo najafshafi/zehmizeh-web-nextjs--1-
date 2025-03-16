@@ -1,6 +1,5 @@
 import ContactUs from "@/components/contact-us/ContactUS";
 import Navbar from "@/components/navbar/Navbar";
-import Footer from "@/components/footer/Footer";
 
 const AboutUsPage = () => {
   return (
@@ -9,7 +8,6 @@ const AboutUsPage = () => {
       <div className="pt-[110px]">
         <ContactUs />
       </div>
-      <Footer />
     </div>
   );
 };

@@ -92,7 +92,7 @@ const NavbarProfile = () => {
           {label}
         </p>
       </Link>
-      <span className="block h-[2px] bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+      <span className="block h-[2px] bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center" />
     </div>
   );
 

@@ -16,7 +16,7 @@ const Wrapper = styled.div<{ user_type?: 'client' | 'freelancer' }>`
   margin: 0 20px;
   flex-wrap: wrap;
   padding-top: 1rem;
-  @media ${breakpoints.mobile} {
+  @media  (max-width: 767px) {
     flex-direction: column;
     padding-top: 1rem;
     margin-bottom: 1rem;
@@ -42,7 +42,7 @@ const Wrapper = styled.div<{ user_type?: 'client' | 'freelancer' }>`
     &__filters {
       display: flex;
       gap: 0.5rem;
-      @media ${breakpoints.mobile} {
+      @media (max-width: 767px) {
         flex-direction: column;
       }
       .refund-symbol {
@@ -62,7 +62,7 @@ const Wrapper = styled.div<{ user_type?: 'client' | 'freelancer' }>`
 `;
 
 const RECORDS_PER_PAGE = [
-  { value: 10, label: '10' },
+  { value: 10, label: '10 ' },
   { value: 25, label: '25' },
   { value: 50, label: '50' },
   { value: 100, label: '100' },

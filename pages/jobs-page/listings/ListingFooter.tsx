@@ -2,10 +2,10 @@
  * This component displays the budget details, locaiton details, and hired person's details*
  */
 
-import BlurredImage from 'components/ui/BlurredImage';
-import { numberWithCommas } from 'helpers/utils/misc';
-import { ReactComponent as DollarCircleIcon } from 'assets/icons/dollar-circle.svg';
-import { ReactComponent as LocationIcon } from 'assets/icons/location-blue.svg';
+import BlurredImage from '@/components/ui/BlurredImage';
+import { numberWithCommas } from '@/helpers/utils/misc';
+import DollarCircleIcon  from '@/public/icons/dollar-circle.svg';
+import LocationIcon  from '@/public/icons/location-blue.svg';
 import moment from 'moment';
 
 const ListingFooter = ({ item }: any) => {

@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from 'react-query';
-import { freelancerJobNameSearch } from 'helpers/http/jobs';
+import { freelancerJobNameSearch } from '@/helpers/http/jobs';
 
 const LIMIT = 10;
 // This custom hook fetches the Jobs which are in progress, prospects, drafts and also templates for client dashboard

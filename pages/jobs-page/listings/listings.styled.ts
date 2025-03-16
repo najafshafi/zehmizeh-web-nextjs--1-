@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { transition } from 'styles/transitions';
+import { transition } from '@/styles/transitions';
 
 export const ListingItem = styled(Link)`
   position: relative;

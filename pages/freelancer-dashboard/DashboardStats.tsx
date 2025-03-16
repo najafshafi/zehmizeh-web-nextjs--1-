@@ -7,7 +7,6 @@ import Spinner from '@/components/forms/Spin/Spinner';
 import styled from 'styled-components';
 import StarIcon from '@/public/icons/starYellow.svg';
 import { numberWithCommas } from '@/helpers/utils/misc';
-import { breakpoints } from '@/helpers/hooks/useResponsive';
 
 const StatBlock = styled.div`
   height: 7.75rem;
@@ -23,7 +22,7 @@ const StatBlock = styled.div`
     line-height: 38.4px;
     letter-spacing: 0.03em;
   }
-  @media ${breakpoints.mobile} {
+  @media (max-width: 767px) {
     margin-bottom: 2rem;
     .stat-value {
       font-size: 1.25rem;
@@ -38,7 +37,7 @@ type Props = {
 
 const DashboardStats = ({ dashboardStats, isLoading }: Props) => {
   return (
-    <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-center">
+    <div className="mt-3 grid grid-cols-2  lg:grid-cols-3 gap-4 justify-center">
     <div className="xs:w-full md:w-full lg:w-full">
       <StatBlock className="flex flex-col justify-between bg-white rounded-xl shadow-sm p-4">
         <div className="stat-label text-lg text-gray-800 font-normal">Total Projects Done</div>

@@ -2,7 +2,6 @@
 
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store"; // Adjust path to your store
-import Footer from "@/components/footer/Footer";
 import Hero from "@/components/hero/Hero";
 import HiringProcess from "@/components/hiringprocess/HiringProcess";
 import Matches from "@/components/matches/Matches";
@@ -45,7 +44,7 @@ export default function Home() {
         <WhyUs />
         <Matches data={data?.data?.popular_category} user={user} />
         <Queries />
-        <Footer />
+
       </div>
     </div>
   );

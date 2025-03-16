@@ -105,7 +105,7 @@ const Tabs = ({
           {tabs?.map((item: any) => (
             <a
               key={item.key}
-              className={cns('tab fw-400 pointer', {
+              className={cns('tab font-normal cursor-pointer', {
                 active: activeTab === item.key,
               })}
               onClick={onChange(item.key)}
@@ -113,12 +113,12 @@ const Tabs = ({
               {item.label}
               {item.hasCounts ||
                 (counts && counts[item.key] > 0 && (
-                  <div className="count fs-sm fw-400 ms-2">{counts[item.key] || 0}</div>
+                  <div className="count text-sm font-normal ms-2">{counts[item.key] || 0}</div>
                 ))}
               {item.tooltip && (
                 <Tooltip
                   customTrigger={
-                    <div className="fs-sm mx-1">
+                    <div className="text-sm mx-1">
                       <Info />
                     </div>
                   }

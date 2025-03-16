@@ -70,7 +70,7 @@ const CustomSelect = ({ onChange = () => null, options = [], title = '', selecte
         })}
         onClick={() => setShow(!show)}
       >
-        <div className="custom-select-title">{title}</div>
+        <div className="custom-select-title ">{title}</div>
         {defaultValue && defaultValue.value !== selectedOption.value && (
           <Cross
             className="cross-icon"

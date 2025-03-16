@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Footer from "../footer/Footer";
 
 const AboutUs = () => {
   const router = useRouter();
@@ -119,7 +118,6 @@ const AboutUs = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

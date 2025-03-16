@@ -7,12 +7,12 @@ import { Spinner } from 'react-bootstrap';
 import moment from 'moment';
 import styled from 'styled-components';
 import { Bookmark } from './listings.styled';
-import { StatusBadge } from 'components/styled/Badges';
-import { ReactComponent as BookmarkIcon } from 'assets/icons/saved.svg';
+import { StatusBadge } from '@/components/styled/Badges';
+import BookmarkIcon  from '@/public/icons/saved.svg';
 import { JOBS_STATUS } from '../consts';
-import { StyledButton } from 'components/forms/Buttons';
+import { StyledButton } from '@/components/forms/Buttons';
 import toast from 'react-hot-toast';
-import { reopenProposal } from 'helpers/http/proposals';
+import { reopenProposal } from '@/helpers/http/proposals';
 
 const Wrapper = styled.div``;
 

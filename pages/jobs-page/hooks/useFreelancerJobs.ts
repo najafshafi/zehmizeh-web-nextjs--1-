@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { getMyAllJobs } from 'helpers/http/freelancer';
+import { getMyAllJobs } from '@/helpers/http/freelancer';
 
 /*
  * This hook will load the client jobs

@@ -9,7 +9,6 @@ const SearchWrapper = styled.div<{
 }>`
   border: ${(props) =>
     props.enableBorder ? `1px solid ${props.theme.colors.gray6}` : 'none'};
-
   margin: 0.5rem;
   border-radius: 0.35rem;
   overflow: hidden;

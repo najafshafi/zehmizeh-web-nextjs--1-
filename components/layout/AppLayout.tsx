@@ -4,15 +4,15 @@ import React from 'react';
 import { useDetectAdBlock } from 'adblock-detect-react';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { useLocation } from 'react-router-dom';
-import AdBlockePopOver from 'components/adblocker-modal/AdBlockePopOver';
-import SiteHeader from 'components/header/Header';
-import SiteFooter from 'components/footer/Footer';
-import { matchDynamicRoutes, matchStaticRoutes } from 'helpers/utils/routeMatch';
-import { GetStarted } from 'components/getStarted';
-import { getToken } from 'helpers/services/auth';
-import { useIsLoginAsUser } from 'helpers/hooks/useIsLoginAsUser';
-import Loader from 'components/Loader';
-import { useAuth } from 'helpers/contexts/auth-context';
+import AdBlockePopOver from '@/components/adblocker-modal/AdBlockePopOver';
+import SiteHeader from '@/components/header/Header';
+import SiteFooter from '@/components/footer/Footer';
+import { matchDynamicRoutes, matchStaticRoutes } from '@/helpers/utils/routeMatch';
+import { GetStarted } from '@/components/getStarted';
+import { getToken } from '@/helpers/services/auth';
+import { useIsLoginAsUser } from '@/helpers/hooks/useIsLoginAsUser';
+import Loader from '@/components/Loader';
+import { useAuth } from '@/helpers/contexts/auth-context';
 
 function AppLayout({ children }: { children: JSX.Element }) {
   const { user, isLoading } = useAuth();
