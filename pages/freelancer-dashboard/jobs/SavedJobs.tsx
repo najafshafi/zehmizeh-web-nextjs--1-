@@ -4,8 +4,8 @@
 "use client";
 import { useState } from 'react';
 import moment from 'moment';
-import { Spinner } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import Spinner from '@/components/forms/Spin/Spinner';
+import Link from 'next/link';
 import { ProposalWrapper, BookmarkIcon, TabContent } from './jobs.styled';
 import Loader from '@/components/Loader';
 import NoDataFound from '@/components/ui/NoDataFound';
@@ -40,7 +40,7 @@ const SavedJobs = () => {
           const isHidden = isProjectHiddenForFreelancer(item);
           return (
             <Link
-              to={`/job-details/${item.job_post_id}/gen_details`}
+              href={`/job-details/${item.job_post_id}/gen_details`}
               key={item.job_post_id}
               className={classNames('no-hover-effect', {
                 'pe-none': isProjectHiddenForFreelancer(item),
@@ -106,7 +106,7 @@ const SavedJobs = () => {
                   onClick={(e) => onBookmarkClick(e, item?.job_post_id)}
                 >
                   {loadingId == item?.job_post_id ? (
-                    <Spinner animation="border" />
+                    <Spinner  />
                   ) : (
                     <SavedIcon />
                   )}

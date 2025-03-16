@@ -2,7 +2,7 @@
  * This component serves a list of archived invites
  */
 
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Row, Col } from 'react-bootstrap';
 import { ProposalWrapper, TabContent } from './proposals.styled';
 import Loader from '@/components/Loader';
@@ -22,7 +22,7 @@ const ArchivedProposals = () => {
       ) : proposals?.length > 0 ? (
         proposals.map((item) => (
           <Link
-            to={`/offer-details/${item.job_post_id}`}
+            href={`/offer-details/${item.job_post_id}`}
             key={item.invite_id}
             className="no-hover-effect"
           >

@@ -9,7 +9,7 @@ import useJobs from './use-jobs';
 import { convertToTitleCase, numberWithCommas } from '@/helpers/utils/misc';
 import DollarCircleIcon from '@/public/icons/dollar-circle.svg';
 import BlurredImage from '@/components/ui/BlurredImage';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 const JobsInProgress = () => {
   const { jobs, isLoading, isRefetching } = useJobs('active');
@@ -20,7 +20,7 @@ const JobsInProgress = () => {
       ) : jobs.length > 0 ? (
         jobs.map((item: any) => (
           <Link
-            to={`/job-details/${item.job_post_id}/m_stone`}
+            href={`/job-details/${item.job_post_id}/m_stone`}
             key={item.job_post_id}
             className="no-hover-effect"
           >

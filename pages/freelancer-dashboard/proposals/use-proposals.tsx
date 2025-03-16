@@ -1,4 +1,4 @@
-"use client";
+
 import { useQuery } from 'react-query';
 import { getProposals } from '@/helpers/http/freelancer';
 
