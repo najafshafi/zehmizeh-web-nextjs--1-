@@ -18,27 +18,27 @@ const ListingFooter = ({ item }: any) => {
   return item?.status !== 'active' && item?.status !== 'closed' ? (
     /* If Job type is PROPSPECTS (applied job) */
 
-    <div className="listing__item-other-details d-flex align-items-center flex-wrap">
-      <div className="d-flex budget align-items-center gap-2">
+    <div className="listing__item-other-details flex items-center flex-wrap">
+      <div className="flex budget items-center gap-2">
         <DollarCircleIcon />
-        <div className="budget-value fs-1rem fw-400">
+        <div className="budget-value fs-1rem font-normal">
           {numberWithCommas(amount, 'USD')}
           {item?.budget?.type === 'fixed' ? (
-            <span className="light-text fw-300 ms-1">Budget</span>
+            <span className="light-text font-light ml-1">Budget</span>
           ) : (
-            <span className="light-text fw-300">/hr</span>
+            <span className="light-text font-light">/hr</span>
           )}
         </div>
       </div>
       {Array.isArray(item?.preferred_location) && item?.preferred_location?.length > 0 && (
-        <div className="budget d-flex align-items-center gap-1">
+        <div className="budget flex items-center gap-1">
           <LocationIcon />
-          <div className="fs-1rem fw-400 budget-label">{item.preferred_location.join(', ')}</div>
+          <div className="fs-1rem font-normal budget-label">{item.preferred_location.join(', ')}</div>
         </div>
       )}
-      <div className="d-flex align-items-center gap-2">
-        <span className="light-text fs-20 fw-400">Due Date:</span>
-        <span className="budget-amount fs-20 fw-400">
+      <div className="flex items-center gap-2">
+        <span className="light-text text-xl font-normal">Due Date:</span>
+        <span className="budget-amount text-xl font-normal">
           {item?.due_date ? moment(item?.due_date).format('MMM DD, YYYY') : '-'}
         </span>
       </div>
@@ -46,9 +46,9 @@ const ListingFooter = ({ item }: any) => {
   ) : (
     /* If Job type is CLOSED or ACTIVE */
 
-    <div className="in-progress-closed d-flex flex-column flex-lg-row align-items-lg-center gap-3">
+    <div className="in-progress-closed flex flex-col lg:flex-row lg:items-center gap-3">
       {/* Hired person details */}
-      <div className="client-details d-flex align-items-center gap-2">
+      <div className="client-details flex items-center gap-2">
         <BlurredImage
           height="52px"
           width="52px"
@@ -58,32 +58,32 @@ const ListingFooter = ({ item }: any) => {
         />
 
         <div>
-          <span className="light-text fs-16 fw-400">Posted by:</span>
-          <div className="fs-20 fw-400 text-capitalize">
+          <span className="light-text fs-16 font-normal">Posted by:</span>
+          <div className="text-xl font-normal text-capitalize">
             {item?.first_name} {item?.last_name}
           </div>
         </div>
       </div>
       {/* Divider */}
-      <div className="divider d-none d-lg-block" />
+      <div className="divider hidden lg:block" />
       {/* -- */}
-      <div className="d-flex budget width-fit-content gap-1 align-items-center">
+      <div className="flex budget w-fit gap-1 items-center">
         <DollarCircleIcon />
-        <div className="budget-value fs-1rem fw-400">
+        <div className="budget-value fs-1rem font-normal">
           {numberWithCommas(item?.proposal?.approved_budget?.amount, 'USD')}
           {item?.budget?.type === 'fixed' ? (
-            <span className="light-text fw-300 ms-1">Budget</span>
+            <span className="light-text font-light ml-1">Budget</span>
           ) : (
-            <span className="light-text fw-300">/hr</span>
+            <span className="light-text font-light">/hr</span>
           )}
         </div>
       </div>
       {/* Divider */}
-      <div className="divider d-none d-lg-block" />
+      <div className="divider hidden lg:block" />
 
-      <div className="d-flex align-items-center gap-2">
-        <span className="light-text fs-20 fw-400">Started:</span>
-        <span className="budget-amount fs-20 fw-400">
+      <div className="flex items-center gap-2">
+        <span className="light-text text-xl font-normal">Started:</span>
+        <span className="budget-amount text-xl font-normal">
           {item?.job_start_date ? moment(item.job_start_date).format('MMM DD, YYYY') : '-'}
         </span>
       </div>
@@ -91,10 +91,10 @@ const ListingFooter = ({ item }: any) => {
       {item?.status === 'closed' && (
         <>
           {/* Divider */}
-          <div className="divider d-none d-lg-block" />
-          <div className="d-flex align-items-center gap-2">
-            <span className="light-text fs-20 fw-400">Ended:</span>
-            <span className="budget-amount fs-20 fw-400">
+          <div className="divider hidden lg:block" />
+          <div className="flex items-center gap-2">
+            <span className="light-text text-xl font-normal">Ended:</span>
+            <span className="budget-amount text-xl font-normal">
               {item?.job_end_date ? moment(item.job_end_date).format('MMM DD, YYYY') : '-'}
             </span>
           </div>

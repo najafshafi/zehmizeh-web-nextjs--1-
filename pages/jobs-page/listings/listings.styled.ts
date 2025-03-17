@@ -1,8 +1,7 @@
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { transition } from '@/styles/transitions';
 
-export const ListingItem = styled(Link)`
+export const ListingItem = styled.a`
   position: relative;
   background: ${(props) => props.theme.colors.white};
   padding: 2rem;

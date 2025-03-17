@@ -3,38 +3,60 @@
  */
 
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
 import moment from 'moment';
-import styled from 'styled-components';
 import { Bookmark } from './listings.styled';
 import { StatusBadge } from '@/components/styled/Badges';
-import BookmarkIcon  from '@/public/icons/saved.svg';
+import BookmarkIcon from '@/public/icons/saved.svg';
 import { JOBS_STATUS } from '../consts';
 import { StyledButton } from '@/components/forms/Buttons';
 import toast from 'react-hot-toast';
 import { reopenProposal } from '@/helpers/http/proposals';
 
-const Wrapper = styled.div``;
+interface JobProposal {
+  proposal_id?: number;
+  proposed_budget?: { amount?: number };
+  status?: string;
+  is_proposal_deleted?: number;
+  is_job_deleted?: number;
+  is_viewed?: boolean;
+  date_created?: string | Date;
+  approved_budget?: { amount?: number };
+}
+
+interface JobItem {
+  status?: string;
+  proposal?: JobProposal;
+  budget?: { type?: string; amount?: number; max_amount?: number };
+  preferred_location?: string[];
+  due_date?: string | Date;
+  first_name?: string;
+  last_name?: string;
+  user_image?: string;
+  job_start_date?: string | Date;
+  job_end_date?: string | Date;
+  date_created?: string | Date;
+}
 
 type Props = {
-  item: any;
+  item: JobItem;
   listingType: string;
-  onBookmarkClick: any;
+  onBookmarkClick: () => void;
   setDisableLink?: Dispatch<SetStateAction<boolean>> /* To disable the link on the list item */;
   refetch: () => void;
 };
+
 const StatusAndDateSection = ({ item, listingType, onBookmarkClick, setDisableLink, refetch }: Props) => {
   const [saving, setSaving] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onBookmark = (e) => {
+  const onBookmark = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
     setSaving(true);
     onBookmarkClick();
   };
 
-  const handleReOpenProposal = (proposal) => {
+  const handleReOpenProposal = (proposal: JobProposal) => {
     if (!proposal || !proposal?.proposal_id) return toast.error('Invalid request.');
 
     const response = reopenProposal({ proposal_id: proposal?.proposal_id });
@@ -68,31 +90,39 @@ const StatusAndDateSection = ({ item, listingType, onBookmarkClick, setDisableLi
     return '';
   }, [item?.proposal?.status, item.status]);
 
-  const handleProposalStatus = (item) => {
-    if (item?.proposal?.is_job_deleted === 1 || item?.proposal?.is_proposal_deleted === 1) return 'darkPink';
-    if (['denied', 'awarded'].includes(item?.proposal?.status)) return JOBS_STATUS[item?.proposal?.status].color;
+  const handleProposalStatus = (jobItem: JobItem) => {
+    if (jobItem?.proposal?.is_job_deleted === 1 || jobItem?.proposal?.is_proposal_deleted === 1) return 'darkPink';
+    if (jobItem?.proposal?.status && ['denied', 'awarded'].includes(jobItem.proposal.status)) {
+      return JOBS_STATUS[jobItem.proposal.status as keyof typeof JOBS_STATUS]?.color || 'green';
+    }
 
-    return JOBS_STATUS[item?.status].color || 'green';
+    return jobItem?.status ? JOBS_STATUS[jobItem.status as keyof typeof JOBS_STATUS]?.color || 'green' : 'green';
   };
 
   return (
-    <Wrapper className="d-flex flex-column justify-content-between flex-2 gap-3 align-items-md-end">
+    <div className="flex flex-col justify-between flex-2 gap-3 md:items-end">
       {/* Status badge or Bookmark icon */}
       {listingType == 'saved' && (
-        <Bookmark className="d-flex justify-content-center align-items-center pointer" onClick={onBookmark}>
-          {saving ? <Spinner animation="border" /> : <BookmarkIcon />}
+        <Bookmark className="flex justify-center items-center cursor-pointer" onClick={onBookmark}>
+          {saving ? (
+            <div className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em]" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          ) : (
+            <BookmarkIcon />
+          )}
         </Bookmark>
       )}
 
       <div>
         {item?.proposal?.proposed_budget?.amount && listingType !== 'saved' && (
-          <StatusBadge color={handleProposalStatus(item)} className="width-fit-content">
+          <StatusBadge color={handleProposalStatus(item)} className="w-fit">
             {status}
           </StatusBadge>
         )}
         {/* START ----------------------------------------- Showing read and unread status when project is prospect and proposal status is pending */}
         {item?.status === 'prospects' && item?.proposal?.status === 'pending' && (
-          <StatusBadge color={item?.proposal?.is_viewed ? 'green' : 'red'} className="ms-3">
+          <StatusBadge color={item?.proposal?.is_viewed ? 'green' : 'red'} className="ml-3">
             {item?.proposal?.is_viewed ? 'Read' : 'Unread'}
           </StatusBadge>
         )}
@@ -100,15 +130,19 @@ const StatusAndDateSection = ({ item, listingType, onBookmarkClick, setDisableLi
       </div>
 
       {item?.proposal && item?.proposal?.is_proposal_deleted === 1 && (
-        <div onMouseEnter={() => setDisableLink(true)} onMouseLeave={() => setDisableLink(false)}>
+        <div onMouseEnter={() => setDisableLink?.(true)} onMouseLeave={() => setDisableLink?.(false)}>
           <StyledButton
             disabled={loading}
             variant="outline-dark"
             type="submit"
-            className="d-flex align-items-center gap-3"
-            onClick={() => handleReOpenProposal(item?.proposal)}
+            className="flex items-center gap-3"
+            onClick={() => handleReOpenProposal(item?.proposal as JobProposal)}
           >
-            {loading && <Spinner size="sm" animation="border" />} Re-open
+            {loading && (
+              <div className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em]" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            )} Re-open
           </StyledButton>
         </div>
       )}
@@ -116,8 +150,8 @@ const StatusAndDateSection = ({ item, listingType, onBookmarkClick, setDisableLi
       {/* Date applied on or Started to end date */}
 
       {listingType !== 'saved' && (
-        <div className="listing__applied-date fs-1rem fw-400 light-text">
-          {['active', 'closed'].includes(item?.status) &&
+        <div className="listing__applied-date text-base font-normal text-gray-500">
+          {item?.status && ['active', 'closed'].includes(item.status) &&
             `Proposal Sent: ${moment(item?.proposal?.date_created).format('MMM DD, YYYY')}`}
 
           {/* {item?.status == 'closed' &&
@@ -130,11 +164,11 @@ const StatusAndDateSection = ({ item, listingType, onBookmarkClick, setDisableLi
         </div>
       )}
       {listingType == 'saved' && (
-        <div className="listing__applied-date fs-1rem fw-400 light-text">
+        <div className="listing__applied-date text-[1rem] font-normal text-gray-500">
           {moment(item?.date_created)?.format('MMM DD, YYYY')}
         </div>
       )}
-    </Wrapper>
+    </div>
   );
 };
 
