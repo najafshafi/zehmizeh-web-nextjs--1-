@@ -1,20 +1,20 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Modal, Button, Form } from 'react-bootstrap';
-import { StyledModal } from 'components/styled/StyledModal';
-import { StyledButton } from 'components/forms/Buttons';
+import { StyledModal } from '@/components/styled/StyledModal';
+import { StyledButton } from '@/components/forms/Buttons';
 import { useForm } from 'react-hook-form';
-import ErrorMessage from 'components/ui/ErrorMessage';
+import ErrorMessage from '@/components/ui/ErrorMessage';
 import * as yup from 'yup';
-import useResponsive from 'helpers/hooks/useResponsive';
-import messageService from 'helpers/http/message';
+import useResponsive from '@/helpers/hooks/useResponsive';
+import messageService from '@/helpers/http/message';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import { postAJob } from 'helpers/http/post-job';
+import { postAJob } from '@/helpers/http/post-job';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from 'redux/store';
-import { AddMessagePayload } from 'redux/slices/chat.interface';
-import { useAuth } from 'helpers/contexts/auth-context';
-import { addNewMessage } from '../../redux/slices/talkjsSlice';
+import { AppDispatch } from '@/store/redux/store';
+import { AddMessagePayload } from '@/store/redux/slices/chat.interface';
+import { useAuth } from '@/helpers/contexts/auth-context';
+import { addNewMessage } from '@/store/redux/slices/talkjsSlice';
 
 interface FormProp {
   message: string;

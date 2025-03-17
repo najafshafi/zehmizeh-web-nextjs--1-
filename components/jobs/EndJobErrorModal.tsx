@@ -3,9 +3,9 @@
  */
 import { Modal, Button } from 'react-bootstrap';
 import styled from 'styled-components';
-import { StyledButton } from 'components/forms/Buttons';
-import { StyledModal } from 'components/styled/StyledModal';
-import { ReactComponent as ErrorIcon } from 'assets/icons/error-orange-icon.svg';
+import { StyledButton } from '@/components/forms/Buttons';
+import { StyledModal } from '@/components/styled/StyledModal';
+import ErrorIcon  from '@/public/icons/error-orange-icon.svg';
 
 type Props = {
   show: boolean;
