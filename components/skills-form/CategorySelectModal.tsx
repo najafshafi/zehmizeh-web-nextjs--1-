@@ -1,47 +1,12 @@
-import { Chip } from "@/components/chip/Chip";
-import { StyledModal } from "@/components/styled/StyledModal";
 import { getCategoriesApi, getSkillsApi } from "@/helpers/http/common";
 import { TJobDetails } from "@/helpers/types/job.type";
 import { useEffect, useState } from "react";
-import { Button, Form, Modal, Spinner } from "react-bootstrap";
 import toast from "react-hot-toast";
-import Tooltip from "@/components/ui/Tooltip";
-import ErrorMessage from "@/components/ui/ErrorMessage";
-import { StyledButton } from "@/components/forms/Buttons";
-import CrossIcon from "../../public/icons/cross-black.svg";
-import styled from "styled-components";
 import { getRelevantSkillsBasedOnCategory } from "@/helpers/utils/helper";
 import { CONSTANTS } from "@/helpers/const/constants";
-import { StatusBadge } from "@/components/styled/Badges";
-import useResponsive from "@/helpers/hooks/useResponsive";
-
-const DummyInputBox = styled.div`
-  cursor: pointer;
-  border: 1px solid ${(props) => props.theme.colors.borderColor};
-  border-radius: 4px;
-  padding: 6px 10px;
-`;
-
-const Items = styled.div`
-  max-height: 60vh;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  flex-wrap: wrap;
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 5px;
-  }
-`;
+import { IoClose } from "react-icons/io5";
+import { VscClose } from "react-icons/vsc";
+import { FaRegCircleCheck } from "react-icons/fa6";
 
 type Props = {
   labelClassName?: string;
@@ -79,6 +44,82 @@ const constantKeys = (type: Props["type"]) => {
   };
 };
 
+// Tooltip component
+const Tooltip = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="group relative inline-block">
+      <span className="cursor-help text-gray-500">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </span>
+      <div className="absolute z-10 w-64 scale-0 rounded bg-gray-800 p-2 text-xs text-white group-hover:scale-100 top-full left-1/2 transform -translate-x-1/2 mt-2">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+// Error Message Component
+const ErrorMessage = ({ message }: { message: string }) => {
+  return <div className="text-red-500 mt-1 text-sm">{message}</div>;
+};
+
+// Chip Component
+const Chip = ({
+  isActive,
+  label,
+  className = "",
+  onSelect,
+}: {
+  isActive?: boolean;
+  label: string;
+  className?: string;
+  onSelect?: () => void;
+}) => {
+  return (
+    <div
+      onClick={onSelect}
+      className={`${
+        isActive
+          ? "bg-[#F2B420] text-[#212529]"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      } px-3 py-[6px] rounded-full flex items-center gap-[2.5px] cursor-pointer text-[16px] capitalize font-medium transition-all ${className}`}
+    >
+      <FaRegCircleCheck className={`${isActive ? "block" : "hidden"}`} />
+      {label}
+    </div>
+  );
+};
+
+// Spinner Component
+const Spinner = ({ size = "sm" }: { size?: "sm" | "md" | "lg" }) => {
+  const sizeClasses = {
+    sm: "w-4 h-4",
+    md: "w-6 h-6",
+    lg: "w-8 h-8",
+  };
+
+  return (
+    <div className="flex justify-center items-center">
+      <div
+        className={`animate-spin rounded-full border-t-2 border-b-2 border-[#F2B420] ${sizeClasses[size]}`}
+      ></div>
+    </div>
+  );
+};
+
 export const CategorySkillSelectModal = ({
   type,
   errorMessage,
@@ -87,23 +128,21 @@ export const CategorySkillSelectModal = ({
   labelClassName,
   showTooltip,
   subText,
-  tooltip,
+  tooltip = "",
   user_type,
   setFormData,
-  categories,
+  categories = [],
   isMandatory,
   noResultFoundText,
   modalOpenCloseListener,
 }: Props) => {
-  const { isMobile, isTablet } = useResponsive();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [allItems, setAllItems] = useState<TSkills>([]);
   const [search, setSearch] = useState("");
   const [selectedItems, setSelectedItems] = useState<Props["formData"]>([]);
-  const [allCategories, setAllCategories] = useState([]);
-  const [allSkills, setAllSkills] = useState([]);
+  const [allCategories, setAllCategories] = useState<any[]>([]);
+  const [allSkills, setAllSkills] = useState<any[]>([]);
 
   /* START ----------------------------------------- Set form data in selected state */
   useEffect(() => {
@@ -125,7 +164,7 @@ export const CategorySkillSelectModal = ({
       setIsLoading(false);
 
       if (Array.isArray(data)) setAllCategories(data);
-    } catch (error) {
+    } catch (error: any) {
       let errorMessage = "Failed to load categories";
       if (
         error?.response?.data?.message &&
@@ -139,6 +178,7 @@ export const CategorySkillSelectModal = ({
       setIsLoading(false);
     }
   };
+
   const getSkills = async () => {
     try {
       setIsLoading(true);
@@ -146,7 +186,7 @@ export const CategorySkillSelectModal = ({
       setIsLoading(false);
 
       if (Array.isArray(data)) setAllSkills(data);
-    } catch (error) {
+    } catch (error: any) {
       let errorMessage = "Failed to load skills";
       if (
         error?.response?.data?.message &&
@@ -207,7 +247,7 @@ export const CategorySkillSelectModal = ({
       .map((item) => ({
         skill_id: item.id,
         skill_name: item.name,
-        categories: item.categories.map((x) => x.id),
+        categories: item.categories.map((x: any) => x.id),
       }));
     const relevantSkills: TSkills = getRelevantSkillsBasedOnCategory([
       ...skills,
@@ -216,18 +256,20 @@ export const CategorySkillSelectModal = ({
     setAllItems(relevantSkills);
   };
 
-  const SkillChip = (item) => {
+  const SkillChip = (item: any) => {
     const isActive =
       selectedItems.findIndex(
         (selectedCategory) =>
-          selectedCategory[constantKeys(type).id] ===
-          item[constantKeys(type).id]
+          selectedCategory[
+            constantKeys(type).id as keyof typeof selectedCategory
+          ] === item[constantKeys(type).id as keyof typeof item]
       ) >= 0;
     return (
       <Chip
         isActive={isActive}
-        key={item[constantKeys(type).id]}
-        label={item[constantKeys(type).name]}
+        key={item[constantKeys(type).id as keyof typeof item]}
+        label={item[constantKeys(type).name as keyof typeof item]}
+        className="m-1 transition-all"
         onSelect={() => {
           const maxItemsAllowedToSelect =
             type === "CATEGORY"
@@ -244,15 +286,18 @@ export const CategorySkillSelectModal = ({
             const newItems = [...prev];
             const existIndex = prev.findIndex(
               (prevCategory) =>
-                prevCategory[constantKeys(type).id] ===
-                item[constantKeys(type).id]
+                prevCategory[
+                  constantKeys(type).id as keyof typeof prevCategory
+                ] === item[constantKeys(type).id as keyof typeof item]
             );
             if (existIndex >= 0) {
               newItems.splice(existIndex, 1);
             } else {
-              const objectToPush = {
-                [constantKeys(type).id]: item[constantKeys(type).id],
-                [constantKeys(type).name]: item[constantKeys(type).name],
+              const objectToPush: any = {
+                [constantKeys(type).id]:
+                  item[constantKeys(type).id as keyof typeof item],
+                [constantKeys(type).name]:
+                  item[constantKeys(type).name as keyof typeof item],
               };
               if (type === "SKILL") objectToPush.categories = item.categories;
               newItems.push(objectToPush);
@@ -269,11 +314,11 @@ export const CategorySkillSelectModal = ({
       {/* START ----------------------------------------- Inputbox */}
       <div className="form-group" id="category-skills">
         <div className="flex items-center gap-1">
-          <span className={`text-capitalize ${labelClassName}`}>{label}</span>
-          {isMandatory && <span className="mandatory">&nbsp;*</span>}
+          <span className={`capitalize ${labelClassName}`}>{label}</span>
+          {isMandatory && <span className="text-red-500">&nbsp;*</span>}
           {showTooltip && (
             <Tooltip>
-              {tooltip.length > 0
+              {tooltip?.length > 0
                 ? tooltip
                 : user_type === "freelancer"
                 ? `If you were to think of the types of services you want to offer on ZMZ,
@@ -292,28 +337,34 @@ export const CategorySkillSelectModal = ({
             </span>
           </div>
         )}
-        <DummyInputBox onClick={() => setIsModalOpen(true)}>
+        <div
+          onClick={() => setIsModalOpen(true)}
+          className="cursor-pointer border border-gray-300 rounded p-2 min-h-[42px]"
+        >
           {formData.length > 0 ? (
-            <div className="flex flex-row flex-wrap gap-3 p-[6px] capitalize">
+            <div className="flex flex-row flex-wrap gap-2 p-1 capitalize">
               {formData.map((item) => {
                 return (
                   <Chip
-                    className="pointer"
-                    key={item[constantKeys(type).id]}
-                    label={item[constantKeys(type).name]}
+                    key={item[constantKeys(type).id as keyof typeof item]}
+                    label={
+                      item[
+                        constantKeys(type).name as keyof typeof item
+                      ] as string
+                    }
                   />
                 );
               })}
             </div>
           ) : (
-            <div>
+            <div className="text-gray-500 py-1">
               {type === "CATEGORY"
                 ? "Select Skill Categories"
                 : "Select Skills"}
             </div>
           )}
-        </DummyInputBox>
-        <div className="flex justify-between mt-2 suggested-skills text-[#656565]">
+        </div>
+        <div className="flex justify-between mt-2 text-[#656565]">
           <div>{errorMessage && <ErrorMessage message={errorMessage} />}</div>
           <div>
             {selectedItems?.length || 0} out of{" "}
@@ -324,126 +375,142 @@ export const CategorySkillSelectModal = ({
         </div>
       </div>
       {/* END ------------------------------------------- Inputbox */}
+
       {/* START ----------------------------------------- Modal */}
-      <StyledModal
-        show={isModalOpen}
-        size="xl"
-        onHide={() => setIsModalOpen(false)}
-        centered
-        maxwidth={isMobile || isTablet ? "90vw" : "80vw"}
-      >
-        <Modal.Body className="flex flex-col justify-center items-center">
-          <p className="text-lg font-bold">
-            {type === "CATEGORY" ? "Skill Categories" : "Skills"}
-          </p>
-          {isLoading && allItems?.length === 0 && (
-            <Spinner animation="border" size="sm" />
-          )}
-          {(!isLoading || allItems?.length > 0) && (
-            <>
-              <Button
-                variant="transparent"
-                className="close"
-                onClick={() => setIsModalOpen(false)}
-              >
-                &times;
-              </Button>
-              <StatusBadge
-                color="yellow"
-                className="absolute"
-                style={{ right: "20px", top: `${isMobile ? "40px" : "20px"}` }}
-              >
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setIsModalOpen(false)}
+          ></div>
+
+          {/* Modal Content */}
+          <div className="bg-white rounded-xl w-full max-w-[1140px] max-h-[90vh] p-11 relative z-50 m-4">
+            {/* Close Button (positioned at top right -40px) */}
+            <button
+              className="absolute top-0 -right-8 text-zinc-100 text-2xl hover:text-gray-200 transition-colors"
+              onClick={() => setIsModalOpen(false)}
+            >
+              <VscClose size={28} />
+            </button>
+
+            {/* Modal Header */}
+            <div className="flex items-center justify-center mb-4">
+              <h2 className="text-[#212529] text-lg font-bold">
+                {type === "CATEGORY" ? "Skill Categories" : "Skills"}
+              </h2>
+              <div className="absolute top-4 right-4 bg-[#fbf5e8] text-[#f2b420] px-5 py-2 rounded-[6px] text-base font-medium">
                 {selectedItems?.length || 0} /{" "}
                 {type === "CATEGORY"
                   ? CONSTANTS.MAX_SELECT_CATEGORY
                   : CONSTANTS.MAX_SELECT_SKILLS}
-              </StatusBadge>
-              {/* START ----------------------------------------- Searchbox */}
-              <div className="relative flex-1 search-and-dropdown flex items-center mb-4">
-                <Form.Control
-                  placeholder={"Search"}
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                  }}
-                  autoFocus={true}
-                  className="custom-search text-base font-light w-[100px]"
-                />
-                {search && !isLoading && (
-                  <CrossIcon
-                    onClick={() => {
-                      setSearch("");
-                    }}
-                    className="cursor-pointer absolute"
-                    style={{ right: "10px" }}
-                  />
-                )}
-                {isLoading && allItems?.length > 0 && (
-                  <Spinner
-                    className="absolute"
-                    style={{ right: "10px" }}
-                    animation="border"
-                    size="sm"
-                  />
-                )}
               </div>
-              {/* END ------------------------------------------- Searchbox */}
+            </div>
 
-              {/* START ----------------------------------------- Items */}
-              <Items>
-                {allItems?.length === 0 ||
-                allItems.every((x) => x.skills?.length === 0) ? (
-                  <div>{noResultFoundText || "No Results found"}</div>
-                ) : (
-                  allItems.map((item) => {
-                    if (item?.skills?.length > 0) {
-                      return (
-                        <div key={item.category_id} className="mb-[2rem]">
-                          <b className="capitalize mt-2 text-lg">
-                            {item.category_name}
-                          </b>
-                          <div className="flex flex-wrap justify-center items-center text-center mt-2">
-                            {item.skills.map((skill) => {
-                              return SkillChip(skill);
-                            })}
-                          </div>
-                        </div>
-                      );
-                    }
-                    if (item?.skills?.length === 0) return <></>;
-                    return <div key={item.skill_id}>{SkillChip(item)}</div>;
-                  })
-                )}
-              </Items>
-              {/* END ------------------------------------------- Items */}
-              <div className="mt-2 gap-2">
-                <StyledButton
-                  className="me-2"
-                  variant="outline-dark"
-                  disabled={isLoading}
-                  onClick={() => {
-                    setSelectedItems([]);
-                    setFormData([]);
-                    setIsModalOpen(false);
-                  }}
-                >
-                  Reset
-                </StyledButton>
-                <StyledButton
-                  className="ms-2"
-                  disabled={isLoading}
-                  onClick={() => {
-                    setFormData(selectedItems);
-                    setIsModalOpen(false);
-                  }}
-                >
-                  Apply
-                </StyledButton>
-              </div>
-            </>
-          )}
-        </Modal.Body>
-      </StyledModal>
+            {/* Modal Content */}
+            <div className="space-y-2">
+              {isLoading && allItems?.length === 0 && (
+                <div className="flex justify-center items-center py-8">
+                  <Spinner size="md" />
+                </div>
+              )}
+
+              {(!isLoading || allItems?.length > 0) && (
+                <>
+                  {/* START ----------------------------------------- Searchbox */}
+                  <div className="relative w-full flex flex-col justify-center">
+                    <input
+                      type="text"
+                      placeholder="Search"
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      autoFocus
+                      className="w-fit self-center border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-base"
+                    />
+                    {search && (
+                      <button
+                        onClick={() => setSearch("")}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                      >
+                        <IoClose className="text-gray-400 hover:text-gray-600" />
+                      </button>
+                    )}
+                    {isLoading && allItems?.length > 0 && (
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                        <Spinner />
+                      </div>
+                    )}
+                  </div>
+                  {/* END ------------------------------------------- Searchbox */}
+
+                  {/* START ----------------------------------------- Items */}
+                  <div className="max-h-[60vh] overflow-y-auto px-2 py-4">
+                    {allItems?.length === 0 ||
+                    allItems.every((x) => x.skills?.length === 0) ? (
+                      <div className="text-center py-8 text-gray-500">
+                        {noResultFoundText || "No Results found"}
+                      </div>
+                    ) : (
+                      <div className="flex flex-wrap justify-center">
+                        {allItems.map((item) => {
+                          if (item?.skills?.length > 0) {
+                            return (
+                              <div
+                                key={item.category_id}
+                                className="w-full mb-8"
+                              >
+                                <h3 className="capitalize text-lg font-bold mb-4 text-center">
+                                  {item.category_name}
+                                </h3>
+                                <div className="flex flex-wrap justify-center gap-2">
+                                  {item.skills.map((skill) => {
+                                    return SkillChip(skill);
+                                  })}
+                                </div>
+                              </div>
+                            );
+                          }
+                          if (item?.skills?.length === 0) return null;
+                          return (
+                            <div key={item.skill_id}>{SkillChip(item)}</div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                  {/* END ------------------------------------------- Items */}
+
+                  {/* Action Buttons */}
+                  <div className="flex justify-center mt-4 gap-4">
+                    <button
+                      className="px-8 py-[14px] border text-lg border-gray-900 text-gray-700 rounded-full hover:bg-gray-100 disabled:opacity-50 transition-all"
+                      disabled={isLoading}
+                      onClick={() => {
+                        setSelectedItems([]);
+                        setFormData([]);
+                        setIsModalOpen(false);
+                      }}
+                    >
+                      Reset
+                    </button>
+                    <button
+                      className="px-8 py-[14px] border text-lg bg-[#F2B420] text-[#212529] rounded-full hover:scale-105 transition-all disabled:opacity-50"
+                      disabled={isLoading}
+                      onClick={() => {
+                        setFormData(selectedItems);
+                        setIsModalOpen(false);
+                      }}
+                    >
+                      Apply
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       {/* END ------------------------------------------- Modal */}
     </div>
   );
