@@ -28,7 +28,3 @@
 :root {
   --toastify-z-index: 9999;
 }
-
-*::-webkit-scrollbar {
-  width: 4px;
-}
