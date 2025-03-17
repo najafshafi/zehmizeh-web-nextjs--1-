@@ -1,4 +1,4 @@
-import { breakpoints } from '@/helpers/hooks/useResponsive';
+
 import styled, { css } from 'styled-components';
 
 export const RegisterWrapper = styled.div`
@@ -12,7 +12,7 @@ export const RegisterWrapper = styled.div`
     font-size: 1rem;
     line-height: 128%;
     color: ${(props) => props.theme.colors.black};
-    @media ${breakpoints.mobile} {
+    @media (max-width: 767px) {
       font-size: 1.25rem;
     }
     svg {
@@ -39,7 +39,7 @@ export const CardWrapper = styled.div<{ small?: boolean }>`
   .yellow-link {
     color: ${(props) => props.theme.colors.yellow};
   }
-  @media ${breakpoints.mobile} {
+  @media (max-width: 767px) {
     padding: 2rem 0.75rem;
     margin-top: 0;
   }
@@ -61,7 +61,7 @@ export const Card = styled.div<{ small?: boolean }>`
   background-color: white;
   border-radius: 17px;
   padding: 3rem 3.875rem;
-  @media ${breakpoints.mobile} {
+  @media (max-width: 767px) {
     padding: 4rem 0.75rem;
     margin-top: 0;
   }

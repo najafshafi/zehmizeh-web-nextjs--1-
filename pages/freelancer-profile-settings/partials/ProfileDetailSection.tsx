@@ -1,103 +1,3 @@
-// /*
-//  * This component is a skeleton for the different sections in profile - freelancer side,
-//  * which will have title and add/edit icon at top
-//  */
-// import Image from 'next/image';
-// import EditIcon from '../../../public/icons/edit-blue-outline.svg';
-// import DeleteIcon from '../../../public/icons/trash.svg';
-
-// const ProfileDetailSection = ({
-//   title,
-//   details,
-//   fullwidth = false,
-//   onEdit,
-//   add,
-//   onDelete,
-//   deleteOption,
-//   edit = true,
-//   isrequired = false,
-//   stripeStatus,
-// }: {
-//   title: React.ReactNode;
-//   details?: React.ReactNode;
-//   fullwidth?: boolean;
-//   onEdit?: () => void;
-//   onDelete?: () => void;
-//   deleteOption?: boolean;
-//   add?: boolean;
-//   edit?: boolean;
-//   isrequired?: boolean;
-//   stripeStatus?: string;
-// }) => {
-//   return (
-//     <div className={`${fullwidth ? 'w-full' : ''}`}>
-//       <div
-//         className={`
-//           flex flex-col gap-3 bg-white/70 h-full p-6 rounded-lg shadow-[0_4px_24px_rgba(0,0,0,0.05)]
-//           ${isrequired ? 'border border-gray-500' : ''}
-//           ${stripeStatus === 'pending' ? 'stripe-pending' : ''}
-//           ${stripeStatus === 'inprogress' ? 'stripe-inprogress' : ''}
-//           ${stripeStatus === 'stripe-verified' ? 'stripe-verified' : ''}
-//         `}
-//       >
-//         <div className="flex items-center justify-between">
-//           <div className="text-2xl font-normal">{title}</div>
-//           <div className="flex items-center gap-2">
-//             {isrequired && (
-//               <div className="w-fit px-6 py-1.5 rounded-md text-[13px] font-medium uppercase flex items-center justify-center text-gray-500 bg-gray-100">
-//                 Required
-//               </div>
-//             )}
-//             {add ? (
-//               <div>
-//                 <div
-//                   className="text-blue-300 cursor-pointer text-base font-normal"
-//                   onClick={onEdit}
-//                 >
-//                   Add
-//                 </div>
-//               </div>
-//             ) : (
-//               <>
-//                 <Image
-//                   src={EditIcon}
-//                   alt="Edit Icon"
-//                   className="cursor-pointer"
-//                   onClick={onEdit}
-//                 />
-//                 <Image
-//                   src={DeleteIcon}
-//                   alt="Delete Icon"
-//                   className="cursor-pointer"
-//                   onClick={onDelete}
-//                 />
-//               </>
-//             )}
-//           </div>
-//         </div>
-//         {details}
-//       </div>
-//     </div>
-//   );
-// };
-
-// // Example usage of the nested classes:
-// /*
-// <div className="about-me leading-9" />
-// <div className="description text-[#595959] leading-[180%]" />
-// <div className="skills flex gap-2.5" />
-// <div className="education-details flex flex-col gap-5" />
-// <div className="course-name leading-6" />
-// <div className="education-description opacity-70 mt-2.5 leading-5" />
-// <img className="education-school-img h-[92px] w-[92px]" />
-// <div className="view-more-btn text-blue-300" />
-// <div className="delete-btn mt-3" />
-// <div className="portfolio text-yellow-400" />
-// <div className="list max-h-[300px] overflow-y-auto" />
-// */
-
-// export default ProfileDetailSection;
-
 /*
  * This component is a skeleton for the different sections in profile - freelancer side,
   which will have title and add/edit icon at top
@@ -107,15 +7,15 @@ import EditIcon from "../../../public/icons/edit-blue-outline.svg";
 import DeleteIcon from "../../../public/icons/trash.svg";
 
 const ProfileDetailSectionStyled = styled.div<{
-  fullwidth: boolean;
-  isrequired?: boolean;
+  $fullwidth?: boolean;
+  $isrequired?: boolean;
 }>`
   background: rgba(255, 255, 255, 0.7);
   height: 100%;
   padding: 2rem;
   border-radius: 0.875rem;
   box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.05);
-  border: ${(props) => (props?.isrequired ? "1px solid #888" : "")};
+  border: ${(props) => (props?.$isrequired ? "1px solid #888" : "")};
   .button {
     transition: all 0.2s ease-in-out;
     &:hover {
@@ -189,7 +89,7 @@ const ProfileDetailSection = ({
   onDelete,
   deleteOption,
   edit = true,
-  isrequired ,
+  isrequired,
   stripeStatus,
 }: {
   title: React.ReactNode;
@@ -205,7 +105,7 @@ const ProfileDetailSection = ({
 }) => {
   return (
     <ProfileDetailSectionStyled
-      fullwidth={fullwidth}
+      $fullwidth={fullwidth}
       className={`flex flex-col gap-3 ${
         stripeStatus === "pending"
           ? "stripe-pending"
@@ -213,7 +113,7 @@ const ProfileDetailSection = ({
           ? "stripe-inprogress"
           : "stripe-verified"
       }`}
-      isrequired={isrequired}
+      $isrequired={isrequired}
     >
       <div className="flex items-center justify-between">
         <div className="fs-24 fw-400">{title}</div>

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { breakpoints } from '@/helpers/hooks/useResponsive';
+// import { breakpoints } from '@/helpers/hooks/useResponsive';
 
 export const Wrapper = styled.div`
   max-width: 678px;
@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
   background: ${(props) => props.theme.colors.white};
   border-radius: 12px;
   padding: 3rem;
-  @media ${breakpoints.mobile} {
+  @media (max-width: 767px) {
     padding: 1rem;
   }
 `;

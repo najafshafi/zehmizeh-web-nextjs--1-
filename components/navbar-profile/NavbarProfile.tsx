@@ -23,15 +23,16 @@ interface MenuItem {
 
 const NavbarProfile = () => {
   const { signout, user } = useAuth();
-  const pathname = usePathname();
+  const pathname = usePathname() || ""; // Handle null pathname
   const url = pathname.split("/")[1];
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const [windowWidth, setWindowWidth] = useState<number | null>(null);
-  const [notificationCount, setNotificationCount] = useState(1);
+  // Commented out unused states
+  // const [windowWidth, setWindowWidth] = useState<number | null>(null);
+  // const [notificationCount, setNotificationCount] = useState(1);
 
   const navigationItems: NavigationItem[] = [
     { href: "/dashboard", label: "Dashboard" },
@@ -50,7 +51,7 @@ const NavbarProfile = () => {
   ];
 
   const handleResize = useCallback(() => {
-    setWindowWidth(window.innerWidth);
+    // setWindowWidth(window.innerWidth);
     if (window.innerWidth >= 1024) {
       setIsMobileMenuOpen(false);
     }
@@ -66,7 +67,7 @@ const NavbarProfile = () => {
   }, []);
 
   useEffect(() => {
-    setWindowWidth(window.innerWidth);
+    // setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -75,10 +76,24 @@ const NavbarProfile = () => {
     };
   }, [handleResize, handleClickOutside]);
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
+    // Close dropdown and add visual indication
     setIsProfileDropdownOpen(false);
-    await signout(); // Ensure signout is async if it involves API calls
-    router.push("/login"); // Redirect to login after signout
+    
+    signout();
+    // Begin navigation immediately
+    router.push("/home");
+    
+    // Sign out in the background after a minimal delay
+    setTimeout(() => {
+      try {
+        if (user){
+          signout();
+        }
+      } catch (error) {
+        console.error("Error during sign out:", error);
+      }
+    }, 100);
   };
 
   const NavLink = ({ href, label }: NavigationItem) => (
@@ -99,7 +114,6 @@ const NavbarProfile = () => {
   // Remove redundant fetchUser effect if handled in signout or auth context
   useEffect(() => {
     if (user) {
-      console.log("User data loaded:", user);
     }
   }, [user]);
 
@@ -169,17 +183,15 @@ const NavbarProfile = () => {
               aria-label="Profile menu"
             >
               <Image
-                src="/hiring.png"
+                src={user?.user_image}
                 width={50}
                 height={50}
                 alt="User avatar"
                 priority
+                style={{ width: 'auto', height: 'auto' }}
               />
               <p className="flex items-center gap-2 text-lg text-[#212529]">
-
-                {user?.data?.first_name ||
-                  user?.first_name + " " + user?.last_name ||
-                  "User"}
+                {user?.first_name && user?.last_name ? `${user.first_name} ${user.last_name}` : "User"}
                 <IoIosArrowDown
                   size={20}
                   className={`transition-transform ${

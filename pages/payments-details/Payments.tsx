@@ -4,7 +4,6 @@ import Spinner from "@/components/forms/Spin/Spinner"
 import styled from 'styled-components';
 import Tooltip from '@/components/ui/Tooltip';
 import Info from '@/public/icons/info-circle-gray.svg';
-import { breakpoints } from '@/helpers/hooks/useResponsive';
 import PaymentHeader from './partials/PaymentHeader';
 import PaymentRecords from './partials/PaymentRecords';
 import PayoutRecords from './partials/PayoutRecords';
@@ -40,7 +39,7 @@ const StatBlock = styled.div`
     line-height: 38.4px;
     letter-spacing: 0.03em;
   }
-  @media ${breakpoints.mobile} {
+  @media (max-width: 767px) {
     margin-bottom: 2rem;
     padding: 1rem;
     .stat-value {

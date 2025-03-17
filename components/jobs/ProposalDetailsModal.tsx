@@ -4,33 +4,33 @@ import styled from 'styled-components';
 import toast from 'react-hot-toast';
 import moment from 'moment';
 import { Modal, Button } from 'react-bootstrap';
-import Tooltip from 'components/ui/Tooltip';
-import Loader from 'components/Loader';
-import { StyledModal } from 'components/styled/StyledModal';
-import { StyledButton } from 'components/forms/Buttons';
-import { StatusBadge } from 'components/styled/Badges';
-import { getProposalDetails, acceptProposal, getInviteeDetails } from 'helpers/http/proposals';
-import useResponsive, { breakpoints } from 'helpers/hooks/useResponsive';
-import { numberWithCommas, separateValuesWithComma } from 'helpers/utils/misc';
-import { ReactComponent as LocationIcon } from 'assets/icons/location-blue.svg';
-import StyledHtmlText from 'components/ui/StyledHtmlText';
-import BlurredImage from 'components/ui/BlurredImage';
-import AttachmentPreview from 'components/ui/AttachmentPreview';
+import Tooltip from '@/components/ui/Tooltip';
+import Loader from '@/components/Loader';
+import { StyledModal } from '@/components/styled/StyledModal';
+import { StyledButton } from '@/components/forms/Buttons';
+import { StatusBadge } from '@/components/styled/Badges';
+import { getProposalDetails, acceptProposal, getInviteeDetails } from '@/helpers/http/proposals';
+import useResponsive from '@/helpers/hooks/useResponsive';
+import { numberWithCommas, separateValuesWithComma } from '@/helpers/utils/misc';
+import LocationIcon  from '@/public/icons/location-blue.svg';
+import StyledHtmlText from '@/components/ui/StyledHtmlText';
+import BlurredImage from '@/components/ui/BlurredImage';
+import AttachmentPreview from '@/components/ui/AttachmentPreview';
 import ProposalMessageModal from './ProposalMessageModal';
 import { WarningFreelancerMessageModal } from './WarningFreelancerMessageModal';
 import { useQueryClient } from 'react-query';
-import { getTimeEstimation, getValueByPercentage } from 'helpers/utils/helper';
-import { TProposalDetails } from 'helpers/types/proposal.type';
-import { JOBS_STATUS } from 'pages/jobs/consts';
-import InviteFreelancerMessageModal from 'components/invite-flow-modals/InviteFreelancerMessageModal';
-import { updateInvitationStatus, editInvitation } from 'helpers/http/jobs';
-import { TInviteSentDetails } from 'helpers/types/invite.type';
+import { getTimeEstimation, getValueByPercentage } from '@/helpers/utils/helper';
+import { TProposalDetails } from '@/helpers/types/proposal.type';
+import { JOBS_STATUS } from '@/pages/jobs-page/consts';
+import InviteFreelancerMessageModal from '@/components/invite-flow-modals/InviteFreelancerMessageModal';
+import { updateInvitationStatus, editInvitation } from '@/helpers/http/jobs';
+import { TInviteSentDetails } from '@/helpers/types/invite.type';
 import { HiringMoreFreelancerModal } from './HiringMoreFreelancerModal';
 import classNames from 'classnames';
-import { talkJsCreateNewThread, talkJsFetchSingleConversation } from 'helpers/http/common';
-import { useAuth } from 'helpers/contexts/auth-context';
-import ChatModal from 'components/talkjs/chat-modal';
-import PaymentTermsPopup from 'components/PaymentTermsPopup';
+import { talkJsCreateNewThread, talkJsFetchSingleConversation } from '@/helpers/http/common';
+import { useAuth } from '@/helpers/contexts/auth-context';
+import ChatModal from '@/components/talkjs/chat-modal';
+import PaymentTermsPopup from '@/components/PaymentTermsPopup';
 
 type Props = {
   show: boolean;
@@ -121,7 +121,7 @@ export const DetailsWrapper = styled.div<{
       display: inline-block;
       margin-left: 4px;
     }
-    @media ${breakpoints.mobile} {
+    @media (max-width: 767px) {
       width: 100%;
     }
   }

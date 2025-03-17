@@ -61,7 +61,7 @@ export const Tabs = () => {
           <TabTitle
             key={tab}
             onClick={() => router.replace(`/freelancer/account/${tab}`)}
-            active={tabkey === tab}
+            $active={tabkey === tab}
           >
             {tab}
           </TabTitle>

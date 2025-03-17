@@ -20,9 +20,10 @@ import { usePathname } from 'next/navigation';
 import { isStagingEnv } from '@/helpers/utils/helper';
 import { setCookie } from '@/helpers/utils/cookieHelper';
 import { Toaster } from 'react-hot-toast';
+import AppLayout from '../layout/AppLayout';
 
 // Constants
-const INTERCOM_APP_ID = process.env.REACT_APP_INTERCOM_APP_ID;
+const INTERCOM_APP_ID = process.env.REACT_APP_INTERCOM_APP_ID || '';
 const GA_TRACKING_CODE = process.env.REACT_APP_GA_TRACKING_CODE;
 
 const initGA = () => {
@@ -53,18 +54,18 @@ const AOS_CONFIG = {
   easing: 'ease',
   once: true,
   mirror: false,
-  anchorPlacement: 'top-bottom',
+  anchorPlacement: 'top-bottom' as any,
 };
 
 function ClientBootstrap({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch();
   const { isBootstrapping } = useSelector((state: RootState) => state.auth);
-  const pathname = usePathname();
+  const pathname = usePathname() || '';
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    dispatch(bootstrapUser());
+    dispatch(bootstrapUser() as any);
   }, [dispatch]);
 
   useEffect(() => {
@@ -109,8 +110,8 @@ function ClientBootstrap({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeProvider theme={myTheme}>
-      {children}
-      <CssUtils theme={undefined} />
+      <AppLayout>{children}</AppLayout>
+      <CssUtils theme={myTheme} />
       <Toaster position="top-center" />
     </ThemeProvider>
   );
@@ -126,13 +127,13 @@ export default function ClientProvider({ children }: { children: React.ReactNode
   return (
     <Provider store={store}>
       <IntercomProvider appId={INTERCOM_APP_ID} autoBoot={isClient && !isStagingEnv()}>
-            <ReactQueryProvider>
-        <ClientOnly>
-          <AuthProvider>
+        <ReactQueryProvider>
+          <ClientOnly>
+            <AuthProvider>
               <ClientBootstrap>{children}</ClientBootstrap>
-          </AuthProvider>
-        </ClientOnly>
-            </ReactQueryProvider>
+            </AuthProvider>
+          </ClientOnly>
+        </ReactQueryProvider>
       </IntercomProvider>
     </Provider>
   );

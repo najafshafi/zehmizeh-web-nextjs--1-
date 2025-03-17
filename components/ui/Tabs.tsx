@@ -2,12 +2,11 @@ import cns from 'classnames';
 import styled from 'styled-components';
 import Tooltip from '@/components/ui/Tooltip';
 import  Info  from "../../public/icons/info-circle-gray.svg";
-import { breakpoints } from '@/helpers/hooks/useResponsive';
 
-const Wrapper = styled.div<{ breakPoint?: string; fontSize?: string }>`
+const Wrapper = styled.div<{ $breakPoint?: string; $fontSize?: string }>`
   position: relative;
   display: flex;
-  @media ${breakpoints.mobile} {
+  @media (max-width: 767px) {
     justify-content: center;
   }
   .tab-container {
@@ -29,7 +28,7 @@ const Wrapper = styled.div<{ breakPoint?: string; fontSize?: string }>`
     border-radius: 28px;
     transition: all 0.5s;
     white-space: nowrap;
-    font-size: ${(props) => (props.fontSize ? props.fontSize : '20px')};
+    font-size: ${(props) => (props.$fontSize ? props.$fontSize : '20px')};
     color: ${({ theme }) => theme.colors.gray3};
     &:hover {
       color: inherit;
@@ -47,7 +46,7 @@ const Wrapper = styled.div<{ breakPoint?: string; fontSize?: string }>`
   .overlay {
     display: none;
   }
-  @media ${breakpoints.mobile} {
+  @media (max-width: 767px) {
     width: 100%;
     .horizontal-tabs {
       padding-right: 50px;
@@ -89,6 +88,8 @@ const Tabs = ({
     label: string;
     id: number;
     key: string;
+    tooltip?: string;
+    hasCounts?: boolean;
   }[];
   activeTab: string;
   onTabChange: (key: string) => void;
@@ -99,10 +100,10 @@ const Tabs = ({
 }) => {
   const onChange = (key: string) => () => onTabChange(key);
   return (
-    <Wrapper className={className} breakPoint={breakPoint} fontSize={fontSize}>
+    <Wrapper className={className} $breakPoint={breakPoint} $fontSize={fontSize}>
       <div className="horizontal-tabs">
         <div className="tab-container">
-          {tabs?.map((item: any) => (
+          {tabs?.map((item) => (
             <a
               key={item.key}
               className={cns('tab font-normal cursor-pointer', {

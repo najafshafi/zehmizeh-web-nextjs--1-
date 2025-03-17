@@ -60,9 +60,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
        
         <ClientProvider>
-        <NavbarConditional />
+        {/* <NavbarConditional /> */}
         {children}
-        <FooterConditional />
+        {/* <FooterConditional /> */}
         </ClientProvider>
       </body>
     </html>

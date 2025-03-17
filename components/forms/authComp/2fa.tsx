@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // Replace useNavigate from react-router-dom
-import { form } from "react-bootstrap";
 import ReactOtpInput from "react-otp-input";
 import styled from "styled-components";
 import Image from "next/image"; // Use Next.js Image component for optimized images
@@ -12,7 +11,6 @@ import AuthLayout from "@/components/layout/AuthLayout"; // Adjust path if neede
 import { LimitedH2 } from "@/components/styled/Auth.styled"; // Adjust path if needed
 import LoadingButtons from "@/components/LoadingButtons"; // Adjust path if needed
 import { useAuth } from "@/helpers/contexts/auth-context"; // Adjust path if needed
-import { breakpoints } from "@/helpers/hooks/useResponsive"; // Adjust path if needed
 import useResponsive from "@/helpers/hooks/useResponsive"; // Adjust path if needed
 import { showErr } from "@/helpers/utils/misc"; // Adjust path if needed
 import useStartPageFromTop from "@/helpers/hooks/useStartPageFromTop"; // Adjust path if needed
@@ -54,7 +52,7 @@ const OtpInputWrapper = styled.div`
   display: flex;
   gap: 1rem;
   justify-content: center;
-  @media ${breakpoints.mobile} {
+  @media (max-width: 767px) {
     gap: 0rem;
   }
   .otp-input {

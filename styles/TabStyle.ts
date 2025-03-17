@@ -37,11 +37,11 @@ export const Tab = styled.div`
   }
 `;
 
-export const TabTitle = styled.div<{ active?: boolean }>`
+export const TabTitle = styled.div<{ $active?: boolean }>`
   cursor: pointer;
   margin-top: 1rem;
   font-size: 24px;
-  font-weight: ${(props) => (props.active ? 700 : 400)};
+  font-weight: ${(props) => (props.$active ? 700 : 400)};
   @media (max-width: 768px) {
     margin-top: 0;
     min-width: fit-content;

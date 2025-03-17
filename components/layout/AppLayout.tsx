@@ -1,24 +1,27 @@
+"use client";
 import React from 'react';
-// TODO: Update versioning for adblock-detect-react
-// changed to patch updates because 1.3.0 was giving error
-import { useDetectAdBlock } from 'adblock-detect-react';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { useLocation } from 'react-router-dom';
-import AdBlockePopOver from '@/components/adblocker-modal/AdBlockePopOver';
-import SiteHeader from '@/components/header/Header';
-import SiteFooter from '@/components/footer/Footer';
+// Temporarily commented out
+// import { useDetectAdBlock } from 'adblock-detect-react';
+import { usePathname } from 'next/navigation';
+// Import commented out until component is available
+// import AdBlockePopOver from '@/components/adblocker-modal/AdBlockePopOver';
+import NavbarLogin from '../navbar-profile/NavbarLogin';
+import Footer from '../footer/Footer';
 import { matchDynamicRoutes, matchStaticRoutes } from '@/helpers/utils/routeMatch';
 import { GetStarted } from '@/components/getStarted';
 import { getToken } from '@/helpers/services/auth';
 import { useIsLoginAsUser } from '@/helpers/hooks/useIsLoginAsUser';
-import Loader from '@/components/Loader';
 import { useAuth } from '@/helpers/contexts/auth-context';
+import Loader from '@/components/Loader';
 
-function AppLayout({ children }: { children: JSX.Element }) {
+function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
-  const location = useLocation();
-  const adBlockDetected = useDetectAdBlock();
+  const pathname = usePathname() || '';
+  // Ad block detection temporarily disabled
+  // const adBlockDetected = useDetectAdBlock();
   const { loading } = useIsLoginAsUser();
+  
+  // Define routes where header and footer should be hidden
   const hideHeaderFooter = React.useMemo(() => {
     return (
       matchStaticRoutes(
@@ -33,10 +36,10 @@ function AppLayout({ children }: { children: JSX.Element }) {
           '/terms',
           '/post-new-job',
         ],
-        location.pathname
-      ) || matchDynamicRoutes(['/invoice/', '/edit/', '/template/'], location.pathname)
+        pathname
+      ) || matchDynamicRoutes(['/invoice/', '/edit/', '/template/'], pathname)
     );
-  }, [location.pathname]);
+  }, [pathname]);
 
   if (loading) {
     return <Loader />;
@@ -44,31 +47,16 @@ function AppLayout({ children }: { children: JSX.Element }) {
 
   return (
     <div className="App">
-      {!hideHeaderFooter && <SiteHeader />}
-
-      <TransitionGroup component={null}>
-        <CSSTransition
-          key={location.key}
-          classNames="fade"
-          // timeout={5000}
-          timeout={{ enter: 700, exit: 0 }}
-          // onExit={() => {
-          //   const node = document.body;
-          //   node.style.position = 'fixed';
-          // }}
-          // onExited={() => {
-          //   const node = document.body;
-          //   node.style.position = 'static';
-          // }}
-          // timeout={3000}
-          unmountOnExit
-          appear
-        >
-          {children}
-        </CSSTransition>
-      </TransitionGroup>
-      <AdBlockePopOver adBlockDetected={adBlockDetected} />
-      {!hideHeaderFooter && <SiteFooter />}
+      {!hideHeaderFooter && <NavbarLogin />}
+      
+      {/* Main content with fade class but without TransitionGroup */}
+      <main className="fade-enter-active fade-enter-done">
+        {children}
+      </main>
+      
+      {/* Component commented out until it's available */}
+      {/* <AdBlockePopOver adBlockDetected={adBlockDetected} /> */}
+      {!hideHeaderFooter && <Footer />}
       {user?.user_type === 'freelancer' && !!getToken() && !hideHeaderFooter && (
         <GetStarted user={user} isLoading={isLoading} />
       )}

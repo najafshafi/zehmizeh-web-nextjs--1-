@@ -1,20 +1,21 @@
+import React from 'react';
 import { Form, Spinner } from 'react-bootstrap';
 import styled from 'styled-components';
 import Search from '../../public/icons/searchIcon.svg';
 import CrossIcon from '../../public/icons/cross-black.svg';
 
 const SearchWrapper = styled.div<{
-  height?: number;
-  enableBorder?: boolean;
+  $height?: number;
+  $enableBorder?: boolean;
 }>`
   border: ${(props) =>
-    props.enableBorder ? `1px solid ${props.theme.colors.gray6}` : 'none'};
+    props.$enableBorder ? `1px solid ${props.theme.colors.gray6}` : 'none'};
   margin: 0.5rem;
   border-radius: 0.35rem;
   overflow: hidden;
   padding-left: 0.65rem;
   display: flex;
-  height: ${(props) => (props.height ? `${props.height}px` : 'initial')};
+  height: ${(props) => (props.$height ? `${props.$height}px` : 'initial')};
   align-items: center;
   input {
     border: none !important;
@@ -37,7 +38,7 @@ const SearchWrapper = styled.div<{
 `;
 
 type Props = {
-  onChange: (e) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
   placeholder?: string;
   isLoading?: boolean;
@@ -62,8 +63,8 @@ function SearchBox({
   return (
     <SearchWrapper
       className={enableBorder ? 'active' : ''}
-      enableBorder={enableBorder}
-      height={height}
+      $enableBorder={enableBorder}
+      $height={height}
     >
       <Search />
       <Form.Control

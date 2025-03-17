@@ -1,8 +1,9 @@
 "use client"
+import React, { ReactNode } from 'react';
 
 type CustomButtonProps = {
   className?: string;
-  text: string;
+  text: ReactNode;
   onClick: () => void;
   disabled?: boolean;
 };
@@ -15,7 +16,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 }) => {
   return (
     <button
-      className={`${className}`}
+      className={`${className} flex justify-center content-center`}
       onClick={onClick}
       disabled={disabled}
     >

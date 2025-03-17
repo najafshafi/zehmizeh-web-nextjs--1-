@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 
-const Wrapper = styled.div<{ minlines: number }>`
+const Wrapper = styled.div<{ $minlines: number }>`
   p {
     margin-bottom: 0px;
     word-break: break-word;
@@ -23,9 +23,9 @@ const Wrapper = styled.div<{ minlines: number }>`
     display: -webkit-box;
     font-size: 1.125rem; /* fallback */
     line-height: 1.8755rem;
-    max-height: ${(props) => props.minlines * 3}rem; /* fallback */
+    max-height: ${(props) => props.$minlines * 3}rem; /* fallback */
     -webkit-line-clamp: ${(props) =>
-      props.minlines}; /* number of lines to show */
+      props.$minlines}; /* number of lines to show */
     -webkit-box-orient: vertical;
   }
 `;
@@ -47,7 +47,7 @@ const StyledHtmlText = ({
   const [showViewMore, setShowViewMore] = useState<boolean>(false);
   const [viewMore, setViewMore] = useState<boolean>(false);
 
-  function getLinesCount(element) {
+  function getLinesCount(element: HTMLElement) {
     const prevLH = element.style.lineHeight;
     const factor = 1000;
     element.style.lineHeight = factor + 'px';
@@ -89,7 +89,7 @@ const StyledHtmlText = ({
     }
   }, [htmlString, id, needToBeShorten, formatDescription]);
 
-  const toggleReadMore = (e) => {
+  const toggleReadMore = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
     setViewMore(!viewMore);
@@ -99,11 +99,11 @@ const StyledHtmlText = ({
     } else {
       element = document.getElementById('htmlString');
     }
-    element.classList.toggle('description');
+    element?.classList.toggle('description');
   };
 
   return (
-    <Wrapper className={className} minlines={minlines}>
+    <Wrapper className={className} $minlines={minlines}>
       <span id={id || 'htmlString'}></span>
       {showViewMore == true && (
         <>

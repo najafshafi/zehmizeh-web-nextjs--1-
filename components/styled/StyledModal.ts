@@ -1,6 +1,5 @@
 import { Modal } from 'react-bootstrap';
 import styled from 'styled-components';
-import { breakpoints } from '@/helpers/hooks/useResponsive';
 
 export const StyledModal = styled(Modal)<{
   maxwidth?: number;
@@ -29,7 +28,7 @@ export const StyledModal = styled(Modal)<{
 
   .modal-body {
     /* overflow-x: hidden; */
-    @media ${breakpoints.mobile} {
+    @media (max-width: 767px) {
       padding: 2rem 1rem;
     }
     padding: 3rem;
@@ -50,7 +49,7 @@ export const StyledModal = styled(Modal)<{
     font-weight: 200;
     border: none !important;
     border-color: none !important;
-    @media ${breakpoints.mobile} {
+    @media (max-width: 767px) {
       transform: translate(0, 0);
       right: 10px;
       color: #000;

@@ -1,4 +1,4 @@
-import useResponsive, { breakpoints } from '@/helpers/hooks/useResponsive';
+import useResponsive from '@/helpers/hooks/useResponsive';
 import { pxToRem } from '@/helpers/utils/misc';
 import styled from 'styled-components';
 import Tabs from '@/components/ui/Tabs';
