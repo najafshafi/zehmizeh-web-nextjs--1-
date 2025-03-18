@@ -104,7 +104,7 @@ const Tabs = ({
       <div className="horizontal-tabs">
         <div className="tab-container">
           {tabs?.map((item) => (
-            <a
+            <button
               key={item.key}
               className={cns('tab font-normal cursor-pointer', {
                 active: activeTab === item.key,
@@ -127,7 +127,7 @@ const Tabs = ({
                   {item.tooltip}
                 </Tooltip>
               )}
-            </a>
+            </button>
           ))}
         </div>
       </div>

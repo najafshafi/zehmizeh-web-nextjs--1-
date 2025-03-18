@@ -77,23 +77,21 @@ const NavbarProfile = () => {
   }, [handleResize, handleClickOutside]);
 
   const handleLogout = () => {
-    // Close dropdown and add visual indication
+    // Close dropdown
     setIsProfileDropdownOpen(false);
     
-    signout();
-    // Begin navigation immediately
-    router.push("/home");
-    
-    // Sign out in the background after a minimal delay
-    setTimeout(() => {
-      try {
-        if (user){
-          signout();
-        }
-      } catch (error) {
-        console.error("Error during sign out:", error);
-      }
-    }, 100);
+    // Use the global logout function if available, otherwise fall back to context signout
+    if (typeof window !== 'undefined' && 'handleGlobalLogout' in window) {
+      // @ts-expect-error - Global function added by NavbarLogin
+      window.handleGlobalLogout();
+    } else {
+      // Fallback to original logout logic
+      signout();
+      // Add small delay before navigation to ensure auth state updates
+      setTimeout(() => {
+        router.replace("/home");
+      }, 50);
+    }
   };
 
   const NavLink = ({ href, label }: NavigationItem) => (

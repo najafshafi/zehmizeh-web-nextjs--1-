@@ -4,6 +4,7 @@ import { Container } from "react-bootstrap";
 import styled from "styled-components";
 import useStartPageFromTop from "@/helpers/hooks/useStartPageFromTop";
 import { useEffect } from "react";
+import Link from "next/link";
 
 const Wrapper = styled(Container)`
   max-width: 770px;
@@ -438,13 +439,13 @@ function Terms() {
         <p>
           You can send your Notice to our designated DMCA / Copyright Claims
           Agent at:{" "}
-          <a
+          <Link
             className="email-link"
             href="mailto:info@zehmizeh.com"
             target="blank"
           >
             info@zehmizeh.com
-          </a>
+          </Link>
         </p>
         <p>
           Note that we will provide the user who is allegedly infringing your
@@ -561,13 +562,13 @@ function Terms() {
         </ul>
         <p>
           You can send your Notice to:{" "}
-          <a
+          <Link
             className="email-link"
             href="mailto:info@zehmizeh.com"
             target="blank"
           >
             info@zehmizeh.com
-          </a>
+          </Link>
         </p>
         <p>
           Note that we will provide the user who is allegedly infringing your
@@ -2124,13 +2125,13 @@ function Terms() {
           If you have any questions about this User Agreement or if you wish to
           report breaches of this User Agreement, please contact us by emailing
           us at&nbsp;
-          <a
+          <Link
             className="email-link"
             href="mailto:info@zehmizeh.com"
             target="blank"
           >
             info@zehmizeh.com
-          </a>
+          </Link>
         </p>
         <p>
           <br />

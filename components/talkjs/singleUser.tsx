@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { SingleUserChatAction, UnreadCount } from './style';
 import cns from 'classnames';
 import { convertToTitleCase } from '@/helpers/utils/misc';
-import { ChatSingleUser } from '@/store/redux/slices/talkjs.interface';
+import { ChatSingleUser } from '@/pages/messaging/messaging.styled';
 import { useAuth } from '@/helpers/contexts/auth-context';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/redux/store';

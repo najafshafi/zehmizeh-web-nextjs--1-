@@ -281,7 +281,7 @@ const SubmitProposalModal = ({ show, toggle, data, onSubmitProposal }: Props) =>
             <p>
               {!seeMore && (
                 <SeeMore className="fs-14" onClick={() => setSeeMore(true)}>
-                  What's in a Proposal?
+                  What&apos;s in a Proposal?
                 </SeeMore>
               )}
               {seeMore && (
@@ -290,13 +290,13 @@ const SubmitProposalModal = ({ show, toggle, data, onSubmitProposal }: Props) =>
                   techniques you’ll use, and how long you think it will take.
                   <p className="my-2">
                     This is also your opportunity to sell yourself as the best freelancer for this project. Try to
-                    demonstrate your expertise, show that you understand the client’s needs, and highlight any relevant
+                    demonstrate your expertise, show that you understand the client&apos;s needs, and highlight any relevant
                     experience that makes you the ideal candidate.
                   </p>
                   <p className="my-2">And as always - be polite and courteous!</p>
                   <b>
                     Note: You should not be doing anything you would want to be paid for at this point. The client has
-                    not committed to pay until he's hired you, aka accepted your proposal
+                    not committed to pay until he&apos;s hired you, aka accepted your proposal
                   </b>{' '}
                 </span>
               )}
@@ -322,7 +322,7 @@ const SubmitProposalModal = ({ show, toggle, data, onSubmitProposal }: Props) =>
             {isHourlyJob ? 'Your Proposed Hourly Rate (In USD)' : 'Your Proposed Price (In USD)'}
             <span className="mandatory">&nbsp;*</span>
           </div>
-          <div className="d-flex align-items-center mx-4 mt-3">
+          <div className="flex items-center mx-4 mt-3">
             <div className="me-4 text-end" style={{ flex: 'none' }}>
               <p className="mb-0">{isHourlyJob ? 'Your Hourly Rate: ' : 'Total to Complete Project: '}</p>
 
@@ -340,7 +340,7 @@ const SubmitProposalModal = ({ show, toggle, data, onSubmitProposal }: Props) =>
           {errors?.costOrHourlyRate && <ErrorMessage message={errors.costOrHourlyRate} />}
 
           {formState.costOrHourlyRate ? (
-            <div className="mt-2 d-flex align-items-center">
+            <div className="mt-2 flex items-center">
               <Tooltip className="me-2">
                 <div>
                   <div className="mt-1">Final takeaway: {calculateFinalAmount}</div>
@@ -356,7 +356,7 @@ const SubmitProposalModal = ({ show, toggle, data, onSubmitProposal }: Props) =>
         <div className="form-group">
           <div className="proposal-heading fw-400">Time Estimation (Optional)</div>
           <div className="fs-1rem fw-300 mb-2">How long would you estimate this project would take you?</div>
-          <div className="d-flex align-items-center">
+          <div className="flex items-center">
             {/* START ----------------------------------------- Number */}
             <Dropdown>
               <Dropdown.Toggle variant="" id="estimation-time">
@@ -480,7 +480,7 @@ const SubmitProposalModal = ({ show, toggle, data, onSubmitProposal }: Props) =>
         <div>
           <div className="proposal-heading fw-400">Attachments (Optional)</div>
           <div className="fs-1rem fw-300 mb-2">
-            If you have work samples similar to this project that you'd like to share, you can attach them here.
+            If you have work samples similar to this project that you&apos;d like to share, you can attach them here.
           </div>
           <CustomUploader
             placeholder="Attach file"
