@@ -79,15 +79,15 @@ const NavbarProfile = () => {
   const handleLogout = () => {
     // Close dropdown and add visual indication
     setIsProfileDropdownOpen(false);
-    
+
     signout();
     // Begin navigation immediately
     router.push("/home");
-    
+
     // Sign out in the background after a minimal delay
     setTimeout(() => {
       try {
-        if (user){
+        if (user) {
           signout();
         }
       } catch (error) {
@@ -188,10 +188,12 @@ const NavbarProfile = () => {
                 height={50}
                 alt="User avatar"
                 priority
-                style={{ width: 'auto', height: 'auto' }}
+                style={{ width: "auto", height: "auto" }}
               />
               <p className="flex items-center gap-2 text-lg text-[#212529]">
-                {user?.first_name && user?.last_name ? `${user.first_name} ${user.last_name}` : "User"}
+                {user?.first_name && user?.last_name
+                  ? `${user.first_name} ${user.last_name}`
+                  : "User"}
                 <IoIosArrowDown
                   size={20}
                   className={`transition-transform ${

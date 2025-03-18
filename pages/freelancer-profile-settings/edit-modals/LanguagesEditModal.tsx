@@ -4,15 +4,42 @@
 
 import { useState, useMemo } from "react";
 import toast from "react-hot-toast";
-import { Modal, Button } from "react-bootstrap";
 import { components } from "react-select";
 import AsyncSelect from "react-select/async";
-import { EditFormWrapper } from "./edit-modals.styled";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { StyledButton } from "@/components/forms/Buttons";
+import { VscClose } from "react-icons/vsc";
+import { IoClose } from "react-icons/io5";
 import { editUser } from "@/helpers/http/auth";
 import { getLanguages } from "@/helpers/http/common";
-import { MultiSelectCustomStyle } from "./multiSelectCustomStyle";
+
+// Custom MultiValueRemove component
+const CustomMultiValueRemove = (props: any) => {
+  return (
+    <components.MultiValueRemove {...props}>
+      <IoClose size={16} style={{ color: "#0067ff" }} />
+    </components.MultiValueRemove>
+  );
+};
+
+// Custom ClearIndicator component to clear all selections
+const ClearIndicator = (props: any) => {
+  const {
+    innerProps,
+    clearValue, // Provided by react-select to clear all values
+    hasValue, // Indicates if there are selected options
+  } = props;
+
+  if (!hasValue) return null; // Hide the clear icon if no values are selected
+
+  return (
+    <div
+      {...innerProps}
+      className="px-2 cursor-pointer"
+      onClick={clearValue} // Clears all selected options
+    >
+      <IoClose size={20} className="text-gray-400 hover:text-gray-600" />
+    </div>
+  );
+};
 
 type Props = {
   show: boolean;
@@ -21,12 +48,69 @@ type Props = {
   onUpdate: () => void;
 };
 
+// Customized styles for the AsyncSelect component
+const customSelectStyles = {
+  control: (base: any) => ({
+    ...base,
+    minHeight: "60px",
+    backgroundColor: "white",
+    border: "1px solid #e2e8f0",
+    borderRadius: "0.375rem",
+    boxShadow: "none",
+    "&:focus": {
+      border: "2px solid #2684ff",
+    },
+  }),
+  menu: (base: any) => ({
+    ...base,
+    borderRadius: "0.375rem",
+    boxShadow:
+      "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+  }),
+  option: (base: any, state: any) => ({
+    ...base,
+    backgroundColor: state.isSelected
+      ? "#d1e5ff66"
+      : state.isFocused
+      ? "#d1e5ff66"
+      : "white",
+    color: state.isSelected ? "#212529" : "#212529",
+    "&:active": {
+      backgroundColor: "#d1e5ff66",
+    },
+  }),
+  multiValue: (base: any) => ({
+    ...base,
+    backgroundColor: "#d1e5ff66",
+    borderRadius: "6px",
+    margin: "5px 10px 5px 0px",
+  }),
+  multiValueLabel: (base: any) => ({
+    ...base,
+    color: "#212529",
+    fontWeight: 500,
+    fontSize: "15px",
+    padding: "2px 8px",
+    margin: "2px 0px",
+  }),
+  multiValueRemove: (base: any) => ({
+    ...base,
+    color: "#212529",
+    "&:hover": {
+      backgroundColor: "#d1e5ff66",
+      color: "#0067ff",
+    },
+  }),
+  indicatorSeparator: () => ({
+    display: "none",
+  }),
+};
+
 const multiSelectProps = {
   closeMenuOnSelect: true,
   isMulti: true,
-  styles: MultiSelectCustomStyle,
+  styles: customSelectStyles,
 };
-
 const LanguagesEditModal = ({
   show,
   onClose,
@@ -37,8 +121,6 @@ const LanguagesEditModal = ({
   const [languages, setLanguages] = useState<any>(languagesProps);
 
   const handleUpdate = () => {
-    // Update languages api call
-
     setLoading(true);
     const body = {
       languages,
@@ -59,8 +141,6 @@ const LanguagesEditModal = ({
   };
 
   const languageOptions = (inputValue: string) => {
-    // This will be called when user types and will call languages api with the keyword
-
     const languagesLocal: { label: any; value: any }[] = [];
     return getLanguages(inputValue || "").then((res) => {
       res.data.forEach(function (item: any) {
@@ -74,9 +154,7 @@ const LanguagesEditModal = ({
     });
   };
 
-  const getDefaultlanguageOptions = useMemo(() => {
-    // This will format all the availbale languages to the format that the react async requires
-
+  const getDefaultLanguageOptions = useMemo(() => {
     if (languages?.length > 0) {
       return languages?.map((item: any) => {
         return { label: item.name, value: item.id };
@@ -91,43 +169,68 @@ const LanguagesEditModal = ({
     setLanguages(data);
   };
 
+  if (!show) return null;
+
   return (
-    <StyledModal maxwidth={678} show={show} size="sm" onHide={onClose} centered>
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={onClose}>
-          &times;
-        </Button>
-        <EditFormWrapper>
-          <div className="content flex flex-column">
-            <div className="modal-title fs-28 fw-400">My Languages</div>
-            <div className="form-group">
-              <div className="flex items-center mb-2">
-                Select all of the languages you can work in.
-              </div>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+      {/* Backdrop */}
+      <div
+        className="w-screen h-screen fixed inset-0 backdrop-blur-sm z-40 p-0 m-0"
+        onClick={onClose}
+      ></div>
+      {/* Modal Content */}
+      <div className="bg-white rounded-xl w-full max-w-[678px] max-h-[90vh] py-8 px-4 md:p-12 relative z-50 m-4">
+        {/* Close Button */}
+        <VscClose
+          className="absolute top-4 md:top-0 right-4 md:-right-8 text-2xl text-black md:text-white hover:text-gray-200 cursor-pointer"
+          onClick={onClose}
+        />
+
+        {/* Modal Content */}
+        <div className="space-y-4">
+          <h2 className="text-[#212529] text-[1.75rem] font-normal">
+            My Languages
+          </h2>
+
+          <div className="space-y-2">
+            <div className="text-base text-gray-700">
+              Select all of the languages you can work in.
+            </div>
+
+            <div className="w-full">
               <AsyncSelect
                 {...multiSelectProps}
                 placeholder="Enter your languages"
-                components={{ NoOptionsMessage }}
+                components={{
+                  NoOptionsMessage,
+                  MultiValueRemove: CustomMultiValueRemove,
+                  ClearIndicator,
+                }}
                 loadOptions={languageOptions}
                 onChange={(options) => onSelect(options)}
-                value={getDefaultlanguageOptions}
+                value={getDefaultLanguageOptions}
                 defaultOptions={true}
+                className="w-full"
+                isClearable={true}
               />
             </div>
-            <div className="bottom-buttons flex">
-              <StyledButton
-                padding="1.125rem 2.25rem"
-                variant="primary"
-                disabled={loading}
-                onClick={handleUpdate}
-              >
-                Update
-              </StyledButton>
-            </div>
           </div>
-        </EditFormWrapper>
-      </Modal.Body>
-    </StyledModal>
+
+          {/* Update Button */}
+          <div className="flex justify-center md:justify-end !mt-9">
+            <button
+              onClick={handleUpdate}
+              disabled={loading}
+              className={`bg-[#F2B420] text-[#212529] px-9 py-[1.15rem] hover:scale-105 duration-300 text-lg rounded-full disabled:bg-[#F2A420] ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              {loading ? "Updating..." : "Update"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -136,7 +239,7 @@ export default LanguagesEditModal;
 const NoOptionsMessage = (props: any) => {
   return (
     <components.NoOptionsMessage {...props}>
-      <div>
+      <div className="py-2 px-3 text-gray-500">
         {props?.selectProps?.inputValue
           ? `No result found for '${props?.selectProps?.inputValue}'`
           : "Search..."}
