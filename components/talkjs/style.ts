@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { breakpoints } from 'helpers/hooks/useResponsive';
-import { chatType } from 'redux/slices/talkjs.interface';
-import { chatTypeSolidColor } from 'helpers/http/common';
+import { breakpoints } from '@/helpers/hooks/useResponsive';
+import { chatType } from '@/store/redux/slices/talkjs.interface';
+import { chatTypeSolidColor } from '@/helpers/http/common';
 import ReactSelect from 'react-select';
 
 export const Select = styled(ReactSelect)`

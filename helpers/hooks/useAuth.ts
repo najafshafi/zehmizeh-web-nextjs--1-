@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from 'react-query';
 import { apiClient } from '@/helpers/http/index';
 import { saveAuthStorage, getToken, getStorageUser, clearAuthStorage } from '@/helpers/services/auth';
 import { useDispatch } from 'react-redux';

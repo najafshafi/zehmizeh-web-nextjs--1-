@@ -1,12 +1,17 @@
+'use client'; // Add this directive since we're using client-side hooks
+
 import { useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'next/navigation';
 
 function useLocationSearch() {
-  const location = useLocation();
-  const searchParams = useMemo(() => {
-    const urlSearchParams = new URLSearchParams(location.search);
-    return Object.fromEntries(urlSearchParams.entries());
-  }, [location]);
-  return searchParams;
+  const searchParams = useSearchParams();
+  
+  const paramsObject = useMemo(() => {
+    // Convert URLSearchParams to a plain object
+    return Object.fromEntries(searchParams?.entries() ?? []);
+  }, [searchParams]);
+
+  return paramsObject;
 }
+
 export default useLocationSearch;

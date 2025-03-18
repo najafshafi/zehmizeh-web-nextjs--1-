@@ -1,8 +1,8 @@
-import { breakpoints } from 'helpers/hooks/useResponsive';
-import { chatOnUserHoverOrActiveColor, chatTypeSolidColor } from 'helpers/http/common';
+import { breakpoints } from '@/helpers/hooks/useResponsive';
+import { chatOnUserHoverOrActiveColor, chatTypeSolidColor } from '@/helpers/http/common';
 import styled from 'styled-components';
 import ReactSelect from 'react-select';
-import { chatType } from 'redux/slices/talkjs.interface';
+import { chatType } from '@/store/redux/slices/talkjs.interface';
 
 export const Wrapper = styled.div`
   margin: 3rem auto;

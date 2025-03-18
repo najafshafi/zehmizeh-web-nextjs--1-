@@ -1,15 +1,15 @@
-import { StyledModal } from 'components/styled/StyledModal';
+import { StyledModal } from '@/components/styled/StyledModal';
 import { Session, Chatbox, Inbox } from '@talkjs/react';
-import { ReactComponent as ChatLoading } from 'assets/icons/waiting.svg';
-import TalkJS from 'pages/talk-js';
-import * as T from 'pages/talk-js/style';
+import  ChatLoading  from '@/public/icons/waiting.svg';
+import TalkJS from '@/pages/talk-js';
+import * as T from '@/pages/talk-js/style';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/store';
-import { useAuth } from 'helpers/contexts/auth-context';
-import { talkjsApiKey, isStagingEnv } from 'helpers/utils/helper';
-import { talkJSAccessTokenApi } from 'helpers/http/common';
+import { RootState } from '@/store/redux/store';
+import { useAuth } from '@/helpers/contexts/auth-context';
+import { talkjsApiKey, isStagingEnv } from '@/helpers/utils/helper';
+import { talkJSAccessTokenApi } from '@/helpers/http/common';
 import toast from 'react-hot-toast';
 
 interface Prop {

@@ -1,14 +1,13 @@
-import BlurredImage from 'components/ui/BlurredImage';
+import BlurredImage from '@/components/ui/BlurredImage';
 import { useMemo, useState } from 'react';
 import { SingleUserChatAction, UnreadCount } from './style';
 import cns from 'classnames';
-import { convertToTitleCase } from 'helpers/utils/misc';
-import { ChatSingleUser } from 'pages/messaging/messaging.styled';
-import { ChatUser } from 'redux/slices/talkjs.interface';
-import { useAuth } from 'helpers/contexts/auth-context';
+import { convertToTitleCase } from '@/helpers/utils/misc';
+import { ChatSingleUser } from '@/store/redux/slices/talkjs.interface';
+import { useAuth } from '@/helpers/contexts/auth-context';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/store';
-import { isClosedorDeclined } from 'helpers/utils/helper';
+import { RootState } from '@/store/redux/store';
+import { isClosedorDeclined } from '@/helpers/utils/helper';
 
 interface Prop {
   conversation: ChatUser;

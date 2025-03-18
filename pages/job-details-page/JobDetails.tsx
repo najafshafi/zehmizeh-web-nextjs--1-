@@ -4,7 +4,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Spinner } from 'react-bootstrap';
+
+import Spinner from "@/components/forms/Spin/Spinner"
 import { useRouter, usePathname } from 'next/navigation';
 import { Wrapper } from './job-details.styled';
 import SingleMessaging from '@/pages/messaging/SingleMessaging';
@@ -35,6 +36,7 @@ import { JobClosuremodalProjectBased } from './JobClosureModalProjectBased';
 import NoDataFound from '@/components/ui/NoDataFound';
 import { ChangeBudgetDeniedModal } from '@/components/changeBudget/ChangeBudgetDeniedModal';
 import { ChangeBudgetRequestModal } from '@/components/changeBudget/ChangeBudgetRequestModal';
+import { goBack } from '@/helpers/utils/goBack';
 import { isProjectHiddenForFreelancer } from '@/helpers/utils/helper';
 import moment from 'moment';
 
@@ -379,7 +381,7 @@ const JobDetails = () => {
   }
 
   return (
-    <Wrapper className="content-hfill px-4 px-lg-0">
+    <Wrapper className="w-full px-4 lg:px-0">
       {/* Back button header */}
       <BackButton route={user.user.user_type === 'freelancer' ? '/jobs' : '/client-jobs'} />
 
@@ -393,14 +395,14 @@ const JobDetails = () => {
         <>
           {/* Tabs and request to end button */}
           {tabItems.length > 1 && (
-            <div className="actions d-flex align-items-center justify-content-between flex-wrap gap-3">
-              <div className="d-flex align-items-center justify-content-between w-100 flex-wrap gap-3">
+            <div className="actions flex items-center justify-between flex-wrap gap-3">
+              <div className="flex items-center justify-between w-full flex-wrap gap-3">
                 <div>
                   <Tabs tabs={tabItems} activeTab={activeTab} onTabChange={onTabChange} fontSize="1rem" />
                 </div>
                 <div>
                   {status && (
-                    <div className="d-flex gap-3">
+                    <div className="flex gap-3">
                       <StatusBadge color={status.color}>{status.text}</StatusBadge>
                       {jobdetails?.proposal?.status === 'pending' && (
                         <StatusBadge color={jobdetails?.proposal?.is_viewed ? 'green' : 'red'}>
@@ -413,12 +415,12 @@ const JobDetails = () => {
               </div>
               {/* Swapping Propose New Milestone/Submit New Hours button with Request to close job */}
 
-              <div className="d-flex align-items-center justify-content-between flex-1">
+              <div className="flex items-center justify-between flex-1">
                 {activeTab === 'm_stone' &&
                 jobdetails.proposal?.approved_budget?.type == 'hourly' &&
                 jobdetails.status !== 'closed' &&
                 !(jobdetails?.is_closure_request && jobdetails?.closure_req_submitted_by) ? (
-                  <div className="d-flex justify-content-center align-items-center">
+                  <div className="flex justify-center items-center">
                     <StyledButton
                       style={{ minWidth: '22rem' }}
                       className={`
@@ -431,7 +433,7 @@ const JobDetails = () => {
                       }}
                       disabled={checkingBanks || jobdetails?.milestone.filter((x: any) => x.is_final_milestone).length > 0}
                     >
-                      Submit Hours {checkingBanks && <Spinner size="sm" animation="grow" />}
+                      Submit Hours {checkingBanks && <Spinner />}
                     </StyledButton>
                   </div>
                 ) : null}
@@ -440,11 +442,11 @@ const JobDetails = () => {
                 !jobdetails?.is_closure_request &&
                 jobdetails?.budget?.type == 'hourly' ? (
                   <div
-                    className={`d-flex justify-content-end align-items-center ${isMobile || isTablet ? '' : 'w-100'}`}
+                    className={`flex justify-end items-center ${isMobile || isTablet ? '' : 'w-full'}`}
                   >
                     <StyledButton
                       minWidth="21rem"
-                      className={isMobile ? 'add-button w-100' : 'add-button w-30'}
+                      className={isMobile ? 'add-button w-full' : 'add-button w-30'}
                       padding="1rem 2rem"
                       onClick={toggleEndJobModal}
                       backgroundcolor="white"
@@ -471,15 +473,15 @@ const JobDetails = () => {
                 jobdetails.status !== 'closed' &&
                 activeTab === 'm_stone' &&
                 !(jobdetails?.is_closure_request && jobdetails?.closure_req_submitted_by) && (
-                  <div className="d-flex justify-content-center align-items-center">
+                  <div className="flex justify-center items-center">
                     <StyledButton
-                      className={isMobile ? 'add-button w-100' : 'add-button w-30'}
+                      className={isMobile ? 'add-button w-full' : 'add-button w-30'}
                       padding="1rem 2rem"
                       onClick={handleAddMilestone}
                       disabled={checkingBanks}
                     >
                       {/* Add Milestone */}
-                      Propose New Milestone {checkingBanks && <Spinner size="sm" animation="grow" />}
+                      Propose New Milestone {checkingBanks && <Spinner />}
                     </StyledButton>
                   </div>
                 )}
@@ -490,7 +492,7 @@ const JobDetails = () => {
                     <>
                       {jobdetails?.budget?.type === 'hourly' && (
                         <>
-                          <div className="opacity-50 d-flex justify-content-md-end justify-content-center flex-1">
+                          <div className="opacity-50 flex md:justify-end justify-center flex-1">
                             {jobdetails?.closure_req_submitted_by === 'FREELANCER'
                               ? 'Request to close project submitted.'
                               : jobdetails?.milestone.filter((x: any) => x.is_final_milestone).length > 0 &&
@@ -506,7 +508,7 @@ const JobDetails = () => {
                         </>
                       )}
                       {jobdetails?.budget?.type === 'fixed' && (
-                        <div className="w-100 text-center">
+                        <div className="w-full text-center">
                           <StyledButton
                             className="add-button"
                             padding="1rem 2rem"
@@ -518,7 +520,7 @@ const JobDetails = () => {
                               });
                             }}
                           >
-                            Open the Client's Closure Request
+                            Open the Client&apos;s Closure Request
                           </StyledButton>
                         </div>
                       )}

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -72,7 +73,7 @@ const BlurredImage = ({
       <ImageWrapper
         style={{ height: height, width: width }}
         onClick={toggleBlur}
-        className="pointer"
+        className="cursor-pointer"
       >
         <div
           className={
@@ -84,16 +85,18 @@ const BlurredImage = ({
           }
           style={{ height: height, width: width }}
         >
-          <img
+          <Image
             src={src}
             className="img"
-            style={{ height: height, width: width }}
             alt="user-profile-img"
+            style={{ height: height, width: width }}
+            width={parseInt(width)}
+            height={parseInt(height)}
           />
         </div>
 
         {allowToUnblur && !isShowingImage && (
-          <div className="overlay flex items-center justify-content-center">
+          <div className="overlay flex items-center justify-center">
             <div className={`overlay-text ${overlayTextClassName}`}>
               {overlayText ?? (
                 <span>

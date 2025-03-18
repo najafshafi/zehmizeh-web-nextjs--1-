@@ -1,5 +1,6 @@
+"use client"
 import { useState, useCallback, useEffect } from 'react';
-import logoUrl from 'assets/icons/logo.svg';
+import logoUrl from '@/public/icons/logo.svg';
 
 interface NotificationState {
   permission: NotificationPermission;

@@ -3,32 +3,32 @@
  */
 
 import { useState } from 'react';
-import { Spinner } from 'react-bootstrap';
+import Spinner from "@/components/forms/Spin/Spinner";
 import moment from 'moment';
 import styled from 'styled-components';
 import { PengingProposalWrapper, NoPropsalWrapper } from './job-details.styled';
 import Tooltip from '@/components/ui/Tooltip';
 import { StatusBadge } from '@/components/styled/Badges';
-import { StyledButton } from '@/components/forms/Buttons';
 import SubmitProposalModal from '@/components/jobs/SubmitProposalModal';
 import BlurredImage from '@/components/ui/BlurredImage';
 import { useAuth } from '@/helpers/contexts/auth-context';
 import { numberWithCommas, changeStatusDisplayFormat, convertToTitleCase } from '@/helpers/utils/misc';
 import { toggleBookmarkPost } from '@/helpers/http/search';
-import  LocationIcon  from '@/public/icons/location-blue.svg';
-import  StarIcon  from '@/public/icons/star-yellow.svg';
-import  UnSavedIcon  from '@/public/icons/unsaved.svg';
-import  SavedIcon  from '@/public/icons/saved.svg';
-import  ShareIcon  from '@/public/icons/share.svg';
+import LocationIcon from '@/public/icons/location-blue.svg';
+import StarIcon from '@/public/icons/star-yellow.svg';
+import UnSavedIcon from '@/public/icons/unsaved.svg';
+import SavedIcon from '@/public/icons/saved.svg';
+import ShareIcon from '@/public/icons/share.svg';
 import { JOBS_STATUS } from '@/pages/jobs-page/consts';
 import { BOOKMARK_TOOLTIPS } from './consts';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useRouter, usePathname } from 'next/navigation';
 import ChangeBudgetModal from '../../components/changeBudget/ChangeBudgetModal';
 import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { ChangeBudgetDeleteRequest } from '@/components/changeBudget/ChangeBudgetDeleteRequest';
 import { breakpoints } from '@/helpers/hooks/useResponsive';
 import MilestoneStats from '@/pages/client-job-details/partials/MilestoneStats';
+import CustomButton from '@/components/custombutton/CustomButton';
 
 const InProgressClosedJobWrapper = styled.div`
   box-shadow: 0px 4px 60px rgba(0, 0, 0, 0.05);
@@ -98,9 +98,15 @@ export const BookmarkIcon = styled.div`
   border-radius: 2rem;
 `;
 
-const DetailsBanner = ({ data, refetch }: any) => {
-  const navigate = useNavigate();
-  const { id } = useParams<{ id?: string }>();
+interface DetailsBannerProps {
+  data: any;
+  refetch: () => void;
+}
+
+const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const id = pathname?.split('/')[2]; // Extract job ID from URL
   const { user } = useAuth();
 
   const [showSubmitProposalModal, setShowSubmitProposalModal] = useState<boolean>(false);
@@ -116,7 +122,7 @@ const DetailsBanner = ({ data, refetch }: any) => {
     setIsProposalSubmitted(true);
     toggleProposalModal();
     refetch();
-    if (id) navigate(`/job-details/${id}/proposal_sent`);
+    if (id) router.push(`/job-details/${id}/proposal_sent`);
   };
   const [loading, setLoading] = useState<boolean>(false);
   const [isSaved, setISaved] = useState<boolean>(data?.is_bookmarked);
@@ -137,30 +143,30 @@ const DetailsBanner = ({ data, refetch }: any) => {
   return data?.proposal?.status ? (
     ['pending', 'declined', 'denied'].includes(data?.proposal?.status) ? (
       <PengingProposalWrapper>
-        <div className="banner-title fs-24 fw-400">{convertToTitleCase(data.job_title)}</div>
-        <div className="job-dates d-flex flex-column flex-md-row align-items-md-center gap-3">
-          <div className="posted-date d-flex align-items-center flex-wrap">
-            <span className="light-text fs-20 fw-400">Posted:</span>
-            <span className="attribute-value line-height-28 fs-20 fw-400">
+        <div className="banner-title text-2xl font-normal">{convertToTitleCase(data.job_title)}</div>
+        <div className="flex flex-col md:flex-row md:items-center gap-3">
+          <div className="flex items-center flex-wrap">
+            <span className="light-text text-xl font-normal">Posted:</span>
+            <span className="attribute-value line-height-28 text-xl font-normal">
               {data?.date_created && moment(data.date_created).format('MMM DD, YYYY')}
             </span>
           </div>
           <Divider />
-          <div className="d-flex align-items-center gap-2">
-            <span className="fs-20 fw-400">Due Date:</span>
-            <span className="budget-amount fs-20 fw-400">
+          <div className="flex items-center gap-2">
+            <span className="text-xl font-normal">Due Date:</span>
+            <span className="budget-amount text-xl font-normal">
               {data?.due_date ? moment(data?.due_date).format('MMM DD, YYYY') : '-'}
             </span>
           </div>
 
           {Array.isArray(data?.preferred_location) && data?.preferred_location?.length > 0 && (
-            <div className="location d-flex align-items-center width-fit-content">
+            <div className="flex items-center width-fit-content">
               <LocationIcon /> &nbsp;
-              <span className="attribute-gray-label fs-1rem fw-400">{data.preferred_location.join(', ')}</span>
+              <span className="attribute-gray-label text-base font-normal">{data.preferred_location.join(', ')}</span>
             </div>
           )}
         </div>
-        <div className="posted-by d-flex align-items-center mt-3 gap-3">
+        <div className="flex items-center mt-3 gap-3">
           <BlurredImage
             src={data.userdata?.user_image || '/images/default_avatar.png'}
             height="2.2625rem"
@@ -168,8 +174,8 @@ const DetailsBanner = ({ data, refetch }: any) => {
             allowToUnblur={false}
             type="small"
           />
-          <div className="d-flex d-flex flex-column flex-md-row align-items-md-center gap-md-3">
-            <span className="fs-20 fw-400 line-height-28 text-capitalize">
+          <div className="flex flex-col md:flex-row md:items-center md:gap-3">
+            <span className="text-xl font-normal line-height-28 capitalize">
               {data.userdata?.first_name} {data.userdata?.last_name}
             </span>
             {/* <Divider />
@@ -183,40 +189,40 @@ const DetailsBanner = ({ data, refetch }: any) => {
           <MilestoneStats milestones={data.milestone} isHourly={data.budget?.type === 'hourly'} isFreelancer={true} />
         )}
         <InProgressClosedJobWrapper>
-          <div className="header d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
-            <div className="job-basic-details d-flex flex-column">
-              <div className="banner-title fs-24 fw-400">{convertToTitleCase(data.job_title)}</div>
-              <div className="d-flex flex-column flex-lg-row align-lg-items-center gap-3">
-                <div className="posted-date d-flex align-items-center flex-wrap">
-                  <span className="light-text fs-20 fw-400 me-2">Started:</span>
-                  <span className="attribute-value line-height-28 fs-20 fw-400">
+          <div className="header flex flex-col md:flex-row justify-between items-start gap-3">
+            <div className="job-basic-details flex flex-col">
+              <div className="banner-title text-2xl font-normal">{convertToTitleCase(data.job_title)}</div>
+              <div className="flex flex-col lg:flex-row gap-3">
+                <div className="flex items-center flex-wrap">
+                  <span className="light-text text-xl font-normal mr-2">Started:</span>
+                  <span className="attribute-value line-height-28 text-xl font-normal">
                     {data.job_start_date && moment(data.job_start_date).format('MMM DD, YYYY')}
                   </span>
                 </div>
                 {data.status === 'active' && (
-                  <div className="d-flex align-items-center gap-3">
+                  <div className="flex items-center gap-3">
                     <Divider />
-                    <div className="d-flex align-items-center gap-2">
-                      <span className="light-text fs-20 fw-400">Due Date: </span>
-                      <span className="budget-amount fs-20 fw-400">
+                    <div className="flex items-center gap-2">
+                      <span className="light-text text-xl font-normal">Due Date: </span>
+                      <span className="budget-amount text-xl font-normal">
                         {data?.due_date ? moment(data?.due_date).format('MMM DD, YYYY') : '-'}
                       </span>
                     </div>
                   </div>
                 )}
                 {data.status === 'closed' && (
-                  <div className="d-flex align-items-center gap-3">
+                  <div className="flex items-center gap-3">
                     <Divider />
-                    <div className="d-flex align-items-center gap-2">
-                      <span className="light-text fs-20 fw-400">Ended: </span>
-                      <span className="budget-amount fs-20 fw-400">
+                    <div className="flex items-center gap-2">
+                      <span className="light-text text-xl font-normal">Ended: </span>
+                      <span className="budget-amount text-xl font-normal">
                         {data?.job_end_date ? moment(data?.job_end_date).format('MMM DD, YYYY') : '-'}
                       </span>
                     </div>
                   </div>
                 )}
               </div>
-              <StatusBadge className="width-fit-content" color={JOBS_STATUS[data?.status]?.color}>
+              <StatusBadge className="width-fit-content" color={JOBS_STATUS[data?.status]?.color || 'yellow'}>
                 {data.status == 'active' ? 'Work In Progress' : changeStatusDisplayFormat(data?.status)}
               </StatusBadge>
             </div>
@@ -225,20 +231,20 @@ const DetailsBanner = ({ data, refetch }: any) => {
                 src={data.userdata?.user_image || '/images/default_avatar.png'}
                 height="5.25rem"
                 width="5.25rem"
-                className="mr-0 d-flex justify-content-center"
+                className="mr-0 flex justify-center"
               />
               <div className="client-name">
-                <div className="fs-20 fw-400 line-height-28 text-capitalize">
+                <div className="text-xl font-normal line-height-28 capitalize">
                   {data.userdata?.first_name} {data.userdata?.last_name}
-                  <span className="attribute-gray-label fs-18 fw-400 ps-2">Client</span>
+                  <span className="attribute-gray-label text-lg font-normal ps-2">Client</span>
                 </div>
               </div>
             </div>
           </div>
-          <div className="budget-and-earnings gap-md-4 gap-3 d-flex flex-column flex-md-row align-items-md-center justify-content-between">
+          <div className="budget-and-earnings md:gap-4 gap-3 flex flex-col md:flex-row md:items-center justify-between">
             <div className="budget-and-earnings__block gap-2 flex-1">
-              <label className="light-text fs-1rem fw-400">Total Budget</label>
-              <div className="fs-20 fw-400 mt-1">
+              <label className="light-text text-base font-normal">Total Budget</label>
+              <div className="text-xl font-normal mt-1">
                 {data?.proposal?.approved_budget?.amount &&
                   `${numberWithCommas(data?.proposal?.approved_budget?.amount, 'USD')}${
                     data?.proposal?.approved_budget?.type == 'hourly' ? '/hr' : ''
@@ -252,7 +258,7 @@ const DetailsBanner = ({ data, refetch }: any) => {
                   (data?.proposal?.budget_change?.status !== 'pending' ||
                     data?.proposal?.budget_change?.requested_by !== 'freelancer') && (
                     <span
-                      className="budget-change-button d-inline-block"
+                      className="budget-change-button inline-block"
                       onClick={() => {
                         setChangeBudgetModal(true);
                       }}
@@ -274,7 +280,7 @@ const DetailsBanner = ({ data, refetch }: any) => {
               data?.proposal?.budget_change?.status === 'pending' &&
               data?.proposal?.budget_change?.amount && (
                 <div className="budget-and-earnings__block gap-2 flex-1">
-                  <label className="light-text fs-1rem fw-400">
+                  <label className="light-text text-base font-normal">
                     Requested {data?.proposal?.approved_budget?.type == 'hourly' ? 'rate' : 'budget'}{' '}
                     <FaEdit className="pointer text-dark align-text-top" onClick={() => setChangeBudgetModal(true)} />
                     <MdDelete
@@ -282,7 +288,7 @@ const DetailsBanner = ({ data, refetch }: any) => {
                       onClick={() => setChangeBudgetDeleteModal(true)}
                     />
                   </label>
-                  <div className="fs-20 fw-400 mt-1 ms-4">
+                  <div className="text-xl font-normal mt-1 ms-4">
                     {data?.proposal?.budget_change?.amount &&
                       `${numberWithCommas(data?.proposal?.budget_change?.amount, 'USD')}${
                         data?.proposal?.approved_budget?.type == 'hourly' ? '/hr' : ''
@@ -293,24 +299,24 @@ const DetailsBanner = ({ data, refetch }: any) => {
             {/* END ------------------------------------------- Requested increase budget amount */}
 
             <div className="flex-1">
-              <div className="light-text fs-1rem fw-400">
+              <div className="light-text text-base font-normal">
                 {data?.budget?.type == 'hourly' ? 'Total Hours Worked' : 'Total in Milestones'}
               </div>
-              <div className="mt-1 fs-20 fw-400">
+              <div className="mt-1 text-xl font-normal">
                 {data?.budget?.type == 'hourly'
                   ? `${numberWithCommas(data?.total_hours)} Hours`
                   : numberWithCommas(
                       data?.milestone
-                        ?.filter((milestone) => milestone.status !== 'cancelled')
-                        .reduce((acc, milestone) => acc + milestone.amount, 0),
+                        ?.filter((milestone: any) => milestone.status !== 'cancelled')
+                        .reduce((acc: number, milestone: any) => acc + milestone.amount, 0),
                       'USD'
                     )}
               </div>
             </div>
-            <div className="divider d-none d-md-block" />
+            <div className="divider hidden md:block" />
             <div className="budget-and-earnings__block flex-1">
-              <label className="light-text fs-1rem fw-400">Sent to Freelancer</label>
-              <div className="fs-20 fw-400 mt-1">
+              <label className="light-text text-base font-normal">Sent to Freelancer</label>
+              <div className="text-xl font-normal mt-1">
                 {data.total_earnings ? numberWithCommas(data?.total_earnings, 'USD') : '$0'}
               </div>
             </div>
@@ -334,19 +340,19 @@ const DetailsBanner = ({ data, refetch }: any) => {
       </>
     )
   ) : (
-    <NoPropsalWrapper className="header d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3">
-      <div className="content d-flex flex-column flex-wrap flex-1">
-        <div className="d-flex flex-row justify-content-between">
-          <span className="banner-title fs-24 fw-400">{convertToTitleCase(data.job_title)}</span>
-          <div className="d-flex">
+    <NoPropsalWrapper className="header flex flex-col md:flex-row justify-between md:items-start gap-3">
+      <div className="content flex flex-col flex-wrap flex-1">
+        <div className="flex flex-row justify-between">
+          <span className="banner-title text-2xl font-normal">{convertToTitleCase(data.job_title)}</span>
+          <div className="flex">
             <Tooltip
               customTrigger={
                 <BookmarkIcon
-                  className="d-flex justify-content-center align-items-center pointer"
+                  className="flex justify-center items-center cursor-pointer"
                   onClick={onBookmarkClick}
                 >
                   {loading ? (
-                    <Spinner animation="border" />
+                    <Spinner />
                   ) : isSaved ? (
                     <SavedIcon />
                   ) : (
@@ -360,7 +366,7 @@ const DetailsBanner = ({ data, refetch }: any) => {
             <Tooltip
               customTrigger={
                 <BookmarkIcon
-                  className="d-flex justify-content-center align-items-center pointer"
+                  className="flex justify-center items-center cursor-pointer"
                   style={{ marginLeft: '10px' }}
                   onClick={() => {
                     navigator.clipboard.writeText(window.location.href);
@@ -381,8 +387,8 @@ const DetailsBanner = ({ data, refetch }: any) => {
             </Tooltip>
           </div>
         </div>
-        <div className="posted-by d-flex align-items-center flex-wrap gap-3">
-          <div className={`d-flex align-items-center ${!user?.is_account_approved ? 'blurred-9px' : ''}`}>
+        <div className="flex items-center flex-wrap gap-3">
+          <div className={`flex items-center ${!user?.is_account_approved ? 'blurred-9px' : ''}`}>
             <BlurredImage
               src={data.userdata?.user_image || '/images/default_avatar.png'}
               height="2.625rem"
@@ -391,70 +397,71 @@ const DetailsBanner = ({ data, refetch }: any) => {
               allowToUnblur={false}
             />
 
-            <span className="fs-20 fw-400 line-height-28 text-capitalize">
+            <span className="text-xl font-normal line-height-28 capitalize">
               {data.userdata?.first_name} {data.userdata?.last_name}
             </span>
           </div>
-          {/* 
-          <Divider />
-
-          <span className="attribute-gray-label fs-18 fw-400">Employer</span> */}
 
           <Divider />
-          <div className="location-and-ratings d-flex align-items-center flex-wrap gap-3">
+          <div className="flex items-center flex-wrap gap-3">
             {data.userdata && (
-              <div className="location d-flex align-items-center">
+              <div className="flex items-center">
                 <LocationIcon />
-                <div className="attribute-value fs-1rem fw-400 attribute-gray-label">
+                <div className="attribute-value text-base font-normal attribute-gray-label">
                   {data.userdata?.location?.country_name}
                 </div>
               </div>
             )}
-            <div className="location d-flex align-items-center">
+            <div className="flex items-center">
               <StarIcon />
-              <div className="attribute-value fs-1rem fw-400">{data.avg_rating?.toFixed(1)}</div>
-              <div className="attribute-value fs-sm fw-300 attribute-gray-label">
+              <div className="attribute-value text-base font-normal">{data.avg_rating?.toFixed(1)}</div>
+              <div className="attribute-value text-sm font-light attribute-gray-label">
                 Ratings ({numberWithCommas(data?.count_rating) || 0})
               </div>
             </div>
           </div>
         </div>
-        <div className="job-dates d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-          <div className="posted-date d-flex align-items-center flex-wrap gap-3">
-            <div className="attribute-gray-label line-height-28 fs-20 fw-400">Posted:</div>
-            <div className="attribute-value line-height-28 fs-20 fw-400">
+        <div className="flex flex-col md:flex-row justify-between md:items-center gap-3">
+          <div className="flex items-center flex-wrap gap-3">
+            <div className="attribute-gray-label line-height-28 text-xl font-normal">Posted:</div>
+            <div className="attribute-value line-height-28 text-xl font-normal">
               {data?.date_created && moment(data?.date_created).format('MMM DD, YYYY')}
             </div>
             <Divider />
-            <div className="d-flex align-items-center gap-2">
-              <span className="attribute-gray-label fs-20 fw-400">Due date: </span>
-              <span className="budget-amount fs-20 fw-400">
+            <div className="flex items-center gap-2">
+              <span className="attribute-gray-label text-xl font-normal">Due date: </span>
+              <span className="budget-amount text-xl font-normal">
                 {data?.due_date ? moment(data?.due_date).format('MMM DD, YYYY') : '-'}
               </span>
             </div>
           </div>
-          <div className="d-flex">
+          <div className="flex">
             {data?.status === 'prospects' ? (
               !isProposalSubmitted ? (
                 <div className="flex-2">
                   {user?.is_account_approved ? (
                     user.stp_account_id && user?.stp_account_status === 'verified' ? (
-                      <StyledButton
-                        padding="1.125rem 2.25rem"
-                        onClick={toggleProposalModal}
+                       <CustomButton
                         disabled={!user?.is_account_approved}
-                      >
-                        Submit Proposal
-                      </StyledButton>
+                       className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+                         onClick={() => {
+                           setShowSubmitProposalModal(true);
+                         }}
+                         text="Submit Proposal"
+                       />
                     ) : (
                       /* Stripe Account is not created or verified  */
                       <Tooltip
                         customTrigger={
-                          <StyledButton padding="1.125rem 2.25rem" disabled>
-                            Submit Proposal
-                          </StyledButton>
+                          <CustomButton
+                          disabled={!user?.is_account_approved}
+                         className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] disabled:opacity-50"
+                           onClick={() => {
+                           }}
+                           text="Submit Proposal"
+                         />
                         }
-                        className="d-inline-block align-middle"
+                        className="inline-block align-middle"
                       >
                         Please {!user.stp_account_id ? `create` : `activate`} your stripe account to submit proposals
                       </Tooltip>
@@ -463,13 +470,17 @@ const DetailsBanner = ({ data, refetch }: any) => {
                     /* Blurred button */
                     <Tooltip
                       customTrigger={
-                        <StyledButton padding="1.125rem 2.25rem" disabled>
-                          Submit Proposal
-                        </StyledButton>
+                        <CustomButton
+                        disabled={!user?.is_account_approved}
+                       className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] disabled:opacity-50"
+                         onClick={() => {
+                         }}
+                         text="Submit Proposal"
+                       />
                       }
-                      className="d-inline-block align-middle"
+                      className="inline-block align-middle"
                     >
-                      Your account is still under review. You'll be able to apply to projects once it's been approved.
+                      Your account is still under review. You&apos;ll be able to apply to projects once it&apos;s been approved.
                     </Tooltip>
                   )}
                 </div>
@@ -504,5 +515,5 @@ const DetailsBanner = ({ data, refetch }: any) => {
 export default DetailsBanner;
 
 const Divider = () => {
-  return <div className="d-none d-lg-block opacity-50">|</div>;
+  return <div className="hidden lg:block opacity-50">|</div>;
 };

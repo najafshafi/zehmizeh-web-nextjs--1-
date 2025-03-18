@@ -3,6 +3,7 @@ import { fileIsAnImage } from "@/helpers/utils/misc";
 import CrossIcon from "../../public/icons/cross-icon.svg";
 import { useState } from "react";
 import classNames from "classnames";
+import Image from "next/image";
 
 const FILE_PATHS = {
   docx: "/images/doc.png",
@@ -141,28 +142,29 @@ const AttachmentPreview = ({
       {/* <a href={uploadedFile} target="_blank" rel="noreferrer"> */}
       <div
         onClick={downloadSampleFile}
-        className={`pointer ${isLoading ? "opacity-25" : ""}`}
+        className={`cursor-pointer ${isLoading ? "opacity-25" : ""}`}
       >
         {fileIsAnImage(uploadedFile) ? (
-          <img src={uploadedFile} alt="uploaded" height="100px" width="100px" />
+          <Image src={uploadedFile} alt="uploaded" height={100} width={100} className="object-cover h-[100px] w-[100px]" />
         ) : (
           <div
             className={classNames("text-center flex items-center", {
               "doctype-preview": shouldShowFileNameAndExtension,
             })}
           >
-            <img
+            <Image
               src={getFileDetails(uploadedFile)?.fileIcon || "/images/pdf.png"}
               alt="uploaded"
-              height="100px"
-              width="100px"
+              height={100}
+              width={100}
+              className="object-cover h-[100px] w-[100px]"
             />
             {shouldShowFileNameAndExtension && (
               <div className="doctype-preview-details ms-2">
-                <div className="file-title text-start text-capitalize fw-500">
+                <div className="file-title text-start text-capitalize font-medium">
                   {fileName || getFileDetails(uploadedFile)?.fileName}
                 </div>
-                <div className="extension text-start text-uppercase fs-sm">
+                <div className="extension text-start text-uppercase text-sm">
                   {getFileDetails(uploadedFile)?.fileExtension}
                 </div>
               </div>
@@ -173,7 +175,7 @@ const AttachmentPreview = ({
       {/* </a> */}
       {removable && (
         <div
-          className="delete-preview position-absolute flex items-center justify-content-center pointer"
+          className="delete-preview position-absolute flex items-center justify-center cursor-pointer"
           onClick={onDelete}
           title="Delete attachment"
         >

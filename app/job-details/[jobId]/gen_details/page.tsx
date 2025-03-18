@@ -3,5 +3,10 @@
 import JobDetails from '@/pages/job-details-page/JobDetails';
 
 export default function GenDetailsPage({ params }: { params: { jobId: string } }) {
-  return <JobDetails />;
+  
+
+  return<div className="pt-[90px] bg-secondary flex flex-col items-center">
+      <JobDetails />
+  </div>;
 }
+
