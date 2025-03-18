@@ -19,7 +19,7 @@ const InviteReceived = () => {
       {isLoading || isRefetching ? (
         <Loader />
       ) : proposals.length > 0 ? (
-        proposals.map((item) => (
+        proposals.map((item: any  ) => (
           <Link
             href={`/offer-details/${item.job_post_id}`}
             key={item.invite_id}
@@ -55,7 +55,7 @@ const InviteReceived = () => {
                 <div className="divider hidden lg:block" />
 
                 {/* Budget */}
-                <div className="proposal__budget flex width-fit-content items-center flex-wrap">
+                <div className="proposal__budget flex items-center flex-wrap">
                   <DollarCircleIcon />
                   <div className="proposal__budget-value flex">
                     {item?.budget?.isProposal

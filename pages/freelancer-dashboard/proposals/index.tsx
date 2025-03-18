@@ -40,7 +40,7 @@ const Proposals = () => {
   const [activeTab, setActiveTab] = useState('invites_received');
   return (
     <Wrapper>
-      <div className="stat-label fs-24 fw-700">Invites & Proposals</div>
+      <div className="stat-label text-2xl font-bold">Invites & Proposals</div>
       <div className="tabs mt-4">
         <Tabs
           tabs={TABS}

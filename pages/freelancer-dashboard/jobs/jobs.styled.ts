@@ -5,6 +5,7 @@ export const TabContent = styled.div`
   height: 500px;
   max-height: 500px;
   overflow-y: auto;
+  color: black;
 `;
 
 export const ProposalWrapper = styled.div`

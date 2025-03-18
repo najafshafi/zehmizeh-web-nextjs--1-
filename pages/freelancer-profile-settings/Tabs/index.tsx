@@ -43,7 +43,7 @@ import { useEffect } from "react";
 export const Tabs = () => {
   const router = useRouter();
   const params = useParams();
-  const tabkey = params?.tabkey as string;
+  const tabkey = decodeURIComponent(params?.tabkey as string);
 
   const isValidTab = Object.values(FREELANCER_PROFILE_TABS).includes(tabkey);
 
@@ -60,7 +60,7 @@ export const Tabs = () => {
         {Object.values(FREELANCER_PROFILE_TABS).map((tab) => (
           <TabTitle
             key={tab}
-            onClick={() => router.replace(`/freelancer/account/${tab}`)}
+            onClick={() => router.replace(`/freelancer/account/${encodeURIComponent(tab)}`)}
             $active={tabkey === tab}
           >
             {tab}

@@ -14,7 +14,7 @@ import StripeResetModal from "./stripeResetModal";
 import Pusher from "pusher-js";
 import { IDENTITY_DOCS } from "@/helpers/const/constants";
 import StripeAcceptableIDModal from "./stripeAcceptableIDModal";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 interface Prop {
   stripe: any;
@@ -45,6 +45,7 @@ const StripeDetails = (props: Prop) => {
   const [stripeResetModal, setStripeResetModal] = useState(false);
   const [ShowAcceptableIDModal, setAcceptableIDModal] =
     useState<boolean>(false);
+  const [pusherInitialized, setPusherInitialized] = useState<boolean>(true);
   const content = useMemo(() => {
     const data = {
       label: "Not started (Required)",
@@ -219,7 +220,7 @@ const StripeDetails = (props: Prop) => {
               To finish verification - please add a Personal Identity Document.
             </b>
             <p className="mb-2">
-              To add: click ‘Go to Stripe’ below, then click ‘Edit’ by your
+              To add: click 'Go to Stripe' below, then click 'Edit' by your
               personal details.
             </p>
           </div>
@@ -332,15 +333,28 @@ const StripeDetails = (props: Prop) => {
       pusher = null;
     }
 
-    const pusher_api_key = pusherApiKey();
-    pusher = new Pusher(pusher_api_key, {
-      cluster: "ap2",
-    });
-
-    const channel = pusher.subscribe(`STRIPE-${stripe?.id}`);
-    channel.bind("stripe-account-updated", (data: PusherDt) => {
-      if (stripeStatus !== data.updated_status) refetch();
-    });
+    try {
+      const pusher_api_key = pusherApiKey();
+      
+      if (!pusher_api_key) {
+        console.error("Pusher API key is missing");
+        setPusherInitialized(false);
+        return;
+      }
+      
+      pusher = new Pusher(pusher_api_key, {
+        cluster: "ap2",
+      });
+      
+      setPusherInitialized(true);
+      const channel = pusher.subscribe(`STRIPE-${stripe?.id}`);
+      channel.bind("stripe-account-updated", (data: PusherDt) => {
+        if (stripeStatus !== data.updated_status) refetch();
+      });
+    } catch (error) {
+      console.error("Error initializing Pusher:", error);
+      setPusherInitialized(false);
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stripe]);
@@ -371,6 +385,12 @@ const StripeDetails = (props: Prop) => {
 
   return (
     <StripeContainer className={`stripe-${status}`}>
+      {!pusherInitialized && stripe?.id && (
+        <div className="alert alert-warning mb-3" role="alert">
+          <small>Note: Real-time updates for Stripe status changes are not available at the moment. Please refresh the page to see updates.</small>
+        </div>
+      )}
+      
       {stripe?.id && (
         <>
           <StripeResetModal
@@ -478,7 +498,7 @@ const StripeDetails = (props: Prop) => {
           )}
           {status == "pending" && (
             <>
-              <Link className="d-block text-primary" to="/support/faq/stripe">
+              <Link className="d-block text-primary" href="/support/faq/stripe">
                 Help with Stripe
               </Link>
               <br />
