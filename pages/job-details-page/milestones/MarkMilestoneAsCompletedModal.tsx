@@ -1,8 +1,8 @@
-import { Modal, Button, Spinner } from 'react-bootstrap';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { StyledButton } from '@/components/forms/Buttons';
-import styled from 'styled-components';
-import { breakpoints } from '@/helpers/hooks/useResponsive';
+import { Modal, Button, Spinner } from "react-bootstrap";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import styled from "styled-components";
+import { breakpoints } from "@/helpers/hooks/useResponsive";
 
 const Wrapper = styled(StyledModal)`
   .heading {
@@ -43,11 +43,11 @@ const MarkMilestoneAsCompleted = ({ stateData, toggle, onConfirm }: Props) => {
           &times;
         </Button>
         <div className="d-flex flex-column gap-md-3 gap-0">
-          <div className="heading fw-400 text-center">
+          <div className="heading font-normal text-center">
             You’re Changing Milestone Status to ‘Complete’
           </div>
 
-          <p style={{ fontSize: '1.2rem' }}>
+          <p style={{ fontSize: "1.2rem" }}>
             By marking a milestone as complete, you’re indicating to the client
             that all of the required uploads have been submitted. They’ll be
             notified that you’re ready to have your payment delivered.
@@ -55,7 +55,7 @@ const MarkMilestoneAsCompleted = ({ stateData, toggle, onConfirm }: Props) => {
 
           <div className="d-flex flex-column flex-md-row justify-content-center gap-3">
             <StyledButton
-              className="fs-16 fw-400"
+              className="fs-16 font-normal"
               variant="outline-dark"
               padding="0.8125rem 2rem"
               onClick={toggle}
@@ -64,7 +64,7 @@ const MarkMilestoneAsCompleted = ({ stateData, toggle, onConfirm }: Props) => {
             </StyledButton>
             <StyledButton
               onClick={onConfirm}
-              className="fs-16 fw-400"
+              className="fs-16 font-normal"
               variant="primary"
               padding="0.8125rem 2rem"
               disabled={stateData.loading}

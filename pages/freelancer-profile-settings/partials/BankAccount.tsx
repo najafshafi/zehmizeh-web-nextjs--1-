@@ -101,29 +101,29 @@ const BankAccount = ({
 
         {/* Account details */}
         <table className="mt-3 bank-table">
-          <tr className="fs-1rem fw-400">
+          <tr className="fs-1rem font-normal">
             <td>
               <span className="acc-info--label">Name on Account: &nbsp;</span>
             </td>
             <td>{item?.account_holder_name}</td>
           </tr>
-          <tr className="fs-1rem fw-400">
+          <tr className="fs-1rem font-normal">
             <td>
               <span className="acc-info--label">Account Type: &nbsp;</span>
             </td>
-            <td className="text-capitalize">
+            <td className="capitalize">
               {item?.account_holder_type === "individual"
                 ? "Individual"
                 : "Business"}
             </td>
           </tr>
-          <tr className="fs-1rem fw-400">
+          <tr className="fs-1rem font-normal">
             <td>
               <span className="acc-info--label">Account Number: &nbsp;</span>
             </td>
             <td>{formatingAccountNumber(item?.last_4_digit)}</td>
           </tr>
-          <tr className="fs-1rem fw-400">
+          <tr className="fs-1rem font-normal">
             <td>
               <span className="acc-info--label">Routing Number: &nbsp;</span>
             </td>

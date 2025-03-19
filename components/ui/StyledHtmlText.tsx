@@ -108,7 +108,7 @@ const StyledHtmlText = ({
       {showViewMore == true && (
         <>
           <div
-            className="view-more-btn pointer view-more-dark"
+            className="view-more-btn cursor-pointer view-more-dark"
             onClick={toggleReadMore}
           >
             {!viewMore ? ' View all' : ' View less'}

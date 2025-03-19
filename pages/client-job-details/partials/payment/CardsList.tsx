@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import { useQuery } from 'react-query';
-import Loader from 'components/Loader';
-import PaymentForm from './AddCardForm';
-import SavedCards from './SavedCards';
-import { getCards } from 'helpers/http/client';
-import { GETSTRIPEKEYHANDLER } from 'helpers/http/common';
+import { useState } from "react";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { useQuery } from "react-query";
+import Loader from "components/Loader";
+import PaymentForm from "./AddCardForm";
+import SavedCards from "./SavedCards";
+import { getCards } from "helpers/http/client";
+import { GETSTRIPEKEYHANDLER } from "helpers/http/common";
 
 const REACT_APP_STRIPE_KEY = GETSTRIPEKEYHANDLER();
 
@@ -20,7 +20,7 @@ type Props = {
 
 const CardsList = ({ onPay, processingPayment, onCancel }: Props) => {
   const [showAddCardForm, setShowAddCardForm] = useState<boolean>(false);
-  const { data, isLoading } = useQuery(['get-cards'], () => getCards());
+  const { data, isLoading } = useQuery(["get-cards"], () => getCards());
 
   const toggleAddCardForm = () => {
     /* This will toggle add card form */
@@ -43,7 +43,7 @@ const CardsList = ({ onPay, processingPayment, onCancel }: Props) => {
       {/* Add new card */}
       {(showAddCardForm || data?.data?.length == 0) && (
         <Elements stripe={stripePromise}>
-          <div className="fs-20 fw-400 mt-4 mb-2">Card Details</div>
+          <div className="fs-20 font-normal mt-4 mb-2">Card Details</div>
 
           {/* Payment form */}
           <PaymentForm

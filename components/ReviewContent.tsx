@@ -17,7 +17,7 @@ const ReviewContent = ({ review }: any) => {
                 <FilledStarIconSmall key={`star_${i}`} />
               ))}
           </div>
-          <div className="given-rating-count fs-18 fw-400">
+          <div className="given-rating-count fs-18 font-normal">
             {review?.rate.toFixed(1)}
           </div>
         </div>
@@ -25,7 +25,7 @@ const ReviewContent = ({ review }: any) => {
           {moment(review?.date_created).format("MMM DD, YYYY")}
         </div>
       </div>
-      <div className="review-description fs-20 fw-400">
+      <div className="review-description fs-20 font-normal">
         &quot;{review?.description}&quote;
       </div>
     </>

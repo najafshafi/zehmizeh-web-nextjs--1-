@@ -125,12 +125,12 @@ const CourseEditModal = ({ show, onClose, data, onUpdate }: any) => {
         </Button>
         <EditFormWrapper>
           <div className="content flex flex-column">
-            <div className="modal-title fs-28 fw-400">
+            <div className="modal-title fs-28 font-normal">
               Courses / Certifications
             </div>
             <div className="form">
               <StyledFormGroup className="mt-0">
-                <div className="fs-sm fw-400">
+                <div className="fs-sm font-normal">
                   Course / Certificate Name
                   <span className="mandatory">&nbsp;*</span>
                 </div>
@@ -151,7 +151,7 @@ const CourseEditModal = ({ show, onClose, data, onUpdate }: any) => {
                 )}
               </StyledFormGroup>
               <StyledFormGroup>
-                <div className="fs-sm fw-400">
+                <div className="fs-sm font-normal">
                   Certifying Institution / College:
                   <span className="mandatory">&nbsp;*</span>
                 </div>
@@ -191,7 +191,7 @@ const CourseEditModal = ({ show, onClose, data, onUpdate }: any) => {
                     )}
                   </StyledFormGroup>
                   {/* <StyledFormGroup>
-                    <div className="fs-sm fw-400">
+                    <div className="fs-sm font-normal">
                       Enter link to Certificate
                     </div>
                     <Form.Control

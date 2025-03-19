@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { StyledButton } from '@/components/forms/Buttons';
-import CustomUploader from '@/components/ui/CustomUploader';
-import AttachmentPreview from '@/components/ui/AttachmentPreview';
-import { deleteFileFromStorage } from '@/helpers/http/common';
-import { CONSTANTS } from '@/helpers/const/constants';
+import { useEffect, useState } from "react";
+import { Modal, Button } from "react-bootstrap";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import CustomUploader from "@/components/ui/CustomUploader";
+import AttachmentPreview from "@/components/ui/AttachmentPreview";
+import { deleteFileFromStorage } from "@/helpers/http/common";
+import { CONSTANTS } from "@/helpers/const/constants";
 
 export interface FileAttachment {
   fileUrl: string;
@@ -20,17 +20,31 @@ type Props = {
   postedWork?: string;
 };
 
-const AttachmentSubmitModal = ({ show, toggle, onConfirm, loading, postedWork }: Props) => {
+const AttachmentSubmitModal = ({
+  show,
+  toggle,
+  onConfirm,
+  loading,
+  postedWork,
+}: Props) => {
   const [attachments, setAttachments] = useState<FileAttachment[]>([]);
   const [existingWork, setExistingWork] = useState<FileAttachment[]>([]);
   const [uploadLimit] = useState<number>(5);
 
-  const handleUploadImage = ({ file, fileName }: { file: string; fileName?: string }) => {
+  const handleUploadImage = ({
+    file,
+    fileName,
+  }: {
+    file: string;
+    fileName?: string;
+  }) => {
     setAttachments([...attachments, { fileUrl: file, fileName }]);
   };
 
   const removeAttachment = (removeIndex: number, fileUrl?: string) => {
-    const allAttachments = [...attachments].filter((_, index: number) => index !== removeIndex);
+    const allAttachments = [...attachments].filter(
+      (_, index: number) => index !== removeIndex
+    );
     setAttachments(allAttachments);
     if (fileUrl) deleteFileFromStorage(fileUrl);
   };
@@ -45,8 +59,8 @@ const AttachmentSubmitModal = ({ show, toggle, onConfirm, loading, postedWork }:
 
   const postedWorkHandler = (images: string) => {
     if (images.length === 0) return null;
-    const files: FileAttachment[] = images.split(',').map((file) => {
-      const [fileUrl, fileName] = file.split('#docname=');
+    const files: FileAttachment[] = images.split(",").map((file) => {
+      const [fileUrl, fileName] = file.split("#docname=");
       return { fileUrl, fileName };
     });
     setExistingWork(files);
@@ -70,7 +84,9 @@ const AttachmentSubmitModal = ({ show, toggle, onConfirm, loading, postedWork }:
 
         {existingWork.length ? (
           <>
-            <div className="fs-20 fw-400 text-start mb-3">Completed Work on this Milestone</div>
+            <div className="fs-20 font-normal text-start mb-3">
+              Completed Work on this Milestone
+            </div>
             {!!existingWork.length && (
               <div className="d-flex align-items-center gap-4 flex-wrap my-3">
                 {existingWork.map((file, index: number) => (
@@ -90,9 +106,11 @@ const AttachmentSubmitModal = ({ show, toggle, onConfirm, loading, postedWork }:
           <></>
         )}
 
-        <div className={existingWork.length ? 'mt-5' : 'mt-0'}>
-          <div className="fs-20 fw-400 text-start mb-3">Click below to upload work for this milestone</div>
-          <div className="fs-20 fw-400 text-start">
+        <div className={existingWork.length ? "mt-5" : "mt-0"}>
+          <div className="fs-20 font-normal text-start mb-3">
+            Click below to upload work for this milestone
+          </div>
+          <div className="fs-20 font-normal text-start">
             <CustomUploader
               limit={uploadLimit}
               handleUploadImage={handleUploadImage}
@@ -100,7 +118,11 @@ const AttachmentSubmitModal = ({ show, toggle, onConfirm, loading, postedWork }:
               removeAttachment={removeAttachment}
               placeholder="Attach doc"
               totalUploaded={existingWork.length}
-              acceptedFormats={[...CONSTANTS.DEFAULT_ATTACHMENT_SUPPORTED_TYPES, 'audio/*', 'video/*'].join(', ')}
+              acceptedFormats={[
+                ...CONSTANTS.DEFAULT_ATTACHMENT_SUPPORTED_TYPES,
+                "audio/*",
+                "video/*",
+              ].join(", ")}
               suggestions="File type: PDF, DOC, DOCX, XLS, XLSX, Image Files, Audio Files, Video Files"
               shouldShowFileNameAndExtension={false}
             />
@@ -109,7 +131,7 @@ const AttachmentSubmitModal = ({ show, toggle, onConfirm, loading, postedWork }:
 
         <div className="d-flex justify-content-md-end justify-content-center mt-4">
           <StyledButton
-            className="fs-16 fw-400"
+            className="fs-16 font-normal"
             variant="primary"
             padding="0.8125rem 2rem"
             onClick={onSend}

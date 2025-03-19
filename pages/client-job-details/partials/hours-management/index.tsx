@@ -1,52 +1,59 @@
-import { useEffect, useState } from 'react';
-import moment from 'moment';
-import toast from 'react-hot-toast';
-import { MilestonesWrapper, MileStoneListItem } from './hours-management.styled';
-import { StatusBadge } from 'components/styled/Badges';
-import { StyledButton } from 'components/forms/Buttons';
-import NoDataFound from 'components/ui/NoDataFound';
-import StyledHtmlText from 'components/ui/StyledHtmlText';
-import AttachmentPreview from 'components/ui/AttachmentPreview';
-import PaymentModal from '../payment/PaymentModal';
-import ConfirmPaymentModal from '../payment/ConfirmPaymentModal';
-import { changeStatusDisplayFormat, convertToTitleCase, numberWithCommas } from 'helpers/utils/misc';
-import { manageHours } from 'helpers/http/jobs';
-import DeclineReasonPrompt from '../DeclineReasonPrompt';
-import { usePayments } from 'pages/client-job-details/controllers/usePayments';
-import PendingHourlySubmission from 'pages/client-job-details/quick-options/PendingHourlySubmission';
-import { paymentProcessingStatusHandler } from 'helpers/validation/common';
-import styled from 'styled-components';
-import { TcomponentConnectorRef } from 'pages/client-job-details/ClientJobDetails';
-import { getValueByPercentage } from 'helpers/utils/helper';
+import { useEffect, useState } from "react";
+import moment from "moment";
+import toast from "react-hot-toast";
+import {
+  MilestonesWrapper,
+  MileStoneListItem,
+} from "./hours-management.styled";
+import { StatusBadge } from "components/styled/Badges";
+import { StyledButton } from "components/forms/Buttons";
+import NoDataFound from "components/ui/NoDataFound";
+import StyledHtmlText from "components/ui/StyledHtmlText";
+import AttachmentPreview from "components/ui/AttachmentPreview";
+import PaymentModal from "../payment/PaymentModal";
+import ConfirmPaymentModal from "../payment/ConfirmPaymentModal";
+import {
+  changeStatusDisplayFormat,
+  convertToTitleCase,
+  numberWithCommas,
+} from "helpers/utils/misc";
+import { manageHours } from "helpers/http/jobs";
+import DeclineReasonPrompt from "../DeclineReasonPrompt";
+import { usePayments } from "pages/client-job-details/controllers/usePayments";
+import PendingHourlySubmission from "pages/client-job-details/quick-options/PendingHourlySubmission";
+import { paymentProcessingStatusHandler } from "helpers/validation/common";
+import styled from "styled-components";
+import { TcomponentConnectorRef } from "pages/client-job-details/ClientJobDetails";
+import { getValueByPercentage } from "helpers/utils/helper";
 
 const PAYMENT_STATUS = {
   released: {
-    color: 'gray',
+    color: "gray",
   },
   paid: {
-    color: 'green',
+    color: "green",
   },
   under_dispute: {
-    color: 'darkPink',
+    color: "darkPink",
   },
   declined: {
-    color: 'darkPink',
+    color: "darkPink",
   },
   decline: {
-    color: 'darkPink',
+    color: "darkPink",
   },
   cancelled: {
-    color: 'darkPink',
+    color: "darkPink",
   },
   payment_processing: {
-    color: 'yellow',
+    color: "yellow",
   },
   decline_dispute: {
-    color: 'darkPink',
+    color: "darkPink",
   },
 };
 
-const MilestoneHintText = styled('p')`
+const MilestoneHintText = styled("p")`
   color: ${(props) => props.theme.colors.red};
 `;
 
@@ -66,8 +73,9 @@ const HoursManagement = ({
   const { setAmount, setJobType, selectedPaymentMethod } = usePayments();
 
   const [isFinalHourPayable, setIsFinalHourPayable] = useState(false);
-  const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>('');
-  const [declineReasonPropmt, setDeclineReasonPropmt] = useState<boolean>(false);
+  const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>("");
+  const [declineReasonPropmt, setDeclineReasonPropmt] =
+    useState<boolean>(false);
 
   const [modalsState, setModalsState] = useState<{
     showConfirmationModal?: boolean;
@@ -98,7 +106,7 @@ const HoursManagement = ({
   // First this will ask for confirmation... Are you sure?
   const askForConfirmation = (item: any) => () => {
     setAmount(item.total_amount);
-    setJobType('hourly');
+    setJobType("hourly");
     setModalsState({
       ...modalsState,
       showConfirmationModal: true,
@@ -109,8 +117,8 @@ const HoursManagement = ({
   };
 
   const closeConfirmPaymentModal = () => {
-    setAmount('');
-    setJobType('');
+    setAmount("");
+    setJobType("");
     setModalsState({ showConfirmationModal: false });
   };
 
@@ -128,11 +136,11 @@ const HoursManagement = ({
     setSelectedMilestoneId(modalsState?.milestone?.hourly_id);
     setModalsState({
       ...modalsState,
-      hourlyStatus: 'paid',
+      hourlyStatus: "paid",
     });
     const body = {
-      action: 'edit_hours',
-      status: 'paid',
+      action: "edit_hours",
+      status: "paid",
       hourly_id: modalsState?.milestone?.hourly_id,
       token: tokenId,
       payment_method: selectedPaymentMethod,
@@ -141,17 +149,17 @@ const HoursManagement = ({
     const promise = manageHours(body);
 
     toast.promise(promise, {
-      loading: 'Loading...',
+      loading: "Loading...",
       success: (res) => {
-        setSelectedMilestoneId('');
+        setSelectedMilestoneId("");
         refetch();
         closeConfirmPaymentModal();
         enableEndJobModal();
         return res.response;
       },
       error: (err) => {
-        setSelectedMilestoneId('');
-        return err?.response?.data?.message || 'error';
+        setSelectedMilestoneId("");
+        return err?.response?.data?.message || "error";
       },
     });
   };
@@ -165,15 +173,15 @@ const HoursManagement = ({
 
   const toggleDeclienReasonModal = () => {
     if (declineReasonPropmt) {
-      setSelectedMilestoneId('');
+      setSelectedMilestoneId("");
     }
     setDeclineReasonPropmt(!declineReasonPropmt);
   };
 
   const closePaymentModal = () => {
     // This will close the payment modal
-    setAmount('');
-    setJobType('');
+    setAmount("");
+    setJobType("");
     setModalsState({ showPaymentModal: false });
   };
 
@@ -184,27 +192,33 @@ const HoursManagement = ({
     });
   };
 
-  const payAndCloseProjectCheckHandler = (item: any, selectedMilestoneId: any) => {
+  const payAndCloseProjectCheckHandler = (
+    item: any,
+    selectedMilestoneId: any
+  ) => {
     const condOne = item?.hourly_id == selectedMilestoneId;
     let isAnyDisputePresent = false;
 
     milestone?.forEach((dt) => {
-      if (!isAnyDisputePresent) isAnyDisputePresent = ['under_dispute'].includes(dt['hourly_status']);
+      if (!isAnyDisputePresent)
+        isAnyDisputePresent = ["under_dispute"].includes(dt["hourly_status"]);
     });
 
     return condOne || isAnyDisputePresent;
   };
   useEffect(() => {
-    let statusArr: any[] = milestone.filter((item) => item?.is_final_milestone === 0);
+    let statusArr: any[] = milestone.filter(
+      (item) => item?.is_final_milestone === 0
+    );
     statusArr = statusArr.map(
       (item) =>
-        item?.hourly_status === 'paid' ||
-        item?.hourly_status === 'decline' ||
+        item?.hourly_status === "paid" ||
+        item?.hourly_status === "decline" ||
         // item?.hourly_status === 'under_dispute' ||
         // item?.hourly_status === 'payment_processing' ||
-        item?.hourly_status === 'cancelled' ||
-        item?.dispute_submitted_by === 'CLIENT' ||
-        item?.dispute_submitted_by === 'FREELANCER'
+        item?.hourly_status === "cancelled" ||
+        item?.dispute_submitted_by === "CLIENT" ||
+        item?.dispute_submitted_by === "FREELANCER"
     );
 
     setIsFinalHourPayable(!statusArr.includes(false));
@@ -212,13 +226,18 @@ const HoursManagement = ({
   }, []);
 
   const milestoneHandler = (milestone: any) => {
-    return milestone.sort((a, b) => b.is_final_milestone - a.is_final_milestone);
+    return milestone.sort(
+      (a, b) => b.is_final_milestone - a.is_final_milestone
+    );
   };
 
   return (
     <MilestonesWrapper>
       {milestone?.length == 0 && (
-        <NoDataFound className="py-5" title="The freelancer hasn't submitted any hours yet." />
+        <NoDataFound
+          className="py-5"
+          title="The freelancer hasn't submitted any hours yet."
+        />
       )}
 
       {milestone?.length > 0 &&
@@ -230,68 +249,99 @@ const HoursManagement = ({
           >
             <div className="d-flex flex-md-row flex-column justify-content-between gap-md-3 gap-4">
               <div>
-                <div className="fs-20 fw-400 capital-first-ltr">
-                  {item.is_final_milestone ? 'Final Submission' : 'Submission ' + ++index}:{' '}
-                  {convertToTitleCase(item.title)}
+                <div className="fs-20 font-normal capital-first-ltr">
+                  {item.is_final_milestone
+                    ? "Final Submission"
+                    : "Submission " + ++index}
+                  : {convertToTitleCase(item.title)}
                 </div>
-                <div className="fs-32 fw-400 line-height-100-perc mt-3">
-                  {numberWithCommas(item.total_amount, 'USD')}
+                <div className="fs-32 font-normal line-height-100-perc mt-3">
+                  {numberWithCommas(item.total_amount, "USD")}
                 </div>
                 {/* START ----------------------------------------- Showing price client has to pay including fees */}
-                {item.hourly_status === 'pending' && (
+                {item.hourly_status === "pending" && (
                   <div className="fs-14 mt-1 mb-2">
-                    ({numberWithCommas(getValueByPercentage(item.total_amount, 102.9), 'USD')} -{' '}
-                    {numberWithCommas(getValueByPercentage(item.total_amount, 104.9), 'USD')} with fee)
+                    (
+                    {numberWithCommas(
+                      getValueByPercentage(item.total_amount, 102.9),
+                      "USD"
+                    )}{" "}
+                    -{" "}
+                    {numberWithCommas(
+                      getValueByPercentage(item.total_amount, 104.9),
+                      "USD"
+                    )}{" "}
+                    with fee)
                   </div>
                 )}
                 {/* END ----------------------------------------- Showing price client has to pay including fees */}
               </div>
-              {item.hourly_status !== 'pending' ? (
+              {item.hourly_status !== "pending" ? (
                 <div className="d-flex flex-column align-items-md-end">
                   {[
-                    'paid',
-                    'under_dispute',
-                    'declined',
-                    'decline',
-                    'released',
-                    'payment_processing',
-                    'cancelled',
-                    'decline_dispute',
+                    "paid",
+                    "under_dispute",
+                    "declined",
+                    "decline",
+                    "released",
+                    "payment_processing",
+                    "cancelled",
+                    "decline_dispute",
                   ].includes(item.hourly_status) && (
                     <>
                       <div>
-                        <StatusBadge color={PAYMENT_STATUS[item.hourly_status]?.color}>
-                          {['decline_dispute'].includes(item.hourly_status) && item?.dispute_submitted_by === 'CLIENT'
-                            ? 'Closed by Client'
-                            : ['decline_dispute'].includes(item.hourly_status) &&
-                              item?.dispute_submitted_by === 'FREELANCER'
-                            ? 'Canceled'
-                            : ['decline', 'declined'].includes(item.hourly_status)
-                            ? 'Declined'
-                            : ['cancelled'].includes(item.hourly_status) && item?.is_paid === 0
-                            ? 'Canceled by Freelancer'
-                            : item.hourly_status === 'payment_processing'
-                            ? paymentProcessingStatusHandler(item?.payment_method)
-                            : changeStatusDisplayFormat(item.hourly_status, '_')}
+                        <StatusBadge
+                          color={PAYMENT_STATUS[item.hourly_status]?.color}
+                        >
+                          {["decline_dispute"].includes(item.hourly_status) &&
+                          item?.dispute_submitted_by === "CLIENT"
+                            ? "Closed by Client"
+                            : ["decline_dispute"].includes(
+                                item.hourly_status
+                              ) && item?.dispute_submitted_by === "FREELANCER"
+                            ? "Canceled"
+                            : ["decline", "declined"].includes(
+                                item.hourly_status
+                              )
+                            ? "Declined"
+                            : ["cancelled"].includes(item.hourly_status) &&
+                              item?.is_paid === 0
+                            ? "Canceled by Freelancer"
+                            : item.hourly_status === "payment_processing"
+                            ? paymentProcessingStatusHandler(
+                                item?.payment_method
+                              )
+                            : changeStatusDisplayFormat(
+                                item.hourly_status,
+                                "_"
+                              )}
                         </StatusBadge>
                       </div>
                     </>
                   )}
                   {!!item?.date_created && (
-                    <div className="fs-18 fw-400 mt-3">
+                    <div className="fs-18 font-normal mt-3">
                       Submitted on
-                      {item?.date_created ? ' ' + moment(item?.date_created).format('MMM DD, YYYY') : ' -'}
+                      {item?.date_created
+                        ? " " +
+                          moment(item?.date_created).format("MMM DD, YYYY")
+                        : " -"}
                     </div>
                   )}
                   {!!item.cancelled_date && (
-                    <div className="fs-18 fw-400">
-                      Closed on {item.cancelled_date ? moment(item.cancelled_date).format('MMM DD, YYYY') : ''}
+                    <div className="fs-18 font-normal">
+                      Closed on{" "}
+                      {item.cancelled_date
+                        ? moment(item.cancelled_date).format("MMM DD, YYYY")
+                        : ""}
                     </div>
                   )}
-                  {item?.hourly_status == 'paid' && (
-                    <div className="fs-18 fw-400">
+                  {item?.hourly_status == "paid" && (
+                    <div className="fs-18 font-normal">
                       Paid on
-                      {item?.paid_date ? ' ' + moment(item?.paid_date).format('MMM DD, YYYY') : ' -'}
+                      {item?.paid_date
+                        ? " " + moment(item?.paid_date).format("MMM DD, YYYY")
+                        : " -"}
                     </div>
                   )}
                 </div>
@@ -306,8 +356,15 @@ const HoursManagement = ({
                       // If there are more than 1 hourly payment that need to be accepted
                       // then opening list modal to show all hourly payment
                       const moreThanOnePendingMilestone =
-                        self.filter((x) => !x?.is_final_milestone && x?.hourly_status === 'pending').length > 1;
-                      if (moreThanOnePendingMilestone && componentConnectorRef.current?.openMilestoneListModal) {
+                        self.filter(
+                          (x) =>
+                            !x?.is_final_milestone &&
+                            x?.hourly_status === "pending"
+                        ).length > 1;
+                      if (
+                        moreThanOnePendingMilestone &&
+                        componentConnectorRef.current?.openMilestoneListModal
+                      ) {
                         componentConnectorRef.current.openMilestoneListModal();
                         return;
                       }
@@ -323,16 +380,21 @@ const HoursManagement = ({
             </div>
             <div className="d-flex mt-md-3 flex-md-row flex-column justify-content-between align-items-md-end gap-3">
               <div>
-                <StyledHtmlText needToBeShorten htmlString={item.description} id={`mstone_${item.hourly_id}`} />
+                <StyledHtmlText
+                  needToBeShorten
+                  htmlString={item.description}
+                  id={`mstone_${item.hourly_id}`}
+                />
                 {/* Hint text to dont start working until milestone is approved */}
-                {item.hourly_status === 'pending' && item?.failure_message && (
+                {item.hourly_status === "pending" && item?.failure_message && (
                   <MilestoneHintText className="mb-0 mt-1 fs-20">
-                    <b>Payment Failed:</b> Your last payment failed because {item?.failure_message}
+                    <b>Payment Failed:</b> Your last payment failed because{" "}
+                    {item?.failure_message}
                   </MilestoneHintText>
                 )}
                 {item?.attachments ? (
                   <div className="d-flex items-center justify-content-start gap-3">
-                    {item?.attachments?.split(',').map((att, index) => (
+                    {item?.attachments?.split(",").map((att, index) => (
                       <div className="mt-3" key={`attachments-${index}`}>
                         <AttachmentPreview
                           uploadedFile={att}
@@ -344,7 +406,7 @@ const HoursManagement = ({
                   </div>
                 ) : null}
               </div>
-              {item.hourly_status == 'pending' && !item.is_final_milestone ? (
+              {item.hourly_status == "pending" && !item.is_final_milestone ? (
                 // Mobile view only
                 <StyledButton
                   padding="1rem 2rem"
@@ -358,7 +420,12 @@ const HoursManagement = ({
             </div>
 
             {item.is_final_milestone &&
-            !['paid', 'payment_processing', 'under_dispute', 'decline_dispute'].includes(item.hourly_status) ? (
+            ![
+              "paid",
+              "payment_processing",
+              "under_dispute",
+              "decline_dispute",
+            ].includes(item.hourly_status) ? (
               <div className="d-flex flex-md-row flex-column mt-3 gap-3 justify-content-md-end justify-content-center">
                 <StyledButton
                   variant="outline-dark"
@@ -370,11 +437,22 @@ const HoursManagement = ({
                 </StyledButton>
                 <StyledButton
                   style={{
-                    opacity: isFinalHourPayable && !payAndCloseProjectCheckHandler(item, selectedMilestoneId) ? 1 : 0.5,
+                    opacity:
+                      isFinalHourPayable &&
+                      !payAndCloseProjectCheckHandler(item, selectedMilestoneId)
+                        ? 1
+                        : 0.5,
                   }}
                   padding="1rem 2rem"
-                  disabled={payAndCloseProjectCheckHandler(item, selectedMilestoneId)}
-                  onClick={() => (isFinalHourPayable ? askForConfirmation(item)() : togglePendingHrSubModal())}
+                  disabled={payAndCloseProjectCheckHandler(
+                    item,
+                    selectedMilestoneId
+                  )}
+                  onClick={() =>
+                    isFinalHourPayable
+                      ? askForConfirmation(item)()
+                      : togglePendingHrSubModal()
+                  }
                 >
                   Pay & Close Project
                 </StyledButton>
@@ -401,7 +479,7 @@ const HoursManagement = ({
         show={modalsState?.showPaymentModal}
         onCancel={closePaymentModal}
         onPay={handlePayment}
-        processingPayment={selectedMilestoneId !== ''}
+        processingPayment={selectedMilestoneId !== ""}
       />
 
       <ConfirmPaymentModal
@@ -409,7 +487,7 @@ const HoursManagement = ({
         isReleasePrompt={false}
         toggle={closeConfirmPaymentModal}
         onConfirm={onConfirm}
-        loading={selectedMilestoneId !== ''}
+        loading={selectedMilestoneId !== ""}
         buttonText="Pay"
       />
     </MilestonesWrapper>

@@ -4,6 +4,7 @@ import { Container } from "react-bootstrap";
 import styled from "styled-components";
 import useStartPageFromTop from "@/helpers/hooks/useStartPageFromTop";
 import { useEffect } from "react";
+import Link from "next/link";
 
 const Wrapper = styled(Container)`
   max-width: 770px;
@@ -75,7 +76,7 @@ function Terms() {
           <strong>Terms &amp; Conditions: ZMZ&rsquo;s User Agreement</strong>
         </h1>
 
-        <p className="fw-400">
+        <p className="font-normal">
           This User Agreement describes the terms and conditions which you
           accept by using our Website or our Services. We may have incorporated
           by reference some linked information.
@@ -84,13 +85,13 @@ function Terms() {
         <h2 className="title mt-4 mb-3">In this User Agreement:</h2>
         <p>
           <strong>"Account"</strong>
-          <span className="fw-400">
+          <span className="font-normal">
             &nbsp;means the account associated with your email address.
           </span>
         </p>
         <p>
           <strong>"Client"</strong>
-          <span className="fw-400">
+          <span className="font-normal">
             &nbsp; means a User that purchases Freelancer Services from
             Freelancers or identifies as an Client through the website. A User
             may be both a Client and a Freelancer under this agreement.
@@ -98,35 +99,37 @@ function Terms() {
         </p>
         <p>
           <strong>"Dispute Resolution Process"</strong>
-          <span className="fw-400">
+          <span className="font-normal">
             &nbsp;means the process to be followed by Clients and Freelancers in
             accordance with the Dispute Resolution Services.
           </span>
         </p>
         <p>
           <strong>"Zehmizeh,"</strong>
-          <span className="fw-400">&nbsp;</span>
+          <span className="font-normal">&nbsp;</span>
           <strong>"we,"</strong>
-          <span className="fw-400">&nbsp;</span>
+          <span className="font-normal">&nbsp;</span>
           <strong>"our,"</strong>
-          <span className="fw-400">&nbsp;</span>
+          <span className="font-normal">&nbsp;</span>
           <strong>"company,"</strong>
-          <span className="fw-400">&nbsp;</span>
+          <span className="font-normal">&nbsp;</span>
           <strong>"the company,"</strong>
-          <span className="fw-400">&nbsp;or&nbsp;</span>
+          <span className="font-normal">&nbsp;or&nbsp;</span>
           <strong>"us"</strong>
-          <span className="fw-400">&nbsp;means Zehmize Inc. DBA Zehmizeh</span>
+          <span className="font-normal">
+            &nbsp;means Zehmize Inc. DBA Zehmizeh
+          </span>
         </p>
         <p>
           <strong>"Inactive Account"</strong>
-          <span className="fw-400">
+          <span className="font-normal">
             &nbsp;means a User Account that has not been logged into for a
             6-month period or other period determined by us from time to time.
           </span>
         </p>
         <p>
           <strong>"Intellectual Property Rights"</strong>{" "}
-          <span className="fw-400">
+          <span className="font-normal">
             means all patent rights, copyright rights, moral rights, rights of
             publicity, trademark, trade dress and service mark rights, goodwill,
             trade secret rights and other intellectual property rights as may
@@ -139,7 +142,7 @@ function Terms() {
         </p>
         <p>
           <strong>"ZMZ Payment"</strong>
-          <span className="fw-400">
+          <span className="font-normal">
             &nbsp;means a payment made by the Client for the provision of
             Freelancer Services under a User Contract and which will be released
             in accordance with the section "ZMZ Payments" of these terms and
@@ -148,7 +151,7 @@ function Terms() {
         </p>
         <p>
           <strong>"Project"</strong>
-          <span className="fw-400">
+          <span className="font-normal">
             &nbsp;means a project offered or awarded by an Client via the
             Website, which may include a Project listed by an Client, a Project
             awarded by an Client, or a service bought by an Client from a
@@ -157,7 +160,7 @@ function Terms() {
         </p>
         <p>
           <strong>"Freelancer"</strong>
-          <span className="fw-400">
+          <span className="font-normal">
             &nbsp;means a User that offers and provides services or identifies
             as a Freelancer through the Website. A User may be both a Client and
             a Freelancer under this agreement.
@@ -165,29 +168,29 @@ function Terms() {
         </p>
         <p>
           <strong>"Freelancer Services"</strong>
-          <span className="fw-400">
+          <span className="font-normal">
             &nbsp;means all services provided by a Freelancer.
           </span>
         </p>
         <p>
           <strong>"Zehmizeh Services"</strong>
-          <span className="fw-400">
+          <span className="font-normal">
             &nbsp;means all services provided by us to you.
           </span>
         </p>
         <p>
           <strong>"User,"</strong>
-          <span className="fw-400">&nbsp;</span>
+          <span className="font-normal">&nbsp;</span>
           <strong>"you"</strong>
-          <span className="fw-400">&nbsp;or&nbsp;</span>
+          <span className="font-normal">&nbsp;or&nbsp;</span>
           <strong>"your"</strong>
-          <span className="fw-400">
+          <span className="font-normal">
             &nbsp;means an individual who visits or uses the Website.
           </span>
         </p>
         <p>
           <strong>"User Contract"</strong>
-          <span className="fw-400">
+          <span className="font-normal">
             &nbsp;means: (1) this User Agreement; (2) any other contractual
             provisions accepted by both the Client and Freelancer uploaded to
             the Website, to the extent not inconsistent with the User Agreement;
@@ -198,7 +201,7 @@ function Terms() {
         </p>
         <p>
           <strong>"Website"</strong>
-          <span className="fw-400">
+          <span className="font-normal">
             &nbsp;means the Websites operated by Zehmizeh and any of its
             regional or other domains or properties, and any related Zehmizeh
             service, tool or application, specifically including mobile web, any
@@ -246,7 +249,7 @@ function Terms() {
           Website policies and all linked information.
         </p>
         <p>
-          <span className="fw-400">
+          <span className="font-normal">
             You must read and accept all of the terms in and linked to this User
             Agreement, the Zehmizeh Privacy Policy and all Website policies. By
             accepting this User Agreement as you access our Website, you agree
@@ -263,16 +266,18 @@ function Terms() {
 
         <p>You will not use the Website if you:</p>
         <ol>
-          <li className="fw-400">
+          <li className="font-normal">
             are not able to form legally binding contracts;
           </li>
-          <li className="fw-400">are under the age of 18;</li>
-          <li className="fw-400">
+          <li className="font-normal">are under the age of 18;</li>
+          <li className="font-normal">
             are a person barred from receiving and/or rendering services under
             the laws of United States or other applicable jurisdiction;
           </li>
-          <li className="fw-400">are suspended from using the Website; or</li>
-          <li className="fw-400">do not hold a valid email address.</li>
+          <li className="font-normal">
+            are suspended from using the Website; or
+          </li>
+          <li className="font-normal">do not hold a valid email address.</li>
         </ol>
         <p>
           Login credentials should not be shared by users with others.
@@ -305,73 +310,73 @@ function Terms() {
           of the following:
         </p>
         <ol>
-          <li className="fw-400">
+          <li className="font-normal">
             post content or items in inappropriate categories or areas on our
             Websites and services;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             infringe any laws, third party rights or our policies;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             fail to deliver payment for services delivered to you;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             fail to deliver Freelancer Services purchased from you;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             circumvent or manipulate our fee structure, the billing process, or
             fees owed to Zehmizeh;
           </li>
-          <li className="fw-400">
-            <span className="fw-400">post content that is unlawful, </span>
+          <li className="font-normal">
+            <span className="font-normal">post content that is unlawful, </span>
             <em>
-              <span className="fw-400">unhalachik</span>
+              <span className="font-normal">unhalachik</span>
             </em>
-            <span className="fw-400">
+            <span className="font-normal">
               , plagiarized, discriminatory, offensive, threatening, abusive,
               false, inaccurate, misleading, deceptive, defamatory, invasive of
               privacy, or offensive;
             </span>
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             take any action that may undermine the feedback or reputation
             systems (such as displaying, importing or exporting feedback
             information or using it for purposes unrelated to the Website);
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             transfer your Zehmizeh account (including feedback) and Username to
             another party without our consent;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             distribute or post spam, unsolicited or bulk electronic
             communications, chain letters, or pyramid schemes;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             distribute viruses or any other technologies that may harm Zehmizeh,
             the Website, or the interests or property of Zehmizeh users
             (including their Intellectual Property Rights, privacy, and
             publicity rights)
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             download and aggregate listings from the Website for display with
             listings from other websites without our express written permission,
             "frame," "mirror," or otherwise incorporate any part of the Website
             into any other website without our prior written authorization;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             attempt to modify, translate, adapt, edit, decompile, disassemble,
             or reverse engineer any software programs used by us in connection
             with the Website;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             copy, modify, or distribute rights or content from the Website or
             Zehmizeh’s copyrights and trademarks;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             harvest or otherwise collect information about Users, including
             email addresses, without the Users’ consent; or
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             use Zehmizeh to facilitate money exchanges, including, but not
             limited to, cryptocurrency (e.g., bitcoin).
           </li>
@@ -393,43 +398,43 @@ function Terms() {
           copyright infringement notice ("Notice") should include the following:
         </p>
         <ul>
-          <li className="fw-400">
+          <li className="font-normal">
             Identification of your copyrighted work and what is protected under
             the copyright(s) that you are referring to;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             Your copyright certificate(s)/designation(s) and the type, e.g.,
             registered or unregistered;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             Proof of your copyrights ownership, such as the registration number
             or a copy of the registration certificate;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             A short description of how our user(s) allegedly infringe(s) your
             copyright(s);
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             Clear reference to the materials you allege are infringing and which
             you are requesting to be removed, for example, the GIG® url, a link
             to the deliverable provided to a user, etc.;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             Your complete name, address, email address, and telephone number;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             A statement that you have a good faith belief that use of the
             material in the manner complained of is not authorized by the
             copyright owner, its agent, or the law;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             A statement made under penalty of perjury that the information
             provided in the notice is accurate and that you are the copyright
             owner or the owner of an exclusive right that is being infringed, or
             are authorized to make the complaint on behalf of the copyright
             owner or the owner of an exclusive right that is being infringed.
           </li>
-          <li className="fw-400">Your electronic or physical signature</li>
+          <li className="font-normal">Your electronic or physical signature</li>
         </ul>
         <p>
           If you fail to comply with all of the requirements of Section
@@ -438,13 +443,13 @@ function Terms() {
         <p>
           You can send your Notice to our designated DMCA / Copyright Claims
           Agent at:{" "}
-          <a
+          <Link
             className="email-link"
             href="mailto:info@zehmizeh.com"
             target="blank"
           >
             info@zehmizeh.com
-          </a>
+          </Link>
         </p>
         <p>
           Note that we will provide the user who is allegedly infringing your
@@ -474,24 +479,26 @@ function Terms() {
           include substantially the following:
         </p>
         <ul>
-          <li className="fw-400">Your physical or electronic signature.</li>
-          <li className="fw-400">
+          <li className="font-normal">
+            Your physical or electronic signature.
+          </li>
+          <li className="font-normal">
             An identification of the material that has been removed or to which
             access has been disabled and the location at which the material
             appeared before it was removed or access disabled.
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             Adequate information by which we can contact you (including your
             name, postal address, telephone number and, if available, e-mail
             address).
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             A statement under penalty of perjury by you that you have a good
             faith belief that the material identified above was removed or
             disabled as a result of a mistake or misidentification of the
             material to be removed or disabled.
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             A statement that you will consent to the jurisdiction of the Federal
             District Court for the judicial district in which your address is
             located (or if you reside outside the United States for any judicial
@@ -524,50 +531,52 @@ function Terms() {
           following:
         </p>
         <ul>
-          <li className="fw-400">
+          <li className="font-normal">
             Identification of your trademark and the goods/services for which
             you claim trademark rights;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             Your trademark registration certificate and a printout from the
             pertinent country's trademark office records showing current status
             and title of the registration. Alternatively, a statement that your
             mark is unregistered, together with a court ruling confirming your
             rights;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             A short description of how our user(s) allegedly infringe(s) your
             trademark(s);
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             Clear reference to the materials you allege are infringing and which
             you are requesting to be removed;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             Your complete name, address, email address, and telephone number;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             A statement that you have a good faith belief that use of the
             material in the manner complained of is not authorized by the
             trademark owner, its agent, or the law;
           </li>
-          <li className="fw-400">
+          <li className="font-normal">
             A statement made under penalty of perjury that the information
             provided in the notice is accurate and that you are the trademark or
             are authorized to make the complaint on behalf of the trademark
             owner; and
           </li>
-          <li className="fw-400">Your electronic or physical signature.</li>
+          <li className="font-normal">
+            Your electronic or physical signature.
+          </li>
         </ul>
         <p>
           You can send your Notice to:{" "}
-          <a
+          <Link
             className="email-link"
             href="mailto:info@zehmizeh.com"
             target="blank"
           >
             info@zehmizeh.com
-          </a>
+          </Link>
         </p>
         <p>
           Note that we will provide the user who is allegedly infringing your
@@ -813,7 +822,7 @@ function Terms() {
           </p>
         </div>
         <p>
-          <span className="fw-400">
+          <span className="font-normal">
             Most browsers allow you to turn off cookies. To do this, look at the
             &ldquo;help&rdquo; menu on your browser. Switching off cookies may
             restrict your use of the Site and/or delay or affect the way in
@@ -2075,7 +2084,7 @@ function Terms() {
         </h2>
 
         <p>
-          <span className="fw-400">
+          <span className="font-normal">
             This Agreement and the Additional Terms set forth or referenced in
             Item 38 of this Agreement contain the entire understanding and
             agreement between you and Zehmizeh. The terms of the Agreement shall
@@ -2124,13 +2133,13 @@ function Terms() {
           If you have any questions about this User Agreement or if you wish to
           report breaches of this User Agreement, please contact us by emailing
           us at&nbsp;
-          <a
+          <Link
             className="email-link"
             href="mailto:info@zehmizeh.com"
             target="blank"
           >
             info@zehmizeh.com
-          </a>
+          </Link>
         </p>
         <p>
           <br />

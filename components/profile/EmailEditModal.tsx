@@ -252,7 +252,7 @@ const EmailEditModal = ({
         </Button>
 
         <div className="flex flex-column gap-4">
-          <header className="fs-28 fw-400">Edit Email</header>
+          <header className="fs-28 font-normal">Edit Email</header>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <label className="flex items-center opacity-75">
@@ -269,7 +269,7 @@ const EmailEditModal = ({
 
               {isOtpSent ? (
                 <div
-                  className="edit-button pointer position-absolute fs-1rem fw-400"
+                  className="edit-button pointer position-absolute fs-1rem font-normal"
                   onClick={handleToggleEmail}
                 >
                   Change
@@ -297,7 +297,7 @@ const EmailEditModal = ({
               onSubmit={verifyOtpAndChangeEmail}
               className="flex flex-column gap-4"
             >
-              <div className="fs-15 fw-400 opacity-75">
+              <div className="fs-15 font-normal opacity-75">
                 Check your email. We&apos;ve sent a 6 digit code. Do not share
                 this code with anyone.
               </div>

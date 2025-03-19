@@ -116,27 +116,21 @@ const ProfileDetailSection = ({
       $isrequired={isrequired}
     >
       <div className="flex items-center justify-between">
-        <div className="fs-24 fw-400">{title}</div>
+        <div className="fs-24 font-normal">{title}</div>
         <div className="flex items-center gap-2">
           {isrequired && <RequiredTag>Required</RequiredTag>}
           {add ? (
             <div
-              className="button add-btn pointer fs-1rem fw-400"
+              className="button add-btn pointer fs-1rem font-normal"
               onClick={onEdit}
             >
               Add
             </div>
           ) : edit ? (
-            <EditIcon
-              className="cursor-pointer"
-              onClick={onEdit}
-            />
+            <EditIcon className="cursor-pointer" onClick={onEdit} />
           ) : null}
           {deleteOption && (
-            <DeleteIcon
-              className="cursor-pointer"
-              onClick={onDelete}
-            />
+            <DeleteIcon className="cursor-pointer" onClick={onDelete} />
           )}
         </div>
       </div>

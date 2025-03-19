@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 // import { Spinner } from "react-bootstrap";
 import Spinner from "@/components/forms/Spin/Spinner"
+import CustomButton from "@/components/custombutton/CustomButton";
 import {
   FreelancerContent,
   FreelancerProfileWrapper,
@@ -47,6 +48,7 @@ const FreelancerProfileSettings = () => {
   const searchParams = useSearchParams();
   const { setUser, user } = useAuth();
 
+  const decodedTabKey = decodeURIComponent(params.tabkey);
   const { profileData, isLoading, isRefetching, refetch } = useProfile();
 
   useEffect(() => {
@@ -95,7 +97,7 @@ const FreelancerProfileSettings = () => {
   };
 
   const tabUI = () => {
-    switch (params.tabkey) {
+    switch (decodedTabKey) {
       case FREELANCER_PROFILE_TABS.PROFILE:
         return <Profile />;
       case FREELANCER_PROFILE_TABS.PORTFOLIO:
@@ -122,7 +124,10 @@ const FreelancerProfileSettings = () => {
                 <Spinner  className="ms-1" />
               ) : null}
             </BackButton>
+
+
             <StyledButton
+              className="hover:scale-105 transition-all duration-300 hover:shadow-sm"
               background="white"
               variant="light"
               onClick={() => {

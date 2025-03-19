@@ -1,19 +1,19 @@
 /*
  * This is the Invite freelacner modal - This will list some recommended freelancers in the modal
  */
-import { useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import toast from 'react-hot-toast';
-import { useQuery } from 'react-query';
-import styled from 'styled-components';
-import { StyledButton } from 'components/forms/Buttons';
-import Loader from 'components/Loader';
-import TalentComponent from './talent-component';
-import { StyledModal } from 'components/styled/StyledModal';
-import PaginationComponent from 'components/ui/Pagination';
-import { getRecommendedFreelancers } from 'helpers/http/search';
-import { breakpoints } from 'helpers/hooks/useResponsive';
-import NoDataFound from 'components/ui/NoDataFound';
+import { useState } from "react";
+import { Modal, Button } from "react-bootstrap";
+import toast from "react-hot-toast";
+import { useQuery } from "react-query";
+import styled from "styled-components";
+import { StyledButton } from "components/forms/Buttons";
+import Loader from "components/Loader";
+import TalentComponent from "./talent-component";
+import { StyledModal } from "components/styled/StyledModal";
+import PaginationComponent from "components/ui/Pagination";
+import { getRecommendedFreelancers } from "helpers/http/search";
+import { breakpoints } from "helpers/hooks/useResponsive";
+import NoDataFound from "components/ui/NoDataFound";
 
 type Props = {
   show: boolean;
@@ -60,7 +60,7 @@ const InviteFreelancer = ({ show, jobPostId, toggle, onNext }: Props) => {
 
   const onContinue = () => {
     if (selectedFreelancers.length == 0) {
-      toast.error('Please select freelancer(s).');
+      toast.error("Please select freelancer(s).");
       return;
     }
     onNext(selectedFreelancers);
@@ -68,7 +68,7 @@ const InviteFreelancer = ({ show, jobPostId, toggle, onNext }: Props) => {
   };
 
   const { data, isLoading, isRefetching } = useQuery(
-    ['recommended-freelancers', jobPostId, currentPage],
+    ["recommended-freelancers", jobPostId, currentPage],
     () =>
       getRecommendedFreelancers({
         job_id: jobPostId,
@@ -94,9 +94,9 @@ const InviteFreelancer = ({ show, jobPostId, toggle, onNext }: Props) => {
 
   const onPageChange = (page: { selected: number }) => {
     /* This will set next page as active and load new page data - Pagination is implemented locally  */
-    const listContainer = document.getElementById('list');
+    const listContainer = document.getElementById("list");
     if (listContainer) {
-      listContainer.scroll({ top: 0, behavior: 'smooth' });
+      listContainer.scroll({ top: 0, behavior: "smooth" });
     }
     setCurrentPage(page?.selected + 1);
   };
@@ -138,7 +138,7 @@ const InviteFreelancer = ({ show, jobPostId, toggle, onNext }: Props) => {
 
           <div className="d-flex g-2 bottom-buttons flex-wrap">
             <StyledButton
-              className="fs-16 fw-400"
+              className="fs-16 font-normal"
               variant="primary"
               padding="0.8125rem 2rem"
               onClick={onContinue}

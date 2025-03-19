@@ -142,7 +142,9 @@ export const stripeIntercomStatusHandler = (stp_account_id: string, stp_account_
 export const isStagingEnv = () => ['beta.zehmizeh.com', 'localhost'].includes(window?.location?.hostname);
 
 export const pusherApiKey = () =>
-  isStagingEnv() ? process.env.REACT_APP_PUSHER_API_KEY : process.env.REACT_APP_PUSHER_API_KEY_PROD;
+  isStagingEnv() 
+    ? process.env.NEXT_PUBLIC_PUSHER_API_KEY || process.env.REACT_APP_PUSHER_API_KEY 
+    : process.env.NEXT_PUBLIC_PUSHER_API_KEY_PROD || process.env.REACT_APP_PUSHER_API_KEY_PROD;
 
 export const talkjsApiKey = () =>
   isStagingEnv() ? process.env.REACT_APP_TALKJS_APP_ID : process.env.REACT_APP_TALKJS_APP_ID_PROD;

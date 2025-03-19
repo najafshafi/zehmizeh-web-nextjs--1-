@@ -1,12 +1,12 @@
-"use client"
-import { useCallback, useState } from 'react';
-import { FormWrapper } from './steps.styled';
-import { Container } from 'react-bootstrap';
-import EditPictureModal from '@/components/ui/EditPictureModal';
-import  EditBlueIcon  from '@/public/icons/edit-blue-outline.svg';
-import { StyledButton } from '@/components/forms/Buttons';
-import { IClientDetails } from '@/helpers/types/client.type';
-import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
+"use client";
+import { useCallback, useState } from "react";
+import { FormWrapper } from "./steps.styled";
+import { Container } from "react-bootstrap";
+import EditPictureModal from "@/components/ui/EditPictureModal";
+import EditBlueIcon from "@/public/icons/edit-blue-outline.svg";
+import { StyledButton } from "@/components/forms/Buttons";
+import { IClientDetails } from "@/helpers/types/client.type";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 
 type TData = Partial<IClientDetails & IFreelancerDetails>;
 
@@ -34,7 +34,7 @@ export const ProfilePhoto = ({
   }, []);
 
   const handleImageChange = (uploadedUrl: string) => {
-    handleChange('user_image', uploadedUrl);
+    handleChange("user_image", uploadedUrl);
 
     setShowEditPictureModal(false);
   };
@@ -42,7 +42,7 @@ export const ProfilePhoto = ({
   return (
     <FormWrapper className="d-flex flex-column">
       <Container className="mt-3 px-0 d-flex flex-column">
-        <div className="fs-sm fw-400 mb-3">
+        <div className="fs-sm font-normal mb-3">
           <b className="fs-18">Profile Pic</b> (Optional)
           <p className="mt-2 mb-0 text-justify fs-base text-secondary">
             To make your profile even more personable, you can add a profile
@@ -57,7 +57,7 @@ export const ProfilePhoto = ({
         >
           <img
             className="img"
-            src={formState?.user_image || '/images/default_avatar.png'}
+            src={formState?.user_image || "/images/default_avatar.png"}
             alt="freelancer-profile"
           />
           <div className="edit-picture-btn d-flex align-items-center justify-content-center">

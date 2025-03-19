@@ -1,18 +1,25 @@
-"use client"
-import { Modal, Button } from 'react-bootstrap';
-import { StyledButton } from '@/components/forms/Buttons';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { useEffect, useState } from 'react';
-import moment from 'moment';
+"use client";
+import { Modal, Button } from "react-bootstrap";
+import { StyledButton } from "@/components/forms/Buttons";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { useEffect, useState } from "react";
+import moment from "moment";
 
 type Props = {
   show: boolean;
   loading: boolean;
   toggle: () => void;
-  handleClick: (data: 'ACCEPT_AND_DECLINE_REST' | 'ACCEPT_AND_LEAVE_OPEN') => void;
+  handleClick: (
+    data: "ACCEPT_AND_DECLINE_REST" | "ACCEPT_AND_LEAVE_OPEN"
+  ) => void;
 };
 
-export const HiringMoreFreelancerModal = ({ show, toggle, handleClick, loading }: Props) => {
+export const HiringMoreFreelancerModal = ({
+  show,
+  toggle,
+  handleClick,
+  loading,
+}: Props) => {
   const [showInformationModal, setShowInformationModal] = useState(false);
 
   // Reseting state when modal is not open
@@ -32,12 +39,15 @@ export const HiringMoreFreelancerModal = ({ show, toggle, handleClick, loading }
 
   const ConfirmationPopup = (
     <div className="text-center">
-      <div className="modal-title fs-24 fw-700">Would you like to hire more freelancers?</div>
+      <div className="modal-title fs-24 fw-700">
+        Would you like to hire more freelancers?
+      </div>
 
       <p className="my-4">
         Would you like to accept this freelancer and decline the others?
         <br />
-        Or would you like to keep the project post open so you can hire more freelancers?
+        Or would you like to keep the project post open so you can hire more
+        freelancers?
       </p>
 
       <div className="d-flex gap-3 align-items-center justify-content-center">
@@ -45,12 +55,16 @@ export const HiringMoreFreelancerModal = ({ show, toggle, handleClick, loading }
           onClick={() => {
             setShowInformationModal(true);
           }}
-          className="d-flex align-items-center gap-3 text-capitalize"
+          className="d-flex align-items-center gap-3 capitalize"
           disabled={loading}
         >
           Accept & Leave Open
         </StyledButton>
-        <StyledButton variant="outline-dark" onClick={() => handleClick('ACCEPT_AND_DECLINE_REST')} disabled={loading}>
+        <StyledButton
+          variant="outline-dark"
+          onClick={() => handleClick("ACCEPT_AND_DECLINE_REST")}
+          disabled={loading}
+        >
           Accept & Decline the Rest
         </StyledButton>
       </div>
@@ -60,21 +74,23 @@ export const HiringMoreFreelancerModal = ({ show, toggle, handleClick, loading }
   const InformationPopup = (
     <div className="text-center">
       <div className="modal-title fs-24 fw-700">
-        You can continue accepting proposals and inviting more freelancers to this project.
+        You can continue accepting proposals and inviting more freelancers to
+        this project.
       </div>
 
       <p className="my-4">
-        In 65 Days ({moment().add('65', 'days').format('MMM DD, YYYY')}), your project post will close. Every time you
-        accept a freelancer, the time will be extended again.
+        In 65 Days ({moment().add("65", "days").format("MMM DD, YYYY")}), your
+        project post will close. Every time you accept a freelancer, the time
+        will be extended again.
       </p>
 
       <div className="d-flex gap-3 align-items-center justify-content-center">
         <StyledButton
           onClick={() => {
-            handleClick('ACCEPT_AND_LEAVE_OPEN');
+            handleClick("ACCEPT_AND_LEAVE_OPEN");
           }}
           disabled={loading}
-          className="d-flex align-items-center gap-3 text-capitalize"
+          className="d-flex align-items-center gap-3 capitalize"
         >
           Close
         </StyledButton>
@@ -83,11 +99,21 @@ export const HiringMoreFreelancerModal = ({ show, toggle, handleClick, loading }
   );
 
   return (
-    <StyledModal maxwidth={678} show={show} size="lg" onHide={toggleWrapper} centered>
+    <StyledModal
+      maxwidth={678}
+      show={show}
+      size="lg"
+      onHide={toggleWrapper}
+      centered
+    >
       <Modal.Body>
         {!loading && (
           <>
-            <Button variant="transparent" className="close" onClick={toggleWrapper}>
+            <Button
+              variant="transparent"
+              className="close"
+              onClick={toggleWrapper}
+            >
               &times;
             </Button>
           </>

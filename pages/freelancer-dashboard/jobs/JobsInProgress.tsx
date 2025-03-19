@@ -24,13 +24,13 @@ const JobsInProgress = () => {
             key={item.job_post_id}
             className="no-hover-effect"
           >
-            <ProposalWrapper className="mt-3 d-flex flex-column pointer no-hover-effect">
-              <div className="job-title fs-18 fw-400">
+            <ProposalWrapper className="mt-3 flex flex-col cursor-pointer no-hover-effect">
+              <div className="job-title text-lg font-normal">
                 {convertToTitleCase(item.job_title)}
               </div>
-              <div className="proposal__details d-flex align-items-center flex-wrap">
+              <div className="proposal__details flex items-center flex-wrap">
                 {/* Client details */}
-                <div className="d-flex align-items-center mt-2">
+                <div className="flex items-center mt-2">
                   <BlurredImage
                     src={item?.user_image || '/images/default_avatar.png'}
                     className="proposal__client-profile-img"
@@ -40,23 +40,23 @@ const JobsInProgress = () => {
                     type="small"
                   />
                   <div>
-                    <div className="proposal__client-detail-label fs-sm fw-400">
+                    <div className="proposal__client-detail-label text-sm font-normal">
                       Client:
                     </div>
-                    <div className="fs-1rem fw-400 text-capitalize">
+                    <div className="text-sm font-normal capitalize">
                       {item?.first_name} {item?.last_name}
                     </div>
                   </div>
                 </div>
 
                 {/* Divider */}
-                <div className="divider d-none d-lg-block" />
+                <div className="divider hidden lg:block" />
 
                 {/* Budget */}
 
-                <div className="proposal__budget d-flex width-fit-content justify-content-center align-items-center flex-wrap">
+                <div className="proposal__budget flex items-center justify-center flex-wrap">
                   <DollarCircleIcon />
-                  <div className="proposal__budget-value fs-1rem fw-400 d-flex">
+                  <div className="proposal__budget-value flex">
                     <>
                       {numberWithCommas(item?.approved_budget?.amount, 'USD')}
                       {item?.approved_budget?.type === 'hourly' ? (

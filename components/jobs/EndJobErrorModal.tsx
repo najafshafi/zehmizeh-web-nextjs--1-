@@ -1,11 +1,11 @@
 /*
  * This is the end job error modal - this will be opened when any error comes while ending the job
  */
-import { Modal, Button } from 'react-bootstrap';
-import styled from 'styled-components';
-import { StyledButton } from '@/components/forms/Buttons';
-import { StyledModal } from '@/components/styled/StyledModal';
-import ErrorIcon  from '@/public/icons/error-orange-icon.svg';
+import { Modal, Button } from "react-bootstrap";
+import styled from "styled-components";
+import { StyledButton } from "@/components/forms/Buttons";
+import { StyledModal } from "@/components/styled/StyledModal";
+import ErrorIcon from "@/public/icons/error-orange-icon.svg";
 
 type Props = {
   show: boolean;
@@ -29,13 +29,13 @@ const EndJobErrorModal = ({ show, toggle, goToMilestones, error }: Props) => {
         </Button>
         <Content className="d-flex flex-column justify-content-center align-items-center">
           <ErrorIcon />
-          <div className="description fs-20 fw-400 text-center">
+          <div className="description fs-20 font-normal text-center">
             {error ||
-              'Please complete/close all the remaining milestones in order to end the project.'}
+              "Please complete/close all the remaining milestones in order to end the project."}
           </div>
           {goToMilestones ? (
             <StyledButton
-              className="fs-16 fw-400 mt-4"
+              className="fs-16 font-normal mt-4"
               variant="primary"
               padding="1.125rem 2.25rem"
               onClick={goToMilestones}

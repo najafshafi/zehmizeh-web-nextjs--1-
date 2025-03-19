@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 export const FAQ_QUESTIONS: Record<string, { question: string; answer: ReactNode }[]> = {
   basics: [
@@ -8,14 +8,14 @@ export const FAQ_QUESTIONS: Record<string, { question: string; answer: ReactNode
       answer: (
         <div>
           <p>
-            So ZehMizeh is not a recruitment agency. We're what's called a “freelancing marketplace,” - a platform where
+            So ZehMizeh is not a recruitment agency. We&apos;re what&apos;s called a “freelancing marketplace,” - a platform where
             clients can hire professionals from different industries to complete short-term projects.
           </p>
           <br />
           <p>
             <u>
               <Link
-                to="https://intercom.help/zehmizehfaq/en/articles/9491948-how-does-zehmizeh-work-you-re-finding-me-a-job"
+                href="https://intercom.help/zehmizehfaq/en/articles/9491948-how-does-zehmizeh-work-you-re-finding-me-a-job"
                 target="_blank"
               >
                 How Projects on ZehMizeh Work
@@ -26,7 +26,7 @@ export const FAQ_QUESTIONS: Record<string, { question: string; answer: ReactNode
           <b>Step 1:</b>
           <p className="mb-2">
             Clients post descriptions of the work they need to get done on the Project Board. Approved freelancers can
-            see them by clicking the "Find Projects" button.
+            see them by clicking the &quot;Find Projects&quot; button.
           </p>
           <b>Step 2:</b>
           <p className="mb-2">
@@ -39,7 +39,7 @@ export const FAQ_QUESTIONS: Record<string, { question: string; answer: ReactNode
             completes the project and submits the work to the client.
           </p>
           <b>Step 4:</b>
-          <p>The client sends money through the site directly to the freelancer's account.</p>
+          <p>The client sends money through the site directly to the freelancer&apos;s account.</p>
         </div>
       ),
     },
@@ -111,8 +111,8 @@ export const FAQ_QUESTIONS: Record<string, { question: string; answer: ReactNode
           </ul>
           <p>
             - they can send an Off-Site Partnership Request in order to take their working relationship off the website
-            with ZehMizeh's approval. When this request is approved, users can legally and halachically continue their
-            working relationship without violating ZehMizeh's Terms of Service.
+            with ZehMizeh&apos;s approval. When this request is approved, users can legally and halachically continue their
+            working relationship without violating ZehMizeh&apos;s Terms of Service.
           </p>
         </div>
       ),
@@ -214,7 +214,7 @@ export const FAQ_QUESTIONS: Record<string, { question: string; answer: ReactNode
             probably an issue with your profile. See the article{' '}
             <u>
               <Link
-                to="https://intercom.help/zehmizehfaq/en/articles/9491354-why-hasn-t-my-account-been-approved-yet"
+                href="https://intercom.help/zehmizehfaq/en/articles/9491354-why-hasn-t-my-account-been-approved-yet"
                 target="_blank"
               >
                 Why hasn’t my account been approved yet?

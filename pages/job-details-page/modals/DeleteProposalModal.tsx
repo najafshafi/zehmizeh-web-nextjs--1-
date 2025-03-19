@@ -5,7 +5,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { deleteProposal } from '@/helpers/http/proposals';
 import { useRouter } from 'next/navigation'; // Replaced useNavigate
-import { Spinner } from '@/components/ui/Spinner'; // Custom Spinner component
+import Spinner from "@/components/forms/Spin/Spinner";
 
 // Type definitions
 interface DeleteProposalModalProps {

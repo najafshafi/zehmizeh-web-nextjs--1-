@@ -77,23 +77,21 @@ const NavbarProfile = () => {
   }, [handleResize, handleClickOutside]);
 
   const handleLogout = () => {
-    // Close dropdown and add visual indication
+    // Close dropdown
     setIsProfileDropdownOpen(false);
-
-    signout();
-    // Begin navigation immediately
-    router.push("/home");
-
-    // Sign out in the background after a minimal delay
-    setTimeout(() => {
-      try {
-        if (user) {
-          signout();
-        }
-      } catch (error) {
-        console.error("Error during sign out:", error);
-      }
-    }, 100);
+    
+    // Use the global logout function if available, otherwise fall back to context signout
+    if (typeof window !== 'undefined' && 'handleGlobalLogout' in window) {
+      // @ts-expect-error - Global function added by NavbarLogin
+      window.handleGlobalLogout();
+    } else {
+      // Fallback to original logout logic
+      signout();
+      // Add small delay before navigation to ensure auth state updates
+      setTimeout(() => {
+        router.replace("/home");
+      }, 50);
+    }
   };
 
   const NavLink = ({ href, label }: NavigationItem) => (
@@ -188,12 +186,10 @@ const NavbarProfile = () => {
                 height={50}
                 alt="User avatar"
                 priority
-                style={{ width: "auto", height: "auto" }}
+                style={{ width: 'auto', height: 'auto' }}
               />
               <p className="flex items-center gap-2 text-lg text-[#212529]">
-                {user?.first_name && user?.last_name
-                  ? `${user.first_name} ${user.last_name}`
-                  : "User"}
+                {user?.first_name && user?.last_name ? `${user.first_name} ${user.last_name}` : "User"}
                 <IoIosArrowDown
                   size={20}
                   className={`transition-transform ${

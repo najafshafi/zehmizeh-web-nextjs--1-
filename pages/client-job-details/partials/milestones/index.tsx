@@ -1,76 +1,80 @@
-import { useState } from 'react';
-import moment from 'moment';
-import toast from 'react-hot-toast';
-import { MilestonesWrapper, MileStoneListItem } from './milestones.styled';
-import { StatusBadge } from 'components/styled/Badges';
-import { StyledButton } from 'components/forms/Buttons';
-import AttachmentPreview from 'components/ui/AttachmentPreview';
-import DeclineReasonPrompt from '../DeclineReasonPrompt';
-import PaymentModal from '../payment/PaymentModal';
-import ConfirmPaymentModal from '../payment/ConfirmPaymentModal';
-import { convertToTitleCase, formatLocalDate, numberWithCommas } from 'helpers/utils/misc';
-import { manageMilestone, manageMilestoneNew } from 'helpers/http/jobs';
-import { usePayments } from 'pages/client-job-details/controllers/usePayments';
-import StyledHtmlText from 'components/ui/StyledHtmlText';
-import { ReactComponent as CheckMark } from 'assets/icons/check-mark-green.svg';
-import { paymentProcessingStatusHandler } from 'helpers/validation/common';
-import { CLIENT_HOW_TO_PROJECT_BASED_PROJECTS } from 'helpers/const/CONFIG';
-import { ReactComponent as Info } from 'assets/icons/info-octashape.svg';
-import { VideoComponent } from 'components/video';
-import styled from 'styled-components';
-import { TcomponentConnectorRef } from 'pages/client-job-details/ClientJobDetails';
-import { getValueByPercentage } from 'helpers/utils/helper';
-import { AcceptAndPaynowModal } from '../payment/AcceptAndPaynowModal';
+import { useState } from "react";
+import moment from "moment";
+import toast from "react-hot-toast";
+import { MilestonesWrapper, MileStoneListItem } from "./milestones.styled";
+import { StatusBadge } from "components/styled/Badges";
+import { StyledButton } from "components/forms/Buttons";
+import AttachmentPreview from "components/ui/AttachmentPreview";
+import DeclineReasonPrompt from "../DeclineReasonPrompt";
+import PaymentModal from "../payment/PaymentModal";
+import ConfirmPaymentModal from "../payment/ConfirmPaymentModal";
+import {
+  convertToTitleCase,
+  formatLocalDate,
+  numberWithCommas,
+} from "helpers/utils/misc";
+import { manageMilestone, manageMilestoneNew } from "helpers/http/jobs";
+import { usePayments } from "pages/client-job-details/controllers/usePayments";
+import StyledHtmlText from "components/ui/StyledHtmlText";
+import { ReactComponent as CheckMark } from "assets/icons/check-mark-green.svg";
+import { paymentProcessingStatusHandler } from "helpers/validation/common";
+import { CLIENT_HOW_TO_PROJECT_BASED_PROJECTS } from "helpers/const/CONFIG";
+import { ReactComponent as Info } from "assets/icons/info-octashape.svg";
+import { VideoComponent } from "components/video";
+import styled from "styled-components";
+import { TcomponentConnectorRef } from "pages/client-job-details/ClientJobDetails";
+import { getValueByPercentage } from "helpers/utils/helper";
+import { AcceptAndPaynowModal } from "../payment/AcceptAndPaynowModal";
 
 // Payment status configurations with color and label mappings
 const PAYMENT_STATUS = {
   pending: {
-    color: 'yellow',
-    label: 'Milestone Proposal Pending',
+    color: "yellow",
+    label: "Milestone Proposal Pending",
   },
   released: {
-    color: 'gray',
-    label: 'Paid',
+    color: "gray",
+    label: "Paid",
   },
   paid: {
-    color: 'green',
-    label: 'Milestone Accepted',
+    color: "green",
+    label: "Milestone Accepted",
   },
   under_dispute: {
-    color: 'darkPink',
-    label: 'Under Dispute',
+    color: "darkPink",
+    label: "Under Dispute",
   },
   waiting_for_release: {
-    color: 'yellow',
-    label: 'Waiting for Approval',
+    color: "yellow",
+    label: "Waiting for Approval",
   },
   decline: {
-    color: 'darkPink',
-    label: 'Milestone Terminated',
+    color: "darkPink",
+    label: "Milestone Terminated",
   },
   declined: {
-    color: 'darkPink',
-    label: 'Milestone Terminated',
+    color: "darkPink",
+    label: "Milestone Terminated",
   },
   payment_processing: {
-    color: 'yellow',
-    label: 'Payment Processing',
+    color: "yellow",
+    label: "Payment Processing",
   },
   cancelled: {
-    color: 'darkPink',
-    label: 'Canceled by Freelancer',
+    color: "darkPink",
+    label: "Canceled by Freelancer",
   },
   request_revision: {
-    color: 'yellow',
-    label: 'Revisions Requested',
+    color: "yellow",
+    label: "Revisions Requested",
   },
   completed_by_freelancer: {
-    color: 'yellow',
-    label: 'Completed - Freelancer Waiting for Payment',
+    color: "yellow",
+    label: "Completed - Freelancer Waiting for Payment",
   },
   decline_dispute: {
-    color: 'darkPink',
-    label: '',
+    color: "darkPink",
+    label: "",
   },
 };
 
@@ -102,11 +106,18 @@ const Milestones = ({
   isRefetching: boolean;
   componentConnectorRef?: TcomponentConnectorRef;
 }) => {
-  const { setAmount, setJobType, selectedPaymentMethod, payDirectlyToFreelancer } = usePayments();
+  const {
+    setAmount,
+    setJobType,
+    selectedPaymentMethod,
+    payDirectlyToFreelancer,
+  } = usePayments();
 
-  const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>('');
-  const [requestingRivisions, setRequestingRivisions] = useState<boolean>(false);
-  const [declineReasonPropmt, setDeclineReasonPropmt] = useState<boolean>(false);
+  const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>("");
+  const [requestingRivisions, setRequestingRivisions] =
+    useState<boolean>(false);
+  const [declineReasonPropmt, setDeclineReasonPropmt] =
+    useState<boolean>(false);
   const [isPayNow, setIsPayNow] = useState(false);
 
   const [modalsState, setModalsState] = useState<{
@@ -128,7 +139,7 @@ const Milestones = ({
   // First this will ask for confirmation... Are you sure?
   const askForConfirmation = (item: any) => () => {
     setAmount(item.amount);
-    setJobType('fixed');
+    setJobType("fixed");
     setModalsState({
       ...modalsState,
       showConfirmationModal: true,
@@ -137,14 +148,14 @@ const Milestones = ({
   };
 
   const closeConfirmPaymentModal = () => {
-    setAmount('');
-    setJobType('');
+    setAmount("");
+    setJobType("");
     setModalsState({ showConfirmationModal: false });
   };
 
   const askForPayNowConfirmation = (item: any) => () => {
     setAmount(item.amount);
-    setJobType('fixed');
+    setJobType("fixed");
     setModalsState({
       ...modalsState,
       showPayNowConfirmationModal: true,
@@ -153,8 +164,8 @@ const Milestones = ({
   };
 
   const closePayNowModal = () => {
-    setAmount('');
-    setJobType('');
+    setAmount("");
+    setJobType("");
     setModalsState({ showPayNowConfirmationModal: false });
   };
 
@@ -162,7 +173,7 @@ const Milestones = ({
   const onConfirm = () => {
     if (modalsState.isReleasePrompt) {
       /* On confirmation of release */
-      updateMilestoneNew(modalsState?.milestone?.milestone_id, 'released');
+      updateMilestoneNew(modalsState?.milestone?.milestone_id, "released");
     } else {
       /* On confirmation for payment */
       setModalsState({
@@ -184,28 +195,32 @@ const Milestones = ({
 
   /* Makes the actual payment and update into database */
   const handlePayment = (tokenId?: string) => {
-    updateMilestoneNew(modalsState?.milestone?.milestone_id, 'paid', tokenId);
+    updateMilestoneNew(modalsState?.milestone?.milestone_id, "paid", tokenId);
   };
 
   const toggleDeclienReasonModal = () => {
     if (declineReasonPropmt) {
-      setSelectedMilestoneId('');
+      setSelectedMilestoneId("");
     }
     setDeclineReasonPropmt(!declineReasonPropmt);
   };
 
   // This will close the payment modal
   const closePaymentModal = () => {
-    setAmount('');
-    setJobType('');
+    setAmount("");
+    setJobType("");
     setModalsState({ showPaymentModal: false });
   };
 
   /* The actual api call to update the status of the milestone */
-  const updateMilestoneNew = async (milestoneId: string, status: string, token?: string) => {
+  const updateMilestoneNew = async (
+    milestoneId: string,
+    status: string,
+    token?: string
+  ) => {
     setSelectedMilestoneId(milestoneId);
     const body: any = {
-      action: 'edit_milestone',
+      action: "edit_milestone",
       status,
       milestone_id: milestoneId,
       payment_method: selectedPaymentMethod,
@@ -215,22 +230,24 @@ const Milestones = ({
     if (token) body.token = token;
 
     // if user selected accept & pay now then calling pay now function else escrow function
-    const promise = isPayNow ? payDirectlyToFreelancer(milestoneId, token) : manageMilestoneNew(body);
+    const promise = isPayNow
+      ? payDirectlyToFreelancer(milestoneId, token)
+      : manageMilestoneNew(body);
 
     toast.promise(promise, {
-      loading: 'Loading...',
+      loading: "Loading...",
       success: ({ data }) => {
-        setSelectedMilestoneId('');
-        setAmount('');
-        setJobType('');
+        setSelectedMilestoneId("");
+        setAmount("");
+        setJobType("");
         setModalsState({});
         refetch();
 
         return data?.response;
       },
       error: (error) => {
-        setSelectedMilestoneId('');
-        return error?.response?.data?.message || 'error';
+        setSelectedMilestoneId("");
+        return error?.response?.data?.message || "error";
       },
     });
   };
@@ -239,28 +256,28 @@ const Milestones = ({
     setSelectedMilestoneId(milestoneId);
     setRequestingRivisions(true);
     const body = {
-      action: 'request_revision',
+      action: "request_revision",
       milestone_id: milestoneId,
     };
     const promise = manageMilestone(body);
     toast.promise(promise, {
-      loading: 'Loading...',
+      loading: "Loading...",
       success: (res) => {
         setRequestingRivisions(false);
-        setSelectedMilestoneId('');
+        setSelectedMilestoneId("");
         refetch();
         return res.response;
       },
       error: (err) => {
         setRequestingRivisions(false);
-        setSelectedMilestoneId('');
-        return err?.response?.data?.message || 'error';
+        setSelectedMilestoneId("");
+        return err?.response?.data?.message || "error";
       },
     });
   };
 
   const onRelease = (item) => () => {
-    setJobType('fixed');
+    setJobType("fixed");
     setAmount(item.amount);
     setModalsState({
       milestone: item,
@@ -270,33 +287,33 @@ const Milestones = ({
   };
 
   const getDateLabel = (milestoneStatus: string) => {
-    let label = '';
+    let label = "";
     switch (milestoneStatus) {
-      case 'released':
-        label = 'Paid on';
+      case "released":
+        label = "Paid on";
         break;
-      case 'paid':
-        label = 'Payment Deposited on';
+      case "paid":
+        label = "Payment Deposited on";
         break;
-      case 'request_revision':
-        label = 'Requested Revision on';
+      case "request_revision":
+        label = "Requested Revision on";
         break;
     }
     return label;
   };
 
   const getDate = (item) => {
-    let date = '';
+    let date = "";
     const milestoneStatus = item.status;
     switch (milestoneStatus) {
-      case 'paid':
-        date = moment(item?.paid_date).format('MMM DD, YYYY');
+      case "paid":
+        date = moment(item?.paid_date).format("MMM DD, YYYY");
         break;
-      case 'released':
-        date = moment(item?.released_date).format('MMM DD, YYYY');
+      case "released":
+        date = moment(item?.released_date).format("MMM DD, YYYY");
         break;
-      case 'request_revision':
-        date = moment(item?.revision_date).format('MMM DD, YYYY');
+      case "request_revision":
+        date = moment(item?.revision_date).format("MMM DD, YYYY");
         break;
     }
     return date;
@@ -318,7 +335,8 @@ const Milestones = ({
   // If there are more than 1 milestone that need to be accepted
   // then opening list modal to show all milestones
   const moreThanOnePendingMilestone =
-    milestone.filter((x) => x?.status === 'pending' && jobstatus === 'active').length > 1;
+    milestone.filter((x) => x?.status === "pending" && jobstatus === "active")
+      .length > 1;
 
   return (
     <MilestonesWrapper>
@@ -332,31 +350,37 @@ const Milestones = ({
           {/* END ------------------------------------------- Video for doing project based projects */}
           <b className="fs-18">What are milestones?</b>
           <p className="mt-2">
-            In project-based projects, freelancers submit 'milestones' <b>BEFORE they do any work.</b>
+            In project-based projects, freelancers submit 'milestones'{" "}
+            <b>BEFORE they do any work.</b>
           </p>
           <p>
-            Milestones are mini-project-proposals, where they propose what work they'll do for a certain percentage of
-            the budget. So if you agreed to pay them $300 for three flyers, they might send three milestones, each
-            valued at $100.
+            Milestones are mini-project-proposals, where they propose what work
+            they'll do for a certain percentage of the budget. So if you agreed
+            to pay them $300 for three flyers, they might send three milestones,
+            each valued at $100.
           </p>
           <p>
-            Alternatively, you don't have to break the budget up. If everyone is happy to just do one payment at the end
-            of the project, the freelancer can send one milestone that represents the whole project in exchange for the
-            whole project's budget.
+            Alternatively, you don't have to break the budget up. If everyone is
+            happy to just do one payment at the end of the project, the
+            freelancer can send one milestone that represents the whole project
+            in exchange for the whole project's budget.
           </p>
           <b className="fs-18">Doing the Project</b>
           <p className="mt-2">
-            When the freelancer sends a milestone and you accept it, you will be charged the fee you're promising to
-            pay. ZMZ will hold that fee while the freelancer works.
+            When the freelancer sends a milestone and you accept it, you will be
+            charged the fee you're promising to pay. ZMZ will hold that fee
+            while the freelancer works.
           </p>
           <p>
-            When the freelancer is done, they will submit the work here in the milestone tab. You'll check that you've
-            received everything that was agreed upon. Once that's confirmed, you'll press the "Deliver Payment" button
-            to release the fee to the freelancer.
+            When the freelancer is done, they will submit the work here in the
+            milestone tab. You'll check that you've received everything that was
+            agreed upon. Once that's confirmed, you'll press the "Deliver
+            Payment" button to release the fee to the freelancer.
           </p>
           <p>
-            <b>For more information</b> , see the "Search for help" section in our Help Center, by clicking the yellow
-            icon in the bottom right corner.
+            <b>For more information</b> , see the "Search for help" section in
+            our Help Center, by clicking the yellow icon in the bottom right
+            corner.
           </p>
         </div>
       )}
@@ -371,8 +395,12 @@ const Milestones = ({
           >
             <div className="d-flex flex-md-row flex-column justify-content-between gap-md-3 gap-4">
               <div>
-                <div className="fs-20 fw-400 capital-first-ltr">{convertToTitleCase(item.title)}</div>
-                <div className="fs-32 fw-400 line-height-100-perc mt-3">{numberWithCommas(item.amount, 'USD')}</div>
+                <div className="fs-20 font-normal capital-first-ltr">
+                  {convertToTitleCase(item.title)}
+                </div>
+                <div className="fs-32 font-normal line-height-100-perc mt-3">
+                  {numberWithCommas(item.amount, "USD")}
+                </div>
 
                 {/* START ----------------------------------------- Showing price client has to pay including fees */}
                 {/*item?.status === 'pending' && (
@@ -386,31 +414,41 @@ const Milestones = ({
               <div className="status">
                 <div className="d-flex flex-column align-items-md-end">
                   <>
-                    <StatusBadge color={PAYMENT_STATUS[item?.status]?.color || 'green'}>
-                      {['decline_dispute'].includes(item.status) && item?.dispute_submitted_by === 'CLIENT'
-                        ? 'Closed by Client'
-                        : ['decline_dispute'].includes(item.status) && item?.dispute_submitted_by === 'FREELANCER'
-                        ? 'Canceled'
-                        : jobstatus !== 'active' && item.status === 'pending'
-                        ? 'Milestone Never Accepted'
-                        : item?.status === 'payment_processing'
+                    <StatusBadge
+                      color={PAYMENT_STATUS[item?.status]?.color || "green"}
+                    >
+                      {["decline_dispute"].includes(item.status) &&
+                      item?.dispute_submitted_by === "CLIENT"
+                        ? "Closed by Client"
+                        : ["decline_dispute"].includes(item.status) &&
+                          item?.dispute_submitted_by === "FREELANCER"
+                        ? "Canceled"
+                        : jobstatus !== "active" && item.status === "pending"
+                        ? "Milestone Never Accepted"
+                        : item?.status === "payment_processing"
                         ? paymentProcessingStatusHandler(item?.payment_method)
                         : PAYMENT_STATUS[item?.status]?.label}
                     </StatusBadge>
                   </>
                   {!!item?.date_created && (
-                    <div className="fs-18 fw-400 mt-3">
+                    <div className="fs-18 font-normal mt-3">
                       Submitted on
-                      {item?.date_created ? ' ' + moment(item?.date_created).format('MMM DD, YYYY') : ' -'}
+                      {item?.date_created
+                        ? " " +
+                          moment(item?.date_created).format("MMM DD, YYYY")
+                        : " -"}
                     </div>
                   )}
                   {!!item.cancelled_date && (
-                    <div className="fs-18 fw-400">
-                      Closed on {item.cancelled_date ? moment(item.cancelled_date).format('MMM DD, YYYY') : ''}
+                    <div className="fs-18 font-normal">
+                      Closed on{" "}
+                      {item.cancelled_date
+                        ? moment(item.cancelled_date).format("MMM DD, YYYY")
+                        : ""}
                     </div>
                   )}
-                  {item?.status !== 'pending' && (
-                    <div className="fs-18 fw-400">
+                  {item?.status !== "pending" && (
+                    <div className="fs-18 font-normal">
                       {getDateLabel(item.status)} {getDate(item)}
                     </div>
                   )}
@@ -419,40 +457,49 @@ const Milestones = ({
             </div>
             <div className="d-flex mt-md-1 flex-md-row flex-column justify-content-between align-items-md-end gap-3">
               <div>
-                <StyledHtmlText needToBeShorten htmlString={item.description} id={`mstone_${item.milestone_id}`} />
+                <StyledHtmlText
+                  needToBeShorten
+                  htmlString={item.description}
+                  id={`mstone_${item.milestone_id}`}
+                />
                 {item.due_date && (
                   <div className="mt-1">
-                    {'Milestone Submission Scheduled: ' + formatLocalDate(item.due_date, 'MMM DD, YYYY')}
+                    {"Milestone Submission Scheduled: " +
+                      formatLocalDate(item.due_date, "MMM DD, YYYY")}
                   </div>
                 )}
               </div>
             </div>
             {/* Only show attachments if milestone is not under dispute */}
-            {item?.attachments && item?.status !== 'under_dispute' && (
+            {item?.attachments && item?.status !== "under_dispute" && (
               <div className="d-flex align-items-center gap-4 flex-wrap mt-3">
-                {item?.attachments.split(',').map((attachment, index: number) => (
-                  <div key={`milestone-${index}`}>
-                    <AttachmentPreview
-                      uploadedFile={attachment}
-                      removable={false}
-                      shouldShowFileNameAndExtension={false}
-                    />
-                  </div>
-                ))}
+                {item?.attachments
+                  .split(",")
+                  .map((attachment, index: number) => (
+                    <div key={`milestone-${index}`}>
+                      <AttachmentPreview
+                        uploadedFile={attachment}
+                        removable={false}
+                        shouldShowFileNameAndExtension={false}
+                      />
+                    </div>
+                  ))}
               </div>
             )}
             {/* Show warning message if milestone is under dispute */}
-            {item?.status === 'under_dispute' && item?.attachments && (
+            {item?.status === "under_dispute" && item?.attachments && (
               <DisputeWarningText>
-                <Info /> Attachments are not available while this milestone is under dispute.
+                <Info /> Attachments are not available while this milestone is
+                under dispute.
               </DisputeWarningText>
             )}
-            {jobstatus === 'active' && item?.status === 'pending' && (
+            {jobstatus === "active" && item?.status === "pending" && (
               <div>
                 {/* Hint text to dont start working until milestone is approved */}
                 {!!item?.failure_message && (
                   <MilestoneHintText className="mb-0 mt-1 fs-20">
-                    <b>Payment Failed:</b> Your last payment failed because {item?.failure_message}
+                    <b>Payment Failed:</b> Your last payment failed because{" "}
+                    {item?.failure_message}
                   </MilestoneHintText>
                 )}
                 <div className="divider my-4" />
@@ -476,46 +523,57 @@ const Milestones = ({
                       </StyledButton>
                     </>
                   )}
-                  {moreThanOnePendingMilestone && componentConnectorRef.current?.openMilestoneListModal && (
-                    <StyledButton
-                      padding="1rem 2rem"
-                      disabled={item?.milestone_id == selectedMilestoneId}
-                      onClick={() => {
-                        componentConnectorRef.current.openMilestoneListModal();
-                      }}
-                    >
-                      Accept Milestone
-                    </StyledButton>
-                  )}
+                  {moreThanOnePendingMilestone &&
+                    componentConnectorRef.current?.openMilestoneListModal && (
+                      <StyledButton
+                        padding="1rem 2rem"
+                        disabled={item?.milestone_id == selectedMilestoneId}
+                        onClick={() => {
+                          componentConnectorRef.current.openMilestoneListModal();
+                        }}
+                      >
+                        Accept Milestone
+                      </StyledButton>
+                    )}
                 </div>
               </div>
             )}
 
-            {item.status === 'completed_by_freelancer' && (
+            {item.status === "completed_by_freelancer" && (
               <div className="mlstn-completed-notice d-flex align-items-center gap-3 mt-4 rounded-lg p-md-3 p-2">
                 <span>
                   <Info />
                 </span>
-                <span className="ms-2 fs-16 fw-400">
-                  The freelancer has submitted all the work and marked this milestone as 'Complete.' Please review the
-                  work and deliver the payment.
+                <span className="ms-2 fs-16 font-normal">
+                  The freelancer has submitted all the work and marked this
+                  milestone as 'Complete.' Please review the work and deliver
+                  the payment.
                 </span>
               </div>
             )}
 
             {/* Deliver payment button on after accepting milestone */}
-            {['paid'].includes(item.status) && (
-              <div className="bottom-buttons d-flex align-items-center gap-3 flex-wrap">{deliverPaymentBtn(item)}</div>
+            {["paid"].includes(item.status) && (
+              <div className="bottom-buttons d-flex align-items-center gap-3 flex-wrap">
+                {deliverPaymentBtn(item)}
+              </div>
             )}
-            {['waitingForRelease', 'waiting_for_release', 'request_revision', 'completed_by_freelancer'].includes(
-              item?.status
-            ) ? (
+            {[
+              "waitingForRelease",
+              "waiting_for_release",
+              "request_revision",
+              "completed_by_freelancer",
+            ].includes(item?.status) ? (
               <>
                 <div className="divider my-4" />
                 <div className="bottom-buttons d-flex align-items-center gap-3 flex-wrap">
-                  {item.status === 'request_revision' ? (
+                  {item.status === "request_revision" ? (
                     /* Revisions requested */
-                    <StyledButton padding="1rem 2rem" variant="outline-success" disabled={true}>
+                    <StyledButton
+                      padding="1rem 2rem"
+                      variant="outline-success"
+                      disabled={true}
+                    >
                       <CheckMark stroke="green" />
                       Revisions request sent
                     </StyledButton>
@@ -524,7 +582,10 @@ const Milestones = ({
                     <StyledButton
                       padding="1rem 2rem"
                       variant="outline-dark"
-                      disabled={item?.milestone_id === selectedMilestoneId && requestingRivisions}
+                      disabled={
+                        item?.milestone_id === selectedMilestoneId &&
+                        requestingRivisions
+                      }
                       onClick={requestRevisions(item?.milestone_id)}
                     >
                       Request Revisions
@@ -549,7 +610,7 @@ const Milestones = ({
         show={modalsState?.showPaymentModal}
         onCancel={closePaymentModal}
         onPay={handlePayment}
-        processingPayment={selectedMilestoneId !== ''}
+        processingPayment={selectedMilestoneId !== ""}
       />
 
       <ConfirmPaymentModal
@@ -557,8 +618,10 @@ const Milestones = ({
         isReleasePrompt={modalsState?.isReleasePrompt}
         toggle={closeConfirmPaymentModal}
         onConfirm={onConfirm}
-        loading={selectedMilestoneId !== ''}
-        buttonText={!modalsState?.isReleasePrompt ? 'Accept & Deposit' : 'Confirm and Pay'}
+        loading={selectedMilestoneId !== ""}
+        buttonText={
+          !modalsState?.isReleasePrompt ? "Accept & Deposit" : "Confirm and Pay"
+        }
       />
       <AcceptAndPaynowModal
         show={modalsState?.showPayNowConfirmationModal}

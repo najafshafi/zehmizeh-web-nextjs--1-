@@ -1,9 +1,9 @@
-import classNames from 'classnames';
-import { StyledButton } from 'components/forms/Buttons';
-import { StyledModal } from 'components/styled/StyledModal';
-import useResponsive from 'helpers/hooks/useResponsive';
-import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
+import classNames from "classnames";
+import { StyledButton } from "components/forms/Buttons";
+import { StyledModal } from "components/styled/StyledModal";
+import useResponsive from "helpers/hooks/useResponsive";
+import React, { useEffect, useMemo, useState } from "react";
+import { Button, Form, Modal } from "react-bootstrap";
 
 type Props = {
   show: boolean;
@@ -34,34 +34,34 @@ export const PostVisibilityConfirmationModal = ({
   const content = useMemo(() => {
     if (isHidden) {
       return {
-        title: 'Are you sure you want to hide this post?',
-        text: 'If you switch this post to the “Hidden” status, only freelancers who <b>(1)</b> you invite, <b>(2)</b> have already invited, or <b>(3)</b> who have already sent in proposals will be able to see the details. No one else will be able to submit proposals.',
+        title: "Are you sure you want to hide this post?",
+        text: "If you switch this post to the “Hidden” status, only freelancers who <b>(1)</b> you invite, <b>(2)</b> have already invited, or <b>(3)</b> who have already sent in proposals will be able to see the details. No one else will be able to submit proposals.",
         buttons: [
           {
-            variant: 'secondary',
-            text: 'No - Keep public',
+            variant: "secondary",
+            text: "No - Keep public",
             onClick: handleReject,
           },
           {
-            variant: 'primary',
-            text: 'Yes - Hide my post',
+            variant: "primary",
+            text: "Yes - Hide my post",
             onClick: () => handleConfirm(isDoNotShowWarningChecked),
           },
         ],
       };
     }
     return {
-      title: 'Are you sure you want to make this post public?',
+      title: "Are you sure you want to make this post public?",
       text: 'If you switch this post to “public," any freelancer on ZehMizeh can access it on the project board.',
       buttons: [
         {
-          variant: 'secondary',
-          text: 'No - Keep hidden',
+          variant: "secondary",
+          text: "No - Keep hidden",
           onClick: handleReject,
         },
         {
-          variant: 'primary',
-          text: 'Yes - Make my post public',
+          variant: "primary",
+          text: "Yes - Make my post public",
           onClick: () => handleConfirm(isDoNotShowWarningChecked),
         },
       ],
@@ -87,22 +87,24 @@ export const PostVisibilityConfirmationModal = ({
           </Button>
         )}
         <div className="d-flex flex-column align-items-center">
-          <div className="fs-24 fw-400 text-center mb-3">{content.title}</div>
+          <div className="fs-24 font-normal text-center mb-3">
+            {content.title}
+          </div>
           <div
             className="mb-4 fs-18 text-center px-3"
             dangerouslySetInnerHTML={{ __html: content.text }}
           />
           <div
-            className={classNames('d-flex justify-content-center gap-4', {
-              'flex-row': !isMobile,
-              'flex-column w-100': isMobile,
+            className={classNames("d-flex justify-content-center gap-4", {
+              "flex-row": !isMobile,
+              "flex-column w-100": isMobile,
             })}
           >
             {content.buttons.map((button) => {
               return (
                 <StyledButton
                   key={button.text}
-                  className="fs-16 fw-400"
+                  className="fs-16 font-normal"
                   variant={button.variant}
                   padding="0.8125rem 2rem"
                   onClick={button.onClick}

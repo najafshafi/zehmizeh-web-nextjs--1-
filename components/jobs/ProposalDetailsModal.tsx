@@ -1,36 +1,49 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import toast from 'react-hot-toast';
-import moment from 'moment';
-import { Modal, Button } from 'react-bootstrap';
-import Tooltip from '@/components/ui/Tooltip';
-import Loader from '@/components/Loader';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { StyledButton } from '@/components/forms/Buttons';
-import { StatusBadge } from '@/components/styled/Badges';
-import { getProposalDetails, acceptProposal, getInviteeDetails } from '@/helpers/http/proposals';
-import useResponsive from '@/helpers/hooks/useResponsive';
-import { numberWithCommas, separateValuesWithComma } from '@/helpers/utils/misc';
-import LocationIcon  from '@/public/icons/location-blue.svg';
-import StyledHtmlText from '@/components/ui/StyledHtmlText';
-import BlurredImage from '@/components/ui/BlurredImage';
-import AttachmentPreview from '@/components/ui/AttachmentPreview';
-import ProposalMessageModal from './ProposalMessageModal';
-import { WarningFreelancerMessageModal } from './WarningFreelancerMessageModal';
-import { useQueryClient } from 'react-query';
-import { getTimeEstimation, getValueByPercentage } from '@/helpers/utils/helper';
-import { TProposalDetails } from '@/helpers/types/proposal.type';
-import { JOBS_STATUS } from '@/pages/jobs-page/consts';
-import InviteFreelancerMessageModal from '@/components/invite-flow-modals/InviteFreelancerMessageModal';
-import { updateInvitationStatus, editInvitation } from '@/helpers/http/jobs';
-import { TInviteSentDetails } from '@/helpers/types/invite.type';
-import { HiringMoreFreelancerModal } from './HiringMoreFreelancerModal';
-import classNames from 'classnames';
-import { talkJsCreateNewThread, talkJsFetchSingleConversation } from '@/helpers/http/common';
-import { useAuth } from '@/helpers/contexts/auth-context';
-import ChatModal from '@/components/talkjs/chat-modal';
-import PaymentTermsPopup from '@/components/PaymentTermsPopup';
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import toast from "react-hot-toast";
+import moment from "moment";
+import { Modal, Button } from "react-bootstrap";
+import Tooltip from "@/components/ui/Tooltip";
+import Loader from "@/components/Loader";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import { StatusBadge } from "@/components/styled/Badges";
+import {
+  getProposalDetails,
+  acceptProposal,
+  getInviteeDetails,
+} from "@/helpers/http/proposals";
+import useResponsive from "@/helpers/hooks/useResponsive";
+import {
+  numberWithCommas,
+  separateValuesWithComma,
+} from "@/helpers/utils/misc";
+import LocationIcon from "@/public/icons/location-blue.svg";
+import StyledHtmlText from "@/components/ui/StyledHtmlText";
+import BlurredImage from "@/components/ui/BlurredImage";
+import AttachmentPreview from "@/components/ui/AttachmentPreview";
+import ProposalMessageModal from "./ProposalMessageModal";
+import { WarningFreelancerMessageModal } from "./WarningFreelancerMessageModal";
+import { useQueryClient } from "react-query";
+import {
+  getTimeEstimation,
+  getValueByPercentage,
+} from "@/helpers/utils/helper";
+import { TProposalDetails } from "@/helpers/types/proposal.type";
+import { JOBS_STATUS } from "@/pages/jobs-page/consts";
+import InviteFreelancerMessageModal from "@/components/invite-flow-modals/InviteFreelancerMessageModal";
+import { updateInvitationStatus, editInvitation } from "@/helpers/http/jobs";
+import { TInviteSentDetails } from "@/helpers/types/invite.type";
+import { HiringMoreFreelancerModal } from "./HiringMoreFreelancerModal";
+import classNames from "classnames";
+import {
+  talkJsCreateNewThread,
+  talkJsFetchSingleConversation,
+} from "@/helpers/http/common";
+import { useAuth } from "@/helpers/contexts/auth-context";
+import ChatModal from "@/components/talkjs/chat-modal";
+import PaymentTermsPopup from "@/components/PaymentTermsPopup";
 
 type Props = {
   show: boolean;
@@ -38,7 +51,7 @@ type Props = {
   selectedProposalId: string;
   refetch: (shouldToggleModal?: boolean) => void;
   replyOnProjectPageBtn?: boolean;
-  type?: 'proposal' | 'invite';
+  type?: "proposal" | "invite";
 };
 
 export const DetailsWrapper = styled.div<{
@@ -58,14 +71,18 @@ export const DetailsWrapper = styled.div<{
     padding: 6px;
   }
   .view-profile-link {
-    position: ${(props) => (props.isMobile ? 'relative' : 'absolute')};
+    position: ${(props) => (props.isMobile ? "relative" : "absolute")};
     font-size: 18px;
-    right: ${(props) => (!props.isMobile ? '2rem' : 'unset')};
+    right: ${(props) => (!props.isMobile ? "2rem" : "unset")};
     top: ${(props) =>
-      !props.isMobile && props.isShowingDeclinedHeadline ? '3.5rem' : !props.isMobile ? '1.5rem' : 'unset'};
+      !props.isMobile && props.isShowingDeclinedHeadline
+        ? "3.5rem"
+        : !props.isMobile
+        ? "1.5rem"
+        : "unset"};
     color: #f2b420;
-    margin: ${(props) => (props.isMobile ? '1rem 0' : 0)};
-    width: ${(props) => (props.isMobile ? '100%' : 'unset')};
+    margin: ${(props) => (props.isMobile ? "1rem 0" : 0)};
+    width: ${(props) => (props.isMobile ? "100%" : "unset")};
     display: inline-block;
   }
 
@@ -133,7 +150,7 @@ const ProposalDetailsModal = ({
   selectedProposalId,
   refetch,
   replyOnProjectPageBtn = false,
-  type = 'proposal',
+  type = "proposal",
 }: Props) => {
   const { isMobile } = useResponsive();
   const navigate = useNavigate();
@@ -141,11 +158,17 @@ const ProposalDetailsModal = ({
   const [pendingChatAction, setPendingChatAction] = useState<boolean>(false);
   const [fetching, setFetching] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [showInviteMessageModal, setShowInviteMessageModal] = useState<boolean>(false);
-  const [proposalDetails, setProposalDetails] = useState<TProposalDetails & TInviteSentDetails>(null);
+  const [showInviteMessageModal, setShowInviteMessageModal] =
+    useState<boolean>(false);
+  const [proposalDetails, setProposalDetails] = useState<
+    TProposalDetails & TInviteSentDetails
+  >(null);
   const [proMessModal, setProMessModal] = useState(false);
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
-  const [isShowingHiringMoreFreelancerModal, setIsShowingHiringMoreFreelancerModal] = useState(false);
+  const [
+    isShowingHiringMoreFreelancerModal,
+    setIsShowingHiringMoreFreelancerModal,
+  ] = useState(false);
   const [warningPopupCount, setWarningPopupCount] = useState(0);
   // const [sendingEditInvite, setSendingEditInvite] = useState<boolean>(false);
 
@@ -159,7 +182,7 @@ const ProposalDetailsModal = ({
 
   const closeChatModal = () => {
     setOpenChatModal(false);
-    setConversationId('');
+    setConversationId("");
   };
 
   const conversationHandler = async () => {
@@ -173,14 +196,18 @@ const ProposalDetailsModal = ({
     setPendingChatAction(false);
 
     setThreadLoading(true);
-    toast.loading('loading chat...');
+    toast.loading("loading chat...");
     const chatProposalId = `proposal_${proposalDetails.proposal_id}`;
 
     const initializeChat = async () => {
-      const { conversation } = await talkJsFetchSingleConversation(chatProposalId);
+      const { conversation } = await talkJsFetchSingleConversation(
+        chatProposalId
+      );
       toast.remove();
 
-      setFreelancerName(`${proposalDetails.first_name} ${proposalDetails.last_name}`);
+      setFreelancerName(
+        `${proposalDetails.first_name} ${proposalDetails.last_name}`
+      );
       if (conversation?.data !== null) {
         setConversationId(chatProposalId);
         setThreadLoading(false);
@@ -202,16 +229,16 @@ const ProposalDetailsModal = ({
       const promise = talkJsCreateNewThread(payload);
 
       toast.promise(promise, {
-        loading: 'create thread...',
+        loading: "create thread...",
         success: () => {
           setThreadLoading(false);
           setConversationId(payload.conversationId);
           setOpenChatModal(true);
-          return 'thread created successfully';
+          return "thread created successfully";
         },
         error: (err) => {
           setThreadLoading(false);
-          return 'Error: ' + err.toString();
+          return "Error: " + err.toString();
         },
       });
     };
@@ -227,15 +254,22 @@ const ProposalDetailsModal = ({
   const closeModal = () => {
     setLoading(false);
     toggle();
-    queryClient.refetchQueries({ queryKey: ['get-job-applicant'] });
+    queryClient.refetchQueries({ queryKey: ["get-job-applicant"] });
   };
 
   const getMessageFreelancerPopupCount = useCallback(
     (jobId: string) => {
-      const proposals: any = queryClient.getQueryData(['get-received-proposals']);
-      const dashboardJobDetails = proposals?.data?.find((proposal) => proposal?.job_post_id === jobId);
+      const proposals: any = queryClient.getQueryData([
+        "get-received-proposals",
+      ]);
+      const dashboardJobDetails = proposals?.data?.find(
+        (proposal) => proposal?.job_post_id === jobId
+      );
 
-      const clientJobDetails: any = queryClient.getQueryData(['jobdetails', jobId]);
+      const clientJobDetails: any = queryClient.getQueryData([
+        "jobdetails",
+        jobId,
+      ]);
       return (
         dashboardJobDetails?.message_freelancer_popup_count ||
         clientJobDetails?.data?.message_freelancer_popup_count ||
@@ -261,7 +295,9 @@ const ProposalDetailsModal = ({
           refetch();
         } else {
           setLoading(false);
-          toast.error(res?.message ? res?.message : 'Invitation not edit successfully!');
+          toast.error(
+            res?.message ? res?.message : "Invitation not edit successfully!"
+          );
         }
       })
       .catch(() => {
@@ -269,11 +305,13 @@ const ProposalDetailsModal = ({
       });
   };
 
-  const updateStatus = (status: Parameters<typeof updateInvitationStatus>['1']) => {
+  const updateStatus = (
+    status: Parameters<typeof updateInvitationStatus>["1"]
+  ) => {
     setLoading(true);
     const promise = updateInvitationStatus(proposalDetails?.invite_id, status);
     toast.promise(promise, {
-      loading: 'please wait...',
+      loading: "please wait...",
       success: (res) => {
         setLoading(false);
         refetch();
@@ -282,7 +320,7 @@ const ProposalDetailsModal = ({
       error: (err) => {
         const resp = err?.response?.data ?? {};
         setLoading(false);
-        return resp?.message ?? (err?.message || 'error');
+        return resp?.message ?? (err?.message || "error");
       },
     });
   };
@@ -291,29 +329,44 @@ const ProposalDetailsModal = ({
   // when looking at job details and open proposal then it'll fetch status from cache because job details cache is already there
   const jobDetails = useMemo(() => {
     if (!proposalDetails?._job_post_id) return;
-    const proposals: any = queryClient.getQueryData(['get-received-proposals']);
+    const proposals: any = queryClient.getQueryData(["get-received-proposals"]);
     const dashboardJobDetails = proposals?.data?.find(
       (proposal) => proposal?.job_post_id === proposalDetails._job_post_id
     );
 
-    const clientJobDetails: any = queryClient.getQueryData(['jobdetails', proposalDetails._job_post_id]);
+    const clientJobDetails: any = queryClient.getQueryData([
+      "jobdetails",
+      proposalDetails._job_post_id,
+    ]);
     return dashboardJobDetails?.data || clientJobDetails?.data;
   }, [proposalDetails, queryClient]);
 
   useEffect(() => {
-    if (selectedProposalId !== null && selectedProposalId !== '' && type === 'proposal') {
+    if (
+      selectedProposalId !== null &&
+      selectedProposalId !== "" &&
+      type === "proposal"
+    ) {
       setFetching(true);
       getProposalDetails(selectedProposalId).then((res) => {
         setProposalDetails(res.data);
         setFetching(false);
-        setWarningPopupCount(getMessageFreelancerPopupCount(res.data._job_post_id));
+        setWarningPopupCount(
+          getMessageFreelancerPopupCount(res.data._job_post_id)
+        );
       });
-    } else if (selectedProposalId !== null && selectedProposalId !== '' && type === 'invite') {
+    } else if (
+      selectedProposalId !== null &&
+      selectedProposalId !== "" &&
+      type === "invite"
+    ) {
       setFetching(true);
       getInviteeDetails(selectedProposalId).then((res) => {
         setProposalDetails(res.data);
         setFetching(false);
-        setWarningPopupCount(getMessageFreelancerPopupCount(res.data._job_post_id));
+        setWarningPopupCount(
+          getMessageFreelancerPopupCount(res.data._job_post_id)
+        );
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -321,8 +374,10 @@ const ProposalDetailsModal = ({
 
   const onAcceptDecline =
     (
-      status: 'denied' | 'pending' | 'accept',
-      canHireMoreFreelancers?: 'ACCEPT_AND_DECLINE_REST' | 'ACCEPT_AND_LEAVE_OPEN'
+      status: "denied" | "pending" | "accept",
+      canHireMoreFreelancers?:
+        | "ACCEPT_AND_DECLINE_REST"
+        | "ACCEPT_AND_LEAVE_OPEN"
     ) =>
     () => {
       setLoading(true);
@@ -330,32 +385,38 @@ const ProposalDetailsModal = ({
         status,
         proposal_id: selectedProposalId,
         approved_budget: {
-          start_date: moment(new Date()).format('DD-MM-YYYY'),
+          start_date: moment(new Date()).format("DD-MM-YYYY"),
         },
         can_hire_more_freelancers: false,
       };
 
       // If client wants to make another version of same project then passing
       // can_hire_more_freelancers flag which will create copy of this project and move data to new project
-      if (status === 'accept') {
-        body.can_hire_more_freelancers = canHireMoreFreelancers === 'ACCEPT_AND_LEAVE_OPEN';
+      if (status === "accept") {
+        body.can_hire_more_freelancers =
+          canHireMoreFreelancers === "ACCEPT_AND_LEAVE_OPEN";
       }
 
       const promise = acceptProposal(body);
       toast.promise(promise, {
         loading: `${
-          status == 'accept' ? 'Accepting' : status == 'pending' ? 'Reopening' : 'Declining'
+          status == "accept"
+            ? "Accepting"
+            : status == "pending"
+            ? "Reopening"
+            : "Declining"
         } the proposal...`,
         success: (res) => {
           setLoading(false);
-          refetch(status === 'accept' ? false : true);
-          if (proposalDetails?._job_post_id) navigate(`/client-job-details/${proposalDetails._job_post_id}`);
+          refetch(status === "accept" ? false : true);
+          if (proposalDetails?._job_post_id)
+            navigate(`/client-job-details/${proposalDetails._job_post_id}`);
           return res.message;
         },
         error: (err) => {
           const resp = err?.response?.data ?? {};
           setLoading(false);
-          return resp?.message ?? (err?.message || 'error');
+          return resp?.message ?? (err?.message || "error");
         },
       });
     };
@@ -371,28 +432,37 @@ const ProposalDetailsModal = ({
 
   const proposalStatus = {
     denied:
-      jobDetails?.status === 'prospects' &&
-      type === 'proposal' &&
+      jobDetails?.status === "prospects" &&
+      type === "proposal" &&
       !replyOnProjectPageBtn &&
-      proposalDetails?.status === 'denied',
+      proposalDetails?.status === "denied",
     pending:
-      jobDetails?.status === 'prospects' &&
-      type === 'proposal' &&
+      jobDetails?.status === "prospects" &&
+      type === "proposal" &&
       !replyOnProjectPageBtn &&
-      proposalDetails?.status === 'pending',
+      proposalDetails?.status === "pending",
   };
 
   const inviteStatus = {
-    pending: jobDetails?.status === 'prospects' && proposalDetails?.status === 'pending' && type === 'invite',
-    canceled: jobDetails?.status === 'prospects' && proposalDetails?.status === 'canceled' && type === 'invite',
-    read: jobDetails?.status === 'prospects' && proposalDetails?.status === 'read' && type === 'invite',
+    pending:
+      jobDetails?.status === "prospects" &&
+      proposalDetails?.status === "pending" &&
+      type === "invite",
+    canceled:
+      jobDetails?.status === "prospects" &&
+      proposalDetails?.status === "canceled" &&
+      type === "invite",
+    read:
+      jobDetails?.status === "prospects" &&
+      proposalDetails?.status === "read" &&
+      type === "invite",
   };
 
   const buttonsUI = {
     acceptProposal: (
       <StyledButton
         padding="1rem 2rem"
-        className={isMobile ? 'w-100' : null}
+        className={isMobile ? "w-100" : null}
         variant="primary"
         onClick={handleAcceptFreelancer}
         disabled={loading}
@@ -403,9 +473,9 @@ const ProposalDetailsModal = ({
     declineProposal: (
       <StyledButton
         padding="1rem 2rem"
-        className={isMobile ? 'w-100' : null}
+        className={isMobile ? "w-100" : null}
         variant="outline-dark"
-        onClick={onAcceptDecline('denied')}
+        onClick={onAcceptDecline("denied")}
         disabled={loading}
       >
         Decline Proposal
@@ -414,7 +484,7 @@ const ProposalDetailsModal = ({
     messageFreelancerOrGotoChat: (
       <StyledButton
         padding="1rem 2rem"
-        className={isMobile ? 'w-100' : null}
+        className={isMobile ? "w-100" : null}
         variant="outline-dark"
         disabled={loading}
         onClick={() => conversationHandler()}
@@ -426,9 +496,13 @@ const ProposalDetailsModal = ({
     seeProjectPost: (
       <StyledButton
         padding="1rem 2rem"
-        className={isMobile ? 'w-100' : null}
+        className={isMobile ? "w-100" : null}
         variant="primary"
-        onClick={() => navigate(`/client-job-details/${proposalDetails._job_post_id}/applicants`)}
+        onClick={() =>
+          navigate(
+            `/client-job-details/${proposalDetails._job_post_id}/applicants`
+          )
+        }
         disabled={loading}
       >
         See Project Post
@@ -476,7 +550,13 @@ const ProposalDetailsModal = ({
         onAccept={handlePaymentTermsAccept}
       />
 
-      <StyledModal maxwidth={767} show={show} size="sm" onHide={closeModal} centered>
+      <StyledModal
+        maxwidth={767}
+        show={show}
+        size="sm"
+        onHide={closeModal}
+        centered
+      >
         <Modal.Body>
           <Button variant="transparent" className="close" onClick={closeModal}>
             &times;
@@ -486,36 +566,51 @@ const ProposalDetailsModal = ({
           ) : (
             <DetailsWrapper
               isMobile={isMobile}
-              isShowingDeclinedHeadline={proposalStatus.denied || inviteStatus.canceled}
+              isShowingDeclinedHeadline={
+                proposalStatus.denied || inviteStatus.canceled
+              }
             >
               {/* START ----------------------------------------- Showing notice if proposal is denied */}
-              {proposalStatus.denied && proposalDetails?.status_change_timestamp?.denied_date && (
-                <div className="declined-headline">
-                  <span>
-                    You declined this proposal -{' '}
-                    {moment(proposalDetails.status_change_timestamp.denied_date).format('MMM DD, YYYY')}
-                  </span>
-                </div>
-              )}
+              {proposalStatus.denied &&
+                proposalDetails?.status_change_timestamp?.denied_date && (
+                  <div className="declined-headline">
+                    <span>
+                      You declined this proposal -{" "}
+                      {moment(
+                        proposalDetails.status_change_timestamp.denied_date
+                      ).format("MMM DD, YYYY")}
+                    </span>
+                  </div>
+                )}
               {/* END ------------------------------------------- Showing notice if proposal is denied */}
 
               {/* START ----------------------------------------- Showing notice if invite is canceled */}
-              {inviteStatus.canceled && proposalDetails?.status_change_timestamp?.canceled_date && (
-                <div className="declined-headline">
-                  <span>
-                    You canceled this invite -{' '}
-                    {moment(proposalDetails.status_change_timestamp.canceled_date).format('MMM DD, YYYY')}
-                  </span>
-                </div>
-              )}
+              {inviteStatus.canceled &&
+                proposalDetails?.status_change_timestamp?.canceled_date && (
+                  <div className="declined-headline">
+                    <span>
+                      You canceled this invite -{" "}
+                      {moment(
+                        proposalDetails.status_change_timestamp.canceled_date
+                      ).format("MMM DD, YYYY")}
+                    </span>
+                  </div>
+                )}
               {/* END ------------------------------------------- Showing notice if invite is canceled */}
 
-              {replyOnProjectPageBtn && <div className="view-profile-link">{buttonsUI.seeProjectPost}</div>}
+              {replyOnProjectPageBtn && (
+                <div className="view-profile-link">
+                  {buttonsUI.seeProjectPost}
+                </div>
+              )}
               {!replyOnProjectPageBtn && proposalDetails?.user_id && (
-                <Link className="view-profile-link" to={`/freelancer/${proposalDetails?.user_id}`}>
+                <Link
+                  className="view-profile-link"
+                  to={`/freelancer/${proposalDetails?.user_id}`}
+                >
                   <StyledButton
                     padding="1rem 2rem"
-                    className={isMobile ? 'w-100' : null}
+                    className={isMobile ? "w-100" : null}
                     variant="primary"
                     disabled={loading}
                   >
@@ -533,32 +628,41 @@ const ProposalDetailsModal = ({
                     <div className="d-flex align-items-center gap-2">
                       {/* START ----------------------------------------- Freelancer image */}
                       <BlurredImage
-                        src={proposalDetails?.user_image || '/images/default_avatar.png'}
+                        src={
+                          proposalDetails?.user_image ||
+                          "/images/default_avatar.png"
+                        }
                         height="80px"
                         width="80px"
                       />
                       {/* END ------------------------------------------- Freelancer image */}
                       <div className="freelancer-name-wrapper">
                         <Link
-                          className={classNames({ 'navigation-link': replyOnProjectPageBtn }, 'me-2')}
+                          className={classNames(
+                            { "navigation-link": replyOnProjectPageBtn },
+                            "me-2"
+                          )}
                           to={`/freelancer/${proposalDetails?.user_id}`}
                         >
-                          {proposalDetails?.first_name} {proposalDetails?.last_name}
+                          {proposalDetails?.first_name}{" "}
+                          {proposalDetails?.last_name}
                         </Link>
                         <div>
-                          {type === 'proposal' && proposalDetails?.is_agency ? (
+                          {type === "proposal" && proposalDetails?.is_agency ? (
                             <StatusBadge color="blue">Agency</StatusBadge>
                           ) : null}
-                          {type === 'invite' && (
+                          {type === "invite" && (
                             <StatusBadge
                               className="width-fit-content"
                               color={
                                 JOBS_STATUS[proposalDetails?.status]?.color
                                   ? JOBS_STATUS[proposalDetails?.status]?.color
-                                  : 'gray'
+                                  : "gray"
                               }
                             >
-                              {proposalDetails?.status == 'pending' ? 'Unread' : proposalDetails?.status}
+                              {proposalDetails?.status == "pending"
+                                ? "Unread"
+                                : proposalDetails?.status}
                             </StatusBadge>
                           )}
                         </div>
@@ -566,11 +670,13 @@ const ProposalDetailsModal = ({
                     </div>
                     {/* END ------------------------------------------- Freelancer name */}
                     {/* START ----------------------------------------- Designation */}
-                    <div className="fs-18 fw-400 light-text capital-first-ltr">{proposalDetails?.job_title}</div>
+                    <div className="fs-18 font-normal light-text capital-first-ltr">
+                      {proposalDetails?.job_title}
+                    </div>
                     {proposalDetails?.invite_message && (
                       <div className="fs-18 fw-700">
                         <span>Invite Message</span>
-                        <div className="fs-18 fw-400 light-text capital-first-ltr">
+                        <div className="fs-18 font-normal light-text capital-first-ltr">
                           <div
                             dangerouslySetInnerHTML={{
                               __html: proposalDetails?.invite_message,
@@ -583,11 +689,12 @@ const ProposalDetailsModal = ({
                     {/* END ------------------------------------------- Designation */}
 
                     {/* START ----------------------------------------- Location */}
-                    {type === 'proposal' &&
-                      (proposalDetails?.location?.state || proposalDetails?.location?.country_name) && (
+                    {type === "proposal" &&
+                      (proposalDetails?.location?.state ||
+                        proposalDetails?.location?.country_name) && (
                         <div className="d-flex align-items-center gap-2">
                           <LocationIcon />
-                          <div className="fs-18 fw-400 light-text">
+                          <div className="fs-18 font-normal light-text">
                             {separateValuesWithComma([
                               proposalDetails?.location?.state,
                               proposalDetails?.location?.country_name,
@@ -602,21 +709,30 @@ const ProposalDetailsModal = ({
                 {/* START ----------------------------------------- Description */}
                 <div className="proposal-details-item d-flex flex-column">
                   <div className="fs-18 fw-700">
-                    {type === 'proposal' && <span>Proposal</span>}
-                    {proposalDetails?.date_created && type === 'proposal' && (
+                    {type === "proposal" && <span>Proposal</span>}
+                    {proposalDetails?.date_created && type === "proposal" && (
                       <div className="fs-1rem fw-300">
-                        Submitted: {moment(proposalDetails.date_created).format('MMM DD, YYYY')}
+                        Submitted:{" "}
+                        {moment(proposalDetails.date_created).format(
+                          "MMM DD, YYYY"
+                        )}
                       </div>
                     )}
-                    {type === 'invite' && <span>Invite</span>}
-                    {proposalDetails?.date_created && type === 'invite' && (
+                    {type === "invite" && <span>Invite</span>}
+                    {proposalDetails?.date_created && type === "invite" && (
                       <div className="fs-1rem fw-300">
-                        Sent: {moment(proposalDetails.date_created).format('MMM DD, YYYY')}
+                        Sent:{" "}
+                        {moment(proposalDetails.date_created).format(
+                          "MMM DD, YYYY"
+                        )}
                       </div>
                     )}
                   </div>
-                  <div className="description-text fs-18 fw-400">
-                    <StyledHtmlText htmlString={proposalDetails?.description} id={`proposal_${selectedProposalId}`} />
+                  <div className="description-text fs-18 font-normal">
+                    <StyledHtmlText
+                      htmlString={proposalDetails?.description}
+                      id={`proposal_${selectedProposalId}`}
+                    />
                   </div>
                 </div>
                 {/* END ------------------------------------------- Description */}
@@ -624,32 +740,48 @@ const ProposalDetailsModal = ({
                 <div className="proposal-details-item d-flex flex-column">
                   <div className="d-flex gap-2 items-center">
                     {/* START ----------------------------------------- Price */}
-                    {type === 'proposal' && (
+                    {type === "proposal" && (
                       <div className="row-item d-flex align-items-center">
                         <div className="fs-1rem fw-700">Price:</div>
                         <div className="fs-1rem fw-300">
-                          {numberWithCommas(proposalDetails?.proposed_budget?.amount, 'USD')}
-                          {proposalDetails?.proposed_budget?.type == 'hourly' ? `/hr` : ``}
+                          {numberWithCommas(
+                            proposalDetails?.proposed_budget?.amount,
+                            "USD"
+                          )}
+                          {proposalDetails?.proposed_budget?.type == "hourly"
+                            ? `/hr`
+                            : ``}
                         </div>
                       </div>
                     )}
                     {/* END ------------------------------------------- Price */}
 
                     {/* START ----------------------------------------- Price */}
-                    {type === 'proposal' && (
+                    {type === "proposal" && (
                       <Tooltip>
                         <div>Price With Fees:</div>
                         <div>
                           {numberWithCommas(
-                            getValueByPercentage(Number(proposalDetails?.proposed_budget?.amount), 102.9),
-                            'USD'
+                            getValueByPercentage(
+                              Number(proposalDetails?.proposed_budget?.amount),
+                              102.9
+                            ),
+                            "USD"
                           )}
-                          {proposalDetails?.proposed_budget?.type == 'hourly' ? `/hr` : ``} -{' '}
+                          {proposalDetails?.proposed_budget?.type == "hourly"
+                            ? `/hr`
+                            : ``}{" "}
+                          -{" "}
                           {numberWithCommas(
-                            getValueByPercentage(Number(proposalDetails?.proposed_budget?.amount), 104.9),
-                            'USD'
+                            getValueByPercentage(
+                              Number(proposalDetails?.proposed_budget?.amount),
+                              104.9
+                            ),
+                            "USD"
                           )}
-                          {proposalDetails?.proposed_budget?.type == 'hourly' ? `/hr` : ``}
+                          {proposalDetails?.proposed_budget?.type == "hourly"
+                            ? `/hr`
+                            : ``}
                         </div>
                       </Tooltip>
                     )}
@@ -663,7 +795,9 @@ const ProposalDetailsModal = ({
                       <div className="fs-1rem fw-300">
                         {getTimeEstimation(
                           proposalDetails?.proposed_budget?.time_estimation,
-                          proposalDetails?.proposed_budget?.type == 'hourly' ? 'hours' : 'weeks'
+                          proposalDetails?.proposed_budget?.type == "hourly"
+                            ? "hours"
+                            : "weeks"
                         )}
                       </div>
                     </div>
@@ -673,7 +807,9 @@ const ProposalDetailsModal = ({
                   {/* START ----------------------------------------- Terms and conditions */}
                   {proposalDetails?.terms_and_conditions && (
                     <div className="d-flex flex-column">
-                      <div className="fs-1rem fw-700">Special Terms & Conditions:</div>
+                      <div className="fs-1rem fw-700">
+                        Special Terms & Conditions:
+                      </div>
                       <div className="description-text fs-18 fw-300">
                         <StyledHtmlText
                           id="termsAndConditions"
@@ -690,44 +826,51 @@ const ProposalDetailsModal = ({
                     <div className="d-flex flex-column">
                       <div className="fs-1rem fw-700">Questions:</div>
                       <div className="description-text fs-18 fw-300">
-                        <StyledHtmlText id="questions" htmlString={proposalDetails.questions} needToBeShorten={true} />
+                        <StyledHtmlText
+                          id="questions"
+                          htmlString={proposalDetails.questions}
+                          needToBeShorten={true}
+                        />
                       </div>
                     </div>
                   )}
                   {/* END ------------------------------------------- Questions */}
 
                   {/* START ----------------------------------------- Attachments */}
-                  {proposalDetails?.attachments && proposalDetails?.attachments?.length > 0 && (
-                    <div className="row-item">
-                      <div className="fs-1rem fw-700">Attachments:</div>
-                      <div className="d-flex flex-wrap mt-2">
-                        {proposalDetails.attachments.map((attachment) => (
-                          <div className="m-1" key={attachment}>
-                            <AttachmentPreview
-                              uploadedFile={attachment}
-                              removable={false}
-                              shouldShowFileNameAndExtension={false}
-                            />
-                          </div>
-                        ))}
+                  {proposalDetails?.attachments &&
+                    proposalDetails?.attachments?.length > 0 && (
+                      <div className="row-item">
+                        <div className="fs-1rem fw-700">Attachments:</div>
+                        <div className="d-flex flex-wrap mt-2">
+                          {proposalDetails.attachments.map((attachment) => (
+                            <div className="m-1" key={attachment}>
+                              <AttachmentPreview
+                                uploadedFile={attachment}
+                                removable={false}
+                                shouldShowFileNameAndExtension={false}
+                              />
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                   {/* END ------------------------------------------- Attachments */}
                 </div>
               </div>
               {/* If user opened proposal modal from somewhere else except job details page then */}
               {/* showing reply on project page button to navigate to project details page */}
-              {replyOnProjectPageBtn && type === 'proposal' && proposalDetails?._job_post_id && (
-                <>
-                  <div className="divider" />
-                  <div className="bottom-buttons d-flex flex-wrap gap-3">
-                    {buttonsUI.messageFreelancerOrGotoChat}
-                    {buttonsUI.declineProposal}
-                    {buttonsUI.acceptProposal}
-                  </div>
-                </>
-              )}
+              {replyOnProjectPageBtn &&
+                type === "proposal" &&
+                proposalDetails?._job_post_id && (
+                  <>
+                    <div className="divider" />
+                    <div className="bottom-buttons d-flex flex-wrap gap-3">
+                      {buttonsUI.messageFreelancerOrGotoChat}
+                      {buttonsUI.declineProposal}
+                      {buttonsUI.acceptProposal}
+                    </div>
+                  </>
+                )}
               {/* START ----------------------------------------- Proposal accept and decline if job and proposal is prospects */}
               {proposalStatus.pending && (
                 <>
@@ -748,9 +891,9 @@ const ProposalDetailsModal = ({
                   <div className="bottom-buttons d-flex flex-wrap gap-3">
                     <StyledButton
                       padding="1rem 2rem"
-                      className={isMobile ? 'w-100' : null}
+                      className={isMobile ? "w-100" : null}
                       variant="primary"
-                      onClick={onAcceptDecline('pending')}
+                      onClick={onAcceptDecline("pending")}
                       disabled={loading}
                     >
                       Reopen Proposal
@@ -768,7 +911,7 @@ const ProposalDetailsModal = ({
                   <div className="bottom-buttons d-flex flex-wrap gap-3">
                     <StyledButton
                       padding="1rem 2rem"
-                      className={isMobile ? 'w-100' : null}
+                      className={isMobile ? "w-100" : null}
                       variant="primary"
                       disabled={loading}
                       onClick={() => {
@@ -780,9 +923,9 @@ const ProposalDetailsModal = ({
                     </StyledButton>
                     <StyledButton
                       padding="1rem 2rem"
-                      className={isMobile ? 'w-100' : null}
+                      className={isMobile ? "w-100" : null}
                       variant="outline-dark"
-                      onClick={() => updateStatus('canceled')}
+                      onClick={() => updateStatus("canceled")}
                       disabled={loading}
                     >
                       Cancel Invitation
@@ -798,10 +941,10 @@ const ProposalDetailsModal = ({
                   <div className="bottom-buttons d-flex flex-wrap gap-3">
                     <StyledButton
                       padding="1rem 2rem"
-                      className={isMobile ? 'w-100' : null}
+                      className={isMobile ? "w-100" : null}
                       variant="primary"
                       disabled={loading}
-                      onClick={() => updateStatus('pending')}
+                      onClick={() => updateStatus("pending")}
                     >
                       Reopen Invitation
                     </StyledButton>
@@ -816,11 +959,13 @@ const ProposalDetailsModal = ({
                   <div className="bottom-buttons d-flex flex-wrap gap-3">
                     <StyledButton
                       padding="1rem 2rem"
-                      className={isMobile ? 'w-100' : null}
+                      className={isMobile ? "w-100" : null}
                       variant="primary"
                       disabled={loading}
                       onClick={() => {
-                        return navigate(`/messages-new/invite_${proposalDetails.invite_id}`);
+                        return navigate(
+                          `/messages-new/invite_${proposalDetails.invite_id}`
+                        );
                       }}
                     >
                       Go To Chat
@@ -838,7 +983,7 @@ const ProposalDetailsModal = ({
       <HiringMoreFreelancerModal
         loading={loading}
         handleClick={(value) => {
-          onAcceptDecline('accept', value)();
+          onAcceptDecline("accept", value)();
         }}
         show={isShowingHiringMoreFreelancerModal}
         toggle={() => setIsShowingHiringMoreFreelancerModal((prev) => !prev)}
@@ -851,7 +996,7 @@ const ProposalDetailsModal = ({
         show={openChatModal}
         conversationId={conversationId}
         closeModal={closeChatModal}
-        key={'proposal-chat-modal'}
+        key={"proposal-chat-modal"}
       />
     </>
   );

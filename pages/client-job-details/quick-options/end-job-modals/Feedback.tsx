@@ -2,14 +2,14 @@
  * This is a modal that asks for review when ending the job
  */
 
-import { useState } from 'react';
-import { Form } from 'react-bootstrap';
-import styled from 'styled-components';
-import toast from 'react-hot-toast';
-import { StyledButton } from 'components/forms/Buttons';
-import AnimatedStar from './AnimatedStar';
-import { endJob } from 'helpers/http/jobs';
-import ErrorMessage from 'components/ui/ErrorMessage';
+import { useState } from "react";
+import { Form } from "react-bootstrap";
+import styled from "styled-components";
+import toast from "react-hot-toast";
+import { StyledButton } from "components/forms/Buttons";
+import AnimatedStar from "./AnimatedStar";
+import { endJob } from "helpers/http/jobs";
+import ErrorMessage from "components/ui/ErrorMessage";
 
 type Props = {
   onEndJob?: () => void;
@@ -49,26 +49,32 @@ const Wrapper = styled.div`
   }
 `;
 
-const errorInitialState = { ratings: '', feedback: '' };
+const errorInitialState = { ratings: "", feedback: "" };
 
-const Feedback = ({ onEndJob, freelancerName, jobPostId, endJobState, onError }: Props) => {
+const Feedback = ({
+  onEndJob,
+  freelancerName,
+  jobPostId,
+  endJobState,
+  onError,
+}: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [ratings, setRatings] = useState<number>(0);
-  const [reviewMsg, setReviewMsg] = useState<string>('');
+  const [reviewMsg, setReviewMsg] = useState<string>("");
   const [error, setError] = useState(errorInitialState);
 
   const isValid = () => {
     const errors = { ...errorInitialState };
-    if (!(endJobState?.selectedStatus == 'in-complete')) {
+    if (!(endJobState?.selectedStatus == "in-complete")) {
       if (!ratings) {
-        errors.ratings = 'Please enter ratings';
+        errors.ratings = "Please enter ratings";
       }
       if (!reviewMsg) {
-        errors.feedback = 'Please enter feedback';
+        errors.feedback = "Please enter feedback";
       }
     }
     setError(errors);
-    if (Object.values(errors).some((x) => x !== '')) return false;
+    if (Object.values(errors).some((x) => x !== "")) return false;
     return true;
   };
 
@@ -79,17 +85,18 @@ const Feedback = ({ onEndJob, freelancerName, jobPostId, endJobState, onError }:
     setLoading(true);
     const body: any = {
       job_id: jobPostId,
-      status: endJobState?.selectedStatus == 'closed' ? 'closed' : 'in-complete',
+      status:
+        endJobState?.selectedStatus == "closed" ? "closed" : "in-complete",
       rate: ratings,
       description: reviewMsg,
     };
 
-    if (endJobState?.selectedStatus == 'in-complete') {
+    if (endJobState?.selectedStatus == "in-complete") {
       body.reason = endJobState?.endingReason;
       body.incomplete_description = endJobState?.incompleteJobDescription;
     }
 
-    toast.loading('Please wait...');
+    toast.loading("Please wait...");
 
     endJob(body)
       .then((res) => {
@@ -113,24 +120,31 @@ const Feedback = ({ onEndJob, freelancerName, jobPostId, endJobState, onError }:
     <Wrapper>
       <div className="fs-32 fw-700">Close Project</div>
       <div className="content d-flex flex-column">
-        {endJobState?.selectedStatus == 'in-complete' ? (
+        {endJobState?.selectedStatus == "in-complete" ? (
           <>
             <div className="ratings d-flex flex-column disabled">
-              <div className="ratings__label fs-16 fw-400 text-uppercase">
+              <div className="ratings__label fs-16 font-normal text-uppercase">
                 RATE YOUR EXPERIENCE WITH {freelancerName}
               </div>
               <div className="d-flex align-items-center">
-                <div className="ratings__range-label fs-18 fw-400">Worst</div>
+                <div className="ratings__range-label fs-18 font-normal">
+                  Worst
+                </div>
                 <div className="ratings__stars d-flex align-items-center mx-3">
                   {Array(5)
                     .fill(1)
                     .map((item: any, index) => (
                       <div key={`star_${index}`} className="pointer">
-                        <AnimatedStar isFilled={index < ratings} onChange={() => setRatings(index + 1)} />
+                        <AnimatedStar
+                          isFilled={index < ratings}
+                          onChange={() => setRatings(index + 1)}
+                        />
                       </div>
                     ))}
                 </div>
-                <div className="ratings__range-label fs-18 fw-400">Best</div>
+                <div className="ratings__range-label fs-18 font-normal">
+                  Best
+                </div>
               </div>
             </div>
             <Form.Control
@@ -149,21 +163,28 @@ const Feedback = ({ onEndJob, freelancerName, jobPostId, endJobState, onError }:
           <>
             <div>
               <div className="ratings d-flex flex-column">
-                <div className="ratings__label fs-16 fw-400 text-uppercase">
+                <div className="ratings__label fs-16 font-normal text-uppercase">
                   RATE YOUR EXPERIENCE WITH {freelancerName}
                 </div>
                 <div className="d-flex align-items-center">
-                  <div className="ratings__range-label fs-18 fw-400">Worst</div>
+                  <div className="ratings__range-label fs-18 font-normal">
+                    Worst
+                  </div>
                   <div className="ratings__stars d-flex align-items-center mx-3">
                     {Array(5)
                       .fill(1)
                       .map((item: any, index) => (
                         <div key={`star_${index}`} className="pointer">
-                          <AnimatedStar isFilled={index < ratings} onChange={() => setRatings(index + 1)} />
+                          <AnimatedStar
+                            isFilled={index < ratings}
+                            onChange={() => setRatings(index + 1)}
+                          />
                         </div>
                       ))}
                   </div>
-                  <div className="ratings__range-label fs-18 fw-400">Best</div>
+                  <div className="ratings__range-label fs-18 font-normal">
+                    Best
+                  </div>
                 </div>
               </div>
               {error?.ratings && <ErrorMessage message={error.ratings} />}
@@ -184,7 +205,11 @@ const Feedback = ({ onEndJob, freelancerName, jobPostId, endJobState, onError }:
           </>
         )}
         <div className="bottom-buttons d-flex">
-          <StyledButton padding="0.75rem 2rem" variant="primary" onClick={handleEndJob}>
+          <StyledButton
+            padding="0.75rem 2rem"
+            variant="primary"
+            onClick={handleEndJob}
+          >
             Submit Feedback & Close Project
           </StyledButton>
         </div>

@@ -34,26 +34,26 @@ const AccountClosureModal = ({
           &times;
         </Button>
         <Wrapper>
-          <div className="fs-28 fw-400 text-center mb-3">
+          <div className="fs-28 font-normal text-center mb-3">
             Are you sure you would like to close your account?
           </div>
-          <div className="fs-20 fw-400 text-center">
+          <div className="fs-20 font-normal text-center">
             Closing an account means permanently removing this user profile from
             the website.
           </div>
-          <div className="mt-2 fs-20 fw-400 text-center">
+          <div className="mt-2 fs-20 font-normal text-center">
             After closing, you will no longer have access to your transaction
             history, project records, ratings and reviews, message history, or
             any other aspect of your personal account. Starting a new account
             with the same name will not reinstate any of these elements.
           </div>
-          <div className="mt-2 fs-20 fw-400 text-center">
+          <div className="mt-2 fs-20 font-normal text-center">
             ZehMizeh will have no record of your personal banking and payment
             details after closure.
           </div>
           <div className="flex flex-column gap-3 mt-md-4 mt-3">
             <StyledButton
-              className="fs-16 fw-400"
+              className="fs-16 font-normal"
               variant="primary"
               padding="0.8125rem 2rem"
               onClick={toggle}
@@ -62,7 +62,7 @@ const AccountClosureModal = ({
               Keep my account open
             </StyledButton>
             <StyledButton
-              className="close-btn fs-16 fw-400"
+              className="close-btn fs-16 font-normal"
               variant="outline-dark"
               padding="0.8125rem 2rem"
               onClick={clousureToggle}

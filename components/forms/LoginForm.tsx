@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
 import { IoEyeOutline } from "react-icons/io5";
-import CustomButton from "../../components/custombutton/CustomButton";
+import CustomButton from "@/components/custombutton/CustomButton";
 import {  useSelector } from "react-redux";
 import { RootState } from '@/store/store'; // Adjust path to your store
 import { useAuth } from '@/helpers/contexts/auth-context'; // Adjust path to AuthContext
@@ -238,7 +238,7 @@ const LoginForm = () => {
           {/* Login Button */}
           <div className="flex flex-col items-center justify-center">
             <CustomButton
-              text={showLoading ? <Spinner /> : "Log In"}
+              text={showLoading ? <Spinner className="w-5 h-5"/> : "Log In"}
               className="px-9 py-4 w-full max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5"
               onClick={onLoginClick}
               disabled={showLoading}

@@ -145,7 +145,13 @@ const AttachmentPreview = ({
         className={`cursor-pointer ${isLoading ? "opacity-25" : ""}`}
       >
         {fileIsAnImage(uploadedFile) ? (
-          <Image src={uploadedFile} alt="uploaded" height={100} width={100} className="object-cover h-[100px] w-[100px]" />
+          <Image
+            src={uploadedFile}
+            alt="uploaded"
+            height={100}
+            width={100}
+            className="object-cover h-[100px] w-[100px]"
+          />
         ) : (
           <div
             className={classNames("text-center flex items-center", {
@@ -161,7 +167,7 @@ const AttachmentPreview = ({
             />
             {shouldShowFileNameAndExtension && (
               <div className="doctype-preview-details ms-2">
-                <div className="file-title text-start text-capitalize font-medium">
+                <div className="file-title text-start capitalize font-medium">
                   {fileName || getFileDetails(uploadedFile)?.fileName}
                 </div>
                 <div className="extension text-start text-uppercase text-sm">

@@ -3,11 +3,11 @@
 -- Freelancer side
  */
 
-import ReviewContent from '@/components/ReviewContent';
-import AddReviewForm from './AddReviewForm';
-import { FeedbackWrapper } from './feedback.styled';
-import { separateValuesWithComma } from '@/helpers/utils/misc';
-import BlurredImage from '@/components/ui/BlurredImage';
+import ReviewContent from "@/components/ReviewContent";
+import AddReviewForm from "./AddReviewForm";
+import { FeedbackWrapper } from "./feedback.styled";
+import { separateValuesWithComma } from "@/helpers/utils/misc";
+import BlurredImage from "@/components/ui/BlurredImage";
 
 const Feedback = ({
   feedbackData,
@@ -21,7 +21,7 @@ const Feedback = ({
   return (
     <FeedbackWrapper className="d-flex flex-column">
       {isClientFeedback && !feedbackData?.freelancer && (
-        <div className="review-heading-note text-center fs-20 fw-400">
+        <div className="review-heading-note text-center fs-20 font-normal">
           Your client has ended the project and shared a review. To read it,
           submit your review below.
         </div>
@@ -33,7 +33,7 @@ const Feedback = ({
           freelancerUserId={freelancerUserId}
           onSubmitFeedback={onSubmitFeedback}
           clientName={
-            clientDetails?.first_name + ' ' + clientDetails?.last_name
+            clientDetails?.first_name + " " + clientDetails?.last_name
           }
         />
       )}
@@ -45,16 +45,16 @@ const Feedback = ({
               <div className="client-details d-flex align-items-center">
                 <BlurredImage
                   src={
-                    clientDetails?.user_image || '/images/default_avatar.png'
+                    clientDetails?.user_image || "/images/default_avatar.png"
                   }
                   height="5.25rem"
                   width="5.25rem"
                 />
                 <div>
-                  <div className="fs-18 fw-400 text-capitalize">
+                  <div className="fs-18 font-normal capitalize">
                     {clientDetails?.first_name} {clientDetails?.last_name}
                   </div>
-                  <div className="client-location fs-18 fw-400 light-text">
+                  <div className="client-location fs-18 font-normal light-text">
                     {separateValuesWithComma([
                       clientDetails?.location?.state,
                       clientDetails?.location?.country_name,

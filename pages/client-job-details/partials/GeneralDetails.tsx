@@ -9,6 +9,7 @@ import StyledHtmlText from '@/components/ui/StyledHtmlText';
 import AttachmentPreview from '@/components/ui/AttachmentPreview';
 import { showFormattedBudget, expectedHoursRemap } from '@/helpers/utils/misc';
 import { getCategories, getSkills } from '@/helpers/utils/helper';
+import Link from 'next/link';
 
 const DetailStyledItem = styled.div`
   margin: auto;
@@ -93,9 +94,9 @@ const JobOtherDetails = ({ data }: any) => {
                             }
                             return (
                               <div key={referenceLink}>
-                                <a className="text-primary" href={referenceLink} target="_blank" rel="noreferrer">
+                                <Link className="text-primary" href={referenceLink} target="_blank" rel="noreferrer">
                                   {referenceLink}
-                                </a>
+                                </Link>
                               </div>
                             );
                           })}

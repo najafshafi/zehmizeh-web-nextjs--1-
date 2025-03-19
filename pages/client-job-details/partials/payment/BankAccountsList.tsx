@@ -1,14 +1,17 @@
-import { useState, useEffect } from 'react';
-import { useQuery } from 'react-query';
-import styled from 'styled-components';
-import { StyledButton } from 'components/forms/Buttons';
-import Loader from 'components/Loader';
-import { getBankAccounts } from 'helpers/http/client';
-import { transition } from 'styles/transitions';
-import PaymentSummary from './PaymentSummary';
-import { usePayments } from 'pages/client-job-details/controllers/usePayments';
-import { formatRoutingNumber, formatingAccountNumber } from 'helpers/utils/helper';
-import toast from 'react-hot-toast';
+import { useState, useEffect } from "react";
+import { useQuery } from "react-query";
+import styled from "styled-components";
+import { StyledButton } from "components/forms/Buttons";
+import Loader from "components/Loader";
+import { getBankAccounts } from "helpers/http/client";
+import { transition } from "styles/transitions";
+import PaymentSummary from "./PaymentSummary";
+import { usePayments } from "pages/client-job-details/controllers/usePayments";
+import {
+  formatRoutingNumber,
+  formatingAccountNumber,
+} from "helpers/utils/helper";
+import toast from "react-hot-toast";
 
 const Wrapper = styled.div`
   .listings {
@@ -51,9 +54,11 @@ type Props = {
 
 const BankAccountsList = ({ onPay, processingPayment }: Props) => {
   const { jobType } = usePayments();
-  const [selectedAccountId, setSelectedAccountId] = useState<string>('');
+  const [selectedAccountId, setSelectedAccountId] = useState<string>("");
 
-  const { data, isLoading } = useQuery(['get-client-bank-accounts'], () => getBankAccounts());
+  const { data, isLoading } = useQuery(["get-client-bank-accounts"], () =>
+    getBankAccounts()
+  );
 
   // Set the first account as selected when data is loaded
   useEffect(() => {
@@ -67,8 +72,8 @@ const BankAccountsList = ({ onPay, processingPayment }: Props) => {
   };
 
   const onContinuePay = () => {
-    if (selectedAccountId == '') {
-      toast.error('Please select a bank account.');
+    if (selectedAccountId == "") {
+      toast.error("Please select a bank account.");
       return;
     }
     onPay(selectedAccountId);
@@ -77,25 +82,26 @@ const BankAccountsList = ({ onPay, processingPayment }: Props) => {
   return (
     <p
       style={{
-        color: '#ff0000',
-        fontSize: '1.2rem',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        padding: '20px',
-        border: '1px solid #ff0000',
-        borderRadius: '5px',
-        backgroundColor: '#ffe6e6',
-        margin: '20px 0',
+        color: "#ff0000",
+        fontSize: "1.2rem",
+        fontWeight: "bold",
+        textAlign: "center",
+        padding: "20px",
+        border: "1px solid #ff0000",
+        borderRadius: "5px",
+        backgroundColor: "#ffe6e6",
+        margin: "20px 0",
       }}
     >
-      Please note that our bank account payment processing system is currently undergoing maintenance. During this time,
-      we kindly request that you use your credit card for any payments.
+      Please note that our bank account payment processing system is currently
+      undergoing maintenance. During this time, we kindly request that you use
+      your credit card for any payments.
     </p>
   );
 
   /*return (
     <Wrapper>
-      <div className="fs-20 fw-400 mt-3">Select Account</div>
+      <div className="fs-20 font-normal mt-3">Select Account</div>
       {isLoading && <Loader />}
       <div className="listings">
         {!isLoading &&
@@ -108,26 +114,26 @@ const BankAccountsList = ({ onPay, processingPayment }: Props) => {
             >
               <div>
                 <table className="bank-table">
-                  <tr className="fs-1rem fw-400">
+                  <tr className="fs-1rem font-normal">
                     <td>
                       <span className="acc-info--label">Name on Account: &nbsp;</span>
                     </td>
-                    <td className="text-capitalize">{item?.account_holder_name}</td>
+                    <td className="capitalize">{item?.account_holder_name}</td>
                   </tr>
-                  <tr className="fs-1rem fw-400">
+                  <tr className="fs-1rem font-normal">
                     <td>
                       <span className="acc-info--label">Account Type: &nbsp;</span>
                     </td>
                     <td className="capital-first-ltr">{item?.account_holder_type}</td>
                   </tr>
-                  <tr className="fs-1rem fw-400">
+                  <tr className="fs-1rem font-normal">
                     <td>
                       <span className="acc-info--label">Account Number: &nbsp;</span>
                     </td>
                     <td>{formatingAccountNumber(item?.last_4_digit)}</td>
                   </tr>
                   {item?.routing_number && (
-                    <tr className="fs-1rem fw-400">
+                    <tr className="fs-1rem font-normal">
                       <td>
                         <span className="acc-info--label">Routing Number: &nbsp;</span>
                       </td>

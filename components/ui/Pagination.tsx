@@ -1,11 +1,8 @@
 // app/components/PaginationComponent.tsx
 'use client'; // Mark as client component since it handles state and navigation
 
-import Link from 'next/link';
 import styled from 'styled-components';
 import ChevronUp from '@/public/icons/chevronUp.svg';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { useCallback } from 'react';
 
 const PaginationWrap = styled.div`
   .pagination {
@@ -29,6 +26,7 @@ const PaginationWrap = styled.div`
       padding: 0;
       border: none;
       transform: rotate(-90deg);
+      cursor: pointer;
     }
     .next {
       transform: rotate(90deg);
@@ -57,6 +55,7 @@ const PaginationWrap = styled.div`
       box-shadow: 0px 4.8px 28.8px rgba(0, 0, 0, 0.08);
       color: #999;
       text-decoration: none;
+      cursor: pointer;
     }
 
     &.active {
@@ -77,40 +76,21 @@ const PaginationWrap = styled.div`
 interface PaginationProps {
   total: number;
   currentPage: number;
-  onPageChange?: (page: number) => void; // Optional callback for custom handling
+  onPageChange: (page: { selected: number }) => void; // Match Jobs.tsx expectation
 }
 
 export default function PaginationComponent({ total, currentPage, onPageChange }: PaginationProps) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768; // Simple mobile check
 
   // Generate page numbers
-  const pageNumbers = [];
-  const marginPagesDisplayed = isMobile ? 1 : 2;
   const pageRangeDisplayed = isMobile ? 0 : 3;
-  const totalPages = Math.ceil(total);
-
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
-
-  // Handle page change with Next.js query params
-  const handlePageChange = useCallback(
-    (page: number) => {
-      const params = new URLSearchParams(searchParams);
-      params.set('page', page.toString());
-      window.history.pushState(null, '', `${pathname}?${params.toString()}`);
-      if (onPageChange) onPageChange(page); // Trigger custom callback if provided
-    },
-    [pathname, searchParams, onPageChange]
-  );
+  const totalPages = total; // Total pages value is already calculated in parent component
 
   // Determine visible page range
   const getVisiblePages = () => {
     const halfRange = Math.floor(pageRangeDisplayed / 2);
     let start = Math.max(currentPage - halfRange, 1);
-    let end = Math.min(start + pageRangeDisplayed - 1, totalPages);
+    const end = Math.min(start + pageRangeDisplayed - 1, totalPages);
 
     if (end - start < pageRangeDisplayed - 1) {
       start = Math.max(end - pageRangeDisplayed + 1, 1);
@@ -121,39 +101,28 @@ export default function PaginationComponent({ total, currentPage, onPageChange }
 
   const { start, end } = getVisiblePages();
 
+  const handlePageClick = (page: number) => {
+    onPageChange({ selected: page - 1 }); // Subtract 1 to match Jobs.tsx expectation
+  };
+
   return (
     <PaginationWrap>
       <div className="pagination">
         <div className="previous-next">
-          <Link
-            href={{
-              pathname,
-              query: { ...searchParams, page: Math.max(currentPage - 1, 1) },
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              handlePageChange(Math.max(currentPage - 1, 1));
-            }}
+          <button
+            onClick={() => handlePageClick(Math.max(currentPage - 1, 1))}
             className="btn"
+            disabled={currentPage === 1}
           >
             <ChevronUp />
-          </Link>
+          </button>
         </div>
 
         <ul>
           {start > 1 && (
             <>
-              <li>
-                <Link
-                  href={{ pathname, query: { ...searchParams, page: 1 } }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(1);
-                  }}
-                  className={currentPage === 1 ? 'active' : ''}
-                >
-                  1
-                </Link>
+              <li className={currentPage === 1 ? 'active' : ''}>
+                <a onClick={() => handlePageClick(1)}>1</a>
               </li>
               {start > 2 && <li className="break-me">...</li>}
             </>
@@ -161,51 +130,28 @@ export default function PaginationComponent({ total, currentPage, onPageChange }
 
           {Array.from({ length: end - start + 1 }, (_, i) => start + i).map((page) => (
             <li key={page} className={currentPage === page ? 'active' : ''}>
-              <Link
-                href={{ pathname, query: { ...searchParams, page: page.toString() } }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(page);
-                }}
-              >
-                {page}
-              </Link>
+              <a onClick={() => handlePageClick(page)}>{page}</a>
             </li>
           ))}
 
           {end < totalPages && (
             <>
               {end < totalPages - 1 && <li className="break-me">...</li>}
-              <li>
-                <Link
-                  href={{ pathname, query: { ...searchParams, page: totalPages } }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(totalPages);
-                  }}
-                  className={currentPage === totalPages ? 'active' : ''}
-                >
-                  {totalPages}
-                </Link>
+              <li className={currentPage === totalPages ? 'active' : ''}>
+                <a onClick={() => handlePageClick(totalPages)}>{totalPages}</a>
               </li>
             </>
           )}
         </ul>
 
         <div className="previous-next">
-          <Link
-            href={{
-              pathname,
-              query: { ...searchParams, page: Math.min(currentPage + 1, totalPages) },
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              handlePageChange(Math.min(currentPage + 1, totalPages));
-            }}
+          <button
+            onClick={() => handlePageClick(Math.min(currentPage + 1, totalPages))}
             className="next btn"
+            disabled={currentPage === totalPages}
           >
             <ChevronUp />
-          </Link>
+          </button>
         </div>
       </div>
     </PaginationWrap>

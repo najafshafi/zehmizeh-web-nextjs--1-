@@ -35,7 +35,7 @@ const DeletePrompt = ({
           &times;
         </Button>
         <SuccessModalContent className="text-center">
-          <div className="modal-title fw-400">{text}</div>
+          <div className="modal-title font-normal">{text}</div>
           <div className="mt-4 flex items-center justify-content-center gap-2">
             <StyledButton variant="outline-dark" onClick={toggle}>
               {cancelButtonText || "Go Back"}

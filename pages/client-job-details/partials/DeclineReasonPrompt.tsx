@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-import { Modal, Button, Form } from 'react-bootstrap';
-import { StyledModal } from 'components/styled/StyledModal';
-import { StyledButton } from 'components/forms/Buttons';
-import { FormWrapper } from './milestones/milestones.styled';
-import { manageMilestone } from 'helpers/http/jobs';
-import { manageHours } from 'helpers/http/jobs';
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { Modal, Button, Form } from "react-bootstrap";
+import { StyledModal } from "components/styled/StyledModal";
+import { StyledButton } from "components/forms/Buttons";
+import { FormWrapper } from "./milestones/milestones.styled";
+import { manageMilestone } from "helpers/http/jobs";
+import { manageHours } from "helpers/http/jobs";
 
 type Props = {
   show: boolean;
@@ -26,7 +26,7 @@ const DeclineReasonPrompt = ({
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (show && type === 'milestone') {
+    if (show && type === "milestone") {
       setShowWarning(true);
     }
   }, [type, show]);
@@ -35,14 +35,14 @@ const DeclineReasonPrompt = ({
     e.preventDefault();
 
     const body: any = {
-      decline_reason: 'Declined',
-      status: 'decline',
+      decline_reason: "Declined",
+      status: "decline",
     };
-    if (type === 'milestone') {
-      body.action = 'edit_milestone';
+    if (type === "milestone") {
+      body.action = "edit_milestone";
       body.milestone_id = milestoneId;
     } else {
-      body.action = 'edit_hours';
+      body.action = "edit_hours";
       body.hourly_id = milestoneId;
     }
 
@@ -50,14 +50,14 @@ const DeclineReasonPrompt = ({
     // let promise;
 
     let promise = null;
-    if (type === 'hourly') {
+    if (type === "hourly") {
       promise = manageHours(body);
     } else {
       promise = manageMilestone(body);
     }
     if (promise) {
       toast.promise(promise, {
-        loading: 'Loading...',
+        loading: "Loading...",
         success: (res: any) => {
           setLoading(false);
           toggle();
@@ -66,7 +66,7 @@ const DeclineReasonPrompt = ({
         },
         error: (err) => {
           setLoading(false);
-          return err?.response?.data?.message || 'error';
+          return err?.response?.data?.message || "error";
         },
       });
     }
@@ -95,14 +95,14 @@ const DeclineReasonPrompt = ({
         </Button>
         {showWarning && (
           <div>
-            <div className="fs-24 fw-400 text-center mb-3">
+            <div className="fs-24 font-normal text-center mb-3">
               Are you sure you want to terminate this milestone?
             </div>
-            <div className="fs-20 fw-400 text-center mb-3">
+            <div className="fs-20 font-normal text-center mb-3">
               When you terminate, the milestone is closed permanently and the
               money you deposited previously is returned to you.
             </div>
-            <div className="fs-20 fw-400 text-center">
+            <div className="fs-20 font-normal text-center">
               If you are simply not ready to deliver payment because you have
               feedback about the work your freelancer delivered - or because
               your freelancer has not yet delivered the work - close this window
@@ -119,7 +119,7 @@ const DeclineReasonPrompt = ({
 
         {!showWarning && (
           <>
-            <div className="fs-20 fw-400 text-center">
+            <div className="fs-20 font-normal text-center">
               Are you sure you would like to decline this Final Hours
               Submission? This will return the project to a "Project in
               Progress" status and the freelancer will be able to continue to
@@ -129,7 +129,7 @@ const DeclineReasonPrompt = ({
               <Form onSubmit={submitDeclineReason}>
                 <div className="d-flex g-2 flex-wrap mt-4 justify-content-center">
                   <StyledButton
-                    className="fs-16 fw-400"
+                    className="fs-16 font-normal"
                     variant="primary"
                     padding="0.8125rem 2rem"
                     type="submit"
@@ -138,7 +138,7 @@ const DeclineReasonPrompt = ({
                     Reopen the Project
                   </StyledButton>
                   <StyledButton
-                    className="fs-16 fw-400"
+                    className="fs-16 font-normal"
                     variant="outline-dark"
                     padding="0.8125rem 2rem"
                     onClick={closeModal}

@@ -2,44 +2,51 @@
  * This is the the main component that displays the list of hourly submissions
  */
 
-import { useState } from 'react';
-import moment from 'moment';
-import toast from 'react-hot-toast';
-import { MilestonesWrapper, MileStoneListItem } from './hours-management.styled';
-import { StatusBadge } from '@/components/styled/Badges';
-import StripeCompleteWarning from '@/components/jobs/StripeCompleteWarning';
-import NoDataFound from '@/components/ui/NoDataFound';
-import StyledHtmlText from '@/components/ui/StyledHtmlText';
-import AddHoursForm from './AddHoursForm';
-import MoreButton from './MoreButton';
-import { changeStatusDisplayFormat, convertToTitleCase, numberWithCommas } from '@/helpers/utils/misc';
-import { manageHours } from '@/helpers/http/jobs';
-import AttachmentPreview from '@/components/ui/AttachmentPreview';
-import classNames from 'classnames';
-import { paymentProcessingStatusHandler } from '@/helpers/validation/common';
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import moment from "moment";
+import toast from "react-hot-toast";
+import {
+  MilestonesWrapper,
+  MileStoneListItem,
+} from "./hours-management.styled";
+import { StatusBadge } from "@/components/styled/Badges";
+import StripeCompleteWarning from "@/components/jobs/StripeCompleteWarning";
+import NoDataFound from "@/components/ui/NoDataFound";
+import StyledHtmlText from "@/components/ui/StyledHtmlText";
+import AddHoursForm from "./AddHoursForm";
+import MoreButton from "./MoreButton";
+import {
+  changeStatusDisplayFormat,
+  convertToTitleCase,
+  numberWithCommas,
+} from "@/helpers/utils/misc";
+import { manageHours } from "@/helpers/http/jobs";
+import AttachmentPreview from "@/components/ui/AttachmentPreview";
+import classNames from "classnames";
+import { paymentProcessingStatusHandler } from "@/helpers/validation/common";
+import { Link } from "react-router-dom";
 
 const STATUS = {
   paid: {
-    color: 'green',
+    color: "green",
   },
   under_dispute: {
-    color: 'darkPink',
+    color: "darkPink",
   },
   decline: {
-    color: 'darkPink',
+    color: "darkPink",
   },
   declined: {
-    color: 'darkPink',
+    color: "darkPink",
   },
   payment_processing: {
-    color: 'yellow',
+    color: "yellow",
   },
   cancelled: {
-    color: 'darkPink',
+    color: "darkPink",
   },
   decline_dispute: {
-    color: 'darkPink',
+    color: "darkPink",
   },
 };
 
@@ -61,25 +68,25 @@ const HoursManagement = ({
   };
   const [stripeWarningModalState, setStripeModalWarningState] = useState<any>({
     show: false,
-    stripeStatus: '',
+    stripeStatus: "",
   });
 
   const onDelete = (hourlyId: string) => {
     // Delete hours api call
 
     const body = {
-      action: 'delete_hours',
+      action: "delete_hours",
       hourly_id: hourlyId,
     };
     const promise = manageHours(body);
     toast.promise(promise, {
-      loading: 'Loading...',
+      loading: "Loading...",
       success: (res) => {
         refetch();
         return res.response;
       },
       error: (err) => {
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
@@ -99,7 +106,7 @@ const HoursManagement = ({
   const closeStripeModal = () => {
     setStripeModalWarningState({
       show: false,
-      stripeStatus: '',
+      stripeStatus: "",
     });
   };
 
@@ -109,7 +116,11 @@ const HoursManagement = ({
         <div>
           <NoDataFound className="pb-2" />
           <p className="text-center mt-4">
-            Check <Link to="/support/faq/working_a_project">Working a Project FAQs</Link> section for more information
+            Check{" "}
+            <Link to="/support/faq/working_a_project">
+              Working a Project FAQs
+            </Link>{" "}
+            section for more information
           </p>
         </div>
       )}
@@ -123,60 +134,83 @@ const HoursManagement = ({
             <div>
               <div className="d-flex justify-content-between gap-3">
                 <div
-                  className={classNames('heading fs-20 fw-400 capital-first-ltr', {
-                    'mb-3': item.is_final_milestone,
-                  })}
+                  className={classNames(
+                    "heading fs-20 font-normal capital-first-ltr",
+                    {
+                      "mb-3": item.is_final_milestone,
+                    }
+                  )}
                 >
-                  {item.is_final_milestone ? 'Final Submission' : 'Submission ' + ++index}:{' '}
-                  {convertToTitleCase(item.title)}
+                  {item.is_final_milestone
+                    ? "Final Submission"
+                    : "Submission " + ++index}
+                  : {convertToTitleCase(item.title)}
                 </div>
-                {item.hourly_status === 'pending' ? (
+                {item.hourly_status === "pending" ? (
                   !item.is_final_milestone ? (
-                    <MoreButton onDelete={() => onDelete(item.hourly_id)} handleEdit={() => handleEdit(item)} />
+                    <MoreButton
+                      onDelete={() => onDelete(item.hourly_id)}
+                      handleEdit={() => handleEdit(item)}
+                    />
                   ) : null
                 ) : (
                   <div>
-                    <StatusBadge color={STATUS[item.hourly_status]?.color || 'green'}>
-                      {['decline_dispute'].includes(item.hourly_status) && item?.dispute_submitted_by === 'CLIENT'
-                        ? 'Closed by Client'
-                        : ['decline_dispute'].includes(item.hourly_status) &&
-                          item?.dispute_submitted_by === 'FREELANCER'
-                        ? 'Canceled'
-                        : ['decline', 'declined'].includes(item.hourly_status)
-                        ? 'Declined'
-                        : ['cancelled'].includes(item.hourly_status) && item?.is_paid === 0
-                        ? 'Canceled by Freelancer'
-                        : item.hourly_status === 'payment_processing'
+                    <StatusBadge
+                      color={STATUS[item.hourly_status]?.color || "green"}
+                    >
+                      {["decline_dispute"].includes(item.hourly_status) &&
+                      item?.dispute_submitted_by === "CLIENT"
+                        ? "Closed by Client"
+                        : ["decline_dispute"].includes(item.hourly_status) &&
+                          item?.dispute_submitted_by === "FREELANCER"
+                        ? "Canceled"
+                        : ["decline", "declined"].includes(item.hourly_status)
+                        ? "Declined"
+                        : ["cancelled"].includes(item.hourly_status) &&
+                          item?.is_paid === 0
+                        ? "Canceled by Freelancer"
+                        : item.hourly_status === "payment_processing"
                         ? paymentProcessingStatusHandler(item?.payment_method)
-                        : changeStatusDisplayFormat(item.hourly_status, '_')}
+                        : changeStatusDisplayFormat(item.hourly_status, "_")}
                     </StatusBadge>
                   </div>
                 )}
               </div>
               <div
                 className={classNames(
-                  'd-flex flex-md-row flex-column justify-content-between align-items-md-end gap-2',
+                  "d-flex flex-md-row flex-column justify-content-between align-items-md-end gap-2",
                   {
-                    'mt-3': item.hourly_status !== 'pending',
+                    "mt-3": item.hourly_status !== "pending",
                   }
                 )}
               >
-                <h4 className="amount fs-32 fw-400">{numberWithCommas(item.total_amount, 'USD')}</h4>
+                <h4 className="amount fs-32 font-normal">
+                  {numberWithCommas(item.total_amount, "USD")}
+                </h4>
 
                 <div>
                   {!!item.date_created && (
-                    <div className="fs-18 fw-400">
-                      Submitted on {item.date_created ? moment(item.date_created).format('MMM DD, YYYY') : ''}
+                    <div className="fs-18 font-normal">
+                      Submitted on{" "}
+                      {item.date_created
+                        ? moment(item.date_created).format("MMM DD, YYYY")
+                        : ""}
                     </div>
                   )}
                   {!!item.cancelled_date && (
-                    <div className="fs-18 fw-400">
-                      Closed on {item.cancelled_date ? moment(item.cancelled_date).format('MMM DD, YYYY') : ''}
+                    <div className="fs-18 font-normal">
+                      Closed on{" "}
+                      {item.cancelled_date
+                        ? moment(item.cancelled_date).format("MMM DD, YYYY")
+                        : ""}
                     </div>
                   )}
-                  {item.hourly_status == 'paid' && (
-                    <div className="fs-18 fw-400">
-                      Paid on {item.paid_date ? moment(item.paid_date).format('MMM DD, YYYY') : ''}
+                  {item.hourly_status == "paid" && (
+                    <div className="fs-18 font-normal">
+                      Paid on{" "}
+                      {item.paid_date
+                        ? moment(item.paid_date).format("MMM DD, YYYY")
+                        : ""}
                     </div>
                   )}
                 </div>
@@ -184,11 +218,15 @@ const HoursManagement = ({
             </div>
             <div className="d-flex flex-md-row flex-column justify-content-between align-items-md-end gap-3">
               <div>
-                <StyledHtmlText needToBeShorten htmlString={item.description} id={`mstone_${item.hourly_id}`} />
+                <StyledHtmlText
+                  needToBeShorten
+                  htmlString={item.description}
+                  id={`mstone_${item.hourly_id}`}
+                />
 
                 {item?.attachments ? (
                   <div className="d-flex items-center justify-content-start gap-3">
-                    {item?.attachments?.split(',').map((att, index) => (
+                    {item?.attachments?.split(",").map((att, index) => (
                       <div className="mt-3" key={`attachments-${index}`}>
                         <AttachmentPreview
                           uploadedFile={att}
@@ -200,9 +238,11 @@ const HoursManagement = ({
                   </div>
                 ) : null}
               </div>
-              {item.hourly_status == 'pending' && (
+              {item.hourly_status == "pending" && (
                 <div className="request-release-btn">
-                  <StatusBadge color="yellow">Waiting for Client to Pay</StatusBadge>
+                  <StatusBadge color="yellow">
+                    Waiting for Client to Pay
+                  </StatusBadge>
                 </div>
               )}
             </div>

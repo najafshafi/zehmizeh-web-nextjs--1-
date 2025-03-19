@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { Modal, Button } from 'react-bootstrap';
-import { StyledModal } from 'components/styled/StyledModal';
-import { StyledButton } from 'components/forms/Buttons';
-import { endJob } from 'helpers/http/jobs';
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { Modal, Button } from "react-bootstrap";
+import { StyledModal } from "components/styled/StyledModal";
+import { StyledButton } from "components/forms/Buttons";
+import { endJob } from "helpers/http/jobs";
 
 type Props = {
   show: boolean;
@@ -34,7 +34,7 @@ const ConfirmEndRequestPrompt = ({
     const promise = endJob(body);
 
     toast.promise(promise, {
-      loading: 'Please wait...',
+      loading: "Please wait...",
       success: (res) => {
         setLoading(false);
         onEndJob();
@@ -43,7 +43,7 @@ const ConfirmEndRequestPrompt = ({
       error: (err) => {
         setLoading(false);
         toggle();
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
@@ -55,7 +55,7 @@ const ConfirmEndRequestPrompt = ({
           &times;
         </Button>
         <div className="text-center">
-          <div className="fs-20 fw-400">
+          <div className="fs-20 font-normal">
             Are you sure you want to end this job?
           </div>
           <div className="mt-4 d-flex align-items-center justify-content-center gap-3 flex-wrap">

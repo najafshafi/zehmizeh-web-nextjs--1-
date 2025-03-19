@@ -1,17 +1,17 @@
-import { useState, useCallback, useEffect } from 'react';
-import { Container, Row, Col, Form } from 'react-bootstrap';
-import { StyledFormGroup, FormWrapper } from './steps.styled';
-import { StyledButton } from '@/components/forms/Buttons';
-import ErrorMessage from '@/components/ui/ErrorMessage';
-import { getYupErrors } from '@/helpers/utils/misc';
-import EditPictureModal from '@/components/ui/EditPictureModal';
-import  EditBlueIcon  from '@/public/icons/edit-blue-outline.svg';
-import { editUser } from '@/helpers/http/auth';
-import toast from 'react-hot-toast';
-import { SeeMore } from '@/components/ui/SeeMore';
-import { IClientDetails } from '@/helpers/types/client.type';
-import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
-import { completeProfilePersonalDetailsValidation } from '@/helpers/validation/completProfileValidation';
+import { useState, useCallback, useEffect } from "react";
+import { Container, Row, Col, Form } from "react-bootstrap";
+import { StyledFormGroup, FormWrapper } from "./steps.styled";
+import { StyledButton } from "@/components/forms/Buttons";
+import ErrorMessage from "@/components/ui/ErrorMessage";
+import { getYupErrors } from "@/helpers/utils/misc";
+import EditPictureModal from "@/components/ui/EditPictureModal";
+import EditBlueIcon from "@/public/icons/edit-blue-outline.svg";
+import { editUser } from "@/helpers/http/auth";
+import toast from "react-hot-toast";
+import { SeeMore } from "@/components/ui/SeeMore";
+import { IClientDetails } from "@/helpers/types/client.type";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+import { completeProfilePersonalDetailsValidation } from "@/helpers/validation/completProfileValidation";
 
 type Props = {
   onUpdate: (data: Partial<IClientDetails & IFreelancerDetails>) => void;
@@ -58,11 +58,11 @@ const PersonalDetails = ({
   };
 
   const countCharactersWithoutSpaces = (text) => {
-    return text.replace(/\s+/g, '').length;
+    return text.replace(/\s+/g, "").length;
   };
 
   const handleImageChange = (uploadedUrl: string) => {
-    handleChange('user_image', uploadedUrl);
+    handleChange("user_image", uploadedUrl);
 
     const body = {
       user_image: uploadedUrl,
@@ -71,13 +71,13 @@ const PersonalDetails = ({
     const promise = editUser(body);
 
     toast.promise(promise, {
-      loading: 'Updating your details - please wait...',
+      loading: "Updating your details - please wait...",
       success: (res: { message: string }) => {
         setShowEditPictureModal(false);
         return res.message;
       },
       error: (err) => {
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
@@ -87,9 +87,9 @@ const PersonalDetails = ({
     if (client) {
       return (
         <>
-          <div className="fs-sm fw-400 mb-3">
+          <div className="fs-sm font-normal mb-3">
             <b className="fs-18">Profile Pic</b> (Optional)
-            <p className="mt-2 mb-0 text-justify fs-18 fw-400">
+            <p className="mt-2 mb-0 text-justify fs-18 font-normal">
               To make your profile even more personable, you can add a profile
               pic. Some users share a photo of their face, but it is also common
               to share your professional logo or a cartoon avatar instead.
@@ -102,7 +102,7 @@ const PersonalDetails = ({
             >
               <img
                 className="img"
-                src={formState?.user_image || '/images/default_avatar.png'}
+                src={formState?.user_image || "/images/default_avatar.png"}
                 alt="freelancer-profile"
               />
               <div className="edit-picture-btn d-flex align-items-center justify-content-center">
@@ -127,7 +127,7 @@ const PersonalDetails = ({
         <Row>
           <Col>
             <StyledFormGroup>
-              <div className="fs-sm fw-400 mb-2">
+              <div className="fs-sm font-normal mb-2">
                 <b className="fs-18">
                   Headline
                   <span className="mandatory">&nbsp;*</span>
@@ -148,18 +148,19 @@ const PersonalDetails = ({
                   </p>
                 )}
                 <SeeMore onClick={() => setSeeMore((prev) => !prev)}>
-                  {seeMore ? 'See Less' : 'See More'}
+                  {seeMore ? "See Less" : "See More"}
                 </SeeMore>
               </div>
               <Form.Control
                 placeholder="Add a tagline to introduce what you do professionally"
                 className="form-input"
                 value={formState?.job_title}
-                onChange={(e) => handleChange('job_title', e.target.value)}
+                onChange={(e) => handleChange("job_title", e.target.value)}
                 maxLength={150}
               />
               <div className="character-counter">
-                {150 - countCharactersWithoutSpaces(formState?.job_title)}/150 characters
+                {150 - countCharactersWithoutSpaces(formState?.job_title)}/150
+                characters
               </div>
               {errors?.job_title && <ErrorMessage message={errors.job_title} />}
             </StyledFormGroup>
@@ -169,7 +170,7 @@ const PersonalDetails = ({
         <Row>
           <Col>
             <StyledFormGroup>
-              <div className="fs-sm fw-400">
+              <div className="fs-sm font-normal">
                 <b className="fs-18">Hourly Rate</b> (Optional)
                 <p className="fs-base mt-2 mb-0 text-justify text-secondary">
                   If you have a standard hourly rate for your services, share it
@@ -185,8 +186,8 @@ const PersonalDetails = ({
                   value={formState?.hourly_rate}
                   onChange={(e) =>
                     handleChange(
-                      'hourly_rate',
-                      e.target.value.replace(/\D/g, '')
+                      "hourly_rate",
+                      e.target.value.replace(/\D/g, "")
                     )
                   }
                   maxLength={3}

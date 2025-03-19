@@ -1,5 +1,5 @@
-import { createGlobalStyle } from 'styled-components';
-import { myTheme } from './theme';
+import { createGlobalStyle } from "styled-components";
+import { myTheme } from "./theme";
 export const CssUtils = createGlobalStyle<{ theme: typeof myTheme }>`
   .mb-2r{
     margin-bottom: 2rem;
@@ -46,7 +46,7 @@ export const CssUtils = createGlobalStyle<{ theme: typeof myTheme }>`
   .fw-300{
     font-weight: 300;
   }
-  .fw-400{
+  .font-normal{
     font-weight: 400;
   }
   .fw-500{

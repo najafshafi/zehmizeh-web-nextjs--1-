@@ -59,7 +59,9 @@ const ManageNotificationModal = ({
         </Button>
         <Wrapper>
           <div className="content flex flex-column">
-            <div className="modal-title fs-28 fw-400">Manage Notification</div>
+            <div className="modal-title fs-28 font-normal">
+              Manage Notification
+            </div>
             <Select
               defaultValue={selectedOPT}
               value={selectedOPT}

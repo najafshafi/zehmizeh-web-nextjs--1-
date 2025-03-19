@@ -1,7 +1,11 @@
+"use client";
+
 import React from "react";
 import Navbar from "@/components/navbar/Navbar";
 import FreelancerProfileSettings from "../../../../pages/freelancer-profile-settings/FreelancerProfileSettings";
-const page = () => {
+
+// This is a client component that handles the dynamic routing
+export default function Page() {
   return (
     <div>
       <div className="flex flex-col">
@@ -12,6 +16,4 @@ const page = () => {
       </div>
     </div>
   );
-};
-
-export default page;
+}
