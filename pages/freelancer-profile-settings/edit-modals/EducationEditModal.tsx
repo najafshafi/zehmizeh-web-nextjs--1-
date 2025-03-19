@@ -156,7 +156,7 @@ const EducationEditModal = ({
       ></div>
 
       {/* Modal Content */}
-      <div className="bg-white rounded-xl w-full max-w-[678px] max-h-[90vh] py-8 px-5 md:px-12 relative z-50 m-4">
+      <div className="bg-white rounded-xl w-full max-w-[678px] max-h-[90vh] py-[2rem] px-[1rem] md:py-[3.20rem] md:px-12 relative z-50 m-2">
         {/* Close Button */}
         <VscClose
           className="absolute top-4 md:top-0 right-4 md:-right-8 text-2xl text-black md:text-white hover:text-gray-200 cursor-pointer"
@@ -165,7 +165,7 @@ const EducationEditModal = ({
 
         {/* Modal Content */}
         <div className="space-y-5">
-          <h2 className="text-[#212529] text-2xl sm:text-[28px] font-medium text-center sm:text-left">
+          <h2 className="text-[#212529] text-[1.75rem] font-medium text-left">
             Education
           </h2>
 
@@ -178,7 +178,7 @@ const EducationEditModal = ({
               <input
                 type="text"
                 placeholder="Enter degree name"
-                className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                className="w-full px-5 py-4 border rounded-md focus:outline-none border-black focus:ring-4 focus:ring-[#0d6efd40] transition-all"
                 value={formState.degreeName}
                 onChange={(e) =>
                   handleChange(
@@ -195,13 +195,13 @@ const EducationEditModal = ({
 
             {/* University Field */}
             <div className="form-group">
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-medium mb-2 text-[#212529]">
                 University<span className="text-red-500">&nbsp;*</span>
               </label>
               <input
                 type="text"
                 placeholder="Enter university name"
-                className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                className="w-full px-5 py-4 border rounded-md focus:outline-none border-black focus:ring-4 focus:ring-[#0d6efd40] transition-all"
                 value={formState.university}
                 onChange={(e) =>
                   handleChange(
@@ -226,7 +226,7 @@ const EducationEditModal = ({
                 <input
                   type="text"
                   placeholder="Year you began the program"
-                  className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="w-full px-5 py-4 border rounded-md focus:outline-none border-black focus:ring-4 focus:ring-[#0d6efd40] transition-all"
                   value={formState.from}
                   onChange={(e) => handleChange("from", e.target.value)}
                 />
@@ -241,7 +241,7 @@ const EducationEditModal = ({
                 <input
                   type="text"
                   placeholder="Year you completed the program"
-                  className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="w-full px-5 py-4 border rounded-md focus:outline-none border-black focus:ring-4 focus:ring-[#0d6efd40] transition-all"
                   value={formState.to}
                   onChange={(e) => handleChange("to", e.target.value)}
                 />
@@ -251,11 +251,11 @@ const EducationEditModal = ({
           </div>
 
           {/* Update Button */}
-          <div className="flex justify-center md:justify-end !mt-9">
+          <div className="flex justify-center lg:justify-end !mt-9">
             <button
               onClick={validate}
               disabled={loading}
-              className={`bg-[#F7B500] text-[#212529] px-9 py-[1.15rem] hover:scale-105 duration-300 text-lg rounded-full disabled:opacity-70 ${
+              className={`bg-[#f2b420] text-[#212529] px-9 py-[1.15rem] hover:scale-105 duration-300 text-lg rounded-full disabled:opacity-70 ${
                 loading ? "opacity-50 cursor-not-allowed" : ""
               }`}
               style={{ lineHeight: 1.6875 }}

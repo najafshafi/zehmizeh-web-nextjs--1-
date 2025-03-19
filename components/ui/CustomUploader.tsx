@@ -217,7 +217,7 @@ const CustomUploader = ({
   return (
     <Wrapper>
       <label
-        className={`file-uploader w-100 fs-1rem fw-300 pointer flex ${
+        className={`file-uploader w-full text-base font-light pointer flex ${
           uploading ? "uploading" : ""
         }`}
         htmlFor="file-upload"
@@ -242,12 +242,15 @@ const CustomUploader = ({
         multiple={multiple}
       />
       <UploadCount>
-        <div className="upload-file-types w-100 fs-1rem fw-300 mt-2">
+        <div className="upload-file-types w-full text-base font-light mt-2">
           {suggestions ||
             "File type: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG, JPEG"}
         </div>
         {limit && (
-          <div className="fs-1rem fw-300 mt-2 ms-2" style={{ flex: "none" }}>
+          <div
+            className="text-base font-light mt-2 ms-2"
+            style={{ flex: "none" }}
+          >
             {count}/{limit}
           </div>
         )}
