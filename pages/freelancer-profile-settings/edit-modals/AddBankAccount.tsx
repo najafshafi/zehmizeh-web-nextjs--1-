@@ -168,7 +168,7 @@ const AddBankAccount = ({ show, onClose, onUpdate }: Props) => {
           &times;
         </Button>
         <div>
-          <div className="fs-28 fw-400 mb-3">Add Payment Details</div>
+          <div className="fs-28 font-normal mb-3">Add Payment Details</div>
           <div className="flex items-center">
             Add Details Below&nbsp;
             <Tooltip>

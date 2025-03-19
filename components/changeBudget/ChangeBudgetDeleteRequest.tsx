@@ -1,10 +1,10 @@
-import { StyledButton } from '@/components/forms/Buttons';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { budgetChangeDeleteRequest } from '@/helpers/http/proposals';
-import { TapiResponse } from '@/helpers/types/apiRequestResponse';
-import { useState } from 'react';
-import { Button, Modal } from 'react-bootstrap';
-import toast from 'react-hot-toast';
+import { StyledButton } from "@/components/forms/Buttons";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { budgetChangeDeleteRequest } from "@/helpers/http/proposals";
+import { TapiResponse } from "@/helpers/types/apiRequestResponse";
+import { useState } from "react";
+import { Button, Modal } from "react-bootstrap";
+import toast from "react-hot-toast";
 
 type Props = {
   show: boolean;
@@ -30,7 +30,7 @@ export const ChangeBudgetDeleteRequest = ({
   const handleDelete = () => {
     setIsLoading(true);
     toast.promise(apiCall(), {
-      loading: 'Please wait...',
+      loading: "Please wait...",
       success: (res: TapiResponse<unknown>) => {
         setIsLoading(false);
         setShow(false);
@@ -38,7 +38,7 @@ export const ChangeBudgetDeleteRequest = ({
       },
       error: (err) => {
         setIsLoading(false);
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
@@ -54,7 +54,7 @@ export const ChangeBudgetDeleteRequest = ({
           &times;
         </Button>
         <div className="text-center">
-          <div className="fs-32 fw-400">
+          <div className="fs-32 font-normal">
             Are you sure you want to delete this request?
           </div>
 

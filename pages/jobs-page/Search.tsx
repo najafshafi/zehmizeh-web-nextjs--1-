@@ -1,10 +1,10 @@
 /*
  * Search component that helps to search the jobs in the jobs page on the freelancer side  *
  */
-import { useState } from 'react';
-import styled from 'styled-components';
-import { ReactComponent as SearchIcon } from 'assets/icons/search.svg';
-import { ReactComponent as CrossIcon } from 'assets/icons/cross-black.svg';
+import { useState } from "react";
+import styled from "styled-components";
+import { ReactComponent as SearchIcon } from "assets/icons/search.svg";
+import { ReactComponent as CrossIcon } from "assets/icons/cross-black.svg";
 
 interface Props {
   searchTerm: string;
@@ -50,9 +50,9 @@ const Search = ({ searchTerm, onChange }: Props) => {
   const toggleSearch = (value) => {
     // This will toggle the search box
     if (value) {
-      document.getElementById('search-box').classList.add('active');
+      document.getElementById("search-box").classList.add("active");
     } else {
-      document.getElementById('search-box').classList.remove('active');
+      document.getElementById("search-box").classList.remove("active");
     }
     setFocused(value);
   };
@@ -60,7 +60,7 @@ const Search = ({ searchTerm, onChange }: Props) => {
   const hideSearchbox = (e: any) => {
     e.stopPropagation();
     toggleSearch(false);
-    onChange('');
+    onChange("");
   };
 
   return (
@@ -79,7 +79,9 @@ const Search = ({ searchTerm, onChange }: Props) => {
       />
       <div className="search-icon-label d-flex align-items-center">
         {focused ? <CrossIcon onClick={hideSearchbox} /> : <SearchIcon />}
-        {!focused && <div className="fs-18 fw-400">Search My Projects</div>}
+        {!focused && (
+          <div className="fs-18 font-normal">Search My Projects</div>
+        )}
       </div>
     </SearchWrapper>
   );

@@ -3,17 +3,17 @@
 /*
  * This is a prompt modal for deleting..
  */
-import { useEffect, useMemo } from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import { useInfiniteQuery } from 'react-query';
-import styled from 'styled-components';
-import { StyledModal } from '@/components/styled/StyledModal';
-import SearchBox from '@/components/ui/SearchBox';
-import useDebounce from '@/helpers/hooks/useDebounce';
-import messageService from '@/helpers/http/message';
-import { getUtcDate } from '@/helpers/utils/misc';
-import { MessageProps } from '../messaging.types';
-import { useAuth } from '@/helpers/contexts/auth-context';
+import { useEffect, useMemo } from "react";
+import { Modal, Button } from "react-bootstrap";
+import { useInfiniteQuery } from "react-query";
+import styled from "styled-components";
+import { StyledModal } from "@/components/styled/StyledModal";
+import SearchBox from "@/components/ui/SearchBox";
+import useDebounce from "@/helpers/hooks/useDebounce";
+import messageService from "@/helpers/http/message";
+import { getUtcDate } from "@/helpers/utils/misc";
+import { MessageProps } from "../messaging.types";
+import { useAuth } from "@/helpers/contexts/auth-context";
 
 const StyledWrapper = styled(StyledModal)`
   word-break: break-word;
@@ -79,31 +79,37 @@ const SearchMessagesModal = ({
   const deboubcedSearch = useDebounce(searchTerm, 500);
   const { user } = useAuth();
 
-  const { data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } = useInfiniteQuery(
-    ['search-messages', deboubcedSearch],
-    ({ pageParam = 1 }) =>
-      messageService.searchMessages({
-        job_id: jobId,
-        remote_user_id: remoteUserId,
-        page: pageParam,
-        limit: LIMIT,
-        text: deboubcedSearch,
-      }),
-    {
-      getNextPageParam: (lastPage, allPages) => {
-        const currentDataCount = allPages.reduce((sum, item) => (sum += item?.data?.chatResult?.length), 0);
-        const total = allPages[0]?.data?.total;
-        const hasNext =
-          Number(currentDataCount) < Number(total) ? Math.ceil(Number(currentDataCount) / LIMIT) + 1 : false;
-        return hasNext;
-      },
-      enabled: !!deboubcedSearch,
-      select: (data) => ({
-        pages: data.pages.flatMap((x) => x?.data?.chatResult),
-        pageParams: data.pageParams,
-      }),
-    }
-  );
+  const { data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } =
+    useInfiniteQuery(
+      ["search-messages", deboubcedSearch],
+      ({ pageParam = 1 }) =>
+        messageService.searchMessages({
+          job_id: jobId,
+          remote_user_id: remoteUserId,
+          page: pageParam,
+          limit: LIMIT,
+          text: deboubcedSearch,
+        }),
+      {
+        getNextPageParam: (lastPage, allPages) => {
+          const currentDataCount = allPages.reduce(
+            (sum, item) => (sum += item?.data?.chatResult?.length),
+            0
+          );
+          const total = allPages[0]?.data?.total;
+          const hasNext =
+            Number(currentDataCount) < Number(total)
+              ? Math.ceil(Number(currentDataCount) / LIMIT) + 1
+              : false;
+          return hasNext;
+        },
+        enabled: !!deboubcedSearch,
+        select: (data) => ({
+          pages: data.pages.flatMap((x) => x?.data?.chatResult),
+          pageParams: data.pageParams,
+        }),
+      }
+    );
 
   const searchResults = useMemo(() => {
     return data?.pages || [];
@@ -122,7 +128,7 @@ const SearchMessagesModal = ({
   useEffect(() => {
     if (show) {
       setTimeout(() => {
-        const elem = document.getElementById('search-msg-input');
+        const elem = document.getElementById("search-msg-input");
         if (elem) {
           elem.focus();
         }
@@ -135,16 +141,23 @@ const SearchMessagesModal = ({
   };
 
   const onClear = () => {
-    onChange('');
+    onChange("");
   };
 
   return (
-    <StyledWrapper maxwidth={718} show={show} size="lg" onHide={onClose} autoFocus={true} animation={false}>
+    <StyledWrapper
+      maxwidth={718}
+      show={show}
+      size="lg"
+      onHide={onClose}
+      autoFocus={true}
+      animation={false}
+    >
       <Modal.Body>
         <Button variant="transparent" className="close" onClick={onClose}>
           &times;
         </Button>
-        <div className="title fs-28 fw-400 mb-3">Search messages</div>
+        <div className="title fs-28 font-normal mb-3">Search messages</div>
         <SearchBox
           placeholder="Search messages"
           value={searchTerm}
@@ -156,7 +169,7 @@ const SearchMessagesModal = ({
           enableBorder={true}
         />
 
-        {!isFetching && searchTerm === '' && searchResults?.length === 0 && (
+        {!isFetching && searchTerm === "" && searchResults?.length === 0 && (
           <div className="d-flex justify-content-center mt-4">
             <span className="text-center fs-18 opacity-50 mx-5">
               Search for messages within message thread of "{jobTitle}" project.
@@ -167,34 +180,53 @@ const SearchMessagesModal = ({
         {searchResults?.length > 0 && (
           <div className="search-results">
             {searchResults?.map((msg: MessageProps) => (
-              <div className="msg-item p-3 pointer d-flex gap-2" key={msg.chat_id} onClick={onSelect(msg)}>
-                {isRemote(msg) ? <img src={msg.user_image} className="user-img" /> : null}
+              <div
+                className="msg-item p-3 pointer d-flex gap-2"
+                key={msg.chat_id}
+                onClick={onSelect(msg)}
+              >
+                {isRemote(msg) ? (
+                  <img src={msg.user_image} className="user-img" />
+                ) : null}
                 <div>
-                  {/* <div className="msg fs-18 fw-400 mb-1">
+                  {/* <div className="msg fs-18 font-normal mb-1">
                     {highlightSearch(msg.message_text)}
                   </div> */}
                   <MessageText msg={msg} searchTerm={searchTerm} />
-                  <span className="msg-by fs-sm fw-400 opacity-50 text-capitalize">
-                    {isRemote(msg) ? `${msg.first_name} ${msg.last_name}` : 'You'}
+                  <span className="msg-by fs-sm font-normal opacity-50 capitalize">
+                    {isRemote(msg)
+                      ? `${msg.first_name} ${msg.last_name}`
+                      : "You"}
                   </span>
-                  <span className="msg-date fs-sm fw-400 opacity-50 flex-2">
-                    {' '}
-                    on {getUtcDate(msg.date_created.replace(/-/g, '/') || '', 'MMM DD[,] YYYY [|] hh:mm A')}
+                  <span className="msg-date fs-sm font-normal opacity-50 flex-2">
+                    {" "}
+                    on{" "}
+                    {getUtcDate(
+                      msg.date_created.replace(/-/g, "/") || "",
+                      "MMM DD[,] YYYY [|] hh:mm A"
+                    )}
                   </span>
                 </div>
               </div>
             ))}
             {searchResults?.length > 0 && hasNextPage ? (
               <div className="loadmore-btn p-2">
-                <LoadMoreButton onClick={fetchNextPage} disabled={isFetchingNextPage} />
+                <LoadMoreButton
+                  onClick={fetchNextPage}
+                  disabled={isFetchingNextPage}
+                />
               </div>
             ) : null}
           </div>
         )}
 
-        {!isFetching && searchResults?.length === 0 && deboubcedSearch !== '' && (
-          <div className="mt-4 fs-18 text-center">No messages found with "{deboubcedSearch}"</div>
-        )}
+        {!isFetching &&
+          searchResults?.length === 0 &&
+          deboubcedSearch !== "" && (
+            <div className="mt-4 fs-18 text-center">
+              No messages found with "{deboubcedSearch}"
+            </div>
+          )}
       </Modal.Body>
     </StyledWrapper>
   );
@@ -202,22 +234,39 @@ const SearchMessagesModal = ({
 
 export default SearchMessagesModal;
 
-const MessageText = ({ msg, searchTerm }: { msg: MessageProps; searchTerm: string }) => {
+const MessageText = ({
+  msg,
+  searchTerm,
+}: {
+  msg: MessageProps;
+  searchTerm: string;
+}) => {
   useEffect(() => {
     const result = msg.message_text;
-    const reg = new RegExp(searchTerm, 'gi');
+    const reg = new RegExp(searchTerm, "gi");
     const final_str = result.replace(reg, function (str) {
-      return '<b>' + str + '</b>';
+      return "<b>" + str + "</b>";
     });
     const msgElem = document.getElementById(`search_msg_item_${msg.chat_id}`);
     if (msgElem) {
       msgElem.innerHTML = String(final_str);
     }
   }, [msg, searchTerm]);
-  return <div id={`search_msg_item_${msg.chat_id}`} className="msg fs-18 fw-400 mb-1" />;
+  return (
+    <div
+      id={`search_msg_item_${msg.chat_id}`}
+      className="msg fs-18 font-normal mb-1"
+    />
+  );
 };
 
-const LoadMoreButton = ({ onClick, disabled }: { onClick: () => void; disabled: boolean }) => {
+const LoadMoreButton = ({
+  onClick,
+  disabled,
+}: {
+  onClick: () => void;
+  disabled: boolean;
+}) => {
   return (
     <Button disabled={disabled} onClick={onClick}>
       Load More

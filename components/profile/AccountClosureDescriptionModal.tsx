@@ -68,7 +68,7 @@ const AccountClosureDescriptionModal = ({
         <ContentWrapper>
           <Form onSubmit={handleSubmit}>
             <div className="content">
-              <div className="fs-20 fw-400">
+              <div className="fs-20 font-normal">
                 We're sorry to see you go! We can improve with your feedback...
                 please let us know why you're closing your account.
               </div>
@@ -83,7 +83,7 @@ const AccountClosureDescriptionModal = ({
             </div>
             <div className="bottom-buttons flex">
               <StyledButton
-                className="fs-16 fw-400"
+                className="fs-16 font-normal"
                 variant="primary"
                 padding="0.8125rem 2rem"
                 type="submit"

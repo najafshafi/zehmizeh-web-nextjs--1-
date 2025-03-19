@@ -1,16 +1,16 @@
-import { StyledButton } from '@/components/forms/Buttons';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { budgetChangeSeenDeniedModal } from '@/helpers/http/proposals';
-import { TapiResponse } from '@/helpers/types/apiRequestResponse';
-import { TJobDetails } from '@/helpers/types/job.type';
-import { useState } from 'react';
-import { Modal } from 'react-bootstrap';
-import toast from 'react-hot-toast';
+import { StyledButton } from "@/components/forms/Buttons";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { budgetChangeSeenDeniedModal } from "@/helpers/http/proposals";
+import { TapiResponse } from "@/helpers/types/apiRequestResponse";
+import { TJobDetails } from "@/helpers/types/job.type";
+import { useState } from "react";
+import { Modal } from "react-bootstrap";
+import toast from "react-hot-toast";
 
 type Props = {
   jobDetails: TJobDetails;
   refetch: () => void;
-  userType: 'client' | 'freelancer';
+  userType: "client" | "freelancer";
 };
 
 export const ChangeBudgetDeniedModal = ({
@@ -19,9 +19,9 @@ export const ChangeBudgetDeniedModal = ({
   userType,
 }: Props) => {
   const jobTypeText =
-    jobDetails.proposal.approved_budget.type === 'fixed'
-      ? 'budget'
-      : 'hourly rate';
+    jobDetails.proposal.approved_budget.type === "fixed"
+      ? "budget"
+      : "hourly rate";
 
   /*
       1. is_seen_denied_modal is 0 so user hasn't already seen denied modal
@@ -30,7 +30,7 @@ export const ChangeBudgetDeniedModal = ({
       */
   const shouldShowModal =
     jobDetails?.proposal?.budget_change?.is_seen_denied_modal === 0 &&
-    jobDetails?.proposal?.budget_change?.status === 'denied' &&
+    jobDetails?.proposal?.budget_change?.status === "denied" &&
     jobDetails?.proposal?.budget_change?.requested_by === userType;
 
   const [isLoading, setIsLoading] = useState(false);
@@ -49,20 +49,20 @@ export const ChangeBudgetDeniedModal = ({
   const handleOkay = () => {
     setIsLoading(true);
     toast.promise(apiCalls(), {
-      loading: 'Please wait...',
+      loading: "Please wait...",
       success: (res: TapiResponse<unknown>) => {
         setIsLoading(false);
         return res?.message;
       },
       error: (err) => {
         setIsLoading(false);
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
 
   const textContent =
-    userType === 'client'
+    userType === "client"
       ? `Your freelancer has declined your ${jobTypeText} decrease request.`
       : `Your client has declined your ${jobTypeText} increase request.`;
 
@@ -70,7 +70,7 @@ export const ChangeBudgetDeniedModal = ({
     <StyledModal show={shouldShowModal} size="lg" centered>
       <Modal.Body>
         <div className="text-center">
-          <div className="fs-32 fw-400">{textContent}</div>
+          <div className="fs-32 font-normal">{textContent}</div>
           <div className="mt-4">
             <StyledButton
               variant="primary"

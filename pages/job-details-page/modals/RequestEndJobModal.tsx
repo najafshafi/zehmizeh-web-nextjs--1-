@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import { StyledButton } from '@/components/forms/Buttons';
-import { StyledModal } from '@/components/styled/StyledModal';
-import ErrorIcon  from '@/public/icons/error-orange-icon.svg';
+import { useState } from "react";
+import { Modal, Button } from "react-bootstrap";
+import { StyledButton } from "@/components/forms/Buttons";
+import { StyledModal } from "@/components/styled/StyledModal";
+import ErrorIcon from "@/public/icons/error-orange-icon.svg";
 
 type Props = {
   show: boolean;
@@ -11,9 +11,9 @@ type Props = {
 };
 
 const EndJobModal = ({ show, toggle, onConfirm }: Props) => {
-  const [errorMsg, setErrorMsg] = useState<string>('');
+  const [errorMsg, setErrorMsg] = useState<string>("");
   const onCloseModal = () => {
-    setErrorMsg('');
+    setErrorMsg("");
     toggle();
   };
 
@@ -32,13 +32,13 @@ const EndJobModal = ({ show, toggle, onConfirm }: Props) => {
         <div className="d-flex flex-column justify-content-center align-items-center">
           {!errorMsg ? (
             <>
-              <div className="description fs-20 fw-400 text-center mb-2">
+              <div className="description fs-20 font-normal text-center mb-2">
                 Are you sure you're ready to end this project? If the employer
                 accepts this request, you won't be able to post any more
                 submissions.
               </div>
               <StyledButton
-                className="fs-16 fw-400 mt-4 w-100"
+                className="fs-16 font-normal mt-4 w-100"
                 variant="outline-dark"
                 padding="1.125rem 2.25rem"
                 onClick={toggle}
@@ -46,7 +46,7 @@ const EndJobModal = ({ show, toggle, onConfirm }: Props) => {
                 No, I'm not ready
               </StyledButton>
               <StyledButton
-                className="fs-16 fw-400 mt-3 w-100"
+                className="fs-16 font-normal mt-3 w-100"
                 variant="outline-dark"
                 padding="1.125rem 2.25rem"
                 onClick={() => onConfirm()}
@@ -57,7 +57,9 @@ const EndJobModal = ({ show, toggle, onConfirm }: Props) => {
           ) : (
             <>
               <ErrorIcon />
-              <div className="error fs-20 fw-400 text-center">{errorMsg}</div>
+              <div className="error fs-20 font-normal text-center">
+                {errorMsg}
+              </div>
             </>
           )}
         </div>

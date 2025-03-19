@@ -104,10 +104,10 @@
 //           )}
 //           {/* Left section */}
 //           <div className="content flex-1">
-//             <header className="title fs-24 fw-400">{convertToTitleCase(item.job_title)}</header>
+//             <header className="title fs-24 font-normal">{convertToTitleCase(item.job_title)}</header>
 
 //             {item?.status !== 'active' && item?.status !== 'closed' ? (
-//               <div className="description light-text fs-18 fw-400">
+//               <div className="description light-text fs-18 font-normal">
 //                 <StyledHtmlText
 //                   htmlString={item.job_description}
 //                   id={`jobs_${item.job_post_id}`}
@@ -135,18 +135,18 @@
 
 // export default Listings;
 
-"use client"
-import { useMemo, useState } from 'react';
-import ListingFooter from './ListingFooter';
-import { ListingItem } from './listings.styled';
-import StatusAndDateSection from './StatusAndDateSection';
-import { toggleBookmarkPost } from '@/helpers/http/search';
-import StyledHtmlText from '@/components/ui/StyledHtmlText';
-import { convertToTitleCase } from '@/helpers/utils/misc';
-import classNames from 'classnames';
-import moment from 'moment';
-import { isProjectHiddenForFreelancer } from '@/helpers/utils/helper';
-import Link from 'next/link';
+"use client";
+import { useMemo, useState } from "react";
+import ListingFooter from "./ListingFooter";
+import { ListingItem } from "./listings.styled";
+import StatusAndDateSection from "./StatusAndDateSection";
+import { toggleBookmarkPost } from "@/helpers/http/search";
+import StyledHtmlText from "@/components/ui/StyledHtmlText";
+import { convertToTitleCase } from "@/helpers/utils/misc";
+import classNames from "classnames";
+import moment from "moment";
+import { isProjectHiddenForFreelancer } from "@/helpers/utils/helper";
+import Link from "next/link";
 
 interface Props {
   data: any;
@@ -157,14 +157,20 @@ interface Props {
 }
 
 const JobProposalStatuses = {
-  Pending: 'pending',
-  Declined: 'denied',
-  All: 'all',
-  Canceled_by_client: 'canceled_by_client',
+  Pending: "pending",
+  Declined: "denied",
+  All: "all",
+  Canceled_by_client: "canceled_by_client",
 };
 
-const Listings = ({ data, listingType, refetch, sortFilter, toggleReset }: Props) => {
-  const [toggleName, setToggleName] = useState('Filter by');
+const Listings = ({
+  data,
+  listingType,
+  refetch,
+  sortFilter,
+  toggleReset,
+}: Props) => {
+  const [toggleName, setToggleName] = useState("Filter by");
   const [disableLink, setDisableLink] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown visibility
 
@@ -182,12 +188,12 @@ const Listings = ({ data, listingType, refetch, sortFilter, toggleReset }: Props
 
   const toggleResetValue = useMemo(() => {
     switch (toggleReset) {
-      case 'pending':
-        return 'Pending';
-      case 'denied':
-        return 'Declined';
-      case 'canceled_by_client':
-        return 'Canceled by Client';
+      case "pending":
+        return "Pending";
+      case "denied":
+        return "Declined";
+      case "canceled_by_client":
+        return "Canceled by Client";
       default:
         return toggleReset;
     }
@@ -195,7 +201,7 @@ const Listings = ({ data, listingType, refetch, sortFilter, toggleReset }: Props
 
   return (
     <div>
-      {listingType === 'applied_job' && (
+      {listingType === "applied_job" && (
         <>
           <div className="relative inline-block">
             {/* Dropdown Toggle Button */}
@@ -210,25 +216,25 @@ const Listings = ({ data, listingType, refetch, sortFilter, toggleReset }: Props
             {isDropdownOpen && (
               <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-md z-10">
                 <div
-                  onClick={filterJobProposals('All')}
+                  onClick={filterJobProposals("All")}
                   className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
                 >
                   All
                 </div>
                 <div
-                  onClick={filterJobProposals('Pending')}
+                  onClick={filterJobProposals("Pending")}
                   className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
                 >
                   Pending
                 </div>
                 <div
-                  onClick={filterJobProposals('Declined')}
+                  onClick={filterJobProposals("Declined")}
                   className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
                 >
                   Declined
                 </div>
                 <div
-                  onClick={filterJobProposals('Canceled_by_client')}
+                  onClick={filterJobProposals("Canceled_by_client")}
                   className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
                 >
                   Canceled by Client
@@ -240,12 +246,13 @@ const Listings = ({ data, listingType, refetch, sortFilter, toggleReset }: Props
         </>
       )}
       {data?.map((item: any) => {
-        const linkHref = item?.proposal?.status === 'pending'
-          ? `/job-details/${item.job_post_id}/proposal_sent`
-          : item?.status === 'prospects'
-          ? `/job-details/${item.job_post_id}/gen_details`
-          : `/job-details/${item.job_post_id}`;
-          
+        const linkHref =
+          item?.proposal?.status === "pending"
+            ? `/job-details/${item.job_post_id}/proposal_sent`
+            : item?.status === "prospects"
+            ? `/job-details/${item.job_post_id}/gen_details`
+            : `/job-details/${item.job_post_id}`;
+
         return (
           <Link href={linkHref} key={item.job_post_id} passHref>
             <ListingItem
@@ -253,24 +260,27 @@ const Listings = ({ data, listingType, refetch, sortFilter, toggleReset }: Props
                 if (disableLink) return e.preventDefault();
               }}
               className={classNames(
-                'pointer flex flex-col md:flex-row justify-between gap-3 no-hover-effect',
+                "pointer flex flex-col md:flex-row justify-between gap-3 no-hover-effect",
                 {
-                  'pe-none': isProjectHiddenForFreelancer(item),
-                  'pe-auto': !isProjectHiddenForFreelancer(item),
+                  "pe-none": isProjectHiddenForFreelancer(item),
+                  "pe-auto": !isProjectHiddenForFreelancer(item),
                 }
               )}
             >
               {isProjectHiddenForFreelancer(item) && (
                 <span className="client-hidden-post-banner">
-                  Client has hidden this post - {moment(item?.is_hidden?.date).format('MMM DD, YYYY')}
+                  Client has hidden this post -{" "}
+                  {moment(item?.is_hidden?.date).format("MMM DD, YYYY")}
                 </span>
               )}
               {/* Left section */}
               <div className="content flex-1">
-                <header className="title fs-24 fw-400">{convertToTitleCase(item.job_title)}</header>
+                <header className="title fs-24 font-normal">
+                  {convertToTitleCase(item.job_title)}
+                </header>
 
-                {item?.status !== 'active' && item?.status !== 'closed' ? (
-                  <div className="description light-text fs-18 fw-400">
+                {item?.status !== "active" && item?.status !== "closed" ? (
+                  <div className="description light-text fs-18 font-normal">
                     <StyledHtmlText
                       htmlString={item.job_description}
                       id={`jobs_${item.job_post_id}`}

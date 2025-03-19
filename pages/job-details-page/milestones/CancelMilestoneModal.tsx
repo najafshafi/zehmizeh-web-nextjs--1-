@@ -1,8 +1,8 @@
-import { Modal, Button } from 'react-bootstrap';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { StyledButton } from '@/components/forms/Buttons';
-import styled from 'styled-components';
-import { breakpoints } from '@/helpers/hooks/useResponsive';
+import { Modal, Button } from "react-bootstrap";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import styled from "styled-components";
+import { breakpoints } from "@/helpers/hooks/useResponsive";
 
 const Wrapper = styled(StyledModal)`
   .heading {
@@ -48,16 +48,16 @@ const CancelMileStoneModal = ({
           &times;
         </Button>
         <div className="d-flex flex-column gap-md-3 gap-0">
-          <div className="heading fw-400 text-center">
+          <div className="heading font-normal text-center">
             Are you sure you want to cancel
-            {cancelStateData.milestoneStatus === 'pending' ? (
+            {cancelStateData.milestoneStatus === "pending" ? (
               <span>&nbsp;this milestone proposal?</span>
             ) : (
               <span>?</span>
             )}
           </div>
-          {cancelStateData.milestoneStatus !== 'pending' ? (
-            <div className="content fw-400 text-center">
+          {cancelStateData.milestoneStatus !== "pending" ? (
+            <div className="content font-normal text-center">
               If you cancel this milestone, the money that has been deposited to
               pay you for its completion will be sent back to the client. There
               is no way to undo this and the client will not be obligated to pay
@@ -71,7 +71,7 @@ const CancelMileStoneModal = ({
           ) : null}
           <div className="d-flex flex-column flex-md-row justify-content-center gap-3">
             <StyledButton
-              className="fs-16 fw-400"
+              className="fs-16 font-normal"
               variant="outline-dark"
               padding="0.8125rem 2rem"
               onClick={toggle}
@@ -79,15 +79,15 @@ const CancelMileStoneModal = ({
               Not Now
             </StyledButton>
             <StyledButton
-              className="fs-16 fw-400"
+              className="fs-16 font-normal"
               variant="primary"
               padding="0.8125rem 2rem"
               onClick={onConfirm}
               disabled={cancelStateData.loading}
             >
-              {cancelStateData.milestoneStatus === 'pending'
-                ? 'Yes - Cancel'
-                : 'Yes - Cancel and Send Back Deposit'}
+              {cancelStateData.milestoneStatus === "pending"
+                ? "Yes - Cancel"
+                : "Yes - Cancel and Send Back Deposit"}
             </StyledButton>
           </div>
         </div>

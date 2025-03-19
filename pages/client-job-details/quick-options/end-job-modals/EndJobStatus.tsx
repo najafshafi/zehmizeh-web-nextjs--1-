@@ -1,13 +1,13 @@
 /*
  * This is a modal that asks to select status of the job while ending the job
  */
-import { useEffect, useState, useCallback } from 'react';
-import { Form } from 'react-bootstrap';
-import toast from 'react-hot-toast';
-import styled from 'styled-components';
-import { StyledButton } from 'components/forms/Buttons';
-import { ReactComponent as ArrowDown } from 'assets/icons/chevronDown.svg';
-import { ReactComponent as ArrowUp } from 'assets/icons/chevronUp.svg';
+import { useEffect, useState, useCallback } from "react";
+import { Form } from "react-bootstrap";
+import toast from "react-hot-toast";
+import styled from "styled-components";
+import { StyledButton } from "components/forms/Buttons";
+import { ReactComponent as ArrowDown } from "assets/icons/chevronDown.svg";
+import { ReactComponent as ArrowUp } from "assets/icons/chevronUp.svg";
 
 type Props = {
   endJobSelectedStatus: string;
@@ -62,16 +62,16 @@ const Wrapper = styled.div`
 `;
 
 const JOB_ENDING_REASONS = [
-  'Not responding',
-  'Freelancer requested to end early',
-  'Client ending early',
-  'Other',
+  "Not responding",
+  "Freelancer requested to end early",
+  "Client ending early",
+  "Other",
 ];
 
 const initialState = {
-  selectedStatus: '',
-  endingReason: '',
-  incompleteJobDescription: '',
+  selectedStatus: "",
+  endingReason: "",
+  incompleteJobDescription: "",
 };
 
 const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
@@ -94,7 +94,7 @@ const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
 
   useEffect(() => {
     if (endJobSelectedStatus) {
-      handleChange('selectedStatus', endJobSelectedStatus);
+      handleChange("selectedStatus", endJobSelectedStatus);
     }
   }, [endJobSelectedStatus, handleChange]);
 
@@ -102,13 +102,13 @@ const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
     toast.dismiss();
     const { selectedStatus, endingReason, incompleteJobDescription } =
       formState;
-    if (selectedStatus == 'in-complete') {
-      if (endingReason == '') {
-        toast.error('Please select the reason why you’re ending the project.');
+    if (selectedStatus == "in-complete") {
+      if (endingReason == "") {
+        toast.error("Please select the reason why you’re ending the project.");
         return;
       }
-      if (incompleteJobDescription === '') {
-        toast.error('Please elaborate on why you’re ending the project.');
+      if (incompleteJobDescription === "") {
+        toast.error("Please elaborate on why you’re ending the project.");
         return;
       }
     }
@@ -121,7 +121,7 @@ const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
   };
 
   const onSelectReason = (item: any) => () => {
-    handleChange('endingReason', item);
+    handleChange("endingReason", item);
     toggleDropdownOptions();
   };
 
@@ -130,7 +130,7 @@ const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
   };
 
   const onSelectStatus = (status: string) => () => {
-    handleChange('selectedStatus', status);
+    handleChange("selectedStatus", status);
   };
 
   return (
@@ -138,29 +138,29 @@ const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
       <div className="fs-32 fw-700">Close Project</div>
       <div className="content d-flex flex-column">
         <div>
-          <div className="label fs-16 fw-400">Choose status</div>
+          <div className="label fs-16 font-normal">Choose status</div>
           <div className="status-options d-flex align-items-center flex-wrap">
             <div
               className={`option flex-1 text-center pointer ${
-                formState?.selectedStatus == 'closed' ? 'selected' : ''
+                formState?.selectedStatus == "closed" ? "selected" : ""
               }`}
-              onClick={onSelectStatus('closed')}
+              onClick={onSelectStatus("closed")}
             >
               Completed
             </div>
             <div
               className={`option flex-1 text-center pointer ${
-                formState?.selectedStatus == 'in-complete' ? 'selected' : ''
+                formState?.selectedStatus == "in-complete" ? "selected" : ""
               }`}
-              onClick={onSelectStatus('in-complete')}
+              onClick={onSelectStatus("in-complete")}
             >
               Incomplete
             </div>
           </div>
         </div>
-        {formState?.selectedStatus == 'in-complete' && (
+        {formState?.selectedStatus == "in-complete" && (
           <div>
-            <div className="label fs-16 fw-400">
+            <div className="label fs-16 font-normal">
               Please explain why you are ending the project while it is still
               incomplete:
             </div>
@@ -172,7 +172,7 @@ const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
                 <div className="dropdown-placeholder">
                   {formState?.endingReason
                     ? formState?.endingReason
-                    : 'Choose the reason'}
+                    : "Choose the reason"}
                 </div>
                 {showDropdownOptions ? <ArrowUp /> : <ArrowDown />}
               </div>
@@ -190,7 +190,7 @@ const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
                 </div>
               )}
             </div>
-            <div className="label fs-16 fw-400 mt-5">
+            <div className="label fs-16 font-normal mt-5">
               Please elaborate why you're marking this project as incomplete. Be
               sure to mention if you experienced poor customer service or any
               form of misconduct.
@@ -199,7 +199,7 @@ const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
               placeholder="Please explain further"
               value={formState?.incompleteJobDescription}
               onChange={(e) =>
-                handleChange('incompleteJobDescription', e.target.value)
+                handleChange("incompleteJobDescription", e.target.value)
               }
               className="form-input mt-2"
               maxLength={500}
@@ -213,7 +213,7 @@ const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
             padding="0.75rem 2rem"
             variant="primary"
             className="button"
-            disabled={formState?.selectedStatus == ''}
+            disabled={formState?.selectedStatus == ""}
             onClick={onNext}
           >
             Continue

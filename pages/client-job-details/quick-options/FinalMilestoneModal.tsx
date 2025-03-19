@@ -1,6 +1,6 @@
-import { Modal, Button } from 'react-bootstrap';
-import { StyledModal } from 'components/styled/StyledModal';
-import { StyledButton } from 'components/forms/Buttons';
+import { Modal, Button } from "react-bootstrap";
+import { StyledModal } from "components/styled/StyledModal";
+import { StyledButton } from "components/forms/Buttons";
 
 type Props = {
   show: boolean;
@@ -17,7 +17,7 @@ const FinalMilestoneModal = ({ show, toggle, onConfirm, loading }: Props) => {
           &times;
         </Button>
 
-        <div className="fs-20 fw-400 text-center mb-3">
+        <div className="fs-20 font-normal text-center mb-3">
           Your freelancer has posted a Final Hours Submission and would like to
           close the project. Please review the submission and decide if you
           would like to accept or decline the request.
@@ -25,7 +25,7 @@ const FinalMilestoneModal = ({ show, toggle, onConfirm, loading }: Props) => {
 
         <div className="d-flex flex-column flex-md-row justify-content-center mt-4 gap-2">
           <StyledButton
-            className="fs-16 fw-400"
+            className="fs-16 font-normal"
             variant="primary"
             padding="0.8125rem 2rem"
             onClick={onConfirm}

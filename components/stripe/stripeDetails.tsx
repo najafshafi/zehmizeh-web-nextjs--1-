@@ -262,7 +262,7 @@ const StripeDetails = (props: Prop) => {
                 {IDENTITY_DOCS[stripe.country as keyof typeof IDENTITY_DOCS]
                   ?.length > 3 && (
                   <div
-                    className="flex reset-password fs-16 fw-400 pointer"
+                    className="flex reset-password fs-16 font-normal pointer"
                     onClick={toggleAcceptableIDModal}
                     style={{
                       background: "none",
@@ -335,17 +335,17 @@ const StripeDetails = (props: Prop) => {
 
     try {
       const pusher_api_key = pusherApiKey();
-      
+
       if (!pusher_api_key) {
         console.error("Pusher API key is missing");
         setPusherInitialized(false);
         return;
       }
-      
+
       pusher = new Pusher(pusher_api_key, {
         cluster: "ap2",
       });
-      
+
       setPusherInitialized(true);
       const channel = pusher.subscribe(`STRIPE-${stripe?.id}`);
       channel.bind("stripe-account-updated", (data: PusherDt) => {
@@ -387,10 +387,13 @@ const StripeDetails = (props: Prop) => {
     <StripeContainer className={`stripe-${status}`}>
       {!pusherInitialized && stripe?.id && (
         <div className="alert alert-warning mb-3" role="alert">
-          <small>Note: Real-time updates for Stripe status changes are not available at the moment. Please refresh the page to see updates.</small>
+          <small>
+            Note: Real-time updates for Stripe status changes are not available
+            at the moment. Please refresh the page to see updates.
+          </small>
         </div>
       )}
-      
+
       {stripe?.id && (
         <>
           <StripeResetModal
@@ -423,7 +426,7 @@ const StripeDetails = (props: Prop) => {
           />
 
           <div
-            className="flex justify-content-end reset-password fs-18 fw-400 pointer"
+            className="flex justify-content-end reset-password fs-18 font-normal pointer"
             onClick={toggleHowToRegModal}
             style={{
               position: "absolute",

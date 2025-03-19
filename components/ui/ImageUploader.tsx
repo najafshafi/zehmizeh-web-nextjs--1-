@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import styled from 'styled-components';
-import toast from 'react-hot-toast';
-import axios from 'axios';
-import { generateAwsUrl } from 'helpers/http/common';
+import { useState } from "react";
+import styled from "styled-components";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { generateAwsUrl } from "helpers/http/common";
 
 const ImageWrapper = styled.div`
   position: relative;
@@ -40,7 +40,7 @@ const ImageWrapper = styled.div`
   .uploading {
     left: 28%;
   }
-  input[type='file'] {
+  input[type="file"] {
     position: absolute;
     z-index: 2;
     opacity: 0;
@@ -60,7 +60,7 @@ type Props = {
 const ImageUploader = ({
   imageUrl,
   handleChange,
-  overlayText = 'Change',
+  overlayText = "Change",
 }: Props) => {
   const [uploading, setUploading] = useState<boolean>(false);
 
@@ -68,12 +68,12 @@ const ImageUploader = ({
     /* Uploaded file details */
     const fileSize = e.target.files[0].size / 1024 / 1024;
     const name = e.target.files[0].name;
-    const extension = e.target.files[0].type?.replace(/(.*)\//g, '');
+    const extension = e.target.files[0].type?.replace(/(.*)\//g, "");
 
     /* Validations */
     const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
     if (fileSize > 100) {
-      toast.error('File size cannot exceed 100MB.');
+      toast.error("File size cannot exceed 100MB.");
       return;
     } else if (!allowedExtensions.exec(name)) {
       toast.error(`.${extension} file type is not supported.`);
@@ -84,7 +84,7 @@ const ImageUploader = ({
 
       /* This will generate a url where the image shoule be uploaded */
       generateAwsUrl({
-        folder: 'job-documents',
+        folder: "job-documents",
         file_name: file.name,
         content_type: file.type,
       }).then((res) => {
@@ -94,16 +94,16 @@ const ImageUploader = ({
         /* This will upload the selected file to the above path */
         axios
           .put(uploadURL, file, {
-            headers: { 'Content-Type': contentType },
+            headers: { "Content-Type": contentType },
           })
           .then(() => {
-            const uploadedUrl = uploadURL.split('?')[0];
+            const uploadedUrl = uploadURL.split("?")[0];
             handleChange(uploadedUrl);
             setUploading(false);
           })
           .catch(() => {
             setUploading(false);
-            toast.error('Error uploading image.');
+            toast.error("Error uploading image.");
           });
       });
     }
@@ -119,7 +119,9 @@ const ImageUploader = ({
       {!uploading && (
         <>
           <div className="overlay pointer"></div>
-          <div className="change-text fs-sm fw-400 pointer">{overlayText}</div>
+          <div className="change-text fs-sm font-normal pointer">
+            {overlayText}
+          </div>
         </>
       )}
       <input
@@ -133,7 +135,9 @@ const ImageUploader = ({
       {uploading && (
         <>
           <div className="overlay"></div>
-          <div className="change-text uploading fs-sm fw-400">Uploading</div>
+          <div className="change-text uploading fs-sm font-normal">
+            Uploading
+          </div>
         </>
       )}
     </ImageWrapper>

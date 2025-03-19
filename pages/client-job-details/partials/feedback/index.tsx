@@ -1,8 +1,8 @@
-import ReviewContent from './ReviewContent';
-import AddReviewForm from './AddReviewForm';
-import { FeedbackWrapper } from './feedback.styled';
-import { separateValuesWithComma } from 'helpers/utils/misc';
-import BlurredImage from 'components/ui/BlurredImage';
+import ReviewContent from "./ReviewContent";
+import AddReviewForm from "./AddReviewForm";
+import { FeedbackWrapper } from "./feedback.styled";
+import { separateValuesWithComma } from "helpers/utils/misc";
+import BlurredImage from "components/ui/BlurredImage";
 
 type Porps = {
   feedbackData: any;
@@ -30,7 +30,7 @@ const Feedback = ({
           freelancerUserId={freelancerUserId}
           onSubmitFeedback={onSubmitFeedback}
           freelancerName={
-            freelancerDetails?.first_name + ' ' + freelancerDetails?.last_name
+            freelancerDetails?.first_name + " " + freelancerDetails?.last_name
           }
         />
       )}
@@ -43,17 +43,17 @@ const Feedback = ({
                 <BlurredImage
                   src={
                     freelancerDetails?.user_image ||
-                    '/images/default_avatar.png'
+                    "/images/default_avatar.png"
                   }
                   height="5.25rem"
                   width="5.25rem"
                 />
                 <div>
-                  <div className="fs-18 fw-400 text-capitalize">
-                    {freelancerDetails?.first_name}{' '}
+                  <div className="fs-18 font-normal capitalize">
+                    {freelancerDetails?.first_name}{" "}
                     {freelancerDetails?.last_name}
                   </div>
-                  <div className="client-location fs-18 fw-400 light-text">
+                  <div className="client-location fs-18 font-normal light-text">
                     {separateValuesWithComma([
                       freelancerDetails?.location?.state,
                       freelancerDetails?.location?.country_name,

@@ -1,15 +1,15 @@
-import { useMemo } from 'react';
-import cns from 'classnames';
-import styled from 'styled-components';
-import { transition } from 'styles/transitions';
-import { StatusBadge } from 'components/styled/Badges';
-import useResponsive, { breakpoints } from 'helpers/hooks/useResponsive';
-import { separateValuesWithComma } from 'helpers/utils/misc';
-import { ReactComponent as DollarCircleIcon } from 'assets/icons/dollar-circle.svg';
-import { ReactComponent as LocationIcon } from 'assets/icons/location-blue.svg';
-import { ReactComponent as StarIcon } from 'assets/icons/star-yellow.svg';
-import BlurredImage from 'components/ui/BlurredImage';
-import StyledHtmlText from 'components/ui/StyledHtmlText';
+import { useMemo } from "react";
+import cns from "classnames";
+import styled from "styled-components";
+import { transition } from "styles/transitions";
+import { StatusBadge } from "components/styled/Badges";
+import useResponsive, { breakpoints } from "helpers/hooks/useResponsive";
+import { separateValuesWithComma } from "helpers/utils/misc";
+import { ReactComponent as DollarCircleIcon } from "assets/icons/dollar-circle.svg";
+import { ReactComponent as LocationIcon } from "assets/icons/location-blue.svg";
+import { ReactComponent as StarIcon } from "assets/icons/star-yellow.svg";
+import BlurredImage from "components/ui/BlurredImage";
+import StyledHtmlText from "components/ui/StyledHtmlText";
 
 const TalentComponentWrapper = styled.div<{ isSelected: boolean }>`
   background: ${(props) => props.theme.colors.white};
@@ -78,7 +78,7 @@ const TalentComponent = ({
   onSelect: () => void;
   isSelected: boolean;
 }) => {
-  const COLORS = useMemo(() => ['orange', 'green', 'blue'], []);
+  const COLORS = useMemo(() => ["orange", "green", "blue"], []);
 
   const { isMobile } = useResponsive();
 
@@ -86,13 +86,13 @@ const TalentComponent = ({
     <>
       <TalentComponentWrapper
         isSelected={isSelected}
-        className={cns('d-flex pointer align-items-start', {
-          'flex-column g-2 align-items-center': isMobile,
+        className={cns("d-flex pointer align-items-start", {
+          "flex-column g-2 align-items-center": isMobile,
         })}
         onClick={onSelect}
       >
         <BlurredImage
-          src={data?.user_image || '/images/default_avatar.png'}
+          src={data?.user_image || "/images/default_avatar.png"}
           height="5.75rem"
           width="5.75rem"
           className="talent__avatar"
@@ -101,16 +101,16 @@ const TalentComponent = ({
           <div
             className={
               isMobile
-                ? 'text-center'
-                : 'd-flex flex-wrap justify-content-between'
+                ? "text-center"
+                : "d-flex flex-wrap justify-content-between"
             }
           >
             <div>
-              <div className="talent__details__title fs-24 fw-400 text-capitalize">
+              <div className="talent__details__title fs-24 font-normal capitalize">
                 {data.first_name} {data.last_name}
               </div>
               {data.job_title !== null && (
-                <div className="talent__details__post fs-18 fw-400 mt-2 capital-first-ltr">
+                <div className="talent__details__post fs-18 font-normal mt-2 capital-first-ltr">
                   {data.job_title}
                 </div>
               )}
@@ -150,7 +150,7 @@ const OtherDetails = ({ data }: any) => {
       <div className="d-flex budget width-fit-content align-items-center">
         <DollarCircleIcon />
         {data.hourly_rate ? (
-          <div className="fs-1rem fw-400 d-flex mx-1">
+          <div className="fs-1rem font-normal d-flex mx-1">
             {data.hourly_rate}
             <div className="budget-label fs-1rem fw-300">/hr</div>
           </div>
@@ -162,7 +162,7 @@ const OtherDetails = ({ data }: any) => {
       {(data.location?.state || data?.location?.country_name) && (
         <div className="d-flex budget align-items-center">
           <LocationIcon />
-          <div className="d-flex fs-1rem fw-400 mx-1">
+          <div className="d-flex fs-1rem font-normal mx-1">
             {separateValuesWithComma([
               data?.location?.state,
               data?.location?.country_name,
@@ -173,7 +173,7 @@ const OtherDetails = ({ data }: any) => {
       {data.ratings !== null && (
         <div className="d-flex budget align-items-center">
           <StarIcon />
-          <div className="ms-1 d-flex align-items-center fs-1rem fw-400">
+          <div className="ms-1 d-flex align-items-center fs-1rem font-normal">
             {data.rating}
             <div className="ms-1 budget-label fs-sm fw-300">
               Ratings ({data?.rating})

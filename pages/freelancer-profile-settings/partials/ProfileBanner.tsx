@@ -97,18 +97,18 @@
 
 //                   <div className="profile__name-title">
 //                     <div className="flex items-center gap-2 flex-wrap">
-//                       <div className="profile__username fs-24 fw-400 text-capitalize">
+//                       <div className="profile__username fs-24 font-normal capitalize">
 //                         {data.first_name} {data?.last_name}
 //                       </div>
 //                       {data?.is_agency ? <StatusBadge color="blue">Agency</StatusBadge> : null}
 //                     </div>
 
 //                     {data.is_agency && data.agency_name ? (
-//                       <div className="profile__description fs-18 fw-400 capital-first-ltr mt-2">{data.agency_name}</div>
+//                       <div className="profile__description fs-18 font-normal capital-first-ltr mt-2">{data.agency_name}</div>
 //                     ) : null}
 
 //                     {data.job_title && (
-//                       <div className="profile__description fs-18 fw-400 capital-first-ltr mt-3">{data.job_title}</div>
+//                       <div className="profile__description fs-18 font-normal capital-first-ltr mt-3">{data.job_title}</div>
 //                     )}
 //                   </div>
 
@@ -116,19 +116,19 @@
 //                     <div className="profile__badge flex items-center">
 //                       <DollarCircleIcon />
 //                       {data?.hourly_rate ? (
-//                         <div className="fs-1rem fw-400">
+//                         <div className="fs-1rem font-normal">
 //                           ${data?.hourly_rate}
-//                           <span className="budget-and-location-gray-text fs-1rem fw-400">/hr</span>
+//                           <span className="budget-and-location-gray-text fs-1rem font-normal">/hr</span>
 //                         </div>
 //                       ) : (
-//                         <span className="budget-and-location-gray-text fs-1rem fw-400">n/a</span>
+//                         <span className="budget-and-location-gray-text fs-1rem font-normal">n/a</span>
 //                       )}
 //                     </div>
 
 //                     {(data?.location?.state || data?.location?.country_name) && (
 //                       <div className="profile__badge flex items-center">
 //                         <LocationIcon />
-//                         <div className="budget-and-location-gray-text fs-1rem fw-400">
+//                         <div className="budget-and-location-gray-text fs-1rem font-normal">
 //                           {separateValuesWithComma([data?.location?.state, data?.location?.country_name])}
 //                         </div>
 //                       </div>
@@ -137,7 +137,7 @@
 //                     {data?.notification_email && (
 //                       <div className="profile__badge flex items-center">
 //                         <BellIcon height={25} style={{ marginRight: '0.3rem', width: '20px' }} />
-//                         <div className="budget-and-location-gray-text fs-1rem fw-400">
+//                         <div className="budget-and-location-gray-text fs-1rem font-normal">
 //                           {CONSTANTS.NOTIFICATION_EMAIL.find(({ value }) => value === data?.notification_email)
 //                             ?.label ?? ''}
 //                         </div>
@@ -147,7 +147,7 @@
 //                     {/* START ----------------------------------------- Ratings */}
 //                     <div className="profile__badge flex items-center">
 //                       {data?.count_rating ? <StarIcon /> : <BsStar color="#f2b420" />}
-//                       <div className="budget-and-location-gray-text fs-1rem fw-400">
+//                       <div className="budget-and-location-gray-text fs-1rem font-normal">
 //                         <span>{data?.avg_rating?.toFixed(1) ?? 0}</span>
 //                         &nbsp;Ratings ({numberWithCommas(data?.count_rating) || 0})
 //                       </div>
@@ -157,7 +157,7 @@
 //                     {/* START ----------------------------------------- Total Jobs Done */}
 //                     <div className="profile__badge flex items-center">
 //                       <JobsDoneIcon />
-//                       <div className="budget-and-location-gray-text fs-1rem fw-400">
+//                       <div className="budget-and-location-gray-text fs-1rem font-normal">
 //                         {numberWithCommas(data?.done_jobs) || 0}&nbsp;
 //                         <span>Projects done</span>
 //                       </div>
@@ -177,7 +177,7 @@
 //                 onClick={toggleEditModal}
 //               >
 //                 <EditIcon stroke="#FFF" />
-//                 <div className="fs-1rem fw-400">Edit</div>
+//                 <div className="fs-1rem font-normal">Edit</div>
 //               </div>
 //             </div>
 //           </Col>

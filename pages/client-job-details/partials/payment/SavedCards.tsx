@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { StyledButton } from 'components/forms/Buttons';
-import PaymentSummary from './PaymentSummary';
-import { transition } from 'styles/transitions';
-import { Row, Col, Container } from 'react-bootstrap';
-import { usePayments } from 'pages/client-job-details/controllers/usePayments';
-import toast from 'react-hot-toast';
+import { useState, useEffect } from "react";
+import styled from "styled-components";
+import { StyledButton } from "components/forms/Buttons";
+import PaymentSummary from "./PaymentSummary";
+import { transition } from "styles/transitions";
+import { Row, Col, Container } from "react-bootstrap";
+import { usePayments } from "pages/client-job-details/controllers/usePayments";
+import toast from "react-hot-toast";
 
 const CardsWrapper = styled.div`
   .listing {
@@ -36,7 +36,7 @@ type Props = {
 };
 
 const SavedCards = ({ cards, processingPayment, onPay }: Props) => {
-  const [selectedCardId, setSelectedCardId] = useState<string>('');
+  const [selectedCardId, setSelectedCardId] = useState<string>("");
   const { jobType } = usePayments();
 
   // Automatically select the first card when component mounts or cards change
@@ -52,28 +52,36 @@ const SavedCards = ({ cards, processingPayment, onPay }: Props) => {
 
   const onContinuePaying = () => {
     if (!selectedCardId) {
-      toast.error('Please select a card.');
+      toast.error("Please select a card.");
     }
     onPay(selectedCardId);
   };
 
   return (
     <CardsWrapper>
-      <div className="fs-20 fw-400 mt-3">Select Card</div>
+      <div className="fs-20 font-normal mt-3">Select Card</div>
       <Container className="listing">
         {cards?.map((item: any) => (
           <Row
             key={item?.user_card_id}
-            className={`card-item mt-3 pointer ${item?.stripe_card_id == selectedCardId ? 'selected' : ''}`}
+            className={`card-item mt-3 pointer ${
+              item?.stripe_card_id == selectedCardId ? "selected" : ""
+            }`}
             onClick={onSelectCard(item?.stripe_card_id)}
           >
             <Col md={8} xs={8}>
-              <div className="payment-text light-text fs-sm fw-300">CARD NUMBER</div>
-              <div className="payment-text fs-1rem fw-400 mt-1">xxxx xxxx xxxx {item?.last_4_digit}</div>
+              <div className="payment-text light-text fs-sm fw-300">
+                CARD NUMBER
+              </div>
+              <div className="payment-text fs-1rem font-normal mt-1">
+                xxxx xxxx xxxx {item?.last_4_digit}
+              </div>
             </Col>
             <Col md={4} xs={4}>
               <div className="payment-text light-text fs-sm fw-300">EXP</div>
-              <div className="payment-text fs-1rem fw-400 mt-1">{item?.exp_date}</div>
+              <div className="payment-text fs-1rem font-normal mt-1">
+                {item?.exp_date}
+              </div>
             </Col>
           </Row>
         ))}
@@ -82,8 +90,12 @@ const SavedCards = ({ cards, processingPayment, onPay }: Props) => {
       <PaymentSummary />
 
       <div className="d-flex justify-content-center">
-        <StyledButton disabled={processingPayment} onClick={onContinuePaying} className="mt-3 w-100">
-          {jobType === 'hourly' ? 'Pay' : 'Deposit Milestone Payment'}
+        <StyledButton
+          disabled={processingPayment}
+          onClick={onContinuePaying}
+          className="mt-3 w-100"
+        >
+          {jobType === "hourly" ? "Pay" : "Deposit Milestone Payment"}
         </StyledButton>
       </div>
     </CardsWrapper>

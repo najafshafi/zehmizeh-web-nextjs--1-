@@ -103,10 +103,10 @@ const EducationEditModal = ({ show, onClose, data, onUpdate }: any) => {
         </Button>
         <EditFormWrapper>
           <div className="content flex flex-column">
-            <div className="modal-title fs-28 fw-400">Education</div>
+            <div className="modal-title fs-28 font-normal">Education</div>
             <div className="form">
               <StyledFormGroup className="mt-0">
-                <div className="fs-sm fw-400">
+                <div className="fs-sm font-normal">
                   Degree Earned<span className="mandatory">&nbsp;*</span>
                 </div>
                 <Form.Control
@@ -126,7 +126,7 @@ const EducationEditModal = ({ show, onClose, data, onUpdate }: any) => {
                 )}
               </StyledFormGroup>
               <StyledFormGroup>
-                <div className="fs-sm fw-400">
+                <div className="fs-sm font-normal">
                   University<span className="mandatory">&nbsp;*</span>
                 </div>
                 <Form.Control
@@ -148,7 +148,7 @@ const EducationEditModal = ({ show, onClose, data, onUpdate }: any) => {
               <Row>
                 <Col md={6}>
                   <StyledFormGroup>
-                    <div className="fs-sm fw-400">From (Year)</div>
+                    <div className="fs-sm font-normal">From (Year)</div>
                     <Form.Control
                       placeholder="Year you began the program"
                       className="form-input"
@@ -160,7 +160,7 @@ const EducationEditModal = ({ show, onClose, data, onUpdate }: any) => {
                 </Col>
                 <Col md={6}>
                   <StyledFormGroup>
-                    <div className="fs-sm fw-400">To (Year)</div>
+                    <div className="fs-sm font-normal">To (Year)</div>
                     <Form.Control
                       placeholder="Year you completed the program"
                       className="form-input"

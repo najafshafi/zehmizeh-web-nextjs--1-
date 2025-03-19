@@ -1,7 +1,11 @@
-import styled from 'styled-components';
-import { Card } from 'react-bootstrap';
-import { formatLocalDate, numberWithCommas, pxToRem } from '@/helpers/utils/misc';
-import classNames from 'classnames';
+import styled from "styled-components";
+import { Card } from "react-bootstrap";
+import {
+  formatLocalDate,
+  numberWithCommas,
+  pxToRem,
+} from "@/helpers/utils/misc";
+import classNames from "classnames";
 
 type Props = {
   data: {
@@ -33,44 +37,44 @@ const Wrapper = styled(Card)`
 const PayoutCard = ({ data }: Props) => {
   return (
     <Wrapper
-      className={classNames('payment-card mb-4', {
-        'refund-row': data.stripe_status === 'pending',
+      className={classNames("payment-card mb-4", {
+        "refund-row": data.stripe_status === "pending",
       })}
     >
       <Card.Body className="flex flex-col gap-3">
         <div>
-          <div className="card-label fs-sm fw-400">AMOUNT</div>
-          <div className="fs-20 fw-400">
+          <div className="card-label fs-sm font-normal">AMOUNT</div>
+          <div className="fs-20 font-normal">
             {numberWithCommas(data?.payment_amount, data?.currency)}
           </div>
         </div>
         <div>
-          <div className="card-label fs-sm fw-400">BANK NAME</div>
-          <div className="fs-20 fw-400">
+          <div className="card-label fs-sm font-normal">BANK NAME</div>
+          <div className="fs-20 font-normal">
             {data?.bank_detail?.bank_name}
-            {'****'}
+            {"****"}
             {data?.bank_detail?.last_4_digit}
           </div>
         </div>
         <div>
-          <div className="card-label fs-sm fw-400">STATUS</div>
-          <div className="fs-20 fw-400">
-            {data?.stripe_status?.replace('_', ' ')}
+          <div className="card-label fs-sm font-normal">STATUS</div>
+          <div className="fs-20 font-normal">
+            {data?.stripe_status?.replace("_", " ")}
           </div>
         </div>
         <div className="flex items-center flex-wrap gap-2">
           <div className="flex-1">
-            <div className="card-label fs-sm fw-400">INITIATED DATE</div>
-            <div className="fs-20 fw-400">
-              {formatLocalDate(data?.date_created, 'LL')}
+            <div className="card-label fs-sm font-normal">INITIATED DATE</div>
+            <div className="fs-20 font-normal">
+              {formatLocalDate(data?.date_created, "LL")}
             </div>
           </div>
           <div className="flex-1 ps-1">
-            <div className="card-label fs-sm fw-400">
+            <div className="card-label fs-sm font-normal">
               ESTIMATED ARRIVAL DATE
             </div>
             <div className="fs-20 fw-700">
-              {formatLocalDate(data?.arrival_date, 'LL')}
+              {formatLocalDate(data?.arrival_date, "LL")}
             </div>
           </div>
         </div>

@@ -2,24 +2,24 @@
  * This component serves a list of invites received
  */
 "use client";
-import Link from 'next/link';
-import { ProposalWrapper, TabContent } from './proposals.styled';
-import Loader from '@/components/Loader';
-import NoDataFound from '@/components/ui/NoDataFound';
-import BlurredImage from '@/components/ui/BlurredImage';
-import useProposals from './use-proposals';
-import { convertToTitleCase, showFormattedBudget } from '@/helpers/utils/misc';
-import DollarCircleIcon from '@/public/icons/dollar-circle.svg';
+import Link from "next/link";
+import { ProposalWrapper, TabContent } from "./proposals.styled";
+import Loader from "@/components/Loader";
+import NoDataFound from "@/components/ui/NoDataFound";
+import BlurredImage from "@/components/ui/BlurredImage";
+import useProposals from "./use-proposals";
+import { convertToTitleCase, showFormattedBudget } from "@/helpers/utils/misc";
+import DollarCircleIcon from "@/public/icons/dollar-circle.svg";
 
 const InviteReceived = () => {
-  const { proposals, isLoading, isRefetching } = useProposals('invite');
+  const { proposals, isLoading, isRefetching } = useProposals("invite");
 
   return (
     <TabContent>
       {isLoading || isRefetching ? (
         <Loader />
       ) : proposals.length > 0 ? (
-        proposals.map((item: any  ) => (
+        proposals.map((item: any) => (
           <Link
             href={`/offer-details/${item.job_post_id}`}
             key={item.invite_id}
@@ -34,7 +34,7 @@ const InviteReceived = () => {
 
                 <div className="flex items-center">
                   <BlurredImage
-                    src={item?.user_image || '/images/default_avatar.png'}
+                    src={item?.user_image || "/images/default_avatar.png"}
                     className="proposal__client-profile-img"
                     height="2.625rem"
                     width="2.625rem"
@@ -45,7 +45,7 @@ const InviteReceived = () => {
                     <div className="proposal__client-detail-label text-sm font-normal">
                       Sent by:
                     </div>
-                    <div className="text-sm font-normal text-capitalize">
+                    <div className="text-sm font-normal capitalize">
                       {item?.first_name} {item?.last_name}
                     </div>
                   </div>
@@ -59,10 +59,10 @@ const InviteReceived = () => {
                   <DollarCircleIcon />
                   <div className="proposal__budget-value flex">
                     {item?.budget?.isProposal
-                      ? 'Open To Proposals'
+                      ? "Open To Proposals"
                       : showFormattedBudget(item?.budget)}
                   </div>
-                  {item?.budget?.type === 'fixed' &&
+                  {item?.budget?.type === "fixed" &&
                     !item?.budget?.isProposal && (
                       <div className="proposal__budget-grey-label text-sm font-normal">
                         Budget

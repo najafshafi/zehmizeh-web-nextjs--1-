@@ -1,6 +1,6 @@
-import { Modal, Button } from 'react-bootstrap';
-import { StyledModal } from 'components/styled/StyledModal';
-import { StyledButton } from 'components/forms/Buttons';
+import { Modal, Button } from "react-bootstrap";
+import { StyledModal } from "components/styled/StyledModal";
+import { StyledButton } from "components/forms/Buttons";
 
 type Props = {
   show: boolean;
@@ -22,13 +22,13 @@ const PendingHourlySubmission = ({
           &times;
         </Button>
 
-        <div className="fs-20 fw-400 text-center mb-3">
+        <div className="fs-20 font-normal text-center mb-3">
           Cannot pay final hours until previous hours are Paid.
         </div>
 
         <div className="d-flex flex-column flex-md-row justify-content-center mt-4 gap-2">
           <StyledButton
-            className="fs-16 fw-400"
+            className="fs-16 font-normal"
             variant="primary"
             padding="0.8125rem 2rem"
             onClick={onConfirm}

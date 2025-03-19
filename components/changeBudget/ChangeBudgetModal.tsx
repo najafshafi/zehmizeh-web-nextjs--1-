@@ -1,16 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
-import styled from 'styled-components';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { StyledButton } from '@/components/forms/Buttons';
-import { showErr } from '@/helpers/utils/misc';
-import { budgetChangeRequest } from '@/helpers/http/proposals';
-import toast from 'react-hot-toast';
-import { queryKeys } from '@/helpers/const/queryKeys';
-import { useRefetch } from '@/helpers/hooks/useQueryData';
-import { StatusBadge } from '@/components/styled/Badges';
-import { IoChevronBackSharp } from 'react-icons/io5';
-import { TJobDetails } from '@/helpers/types/job.type';
+import { useEffect, useMemo, useState } from "react";
+import { Modal, Button, Form } from "react-bootstrap";
+import styled from "styled-components";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import { showErr } from "@/helpers/utils/misc";
+import { budgetChangeRequest } from "@/helpers/http/proposals";
+import toast from "react-hot-toast";
+import { queryKeys } from "@/helpers/const/queryKeys";
+import { useRefetch } from "@/helpers/hooks/useQueryData";
+import { StatusBadge } from "@/components/styled/Badges";
+import { IoChevronBackSharp } from "react-icons/io5";
+import { TJobDetails } from "@/helpers/types/job.type";
 
 const StyledWrapper = styled.div`
   .page-number {
@@ -32,7 +32,7 @@ const StyledWrapper = styled.div`
     position: absolute;
     top: 30%;
     bottom: 0;
-    content: '$';
+    content: "$";
     left: 1rem;
   }
 `;
@@ -40,34 +40,34 @@ const StyledWrapper = styled.div`
 type Props = {
   show: boolean;
   toggle: () => void;
-  userType: 'freelancer' | 'client';
+  userType: "freelancer" | "client";
   jobDetails: TJobDetails;
 };
-type TIncOrDec = 'INCREASE' | 'DECREASE' | '';
+type TIncOrDec = "INCREASE" | "DECREASE" | "";
 
 const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
   const approvedBudget = jobDetails.proposal.approved_budget;
   const jobPostId = jobDetails.job_post_id;
   const jobTypeText =
-    approvedBudget.type === 'fixed' ? 'budget' : 'hourly rate';
+    approvedBudget.type === "fixed" ? "budget" : "hourly rate";
 
   /* START ----------------------------------------- Edit configuration */
   const isEdit =
-    jobDetails?.proposal?.budget_change?.status === 'pending' &&
+    jobDetails?.proposal?.budget_change?.status === "pending" &&
     jobDetails?.proposal?.budget_change?.requested_by === userType;
 
   const isEditIncreaseOrDecrease: TIncOrDec =
     isEdit &&
     Number(jobDetails.proposal.approved_budget.amount) >
       Number(jobDetails?.proposal?.budget_change?.amount)
-      ? 'DECREASE'
-      : 'INCREASE';
+      ? "DECREASE"
+      : "INCREASE";
   /* END ------------------------------------------- Edit configuration */
 
   const { refetch } = useRefetch(queryKeys.jobDetails(jobPostId));
 
   const [step, setStep] = useState(1);
-  const [selectedChange, setSelectedChange] = useState<TIncOrDec>('');
+  const [selectedChange, setSelectedChange] = useState<TIncOrDec>("");
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -83,7 +83,7 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
     }
     return () => {
       setStep(1);
-      setSelectedChange('');
+      setSelectedChange("");
     };
   }, [approvedBudget?.amount, show]);
   /* END ------------------------------------------- Set budget to value state and reset state on closing modal */
@@ -91,7 +91,7 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
   // Check entered value is valid for increase and decrease request
   const isValid = () => {
     if (
-      selectedChange === 'INCREASE' &&
+      selectedChange === "INCREASE" &&
       Number(value) &&
       Number(value) <= Number(approvedBudget?.amount)
     ) {
@@ -99,7 +99,7 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
       return false;
     }
     if (
-      selectedChange === 'DECREASE' &&
+      selectedChange === "DECREASE" &&
       Number(value) &&
       Number(value) >= Number(approvedBudget?.amount)
     ) {
@@ -125,17 +125,17 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
 
     setLoading(true);
     toast.promise(apiCall(), {
-      loading: 'Please wait...',
+      loading: "Please wait...",
       success: () => {
         toggle();
         setLoading(false);
-        let message = '';
-        if (userType === 'client') {
-          if (selectedChange === 'INCREASE')
+        let message = "";
+        if (userType === "client") {
+          if (selectedChange === "INCREASE")
             message = `Increased ${jobTypeText} successfully`;
           else message = `Decrease ${jobTypeText} request sent successfully`;
         } else {
-          if (selectedChange === 'INCREASE')
+          if (selectedChange === "INCREASE")
             message = `Increase ${jobTypeText} request sent successfully`;
           else message = `Decreased ${jobTypeText} successfully`;
         }
@@ -143,7 +143,7 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
       },
       error: (err) => {
         setLoading(false);
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
@@ -163,35 +163,35 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
       note: string | undefined;
 
     /* START ----------------------------------------- Client side contents */
-    if (userType === 'client') {
+    if (userType === "client") {
       headers = {
         step1: `Would you like to increase the ${jobTypeText} or request a decrease?`,
         step2:
-          selectedChange === 'INCREASE'
+          selectedChange === "INCREASE"
             ? `Increase ${jobTypeText}`
             : `What would you like the freelancer to decrease the ${jobTypeText} to?`,
       };
       buttons = {
         step1: [
           {
-            text: 'Request Decrease',
-            onClick: () => handleIncreaseOrDecrease('DECREASE'),
+            text: "Request Decrease",
+            onClick: () => handleIncreaseOrDecrease("DECREASE"),
           },
           {
-            text: 'Increase',
-            onClick: () => handleIncreaseOrDecrease('INCREASE'),
+            text: "Increase",
+            onClick: () => handleIncreaseOrDecrease("INCREASE"),
           },
         ],
         step2: {
           text:
-            selectedChange === 'INCREASE'
+            selectedChange === "INCREASE"
               ? `Increase ${jobTypeText}`
-              : `${isEdit ? 'Edit Request' : 'Request Decrease'}`,
+              : `${isEdit ? "Edit Request" : "Request Decrease"}`,
           onClick: handleUpdate,
         },
       };
       note =
-        selectedChange === 'DECREASE' &&
+        selectedChange === "DECREASE" &&
         `Note: Only freelancers can decrease the project ${jobTypeText}.`;
       /* END ------------------------------------------- Client side contents */
 
@@ -200,7 +200,7 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
       headers = {
         step1: `Would you like to decrease the ${jobTypeText} or request an increase?`,
         step2:
-          selectedChange === 'INCREASE'
+          selectedChange === "INCREASE"
             ? `What would you like the client to increase the ${jobTypeText} to?`
             : `Decrease ${jobTypeText}`,
       };
@@ -208,23 +208,23 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
         step1: [
           {
             text: `Decrease`,
-            onClick: () => handleIncreaseOrDecrease('DECREASE'),
+            onClick: () => handleIncreaseOrDecrease("DECREASE"),
           },
           {
-            text: 'Request Increase',
-            onClick: () => handleIncreaseOrDecrease('INCREASE'),
+            text: "Request Increase",
+            onClick: () => handleIncreaseOrDecrease("INCREASE"),
           },
         ],
         step2: {
           text:
-            selectedChange === 'INCREASE'
-              ? `${isEdit ? 'Edit Request' : 'Request Increase'}`
+            selectedChange === "INCREASE"
+              ? `${isEdit ? "Edit Request" : "Request Increase"}`
               : `Decrease ${jobTypeText}`,
           onClick: handleUpdate,
         },
       };
       note =
-        selectedChange === 'INCREASE' &&
+        selectedChange === "INCREASE" &&
         `Note: Only clients can increase the project ${jobTypeText}.`;
     }
     /* END ------------------------------------------- Freelancer side contents */
@@ -237,7 +237,7 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
   if (step === 1) {
     StepUI = (
       <div>
-        <div className="fs-32 fw-400">{textContent.headers.step1}</div>
+        <div className="fs-32 font-normal">{textContent.headers.step1}</div>
         <div className="mt-4 d-flex flex-row justify-content-center gap-4">
           {textContent.buttons.step1.map(({ onClick, text }) => {
             return (
@@ -257,18 +257,18 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
   if (step === 2) {
     StepUI = (
       <div>
-        <div className="fs-32 fw-400">{textContent.headers.step2}</div>
+        <div className="fs-32 font-normal">{textContent.headers.step2}</div>
         {textContent?.note && <b>{textContent.note}</b>}
         <div className="input-symbol-euro">
           <Form.Control
             required
             placeholder={`Enter new ${jobTypeText}`}
-            value={value || ''}
+            value={value || ""}
             onChange={(e) => {
               setValue(Number(e.target.value));
             }}
             className="budget-input mt-3 p-3 ps-4"
-            maxLength={approvedBudget.type === 'fixed' ? 5 : 3}
+            maxLength={approvedBudget.type === "fixed" ? 5 : 3}
           />
         </div>
         <div className="mt-4 d-flex align-items-center justify-content-center gap-2">

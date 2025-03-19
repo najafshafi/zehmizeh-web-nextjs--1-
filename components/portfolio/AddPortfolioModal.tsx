@@ -201,13 +201,13 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
           className="content flex flex-column gap-4"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="modal-title fs-28 fw-400">
+          <div className="modal-title fs-28 font-normal">
             {portfolio ? "Edit" : "Add New"} Portfolio Album
           </div>
 
           {/* START ----------------------------------------- Album Name */}
           <div className="mt-0 styled-form">
-            <div className="fs-sm fw-400">
+            <div className="fs-sm font-normal">
               Album Name<span className="mandatory">&nbsp;*</span>
             </div>
             <Form.Control
@@ -222,7 +222,7 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
 
           {/* START ----------------------------------------- Album Year */}
           <div className="mt-0 styled-form">
-            <div className="fs-sm fw-400">Album Year</div>
+            <div className="fs-sm font-normal">Album Year</div>
             <Form.Control
               placeholder="Enter album year"
               className="form-input"
@@ -242,7 +242,7 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
 
           {/* START ----------------------------------------- Album Skills */}
           <div className="mt-0 styled-form">
-            <div className="fs-sm fw-400">Album Skills</div>
+            <div className="fs-sm font-normal">Album Skills</div>
             <AsyncSelect
               {...multiSelectProps}
               placeholder={"Enter your skills"}
@@ -258,7 +258,7 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
 
           {/* START ----------------------------------------- Album Description */}
           <div className="mt-0 styled-form">
-            <div className="fs-sm fw-400">Enter Album Description</div>
+            <div className="fs-sm font-normal">Enter Album Description</div>
             <textarea
               // style={{resize: 'none'}}
               placeholder="Enter album description"
@@ -274,7 +274,7 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
             {/* START ----------------------------------------- Attachments */}
             <div className="images-upload flex items-center justify-content-between">
               <div>
-                <div className="fs-18 fw-400">
+                <div className="fs-18 font-normal">
                   Add album&apos;s images, videos, audio, or document files{" "}
                   <span className="fw-300">(25 max)</span>
                 </div>
@@ -292,7 +292,7 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
                   Max size: {CONSTANTS.FILE_SIZE[30]}MB
                 </div>
               </div>
-              <div className="max-count fs-18 fw-400">
+              <div className="max-count fs-18 font-normal">
                 {attachments?.length}/25
               </div>
             </div>

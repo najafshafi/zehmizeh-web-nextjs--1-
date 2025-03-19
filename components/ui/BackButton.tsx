@@ -30,7 +30,7 @@
 //         onClick={handleGoBack}
 //       >
 //         <Image src={BackArrow} alt="Back" width={24} height={24} />
-//          &nbsp;<span className="fs-18 fw-400">Back</span>
+//          &nbsp;<span className="fs-18 font-normal">Back</span>
 //         {children}
 //       </div>
 //     </div>

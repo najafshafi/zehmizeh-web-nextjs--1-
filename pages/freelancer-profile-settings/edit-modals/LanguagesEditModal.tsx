@@ -99,7 +99,7 @@ const LanguagesEditModal = ({
         </Button>
         <EditFormWrapper>
           <div className="content flex flex-column">
-            <div className="modal-title fs-28 fw-400">My Languages</div>
+            <div className="modal-title fs-28 font-normal">My Languages</div>
             <div className="form-group">
               <div className="flex items-center mb-2">
                 Select all of the languages you can work in.

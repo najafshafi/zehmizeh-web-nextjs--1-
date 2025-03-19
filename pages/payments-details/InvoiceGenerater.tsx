@@ -1,19 +1,23 @@
-"use client"
-import { StyledButton } from '@/components/forms/Buttons';
-import React, { useCallback, useEffect } from 'react';
-import styled from 'styled-components';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
-import { getInvoice } from '@/helpers/http/invoice';
-import { convertToTitleCase, formatLocalDate, numberWithCommas } from '@/helpers/utils/misc';
-import Loader from '@/components/Loader';
-import BackButton from '@/components/ui/BackButton';
-import useResponsive from '@/helpers/hooks/useResponsive';
-import useStartPageFromTop from '@/helpers/hooks/useStartPageFromTop';
-import toast from 'react-hot-toast';
-import { goBack } from '@/helpers/utils/goBack';
+"use client";
+import { StyledButton } from "@/components/forms/Buttons";
+import React, { useCallback, useEffect } from "react";
+import styled from "styled-components";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "react-query";
+import { getInvoice } from "@/helpers/http/invoice";
+import {
+  convertToTitleCase,
+  formatLocalDate,
+  numberWithCommas,
+} from "@/helpers/utils/misc";
+import Loader from "@/components/Loader";
+import BackButton from "@/components/ui/BackButton";
+import useResponsive from "@/helpers/hooks/useResponsive";
+import useStartPageFromTop from "@/helpers/hooks/useStartPageFromTop";
+import toast from "react-hot-toast";
+import { goBack } from "@/helpers/utils/goBack";
 
 const Wrapper = styled.div`
   margin: 20px auto;
@@ -60,16 +64,16 @@ function InvoiceGenerater() {
 
   const exportPdf = useCallback(() => {
     toast.dismiss();
-    toast.loading('Downloading PDF...');
-    const input = document.getElementById('invoice');
+    toast.loading("Downloading PDF...");
+    const input = document.getElementById("invoice");
     html2canvas(input).then((canvas) => {
       if (canvas) {
-        const imgData = canvas.toDataURL('image/png');
+        const imgData = canvas.toDataURL("image/png");
         // Initialize PDF with A4 size
         const pdf = new jsPDF({
-          orientation: 'portrait',
-          unit: 'mm',
-          format: 'a4',
+          orientation: "portrait",
+          unit: "mm",
+          format: "a4",
         });
 
         // A4 measurements
@@ -93,10 +97,10 @@ function InvoiceGenerater() {
         // Center the image horizontally if it's smaller than page width
         const xOffset = finalWidth < pdfWidth ? (pdfWidth - finalWidth) / 2 : 0;
 
-        pdf.addImage(imgData, 'PNG', xOffset, 0, finalWidth, finalHeight);
+        pdf.addImage(imgData, "PNG", xOffset, 0, finalWidth, finalHeight);
         pdf.save(`ZMZ Invoice (0000${id}).pdf`);
         toast.dismiss();
-        if (isMobile) goBack(navigate, '/payments');
+        if (isMobile) goBack(navigate, "/payments");
       }
     });
   }, [id, isMobile, navigate]);
@@ -106,18 +110,24 @@ function InvoiceGenerater() {
     if (!invoice) return result;
 
     const { fee_amount, amount, payment_type } = invoice;
-    const operator = payment_type === 'transfer' ? '+' : '-';
+    const operator = payment_type === "transfer" ? "+" : "-";
 
-    result.subtotal = eval(`${Number(amount)} ${operator} ${Number(fee_amount)}`);
+    result.subtotal = eval(
+      `${Number(amount)} ${operator} ${Number(fee_amount)}`
+    );
 
     result.fee = fee_amount;
 
     return result;
   };
 
-  const { data, isLoading, isRefetching } = useQuery(['invoice', id], () => getInvoice(id), {
-    enabled: !!id,
-  });
+  const { data, isLoading, isRefetching } = useQuery(
+    ["invoice", id],
+    () => getInvoice(id),
+    {
+      enabled: !!id,
+    }
+  );
   const invoice = data?.data;
   const feeBreakup = React.useMemo(() => {
     const { fee, subtotal } = feeBreakUpHandler();
@@ -127,9 +137,9 @@ function InvoiceGenerater() {
       fee,
       percentage:
         invoice?.fee_percentage == 4.9
-          ? '4.9%'
+          ? "4.9%"
           : invoice?.fee_percentage == 2.9
-          ? '2.9%'
+          ? "2.9%"
           : `${invoice?.fee_percentage}%`,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -149,15 +159,24 @@ function InvoiceGenerater() {
       <InvoiceBody id="invoice">
         <header className="d-flex justify-content-between mt-4">
           <div>
-            <span className="text-capitalize">
-              {[invoice?.userData.first_name, invoice?.userData.last_name].join(' ')}
+            <span className="capitalize">
+              {[invoice?.userData.first_name, invoice?.userData.last_name].join(
+                " "
+              )}
             </span>
             <br />
             {invoice?.userData?.u_email_id} <br />
-            {[invoice?.userData.location.state, invoice?.userData.location.country_short_name].join(', ')}
+            {[
+              invoice?.userData.location.state,
+              invoice?.userData.location.country_short_name,
+            ].join(", ")}
           </div>
 
-          <img style={{ width: '60px', aspectRatio: '1/1' }} src="/images/zehmizeh-logo.svg" alt="logo" />
+          <img
+            style={{ width: "60px", aspectRatio: "1/1" }}
+            src="/images/zehmizeh-logo.svg"
+            alt="logo"
+          />
         </header>
         <section className="d-flex justify-content-between mt-5">
           <div>
@@ -172,19 +191,19 @@ function InvoiceGenerater() {
             <div className="mt-4">
               <span className="fs-14">
                 <b>Date:</b>
-              </span>{' '}
+              </span>{" "}
               <br />
-              {formatLocalDate(invoice?.date_created, 'LL')}
+              {formatLocalDate(invoice?.date_created, "LL")}
             </div>
           </div>
           <div className="text-end">
             <span className="fs-14">
               <b>Amount Due:</b>
-            </span>{' '}
+            </span>{" "}
             <br />
             <h2 className="fs-20">
               {/* <span className="text-uppercase">{invoice?.currency}</span>{' '} */}
-              {numberWithCommas(invoice?.amount, 'USD')}
+              {numberWithCommas(invoice?.amount, "USD")}
             </h2>
           </div>
         </section>
@@ -201,19 +220,35 @@ function InvoiceGenerater() {
             <tbody>
               {invoice?.milestone ? (
                 <tr className="invoice-content">
-                  <td className="capital-first-ltr">{invoice?.milestone.title}</td>
-                  <td className="capital-first-ltr">{convertToTitleCase(invoice?.jobdata.job_title)}</td>
+                  <td className="capital-first-ltr">
+                    {invoice?.milestone.title}
+                  </td>
+                  <td className="capital-first-ltr">
+                    {convertToTitleCase(invoice?.jobdata.job_title)}
+                  </td>
                   {/* <td>{numberWithCommas(invoice?.amount, 'USD')}</td> */}
-                  <td>{numberWithCommas(feeBreakup?.subtotal, 'USD')}</td>
+                  <td>{numberWithCommas(feeBreakup?.subtotal, "USD")}</td>
                 </tr>
               ) : (
                 <>
                   {Array.isArray(invoice?.milestones) &&
                     invoice?.milestones.map((milestone: any) => (
-                      <tr className="invoice-content" key={`milestone-${milestone.hourly_id}`}>
-                        <td className="capital-first-ltr">{milestone?.title}</td>
-                        <td className="capital-first-ltr">{convertToTitleCase(invoice?.jobdata.job_title)}</td>
-                        <td>{numberWithCommas(milestone?.total_amount ?? milestone?.amount, 'USD')}</td>
+                      <tr
+                        className="invoice-content"
+                        key={`milestone-${milestone.hourly_id}`}
+                      >
+                        <td className="capital-first-ltr">
+                          {milestone?.title}
+                        </td>
+                        <td className="capital-first-ltr">
+                          {convertToTitleCase(invoice?.jobdata.job_title)}
+                        </td>
+                        <td>
+                          {numberWithCommas(
+                            milestone?.total_amount ?? milestone?.amount,
+                            "USD"
+                          )}
+                        </td>
                       </tr>
                     ))}
                 </>
@@ -226,20 +261,27 @@ function InvoiceGenerater() {
                     <tbody>
                       <tr>
                         <td width={180}>
-                          {invoice.payment_type !== 'charge' ? 'Freelancer Original Price' : 'Subtotal'}:
+                          {invoice.payment_type !== "charge"
+                            ? "Freelancer Original Price"
+                            : "Subtotal"}
+                          :
                         </td>
                         <td>
                           {/* <span className="text-uppercase">
                             {invoice?.currency}
                           </span>{' '} */}
-                          {numberWithCommas(feeBreakup.subtotal, 'USD')}
+                          {numberWithCommas(feeBreakup.subtotal, "USD")}
                         </td>
                       </tr>
                       <tr>
-                        <td width={150}>ZehMizeh Fee ({feeBreakup.percentage}):</td>
+                        <td width={150}>
+                          ZehMizeh Fee ({feeBreakup.percentage}):
+                        </td>
                         <td>
-                          <span>{invoice.payment_type === 'transfer' ? '-' : '+'}</span>{' '}
-                          {numberWithCommas(feeBreakup.fee, 'USD')}
+                          <span>
+                            {invoice.payment_type === "transfer" ? "-" : "+"}
+                          </span>{" "}
+                          {numberWithCommas(feeBreakup.fee, "USD")}
                         </td>
                       </tr>
                     </tbody>
@@ -249,7 +291,7 @@ function InvoiceGenerater() {
               <tr
                 className="total"
                 style={{
-                  borderTop: '1px solid #ccc',
+                  borderTop: "1px solid #ccc",
                 }}
               >
                 <td colSpan={2}></td>
@@ -259,7 +301,7 @@ function InvoiceGenerater() {
                       <tr>
                         <td width={130}>Total:</td>
                         <td className="fs-1rem">
-                          <b>{numberWithCommas(invoice?.amount, 'USD')}</b>
+                          <b>{numberWithCommas(invoice?.amount, "USD")}</b>
                         </td>
                       </tr>
                     </tbody>
@@ -274,7 +316,11 @@ function InvoiceGenerater() {
         <StyledButton size="sm" onClick={exportPdf}>
           Download
         </StyledButton>
-        <StyledButton size="sm" variant="outline-primary" onClick={() => window.print()}>
+        <StyledButton
+          size="sm"
+          variant="outline-primary"
+          onClick={() => window.print()}
+        >
           Print
         </StyledButton>
       </div>

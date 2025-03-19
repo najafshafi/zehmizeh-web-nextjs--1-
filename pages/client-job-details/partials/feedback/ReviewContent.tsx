@@ -1,5 +1,5 @@
-import moment from 'moment';
-import { ReactComponent as FilledStarIconSmall } from 'assets/icons/star-yellow.svg';
+import moment from "moment";
+import { ReactComponent as FilledStarIconSmall } from "assets/icons/star-yellow.svg";
 
 const ReviewContent = ({ review }: any) => {
   return (
@@ -13,15 +13,15 @@ const ReviewContent = ({ review }: any) => {
                 <FilledStarIconSmall key={`star_${i}`} />
               ))}
           </div>
-          <div className="given-rating-count fs-18 fw-400">
+          <div className="given-rating-count fs-18 font-normal">
             {review?.rate.toFixed(1)}
           </div>
         </div>
         <div className="ratings-given-on fs-18 fw-300 light-text">
-          {moment(review?.date_created).format('MMM DD, YYYY')}
+          {moment(review?.date_created).format("MMM DD, YYYY")}
         </div>
       </div>
-      <div className="review-description fs-20 fw-400">
+      <div className="review-description fs-20 font-normal">
         "{review?.description}"
       </div>
     </>

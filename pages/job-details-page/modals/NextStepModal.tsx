@@ -1,6 +1,6 @@
-import { Modal, Button } from 'react-bootstrap';
-import { StyledModal } from 'components/styled/StyledModal';
-import { StyledButton } from 'components/forms/Buttons';
+import { Modal, Button } from "react-bootstrap";
+import { StyledModal } from "components/styled/StyledModal";
+import { StyledButton } from "components/forms/Buttons";
 
 type Props = {
   show: boolean;
@@ -14,11 +14,11 @@ const NextStepModal = ({ show, toggle }: Props) => {
         <Button variant="transparent" className="close" onClick={toggle}>
           &times;
         </Button>
-        <div className="fs-24 fw-400 mb-4">Next Step</div>
+        <div className="fs-24 font-normal mb-4">Next Step</div>
         <div className="fs-1rem fw-700">
           The client has accepted your proposal - mazal tov!
           <span className="fw-300">
-            {' '}
+            {" "}
             Because this is a Project-Based project, the next step is to discuss
             the project's milestones with your client.
           </span>
