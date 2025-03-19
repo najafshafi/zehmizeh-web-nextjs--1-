@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const TabWrapper = styled.div`
   flex: none;
@@ -10,10 +10,13 @@ export const TabWrapper = styled.div`
     left: 0px;
     width: 100%;
     overflow: auto;
+    ::-webkit-scrollbar {
+      height: 0px;
+    }
     background-color: rgb(255 255 255);
     border-bottom: 1px solid rgb(226, 226, 226);
     min-width: unset;
-    z-index: 999;
+    z-index: 40;
   }
 `;
 

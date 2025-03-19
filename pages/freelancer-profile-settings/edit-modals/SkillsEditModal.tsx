@@ -37,15 +37,12 @@ const SkillsEditModal = ({
   const [isSkillCategorySelectModalOpen, setIsSkillCategorySelectModalOpen] =
     useState(false);
 
-  // Prevent scrolling when modal is open
+  // We don't prevent scrolling when modal is open - user wants page scrolling
   useEffect(() => {
-    if (show) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
+    // No need to modify document.body.style.overflow
+    // Allow the page to remain scrollable
     return () => {
-      document.body.style.overflow = "auto";
+      // No cleanup needed
     };
   }, [show]);
 
@@ -92,15 +89,15 @@ const SkillsEditModal = ({
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+    <div className="fixed inset-0 flex items-start justify-center bg-black/40 z-50 overflow-y-auto xl:overflow-hidden py-10">
       {/* Backdrop */}
       <div
-        className="w-screen h-screen fixed inset-0 backdrop-blur-sm z-40 p-0 m-0"
+        className="w-screen h-full fixed inset-0 backdrop-blur-sm z-40 p-0 m-0"
         onClick={onClose}
       ></div>
 
       {/* Modal Content */}
-      <div className="bg-white rounded-xl max-w-[678px] min-h-[90vh] w-full py-8 px-4 md:p-12 relative z-50 m-2">
+      <div className="bg-white rounded-xl max-w-[678px] w-full py-[2rem] px-[1rem] md:py-[3.20rem] md:px-12 relative z-50 m-2">
         {/* Close Button */}
         <VscClose
           className="absolute top-4 md:top-0 right-4 md:-right-8 text-2xl text-black md:text-white hover:text-gray-200 cursor-pointer"
@@ -109,7 +106,7 @@ const SkillsEditModal = ({
 
         {/* Modal Content */}
         <div className="space-y-5">
-          <h2 className="text-[#212529] text-2xl sm:text-[28px] font-normal text-center sm:text-left">
+          <h2 className="text-[#212529] text-[1.75rem] font-normal text-left">
             My Skills
           </h2>
 

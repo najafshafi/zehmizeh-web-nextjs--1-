@@ -179,7 +179,7 @@ const LanguagesEditModal = ({
         onClick={onClose}
       ></div>
       {/* Modal Content */}
-      <div className="bg-white rounded-xl w-full max-w-[678px] max-h-[90vh] py-8 px-4 md:p-12 relative z-50 m-4">
+      <div className="bg-white rounded-xl w-full max-w-[678px] max-h-[90vh] py-8 px-4 md:p-12 relative z-50 m-2">
         {/* Close Button */}
         <VscClose
           className="absolute top-4 md:top-0 right-4 md:-right-8 text-2xl text-black md:text-white hover:text-gray-200 cursor-pointer"

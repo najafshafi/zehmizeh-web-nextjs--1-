@@ -1,11 +1,11 @@
-import { Modal, Button, Form } from 'react-bootstrap';
-import { StyledModal } from '@/components/styled/StyledModal';
-import styled from 'styled-components';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { useState } from 'react';
-import { GridContainer, PortfolioBox } from './portfolioStyles';
-import { toast } from 'react-hot-toast';
-import { addEditPortfolio } from '@/helpers/http/portfolio';
+import { Modal, Button, Form } from "react-bootstrap";
+import { StyledModal } from "@/components/styled/StyledModal";
+import styled from "styled-components";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { useState } from "react";
+import { GridContainer, PortfolioBox } from "./portfolioStyles";
+import { toast } from "react-hot-toast";
+import { addEditPortfolio } from "@/helpers/http/portfolio";
 
 export const Wrapper = styled(Form)`
   .styled-form {
@@ -49,22 +49,22 @@ const ReArrangePorfolioItems = (props: Props) => {
     return result;
   };
 
-  const isPDF = (url: string) => url?.split('.').pop() === 'pdf';
-  const isVideo = (url: string) => url?.split('.').pop() === 'mp4';
+  const isPDF = (url: string) => url?.split(".").pop() === "pdf";
+  const isVideo = (url: string) => url?.split(".").pop() === "mp4";
   const isAudio = (url: string) =>
-    ['mp3', 'wav'].includes(url?.split('.').pop() || '');
+    ["mp3", "wav"].includes(url?.split(".").pop() || "");
 
   const coverImgHandler = (file: string) => {
-    if (isPDF(file)) file = '/images/pdf-file.svg';
-    if (isVideo(file)) file = '/images/video.png';
-    if (isAudio(file)) file = '/images/audio.png';
+    if (isPDF(file)) file = "/images/pdf-file.svg";
+    if (isVideo(file)) file = "/images/video.png";
+    if (isAudio(file)) file = "/images/audio.png";
     return file;
   };
 
   const updatedPorfolioHandler = (portFiles: any[]) => {
     const data = { ...props?.portfolio };
     const body: any = {
-      action: 'edit_portfolio',
+      action: "edit_portfolio",
       portfolio_id: data.portfolio_id,
       project_name: data.project_name,
       project_year: data.project_year,
@@ -76,14 +76,14 @@ const ReArrangePorfolioItems = (props: Props) => {
     const promise = addEditPortfolio(body);
     setloading(true);
     toast.promise(promise, {
-      loading: 'Please wait...',
+      loading: "Please wait...",
       success: (res) => {
         setloading(false);
         return res.message;
       },
       error: (err) => {
         setloading(false);
-        return err?.message || 'error';
+        return err?.message || "error";
       },
     });
   };
@@ -121,7 +121,7 @@ const ReArrangePorfolioItems = (props: Props) => {
           &times;
         </Button>
         <Wrapper>
-          <h2 style={{ marginBottom: '2rem' }} className="line-break">
+          <h2 style={{ marginBottom: "2rem" }} className="line-break">
             {project_name}
           </h2>
           <div>
@@ -129,7 +129,7 @@ const ReArrangePorfolioItems = (props: Props) => {
               <Droppable
                 droppableId="droppable"
                 direction="horizontal"
-                key={'droppable-key'}
+                key={"droppable-key"}
               >
                 {(provided: any) => (
                   <GridContainer

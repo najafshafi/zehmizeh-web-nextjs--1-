@@ -24,6 +24,10 @@
   display: none !important;
 } */
 
+.css-1wy0on6 {
+  display: flex !important;
+}
+
 .css-1xc3v61-indicatorContainer {
   display: none !important;
 }
@@ -32,3 +36,4 @@
 :root {
   --toastify-z-index: 9999;
 }
+
