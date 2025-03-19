@@ -386,13 +386,13 @@ export const CategorySkillSelectModal = ({
           ></div>
 
           {/* Modal Content */}
-          <div className="bg-white rounded-xl w-full max-w-[1140px] max-h-[90vh] p-11 relative z-50 m-4">
+          <div className="bg-white rounded-xl w-full  md:max-w-[500px] lg:max-w-[80vw] max-h-[90vh] p-11 relative z-50 m-4">
             {/* Close Button (positioned at top right -40px) */}
             <button
-              className="absolute top-0 -right-8 text-zinc-100 text-2xl hover:text-gray-200 transition-colors"
+              className="absolute md:top-0 top-2 right-2 md:-right-8 text-gray-900 lg:text-zinc-100 text-xl hover:text-gray-200 transition-colors"
               onClick={() => setIsModalOpen(false)}
             >
-              <VscClose size={28} />
+              <VscClose />
             </button>
 
             {/* Modal Header */}
@@ -400,7 +400,7 @@ export const CategorySkillSelectModal = ({
               <h2 className="text-[#212529] text-lg font-bold">
                 {type === "CATEGORY" ? "Skill Categories" : "Skills"}
               </h2>
-              <div className="absolute top-4 right-4 bg-[#fbf5e8] text-[#f2b420] px-5 py-2 rounded-[6px] text-base font-medium">
+              <div className="absolute top-10 lg:top-4 right-4 bg-[#fbf5e8] text-[#f2b420] px-5 py-2 rounded-[6px] text-base font-medium">
                 {selectedItems?.length || 0} /{" "}
                 {type === "CATEGORY"
                   ? CONSTANTS.MAX_SELECT_CATEGORY

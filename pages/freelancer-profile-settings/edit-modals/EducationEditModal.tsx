@@ -1,36 +1,76 @@
 /*
- * This is Add / Edit educaiton modal
+ * This is Add / Edit education modal
  */
 
 import { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
-import { Modal, Button, Form, Row, Col } from "react-bootstrap";
-import { StyledFormGroup, EditFormWrapper } from "./edit-modals.styled";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { StyledButton } from "@/components/forms/Buttons";
+import { VscClose } from "react-icons/vsc";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import { validateEducation } from "@/helpers/validation/common";
 import { getYupErrors } from "@/helpers/utils/misc";
 import { manageEducation } from "@/helpers/http/freelancer";
 import { REGEX } from "@/helpers/const/regex";
 
-const EducationEditModal = ({ show, onClose, data, onUpdate }: any) => {
-  const [formState, setFormState] = useState<any>({
+type EducationProps = {
+  show: boolean;
+  onClose: () => void;
+  data?: {
+    education_id?: string;
+    course_name?: string;
+    school_name?: string;
+    education_year?: string;
+  } | null;
+  onUpdate: () => void;
+};
+
+type FormStateType = {
+  degreeName: string;
+  university: string;
+  from: string;
+  to: string;
+};
+
+type ErrorsType = {
+  degreeName?: string;
+  university?: string;
+  from?: string;
+  to?: string;
+};
+
+const EducationEditModal = ({
+  show,
+  onClose,
+  data,
+  onUpdate,
+}: EducationProps) => {
+  const [formState, setFormState] = useState<FormStateType>({
     degreeName: "",
     university: "",
     from: "",
     to: "",
   });
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<ErrorsType>({});
   const [loading, setLoading] = useState<boolean>(false);
+
+  // Prevent scrolling when modal is open
+  useEffect(() => {
+    if (show) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [show]);
 
   useEffect(() => {
     if (data && show) {
       setFormState({
-        degreeName: data?.course_name,
-        university: data?.school_name,
-        from: data?.education_year?.split("-")[0],
-        to: data?.education_year?.split("-")[1],
+        degreeName: data?.course_name || "",
+        university: data?.school_name || "",
+        from: data?.education_year?.split("-")[0] || "",
+        to: data?.education_year?.split("-")[1] || "",
       });
     } else {
       setFormState({
@@ -43,11 +83,14 @@ const EducationEditModal = ({ show, onClose, data, onUpdate }: any) => {
     }
   }, [data, show]);
 
-  const handleChange = useCallback((field, value) => {
-    setFormState((prevFormState: any) => {
-      return { ...prevFormState, [field]: value };
-    });
-  }, []);
+  const handleChange = useCallback(
+    (field: keyof FormStateType, value: string) => {
+      setFormState((prevFormState) => {
+        return { ...prevFormState, [field]: value };
+      });
+    },
+    []
+  );
 
   const validate = () => {
     validateEducation.isValid(formState).then((valid) => {
@@ -67,17 +110,24 @@ const EducationEditModal = ({ show, onClose, data, onUpdate }: any) => {
 
   const handleUpdate = () => {
     // Add / Edit education modal
-
     setLoading(true);
-    const body: any = {
+    const body: {
+      action: string;
+      course_name: string;
+      school_name: string;
+      education_year: string;
+      education_id?: string;
+    } = {
       action: data ? "edit_education" : "add_education",
-      course_name: formState?.degreeName,
-      school_name: formState?.university,
-      education_year: `${formState?.from}-${formState?.to}`,
+      course_name: formState.degreeName,
+      school_name: formState.university,
+      education_year: `${formState.from}-${formState.to}`,
     };
-    if (data) {
-      body.education_id = data?.education_id;
+
+    if (data?.education_id) {
+      body.education_id = data.education_id;
     }
+
     const promise = manageEducation(body);
     toast.promise(promise, {
       loading: data
@@ -95,97 +145,127 @@ const EducationEditModal = ({ show, onClose, data, onUpdate }: any) => {
     });
   };
 
+  if (!show) return null;
+
   return (
-    <StyledModal maxwidth={678} show={show} size="sm" onHide={onClose} centered>
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={onClose}>
-          &times;
-        </Button>
-        <EditFormWrapper>
-          <div className="content flex flex-column">
-            <div className="modal-title fs-28 font-normal">Education</div>
-            <div className="form">
-              <StyledFormGroup className="mt-0">
-                <div className="fs-sm font-normal">
-                  Degree Earned<span className="mandatory">&nbsp;*</span>
-                </div>
-                <Form.Control
-                  placeholder="Enter degree name"
-                  className="form-input"
-                  value={formState?.degreeName}
-                  onChange={(e) =>
-                    handleChange(
-                      "degreeName",
-                      e.target.value.replace(REGEX.TITLE, "")
-                    )
-                  }
-                  maxLength={100}
-                />
-                {errors?.degreeName && (
-                  <ErrorMessage message={errors.degreeName} />
-                )}
-              </StyledFormGroup>
-              <StyledFormGroup>
-                <div className="fs-sm font-normal">
-                  University<span className="mandatory">&nbsp;*</span>
-                </div>
-                <Form.Control
-                  placeholder="Enter university name"
-                  className="form-input"
-                  value={formState?.university}
-                  onChange={(e) =>
-                    handleChange(
-                      "university",
-                      e.target.value.replace(REGEX.TITLE, "")
-                    )
-                  }
-                  maxLength={100}
-                />
-                {errors?.university && (
-                  <ErrorMessage message={errors.university} />
-                )}
-              </StyledFormGroup>
-              <Row>
-                <Col md={6}>
-                  <StyledFormGroup>
-                    <div className="fs-sm font-normal">From (Year)</div>
-                    <Form.Control
-                      placeholder="Year you began the program"
-                      className="form-input"
-                      value={formState?.from}
-                      onChange={(e) => handleChange("from", e.target.value)}
-                    />
-                    {errors?.from && <ErrorMessage message={errors.from} />}
-                  </StyledFormGroup>
-                </Col>
-                <Col md={6}>
-                  <StyledFormGroup>
-                    <div className="fs-sm font-normal">To (Year)</div>
-                    <Form.Control
-                      placeholder="Year you completed the program"
-                      className="form-input"
-                      value={formState?.to}
-                      onChange={(e) => handleChange("to", e.target.value)}
-                    />
-                    {errors?.to && <ErrorMessage message={errors.to} />}
-                  </StyledFormGroup>
-                </Col>
-              </Row>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+      {/* Backdrop */}
+      <div
+        className="w-screen h-screen fixed inset-0 backdrop-blur-sm z-40 p-0 m-0"
+        onClick={onClose}
+      ></div>
+
+      {/* Modal Content */}
+      <div className="bg-white rounded-xl w-full max-w-[678px] max-h-[90vh] py-8 px-5 md:px-12 relative z-50 m-4">
+        {/* Close Button */}
+        <VscClose
+          className="absolute top-4 md:top-0 right-4 md:-right-8 text-2xl text-black md:text-white hover:text-gray-200 cursor-pointer"
+          onClick={onClose}
+        />
+
+        {/* Modal Content */}
+        <div className="space-y-5">
+          <h2 className="text-[#212529] text-2xl sm:text-[28px] font-medium text-center sm:text-left">
+            Education
+          </h2>
+
+          <div className="space-y-5">
+            {/* Degree Name Field */}
+            <div className="form-group">
+              <label className="block text-sm font-medium mb-2">
+                Degree Earned<span className="text-red-500">&nbsp;*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Enter degree name"
+                className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                value={formState.degreeName}
+                onChange={(e) =>
+                  handleChange(
+                    "degreeName",
+                    e.target.value.replace(REGEX.TITLE, "")
+                  )
+                }
+                maxLength={100}
+              />
+              {errors?.degreeName && (
+                <ErrorMessage message={errors.degreeName} />
+              )}
             </div>
-            <div className="bottom-buttons flex">
-              <StyledButton
-                padding="1.125rem 2.25rem"
-                variant="primary"
-                disabled={loading}
-                onClick={validate}
-              >
-                {data ? "Update" : "Add"}
-              </StyledButton>
+
+            {/* University Field */}
+            <div className="form-group">
+              <label className="block text-sm font-medium mb-2">
+                University<span className="text-red-500">&nbsp;*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Enter university name"
+                className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                value={formState.university}
+                onChange={(e) =>
+                  handleChange(
+                    "university",
+                    e.target.value.replace(REGEX.TITLE, "")
+                  )
+                }
+                maxLength={100}
+              />
+              {errors?.university && (
+                <ErrorMessage message={errors.university} />
+              )}
+            </div>
+
+            {/* Year Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* From Year */}
+              <div className="form-group">
+                <label className="block text-sm font-medium mb-2">
+                  From (Year)
+                </label>
+                <input
+                  type="text"
+                  placeholder="Year you began the program"
+                  className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  value={formState.from}
+                  onChange={(e) => handleChange("from", e.target.value)}
+                />
+                {errors?.from && <ErrorMessage message={errors.from} />}
+              </div>
+
+              {/* To Year */}
+              <div className="form-group">
+                <label className="block text-sm font-medium mb-2">
+                  To (Year)
+                </label>
+                <input
+                  type="text"
+                  placeholder="Year you completed the program"
+                  className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  value={formState.to}
+                  onChange={(e) => handleChange("to", e.target.value)}
+                />
+                {errors?.to && <ErrorMessage message={errors.to} />}
+              </div>
             </div>
           </div>
-        </EditFormWrapper>
-      </Modal.Body>
-    </StyledModal>
+
+          {/* Update Button */}
+          <div className="flex justify-center md:justify-end !mt-9">
+            <button
+              onClick={validate}
+              disabled={loading}
+              className={`bg-[#F7B500] text-[#212529] px-9 py-[1.15rem] hover:scale-105 duration-300 text-lg rounded-full disabled:opacity-70 ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              style={{ lineHeight: 1.6875 }}
+            >
+              {data ? "Update" : "Add"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

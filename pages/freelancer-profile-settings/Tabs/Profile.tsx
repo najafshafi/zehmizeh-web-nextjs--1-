@@ -267,7 +267,7 @@ export const Profile = () => {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="col-span-1">
             {/* START ----------------------------------------- Skills */}
             <ProfileDetailSection
@@ -337,7 +337,7 @@ export const Profile = () => {
 
         {/* START ----------------------------------------- Education */}
         {data?.is_agency == 0 && (
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="col-span-1">
               <ProfileDetailSection
                 add={true}
