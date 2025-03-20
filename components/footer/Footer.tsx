@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 const Footer = () => {
   const router = useRouter();
   return (
-    <div className="w-full flex flex-col items-center justify-center pt-6 xl:p-[4rem_8.75rem_0rem]">
-      <div className="container max-w-[1320px] w-full  flex md:flex-row flex-col items-center justify-between md:gap-0 gap-8 pb-10">
+    <div className="w-full flex flex-col items-center justify-center pt-8 xl:p-[4rem_8.75rem_0rem] border-t border-orangeYellow">
+      <div className="container px-4 max-w-[1320px] w-full flex md:flex-row flex-col items-center justify-between md:gap-0 gap-8 pb-12">
         <Image
           src={"/zehmizeh-logo.svg"}
           alt={"logo"}
@@ -18,7 +18,7 @@ const Footer = () => {
           className="cursor-pointer"
           onClick={() => router.push("/home")}
         />
-        <div className="flex flex-row gap-10">
+        <div className="flex flex-row gap-12">
           <Link href={"/about-us"}>About Us</Link>
           <Link href={"/customer-support"}>Contact Us</Link>
         </div>
