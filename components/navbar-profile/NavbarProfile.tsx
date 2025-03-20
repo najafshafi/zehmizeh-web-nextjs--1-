@@ -5,10 +5,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { IoClose, IoMenu } from "react-icons/io5";
-import { BsBell } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
 import CustomButton from "../custombutton/CustomButton";
 import { useAuth } from "@/helpers/contexts/auth-context";
+import NotificationDropdown from "../notification-dropdown/NotificationDropdown";
 
 // Types for better type safety
 interface NavigationItem {
@@ -79,9 +79,9 @@ const NavbarProfile = () => {
   const handleLogout = () => {
     // Close dropdown
     setIsProfileDropdownOpen(false);
-    
+
     // Use the global logout function if available, otherwise fall back to context signout
-    if (typeof window !== 'undefined' && 'handleGlobalLogout' in window) {
+    if (typeof window !== "undefined" && "handleGlobalLogout" in window) {
       // @ts-expect-error - Global function added by NavbarLogin
       window.handleGlobalLogout();
     } else {
@@ -157,21 +157,11 @@ const NavbarProfile = () => {
         </button>
 
         <div className="hidden lg:flex items-center gap-4 px-4">
-          <div className="relative w-10">
-            {/* {notificationCount > 0 && (
-              <span className="w-5 h-5 rounded-full absolute -top-3 right-0 bg-primary text-center text-sm">
-                {notificationCount}
-              </span>
-            )} */}
-            <BsBell
-              size={30}
-              className="cursor-pointer hover:opacity-80 transition-opacity"
-            />
-          </div>
+          <NotificationDropdown />
           <CustomButton
             text="Find Projects"
             className="px-8 py-[15px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
-            onClick={() => router.push("/find-projects")} // Update with actual route
+            onClick={() => router.push("/search?type=jobs&page=1")} // Update with actual route
           />
           <div className="relative" ref={dropdownRef}>
             <button
@@ -186,10 +176,12 @@ const NavbarProfile = () => {
                 height={50}
                 alt="User avatar"
                 priority
-                style={{ width: 'auto', height: 'auto' }}
+                style={{ width: "auto", height: "auto" }}
               />
               <p className="flex items-center gap-2 text-lg text-[#212529]">
-                {user?.first_name && user?.last_name ? `${user.first_name} ${user.last_name}` : "User"}
+                {user?.first_name && user?.last_name
+                  ? `${user.first_name} ${user.last_name}`
+                  : "User"}
                 <IoIosArrowDown
                   size={20}
                   className={`transition-transform ${
@@ -238,6 +230,9 @@ const NavbarProfile = () => {
           className="absolute top-full left-0 w-full bg-secondary shadow-md flex flex-col gap-4 py-4 md:pl-[100px] pl-[15px] border-b border-customYellow animate-slide-down"
           aria-label="Mobile navigation"
         >
+          <div className="px-4 mb-2">
+            <NotificationDropdown />
+          </div>
           {navigationItems.map((item) => (
             <Link
               key={item.href}
@@ -253,7 +248,7 @@ const NavbarProfile = () => {
             className="px-9 py-4 w-fit mx-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
             onClick={() => {
               setIsMobileMenuOpen(false);
-              router.push("/find-projects"); // Update with actual route
+              router.push("/search?type=jobs&page=1"); // Update with actual route
             }}
           />
         </nav>

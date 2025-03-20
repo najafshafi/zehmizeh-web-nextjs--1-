@@ -5,7 +5,7 @@
 import { useState } from "react";
 import moment from "moment";
 import toast from "react-hot-toast";
-import { Spinner } from "react-bootstrap";
+import Spinner from "@/components/forms/Spin/Spinner";
 import { MilestonesWrapper, MileStoneListItem } from "./milestones.styled";
 import { StatusBadge } from "@/components/styled/Badges";
 import { StyledButton } from "@/components/forms/Buttons";
@@ -326,24 +326,24 @@ const Milestones = ({
       {milestone?.length == 0 && !restrictPostingMilestone && (
         <div>
           <h4 className="text-center">How To Do Project-Based Projects</h4>
-          <b className="fs-18">What are milestones?</b>
+          <b className="text-lg">What are milestones?</b>
           <p className="mt-2">
             In project-based projects, freelancers submit 'milestones'{" "}
             <b>BEFORE they do any work.</b>
           </p>
           <p>
             Milestones are mini-project-proposals, where you propose what work
-            you’ll do for a certain percentage of the budget. So if you were
+            you'll do for a certain percentage of the budget. So if you were
             going to make three flyers for $300, you could send three
             milestones, each valued at $100.
           </p>
           <p>
-            Alternatively, you don’t have to break the budget up. If you’re
+            Alternatively, you don't have to break the budget up. If you're
             happy to be paid in one payment at the end of the project, you can
             send one milestone that represents the whole project in exchange for
-            the whole project’s budget.
+            the whole project's budget.
           </p>
-          <b className="fs-18">Doing the Project</b>
+          <b className="text-lg">Doing the Project</b>
           <p className="mt-2">
             When you send a milestone and the client accepts it, he will be
             charged the fee he promised to pay. ZMZ will hold that fee for you
@@ -351,9 +351,9 @@ const Milestones = ({
           </p>
           <p>
             After submitting the work here in the milestone tab, the client
-            confirms he received what he asked for and clicks the “Deliver
-            Payment” button. The fee will then be released and sent on its way
-            to the freelancer’s bank account.
+            confirms he received what he asked for and clicks the "Deliver
+            Payment" button. The fee will then be released and sent on its way
+            to the freelancer's bank account.
           </p>
           <p>
             <b>For more information</b> , check{" "}
@@ -370,21 +370,21 @@ const Milestones = ({
           editIndex !== index ? (
             <MileStoneListItem
               key={item?.milestone_id}
-              className="d-flex flex-column milestone-item"
+              className="flex flex-col milestone-item"
               data-milestone-status={item.status}
             >
-              <div className="d-flex flex-md-row flex-column justify-content-between gap-3">
-                <div className="d-flex justify-content-between">
+              <div className="flex flex-col md:flex-row justify-between gap-3">
+                <div className="flex justify-between">
                   <div>
-                    <div className="heading fs-20 font-normal capital-first-ltr">
+                    <div className="heading text-xl font-normal capital-first-ltr">
                       {convertToTitleCase(item.title)}
                     </div>
-                    <div className="fs-32 font-normal mt-md-2">
+                    <div className="text-3xl font-normal mt-2 md:mt-2">
                       {numberWithCommas(item.amount, "USD")}
                     </div>
                   </div>
                   {["request_revision", "pending"].includes(item?.status) ? (
-                    <div className="d-md-none d-block">
+                    <div className="md:hidden block">
                       <MoreButton
                         onDelete={onDelete(item)}
                         handleEdit={handleEdit(index)}
@@ -395,7 +395,7 @@ const Milestones = ({
                     </div>
                   ) : item?.status === "paid" ||
                     item?.status === "request_revision" ? (
-                    <div className="d-md-none d-block">
+                    <div className="md:hidden block">
                       <MoreButton
                         onDelete={onDelete(item)}
                         handleEdit={handleEdit(index)}
@@ -404,8 +404,8 @@ const Milestones = ({
                     </div>
                   ) : null}
                 </div>
-                <div className="d-flex flex-column align-items-md-end">
-                  <div className="d-flex gap-3 align-items-center justify-content-between">
+                <div className="flex flex-col md:items-end">
+                  <div className="flex gap-3 items-center justify-between">
                     <StatusBadge
                       color={PAYMENT_STATUS[item?.status]?.color || "green"}
                     >
@@ -422,14 +422,14 @@ const Milestones = ({
 
                     {/* This will be hidden from here in mobile */}
                     {["pending"].includes(item?.status) ? (
-                      <div className="d-md-block d-none">
+                      <div className="hidden md:block">
                         <MoreButton
                           onDelete={onDelete(item)}
                           handleEdit={handleEdit(index)}
                         />
                       </div>
                     ) : item?.status === "paid" ? (
-                      <div className="d-md-block d-none">
+                      <div className="hidden md:block">
                         <MoreButton
                           onDelete={onDelete(item)}
                           handleEdit={handleEdit(index)}
@@ -437,7 +437,7 @@ const Milestones = ({
                         />
                       </div>
                     ) : item?.status === "request_revision" ? (
-                      <div className="d-md-block d-none">
+                      <div className="hidden md:block">
                         <MoreButton
                           onDelete={onDelete(item)}
                           handleEdit={handleEdit(index)}
@@ -452,7 +452,7 @@ const Milestones = ({
                   ) ? (
                     <div className="mt-3">
                       {!!item.date_created && (
-                        <div className="fs-18 font-normal">
+                        <div className="text-lg font-normal">
                           Submitted on{" "}
                           {item.date_created
                             ? moment(item.date_created).format("MMM DD, YYYY")
@@ -460,7 +460,7 @@ const Milestones = ({
                         </div>
                       )}
                       {!!item.cancelled_date && (
-                        <div className="fs-18 font-normal">
+                        <div className="text-lg font-normal">
                           Closed on{" "}
                           {item.cancelled_date
                             ? moment(item.cancelled_date).format("MMM DD, YYYY")
@@ -468,7 +468,7 @@ const Milestones = ({
                         </div>
                       )}
                       {
-                        <div className="fs-18 font-normal">
+                        <div className="text-lg font-normal">
                           {getDateLabel(item.status)} {getDate(item)}
                         </div>
                       }
@@ -478,7 +478,7 @@ const Milestones = ({
               </div>
 
               {/* Description | due date | Attachment | Submit work & Payment button */}
-              {/* <div className="d-flex flex-md-row flex-column justify-content-between gap-3 mt-1 align-items-md-end"> */}
+              {/* <div className="flex flex-col md:flex-row justify-between gap-3 mt-1 md:items-end"> */}
               <div>
                 <div className="flex-1">
                   <StyledHtmlText
@@ -487,12 +487,12 @@ const Milestones = ({
                     id={`mstone_${item.milestone_id}`}
                   />
                   {item.due_date && item.status !== "cancelled" && (
-                    <div className="mt-md-1 mt-2">
+                    <div className="mt-2 md:mt-1">
                       Due on {formatLocalDate(item.due_date, "MMM DD, YYYY")}
                     </div>
                   )}
                   {item?.attachments && (
-                    <div className="d-flex align-items-center gap-4 flex-wrap mt-3">
+                    <div className="flex items-center gap-4 flex-wrap mt-3">
                       {item?.attachments
                         .split(",")
                         .map((attachment, index: number) => (
@@ -511,9 +511,9 @@ const Milestones = ({
                 {["paid", "request_revision", "waiting_for_release"].includes(
                   item.status
                 ) && (
-                  <div className="mt-2 d-flex align-items-center justify-content-end gap-3">
+                  <div className="mt-2 flex items-center justify-end gap-3">
                     <StyledButton
-                      className="payment-btn py-md-3 px-md-4 p-1"
+                      className="payment-btn p-1 md:py-3 md:px-4"
                       disabled={item?.milestone_id == selectedMilestoneId}
                       onClick={() => {
                         checkStripeStatus(item?.milestone_id);
@@ -528,7 +528,7 @@ const Milestones = ({
                     </StyledButton>
 
                     <StyledButton
-                      className="payment-btn py-md-3 px-md-4 p-1"
+                      className="payment-btn p-1 md:py-3 md:px-4"
                       onClick={() => {
                         setSelectedMilestoneId(item?.milestone_id);
                         setShowMarkMilestoneAsCompleted({
@@ -537,7 +537,7 @@ const Milestones = ({
                         });
                       }}
                     >
-                      Mark Milestone as ‘Complete’
+                      Mark Milestone as 'Complete'
                     </StyledButton>
                   </div>
                 )}
@@ -545,7 +545,7 @@ const Milestones = ({
 
               {/* Hint text to dont start working until milestone is approved */}
               {item.status === "pending" && (
-                <MilestoneHintText className="mb-0 mt-4 text-center fs-20">
+                <MilestoneHintText className="mb-0 mt-4 text-center text-xl">
                   <b>NOTE:</b> This milestone is pending.
                   <br />
                   <b>Do NOT begin work</b> on it until the client has accepted.
@@ -555,11 +555,11 @@ const Milestones = ({
               {(item.status === "paid" ||
                 (item.revision_date && item.status == "request_revision")) &&
                 item?.status === "request_revision" && (
-                  <div className="revision-banner d-flex align-items-center gap-3 mt-4 rounded-lg p-md-3 p-2">
+                  <div className="revision-banner flex items-center gap-3 mt-4 rounded-lg p-2 md:p-3">
                     <span>
                       <Info />
                     </span>
-                    <span className="ms-2 fs-16 font-normal">
+                    <span className="ml-2 text-base font-normal">
                       Client has requested revisions on this milestone.
                     </span>
                   </div>

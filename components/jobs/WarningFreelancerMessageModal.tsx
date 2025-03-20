@@ -1,4 +1,5 @@
-import { StyledModal } from 'components/styled/StyledModal';
+"use client";
+import { StyledModal } from '@/components/styled/StyledModal';
 import { useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 
