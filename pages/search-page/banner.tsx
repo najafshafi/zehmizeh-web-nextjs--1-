@@ -48,7 +48,7 @@ export default function Banner(props: any) {
       </PageTitle>
 
       {props?.searchType == 'jobs' && (
-        <div className="d-block text-center">
+        <div className="block text-center">
           Check <Link href={'/support/faq/getting_hired'}>How to Get Hired</Link> Faq&apos;s section for more info
         </div>
       )}

@@ -1,11 +1,14 @@
 "use client";
-import styled from "styled-components";
-import { Dropdown } from "react-bootstrap";
 import DownArrowIcon from "@/public/icons/chevronDown.svg";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
 
-const searchTypes = [
+interface SearchType {
+  label: string;
+  key: string;
+}
+
+const searchTypes: SearchType[] = [
   {
     label: "Search Profiles",
     key: "profile",
@@ -16,69 +19,77 @@ const searchTypes = [
   },
 ];
 
-const TypeDropdown = styled(Dropdown)`
-  .dropdown-toggle {
-    background: none;
-    border: none;
-    color: inherit;
-    &::after {
-      display: none;
-    }
-    margin-right: 1.5rem;
-  }
-  .dropdown-menu {
-    border: 0;
-    box-shadow: 0 0 15px rgb(0 0 0 / 25%);
-    padding: 10px 20px;
-    border-radius: 0.5rem;
-    .dropdown-item {
-      margin-top: 0.5rem;
-      &:hover,
-      &:active,
-      &:focus,
-      &:visited {
-        background-color: transparent !important;
-        color: ${({ theme }) => theme.colors.blue};
-      }
-    }
-  }
-`;
-const TypeDropdownToggle = styled.div``;
-
 const SearchTypeDropdownForClient = () => {
   const { searchTypeForNameOrProfile, setSearchTypeForNameOrProfile } =
     useSearchFilters();
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!searchTypeForNameOrProfile) {
       setSearchTypeForNameOrProfile("");
     }
-  }, [searchTypeForNameOrProfile]);
+  }, [searchTypeForNameOrProfile, setSearchTypeForNameOrProfile]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
-    <TypeDropdown className="pointer">
-      <Dropdown.Toggle as={TypeDropdownToggle}>
-        <div className="d-flex align-items-center">
-          <div className="fs-18 mx-2">
-            {searchTypeForNameOrProfile == "name"
-              ? "Search Names"
-              : "Search Profiles"}
-          </div>
-          <DownArrowIcon className="dropdown-arrow" />
+    <div className="relative cursor-pointer" ref={dropdownRef}>
+      {/* Dropdown toggle */}
+      <div
+        onClick={toggleDropdown}
+        className="flex items-center mr-6 border-none bg-transparent"
+      >
+        <div className="text-base mx-2">
+          {searchTypeForNameOrProfile === "name"
+            ? "Search Names"
+            : "Search Profiles"}
         </div>
-      </Dropdown.Toggle>
-      <Dropdown.Menu align="end">
-        {searchTypes.map((item: any) => (
-          <Dropdown.Item
-            key={item.key}
-            className={`fs-20 ${item == "name" ? "fw-700" : "fw-400"}`}
-            onClick={() => setSearchTypeForNameOrProfile(item.key)}
-          >
-            <div>{item.label}</div>
-          </Dropdown.Item>
-        ))}
-      </Dropdown.Menu>
-    </TypeDropdown>
+        <DownArrowIcon
+          className={`transform transition-transform duration-200 ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
+      </div>
+
+      {/* Dropdown menu */}
+      {isOpen && (
+        <div className="absolute right-0 mt-2 border-0 shadow-[0_0_15px_rgba(0,0,0,0.25)] py-2.5 px-5 rounded-lg bg-white z-10">
+          {searchTypes.map((item: SearchType) => (
+            <div
+              key={item.key}
+              className={`text-xl mt-2 py-1 px-1 min-w-[160px] text-primary hover:text-black bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent cursor-pointer ${
+                item.key === "name" ? "font-medium" : "font-normal"
+              }`}
+              onClick={() => {
+                setSearchTypeForNameOrProfile(item.key);
+                setIsOpen(false);
+              }}
+            >
+              <div>{item.label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 

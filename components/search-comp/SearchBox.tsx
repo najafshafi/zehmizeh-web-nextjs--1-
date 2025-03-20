@@ -1,58 +1,35 @@
 "use client";
 import { useEffect } from "react";
 import styled from "styled-components";
-import { Form } from "react-bootstrap";
-import Spinner from "@/components/forms/Spin/Spinner";
 import SearchTypeDropdown from "./SearchTypeDropdown";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import SearchIcon from "@/public/icons/search.svg";
 import CrossIcon from "@/public/icons/cross-black.svg";
 import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
 import SearchTypeDropdownForClient from "./searchTypeDropdownForClient";
+import Spinner from "@/components/forms/Spin/Spinner";
+
+interface SearchBoxProps {
+  fetching?: boolean;
+  onSubmit: (search: string) => void;
+  searchType: "freelancers" | "jobs";
+}
+
+interface FormEvent extends React.FormEvent<HTMLFormElement> {
+  preventDefault(): void;
+}
+
+interface InputEvent extends React.ChangeEvent<HTMLInputElement> {
+  target: HTMLInputElement;
+}
 
 const Wrapper = styled.div`
   max-width: 822px;
   margin: auto;
-  .search-box-wrapper {
-    border-radius: 7px;
-    background: ${(props) => props.theme.colors.white};
-    box-shadow: 0px 6px 29px rgba(229, 226, 221, 0.74);
-    height: 4.4375rem;
-    padding-left: 1.5rem;
-  }
-  .custom-search {
-    border: none;
-    margin-left: 0.875rem;
-    padding: 0rem;
-    height: 2.2375rem;
-    box-shadow: none;
-    width: 100% !important;
-    line-height: 1.5rem;
-    letter-spacing: -0.02em;
-  }
-  .button {
-    background: ${(props) => props.theme.colors.yellow};
-    height: 100%;
-    line-height: 1.5rem;
-    letter-spacing: -0.02em;
-    padding: 1.5rem 3rem;
-    color: ${(props) => props.theme.colors.black};
-    border-radius: 0px 7px 7px 0px;
-  }
-  .mobile {
-    border-radius: 7px;
-  }
+  margin-top: 1rem;
 `;
 
-const SearchBox = ({
-  fetching,
-  onSubmit,
-  searchType,
-}: {
-  fetching?: boolean;
-  onSubmit?: any;
-  searchType: "freelancers" | "jobs";
-}) => {
+const SearchBox = ({ fetching, onSubmit, searchType }: SearchBoxProps) => {
   const { user } = useAuth();
 
   const {
@@ -62,14 +39,20 @@ const SearchBox = ({
     setSearchTypeForNameOrProfile,
   } = useSearchFilters();
 
-  const handleSubmit = (search: string, searchTypeBy?: string) => (e: any) => {
-    e.preventDefault();
-    // This will submit the search when find button is clicked
-    onSubmit(search);
-    setSearchTypeForNameOrProfile(searchTypeBy);
+  const handleSubmit =
+    (search: string, searchTypeBy?: string) => (e: FormEvent) => {
+      e.preventDefault();
+      // This will submit the search when find button is clicked
+      onSubmit(search);
+      setSearchTypeForNameOrProfile(searchTypeBy);
+    };
+
+  const handleButtonClick = () => {
+    onSubmit(searchTerm);
+    setSearchTypeForNameOrProfile(searchTypeForNameOrProfile);
   };
 
-  const onChange = (e: any) => {
+  const onChange = (e: InputEvent) => {
     setSearchTerm(e.target.value);
     /* TODO: Mudit, here we have a button "Find" to perform search but as per Yogesh,
      * when the search is cleared, it should automatically call api to search without keyword without clicking on the find button
@@ -88,21 +71,21 @@ const SearchBox = ({
   }, [searchTerm]);
 
   return (
-    <Wrapper className="mt-4">
-      <Form onSubmit={handleSubmit(searchTerm, searchTypeForNameOrProfile)}>
-        <div className="search-box-wrapper d-flex align-items-center justify-content-between">
-          <div className="flex-1 search-and-dropdown d-flex align-items-center">
+    <Wrapper>
+      <form onSubmit={handleSubmit(searchTerm, searchTypeForNameOrProfile)}>
+        <div className="flex items-center justify-between rounded-lg bg-white shadow-[0px_6px_29px_rgba(229,226,221,0.74)] h-[4.4375rem] pl-6">
+          <div className="flex-1 flex items-center">
             <SearchIcon />
-            <Form.Control
+            <input
               placeholder={
                 searchType === "freelancers" ? "Search" : "Search for Projects"
               }
               value={searchTerm}
               onChange={onChange}
               autoFocus={true}
-              className="custom-search fs-20 fw-300 w-100"
+              className="border-none ml-3.5 p-0 h-9 shadow-none w-full text-xl leading-6 tracking-[-0.02em] font-light focus:outline-none"
             />
-            {fetching && <Spinner animation="border" size="sm" />}
+            {fetching && <Spinner className="ml-2" />}
             {searchTerm && (
               <CrossIcon
                 onClick={() => {
@@ -111,7 +94,7 @@ const SearchBox = ({
                   onSubmit("");
                   setSearchTypeForNameOrProfile("");
                 }}
-                className="me-4 cursor-pointer"
+                className="mr-4 cursor-pointer"
               />
             )}
           </div>
@@ -122,20 +105,20 @@ const SearchBox = ({
 
           {/* Find button for desktop */}
           <div
-            onClick={handleSubmit(searchTerm, searchTypeForNameOrProfile)}
-            className="button pointer justify-content-center align-items-center fw-400 fs-1rem d-none d-lg-flex"
+            onClick={handleButtonClick}
+            className="hidden lg:flex justify-center items-center bg-primary h-full leading-6 tracking-[-0.02em] px-12 text-black rounded-r-lg font-normal text-base cursor-pointer"
           >
             {searchType === "freelancers" ? "Find Freelancer" : "Find Projects"}
           </div>
         </div>
         {/* Find button mobile view */}
         <div
-          onClick={handleSubmit(searchTerm, searchTypeForNameOrProfile)}
-          className="mt-3 button mobile pointer justify-content-center align-items-center fw-400 fs-1rem d-lg-none d-flex"
+          onClick={handleButtonClick}
+          className="mt-3 flex lg:hidden justify-center items-center bg-primary py-6 text-black rounded-lg font-normal text-base cursor-pointer"
         >
           {searchType === "freelancers" ? "Find Freelancer" : "Find Projects"}
         </div>
-      </Form>
+      </form>
     </Wrapper>
   );
 };
