@@ -1,7 +1,8 @@
 "use client";
 import { useEffect } from "react";
 import styled from "styled-components";
-import { Form, Spinner } from "react-bootstrap";
+import { Form } from "react-bootstrap";
+import Spinner from "@/components/forms/Spin/Spinner";
 import SearchTypeDropdown from "./SearchTypeDropdown";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import SearchIcon from "@/public/icons/search.svg";

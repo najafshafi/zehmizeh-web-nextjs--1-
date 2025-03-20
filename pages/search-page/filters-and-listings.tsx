@@ -76,7 +76,7 @@ export default function FiltersAndListings({
   );
 
   return (
-    <Wrapper className="content d-flex justify-content-center">
+    <Wrapper className="content flex justify-center">
       {/* Filters */}
 
       {/* Filters in Desktop */}
@@ -85,7 +85,7 @@ export default function FiltersAndListings({
       {/* Filter button in Mobile sticky at bottom */}
       {(!isDesktop || isLaptop) && (
         <div
-          className="mobile-filter-btn w-100 d-flex align-items-center justify-content-center p-3 pointer"
+          className="mobile-filter-btn w-full flex items-center justify-center p-4 cursor-pointer"
           onClick={toggleFilterModal}
         >
           Filters
@@ -93,15 +93,16 @@ export default function FiltersAndListings({
       )}
 
       {/* Lisings */}
-      <div className="search-result-container w-100">
+      <div className="search-result-container w-full">
         {!loading && searchTerm !== "" && (
-          <div className="search-result-text fs-24 fw-400 mb-4">
+          <div className="search-result-text text-2xl font-normal mb-5">
             {searchTerm ? (
               <>
-                ‘{totalResult}’ results found for ‘{searchTerm}’
+                &lsquo;{totalResult}&rsquo; results found for &lsquo;
+                {searchTerm}&rsquo;
               </>
             ) : (
-              <>‘{totalResult}’ results found</>
+              <>&lsquo;{totalResult}&rsquo; results found</>
             )}
           </div>
         )}
@@ -111,7 +112,7 @@ export default function FiltersAndListings({
 
         {/* Listings */}
         {loading ? (
-          <div className="search-result-container w-100 justify-content-center">
+          <div className="search-result-container w-full justify-center">
             <Loader />
           </div>
         ) : data?.length > 0 ? (
@@ -132,7 +133,7 @@ export default function FiltersAndListings({
 
             {/* Pagination */}
             {totalPages > 0 && (
-              <div className="d-flex align-items-center justify-content-center">
+              <div className="flex items-center justify-center">
                 <PaginationComponent
                   total={totalPages}
                   onPageChange={onPageChanged}

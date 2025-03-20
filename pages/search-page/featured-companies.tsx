@@ -2,18 +2,19 @@
  * This will list all the featured companies which are static right now
  */
 
-import styled from 'styled-components';
+import Image from "next/image";
+import styled from "styled-components";
 
 // Companies list - TODO: I think this list should come from api
 const FEATURED_COMPANIES = [
-  { key: 'chromatic', image: '/images/chromatic.png' },
-  { key: 'slack', image: '/images/slack.png' },
-  { key: 'netflix', image: '/images/netflix.png' },
-  { key: 'drone', image: '/images/drone.png' },
-  { key: 'udemy', image: '/images/udemy.png' },
-  { key: 'sanity', image: '/images/sanity.png' },
-  { key: 'marvel', image: '/images/marvel.png' },
-  { key: 'section', image: '/images/section.png' },
+  { key: "chromatic", image: "/images/chromatic.png" },
+  { key: "slack", image: "/images/slack.png" },
+  { key: "netflix", image: "/images/netflix.png" },
+  { key: "drone", image: "/images/drone.png" },
+  { key: "udemy", image: "/images/udemy.png" },
+  { key: "sanity", image: "/images/sanity.png" },
+  { key: "marvel", image: "/images/marvel.png" },
+  { key: "section", image: "/images/section.png" },
 ];
 
 const CopmaniesWrapper = styled.div`
@@ -47,22 +48,26 @@ export const FeaturedCompanyItem = styled.div`
 
 export default function FeaturedCompanies() {
   return (
-    <CopmaniesWrapper className="justify-content-center text-center">
-      <div className="featured-companies-title fw-400">Featured Companies</div>
-      <div className="featured-companies-description fs-18 fw-400">
+    <CopmaniesWrapper className="flex flex-col justify-center text-center">
+      <div className="featured-companies-title font-normal">
+        Featured Companies
+      </div>
+      <div className="featured-companies-description font-normal">
         Lorem Ipsum is simply dummy text of the printing and typesetting
       </div>
       {/* // TODO ? Here all the images of companies have different height and width, so how to manage that? */}
-      <div className="company-list d-flex justify-content-center align-items-center flex-wrap gap-3">
+      <div className="company-list flex justify-center items-center flex-wrap gap-4">
         {FEATURED_COMPANIES.map((item: any) => (
           <FeaturedCompanyItem
             key={item.key}
-            className="d-flex justify-content-center align-items-center"
+            className="flex justify-center items-center"
           >
-            <img
+            <Image
               src={item.image}
               className="featured-company-logo"
               alt="featured-company"
+              width={292}
+              height={122}
             />
           </FeaturedCompanyItem>
         ))}

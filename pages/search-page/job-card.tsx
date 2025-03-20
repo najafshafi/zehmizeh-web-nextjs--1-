@@ -1,27 +1,27 @@
 /*
  * This is the Job card of search page
  */
-import React, { useMemo } from 'react';
-import styled from 'styled-components';
-import moment from 'moment';
-import cns from 'classnames';
-import { Spinner } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { transition } from '@/styles/transitions';
-import { BookmarkIcon } from './Search.styled';
-import Tooltip from '@/components/ui/Tooltip';
-import { toggleBookmarkPost } from '@/helpers/http/search';
-import { useAuth } from '@/helpers/contexts/auth-context';
-import UnSavedIcon from '@/public/icons/unsaved.svg';
-import SavedIcon from '@/public/icons/saved.svg';
-import DollarCircleIcon from '@/public/icons/dollar-circle.svg';
-import LocationIcon from '@/public/icons/location-blue.svg';
-import StyledHtmlText from '@/components/ui/StyledHtmlText';
-import { convertToTitleCase, showFormattedBudget } from '@/helpers/utils/misc';
-import { BOOKMARK_TOOLTIPS } from '@/pages/job-details-page/consts';
-import AttachmentPreview from '@/components/ui/AttachmentPreview';
-import { rangeOfNumber } from '@/helpers/utils/rangeOfNumber';
-import { StatusBadge } from '@/components/styled/Badges';
+import React, { useMemo } from "react";
+import styled from "styled-components";
+import moment from "moment";
+import cns from "classnames";
+import Spinner from "@/components/forms/Spin/Spinner";
+import Link from "next/link";
+import { transition } from "@/styles/transitions";
+import { BookmarkIcon } from "./Search.styled";
+import Tooltip from "@/components/ui/Tooltip";
+import { toggleBookmarkPost } from "@/helpers/http/search";
+import { useAuth } from "@/helpers/contexts/auth-context";
+import UnSavedIcon from "@/public/icons/unsaved.svg";
+import SavedIcon from "@/public/icons/saved.svg";
+import DollarCircleIcon from "@/public/icons/dollar-circle.svg";
+import LocationIcon from "@/public/icons/location-blue.svg";
+import StyledHtmlText from "@/components/ui/StyledHtmlText";
+import { convertToTitleCase, showFormattedBudget } from "@/helpers/utils/misc";
+import { BOOKMARK_TOOLTIPS } from "@/pages/job-details-page/consts";
+import AttachmentPreview from "@/components/ui/AttachmentPreview";
+import { rangeOfNumber } from "@/helpers/utils/rangeOfNumber";
+import { StatusBadge } from "@/components/styled/Badges";
 
 const WorkItemWrapper = styled(Link)<{ isloggedin?: string }>`
   position: relative;
@@ -35,7 +35,7 @@ const WorkItemWrapper = styled(Link)<{ isloggedin?: string }>`
   padding: 2rem;
   margin-bottom: 1.875rem;
   border-radius: 14px;
-  ${(props) => props.isloggedin === 'true' && transition()}
+  ${(props) => props.isloggedin === "true" && transition()}
   .work-item__details {
     overflow: hidden;
   }
@@ -77,14 +77,22 @@ const WorkItemWrapper = styled(Link)<{ isloggedin?: string }>`
   }
 `;
 
-const JobCard = ({ workDetails, index }: { workDetails?: any; index?: number }) => {
+const JobCard = ({
+  workDetails,
+  index,
+}: {
+  workDetails?: any;
+  index?: number;
+}) => {
   const { user } = useAuth();
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [isSaved, setIsSaved] = React.useState<boolean>(workDetails?.is_bookmarked);
+  const [isSaved, setIsSaved] = React.useState<boolean>(
+    workDetails?.is_bookmarked
+  );
 
   const jobFilterStatus = {
-    prospects: { label: 'Open', color: 'green' },
-    closed: { label: 'Closed', color: 'red' },
+    prospects: { label: "Open", color: "green" },
+    closed: { label: "Closed", color: "red" },
   };
 
   const onBookmarkClick = (e) => {
@@ -109,7 +117,7 @@ const JobCard = ({ workDetails, index }: { workDetails?: any; index?: number }) 
   };
 
   const getTooltip = () => {
-    if (!user) return 'Please login to save this project.';
+    if (!user) return "Please login to save this project.";
 
     if (user?.is_account_approved) {
       if (isSaved) {
@@ -132,24 +140,26 @@ const JobCard = ({ workDetails, index }: { workDetails?: any; index?: number }) 
     if (total <= 5) {
       return total.toString();
     }
-    return rangeOfNumber(total, total > 30 ? 10 : 5).join(' - ');
+    return rangeOfNumber(total, total > 30 ? 10 : 5).join(" - ");
   }, [workDetails?.total_proposals]);
 
   return (
     <WorkItemWrapper
-      className={cns('d-flex gap-3 no-hover-effect overflow-hidden', {
-        pointer: user && user?.is_account_approved,
+      className={cns("flex gap-3 no-hover-effect overflow-hidden", {
+        "cursor-pointer": user && user?.is_account_approved,
       })}
-      to={`/job-details/${workDetails.job_post_id}/gen_details`}
+      href={`/job-details/${workDetails.job_post_id}/gen_details`}
       onClick={goToDetailsPage}
       isloggedin={Boolean(user && user?.is_account_approved).toString()}
     >
-      <div className="work-item__details w-100">
-        <div className="d-flex flex-wrap justify-content-between">
-          <div className="work-item__details__title fs-24 fw-400">{convertToTitleCase(workDetails.job_title)}</div>
+      <div className="work-item__details w-full">
+        <div className="flex flex-wrap justify-between">
+          <div className="work-item__details__title text-2xl font-normal">
+            {convertToTitleCase(workDetails.job_title)}
+          </div>
         </div>
 
-        <div className="work-item__details__description fs-18 fw-300 mt-2">
+        <div className="work-item__details__description text-lg font-light mt-2">
           {workDetails?.job_description && (
             <StyledHtmlText
               htmlString={workDetails?.job_description}
@@ -160,39 +170,49 @@ const JobCard = ({ workDetails, index }: { workDetails?: any; index?: number }) 
         </div>
         {workDetails?.attachments?.length > 0 && (
           <div
-            className="d-flex align-items-center gap-4 flex-wrap mt-3"
+            className="flex items-center gap-4 flex-wrap mt-3"
             onClick={(e) => {
               e.preventDefault();
             }}
           >
             {workDetails.attachments?.map((item: string) => (
-              <div key={item} className="d-flex">
-                <AttachmentPreview uploadedFile={item} removable={false} shouldShowFileNameAndExtension={false} />
+              <div key={item} className="flex">
+                <AttachmentPreview
+                  uploadedFile={item}
+                  removable={false}
+                  shouldShowFileNameAndExtension={false}
+                />
               </div>
             ))}
           </div>
         )}
 
-        <div className="work-item__other-details mt-3 d-flex align-items-center flex-wrap">
-          <div className="d-flex budget gap-2">
-            {workDetails?.budget?.isProposal === false ? <DollarCircleIcon /> : null}
-            <div className="budget-value fs-1rem fw-400">
-              {workDetails?.budget?.type == 'fixed' ? (
+        <div className="work-item__other-details mt-3 flex items-center flex-wrap">
+          <div className="flex budget gap-2">
+            {workDetails?.budget?.isProposal === false ? (
+              <DollarCircleIcon />
+            ) : null}
+            <div className="budget-value text-base font-normal">
+              {workDetails?.budget?.type == "fixed" ? (
                 workDetails?.budget?.isProposal === true ? (
-                  <div className="budget-label fs-1rem fw-300">Open to Proposals</div>
+                  <div className="budget-label text-base font-light">
+                    Open to Proposals
+                  </div>
                 ) : (
                   showFormattedBudget(workDetails?.budget)
                 )
               ) : workDetails?.budget?.isProposal === true ? (
-                <div className="budget-label fs-1rem fw-300">Open to Proposals</div>
+                <div className="budget-label text-base font-light">
+                  Open to Proposals
+                </div>
               ) : (
                 showFormattedBudget(workDetails?.budget)
               )}
             </div>
 
-            {workDetails?.budget?.type === 'fixed' && (
-              <div className="budget-label fs-1rem fw-300">
-                {workDetails?.budget?.isProposal === true ? null : 'Budget'}
+            {workDetails?.budget?.type === "fixed" && (
+              <div className="budget-label text-base font-light">
+                {workDetails?.budget?.isProposal === true ? null : "Budget"}
               </div>
             )}
           </div>
@@ -200,21 +220,24 @@ const JobCard = ({ workDetails, index }: { workDetails?: any; index?: number }) 
           {/* START ----------------------------------------- Submitted proposals */}
           {Number(workDetails?.total_proposals) > 0 && (
             <div className="budget">
-              <div className="budget-label fs-1rem fw-300">
-                {totalProposalRange} {workDetails?.total_proposals > 1 ? 'Proposals' : 'Proposal'} Submitted
+              <div className="budget-label text-base font-light">
+                {totalProposalRange}{" "}
+                {workDetails?.total_proposals > 1 ? "Proposals" : "Proposal"}{" "}
+                Submitted
               </div>
             </div>
           )}
           {/* END ------------------------------------------- Submitted proposals */}
 
-          {Array.isArray(workDetails?.preferred_location) && workDetails?.preferred_location?.length > 0 && (
-            <div className="d-flex align-items-center budget gap-1">
-              <LocationIcon />
-              <div className="work-item__location fs-1rem fw-400 budget-label">
-                {workDetails.preferred_location.join(', ')}
+          {Array.isArray(workDetails?.preferred_location) &&
+            workDetails?.preferred_location?.length > 0 && (
+              <div className="flex items-center budget gap-1">
+                <LocationIcon />
+                <div className="work-item__location text-base font-normal budget-label">
+                  {workDetails.preferred_location.join(", ")}
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </div>
       <div className="mt-2">
@@ -224,16 +247,21 @@ const JobCard = ({ workDetails, index }: { workDetails?: any; index?: number }) 
       </div>
       <Tooltip
         customTrigger={
-          <BookmarkIcon className="d-flex justify-content-center align-items-center" onClick={onBookmarkClick}>
-            {loading ? <Spinner animation="border" /> : isSaved ? <SavedIcon /> : <UnSavedIcon />}
+          <BookmarkIcon
+            className="flex justify-center items-center"
+            onClick={onBookmarkClick}
+          >
+            {loading ? <Spinner /> : isSaved ? <SavedIcon /> : <UnSavedIcon />}
           </BookmarkIcon>
         }
-        className="d-inline-block align-middle"
+        className="inline-block align-middle"
       >
         {getTooltip()}
       </Tooltip>
 
-      <div className="posted-on budget-label">{moment(workDetails.date_created).format('MMM DD, YYYY')}</div>
+      <div className="posted-on budget-label">
+        {moment(workDetails.date_created).format("MMM DD, YYYY")}
+      </div>
     </WorkItemWrapper>
   );
 };

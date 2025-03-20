@@ -28,13 +28,13 @@ export default function Search() {
   };
 
   return (
-    <MainContainer className="d-flex-column justify-content-center content-hfill">
+    <MainContainer className="flex flex-col justify-center h-full flex-1">
       {/* Search banner */}
 
       <Banner searchType={searchType}>
         <SearchBox onSubmit={onSearch} searchType={searchType} />
         {isFreelancerLaunch && (
-          <div className="info mt-5 text-center fs-20 fw-400">
+          <div className="info mt-5 text-center text-2xl font-normal">
             ZehMizeh is not currently open for clients to join, which means
             there&apos;s no one to post any projects for now. Clients will
             officially be invited to the site on <b>December 2022</b>, so mark
