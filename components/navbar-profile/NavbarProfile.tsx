@@ -79,9 +79,9 @@ const NavbarProfile = () => {
   const handleLogout = () => {
     // Close dropdown
     setIsProfileDropdownOpen(false);
-    
+
     // Use the global logout function if available, otherwise fall back to context signout
-    if (typeof window !== 'undefined' && 'handleGlobalLogout' in window) {
+    if (typeof window !== "undefined" && "handleGlobalLogout" in window) {
       // @ts-expect-error - Global function added by NavbarLogin
       window.handleGlobalLogout();
     } else {
@@ -171,7 +171,7 @@ const NavbarProfile = () => {
           <CustomButton
             text="Find Projects"
             className="px-8 py-[15px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
-            onClick={() => router.push("/find-projects")} // Update with actual route
+            onClick={() => router.push("/search?type=jobs&page=1")} // Update with actual route
           />
           <div className="relative" ref={dropdownRef}>
             <button
@@ -186,10 +186,12 @@ const NavbarProfile = () => {
                 height={50}
                 alt="User avatar"
                 priority
-                style={{ width: 'auto', height: 'auto' }}
+                style={{ width: "auto", height: "auto" }}
               />
               <p className="flex items-center gap-2 text-lg text-[#212529]">
-                {user?.first_name && user?.last_name ? `${user.first_name} ${user.last_name}` : "User"}
+                {user?.first_name && user?.last_name
+                  ? `${user.first_name} ${user.last_name}`
+                  : "User"}
                 <IoIosArrowDown
                   size={20}
                   className={`transition-transform ${
@@ -253,7 +255,7 @@ const NavbarProfile = () => {
             className="px-9 py-4 w-fit mx-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
             onClick={() => {
               setIsMobileMenuOpen(false);
-              router.push("/find-projects"); // Update with actual route
+              router.push("/search?type=jobs&page=1"); // Update with actual route
             }}
           />
         </nav>

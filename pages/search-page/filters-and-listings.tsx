@@ -76,7 +76,7 @@ export default function FiltersAndListings({
   );
 
   return (
-    <Wrapper className="content flex justify-center">
+    <Wrapper className="content flex justify-center w-full">
       {/* Filters */}
 
       {/* Filters in Desktop */}
@@ -112,7 +112,7 @@ export default function FiltersAndListings({
 
         {/* Listings */}
         {loading ? (
-          <div className="search-result-container w-full justify-center">
+          <div className="search-result-container w-full justify-center ">
             <Loader />
           </div>
         ) : data?.length > 0 ? (
@@ -133,7 +133,7 @@ export default function FiltersAndListings({
 
             {/* Pagination */}
             {totalPages > 0 && (
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center ">
                 <PaginationComponent
                   total={totalPages}
                   onPageChange={onPageChanged}
