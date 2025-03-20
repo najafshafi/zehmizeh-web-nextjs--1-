@@ -19,7 +19,7 @@ export const JobClosuremodalProjectBased = ({
   return (
     <StyledModal maxwidth={800} show={show} size="lg" centered scrollable>
       <Modal.Body>
-        <div className="d-flex flex-column justify-content-center">
+        <div className="flex flex-column justify-center">
           <div className="fs-24 fw-700 text-center mb-3">
             The Client Requests to Close the Project
           </div>
@@ -48,7 +48,7 @@ export const JobClosuremodalProjectBased = ({
               cannot be undone.
             </li>
           </ul>
-          <div className="d-flex flex-column justify-content-center align-items-center gap-md-3 gap-2 mt-md-4 mt-3">
+          <div className="flex flex-column justify-center items-center gap-md-3 gap-2 mt-md-4 mt-3">
             <StyledButton
               className={`fs-16 font-normal ${isMobile ? "w-100" : "w-50"}`}
               variant="outline-dark"

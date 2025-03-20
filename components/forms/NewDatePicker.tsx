@@ -1,14 +1,14 @@
-import React from 'react';
-import DatePicker from 'react-datepicker';
-import styled from 'styled-components';
-import CalendarIcon  from '@/public/icons/calendar.svg';
-import 'react-datepicker/dist/react-datepicker.css';
+import React from "react";
+import DatePicker from "react-datepicker";
+import styled from "styled-components";
+import CalendarIcon from "@/public/icons/calendar.svg";
+import "react-datepicker/dist/react-datepicker.css";
 
 const DateInputWrapper = styled.div<{ value?: string }>`
   padding: 1rem 0.8rem;
   border-radius: 7px;
   border: 1px solid lightgray;
-  color: ${(props) => (props.value ? '#000' : 'lightgray')};
+  color: ${(props) => (props.value ? "#000" : "lightgray")};
 `;
 
 const NewCustomDatePicker = (props) => {
@@ -24,18 +24,18 @@ const NewCustomDatePicker = (props) => {
   const currentYear = new Date().getFullYear();
   const years = [currentYear, currentYear + 1];
   const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
   return (
     <div>
@@ -52,8 +52,8 @@ const NewCustomDatePicker = (props) => {
           <div
             style={{
               margin: 10,
-              display: 'flex',
-              justifyContent: 'center',
+              display: "flex",
+              justifyContent: "center",
             }}
           >
             <button
@@ -63,9 +63,12 @@ const NewCustomDatePicker = (props) => {
               }}
               disabled={prevMonthButtonDisabled}
             >
-              {'<'}
+              {"<"}
             </button>
-            <select value={new Date(date).getFullYear()} onChange={({ target: { value } }) => changeYear(value)}>
+            <select
+              value={new Date(date).getFullYear()}
+              onChange={({ target: { value } }) => changeYear(value)}
+            >
               {years.map((option) => (
                 <option key={option} value={option}>
                   {option}
@@ -75,7 +78,9 @@ const NewCustomDatePicker = (props) => {
 
             <select
               value={months[new Date(date).getMonth()]}
-              onChange={({ target: { value } }) => changeMonth(months.indexOf(value))}
+              onChange={({ target: { value } }) =>
+                changeMonth(months.indexOf(value))
+              }
             >
               {months.map((option) => (
                 <option key={option} value={option}>
@@ -91,7 +96,7 @@ const NewCustomDatePicker = (props) => {
               }}
               disabled={nextMonthButtonDisabled}
             >
-              {'>'}
+              {">"}
             </button>
           </div>
         )}
@@ -116,12 +121,12 @@ const CustomInput = ({
   ref: any;
 }) => (
   <DateInputWrapper
-    className="date-input d-flex align-items-center justify-content-between pointer"
+    className="date-input flex items-center justify-between pointer"
     onClick={onClick}
     ref={ref}
     value={value}
   >
     <div>{value || placeholder}</div>
-    {value ? '' : <CalendarIcon />}
+    {value ? "" : <CalendarIcon />}
   </DateInputWrapper>
 );

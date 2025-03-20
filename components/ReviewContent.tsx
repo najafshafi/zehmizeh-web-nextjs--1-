@@ -8,7 +8,7 @@ import FilledStarIconSmall from "../public/icons/starYellow.svg";
 const ReviewContent = ({ review }: any) => {
   return (
     <>
-      <div className="flex items-center justify-content-between flex-wrap">
+      <div className="flex items-center justify-between flex-wrap">
         <div className="given-ratings flex">
           <div className="stars flex items-center gap-1">
             {Array(review?.rate)

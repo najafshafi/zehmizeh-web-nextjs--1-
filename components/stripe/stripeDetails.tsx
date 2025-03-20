@@ -2,7 +2,7 @@ import { StripeContainer } from "./stripeStyled";
 import "./style.css";
 import Tooltip from "@/components/ui/Tooltip";
 import { ReactElement, useEffect, useMemo, useState } from "react";
-import { Spinner } from "react-bootstrap";
+import Spinner from "@/components/forms/Spin/Spinner";
 import { StyledButton } from "@/components/forms/Buttons";
 import { getStripeVerificationLink } from "@/helpers/http/freelancer";
 import { isUserStripeVerified, pusherApiKey } from "@/helpers/utils/helper";
@@ -15,6 +15,7 @@ import Pusher from "pusher-js";
 import { IDENTITY_DOCS } from "@/helpers/const/constants";
 import StripeAcceptableIDModal from "./stripeAcceptableIDModal";
 import Link from "next/link";
+import CustomButton from "../custombutton/CustomButton";
 
 interface Prop {
   stripe: any;
@@ -215,7 +216,7 @@ const StripeDetails = (props: Prop) => {
         finalRequirementArr[0] === "Document"
       ) {
         finalMessage = (
-          <div className="fs-18">
+          <div className="text-lg">
             <b>
               To finish verification - please add a Personal Identity Document.
             </b>
@@ -232,7 +233,7 @@ const StripeDetails = (props: Prop) => {
               To continue your registration with Stripe, click "Go to Stripe"
               and add this info:
             </p>
-            <ul className="ps-3 mt-1">{missingDetails(finalRequirementArr)}</ul>
+            <ul className="pl-3 mt-1">{missingDetails(finalRequirementArr)}</ul>
           </div>
         );
       }
@@ -245,7 +246,7 @@ const StripeDetails = (props: Prop) => {
               <div>
                 Please upload one of the following acceptable ID documents:
               </div>
-              <ul className="ps-3 mt-1">
+              <ul className="pl-3 mt-1">
                 {stripe?.country &&
                   Array.isArray(
                     IDENTITY_DOCS?.[
@@ -426,7 +427,7 @@ const StripeDetails = (props: Prop) => {
           />
 
           <div
-            className="flex justify-content-end reset-password fs-18 font-normal pointer"
+            className="flex justify-end reset-password text-lg font-normal cursor-pointer"
             onClick={toggleHowToRegModal}
             style={{
               position: "absolute",
@@ -440,13 +441,13 @@ const StripeDetails = (props: Prop) => {
       )}
 
       <div>
-        <div className="flex items-center justify-content-between">
-          <h3>Stripe Account Details</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold">Stripe Account Details</h3>
         </div>
         <div className="mt-4">
           <div className="flex  gap-3">
             <div className=" stripe-tag">
-              <span>{content[status].label}</span>
+              <span className="font-semibold">{content[status].label}</span>
 
               {content[status].tooltip && (
                 <Tooltip className="stripe-tooltip">
@@ -457,7 +458,9 @@ const StripeDetails = (props: Prop) => {
 
             {stripe?.id && (
               <div className="stripe-tag">
-                <span>{`ACCT: ${stripe?.id.split("_")[1]}`}</span>
+                <span className="font-semibold">{`ACCT: ${
+                  stripe?.id.split("_")[1]
+                }`}</span>
               </div>
             )}
           </div>
@@ -466,7 +469,7 @@ const StripeDetails = (props: Prop) => {
           <table className="no-border">
             <tr>
               <td className="pb-3">Full Name</td>
-              <td className="ps-5 pb-3">
+              <td className="pl-5 pb-3">
                 {first_name && last_name ? (
                   <>
                     {first_name} {last_name}
@@ -478,30 +481,30 @@ const StripeDetails = (props: Prop) => {
             </tr>
             <tr>
               <td>Email</td>
-              <td className="ps-5">{stripe?.email ?? "-"}</td>
+              <td className="pl-5">{stripe?.email ?? "-"}</td>
             </tr>
           </table>
         </div>
 
         <div className="capabilities-container-wrapper mt-4 mb-4">
-          <p className="stripe-message my-3">{message}</p>
+          <p className="stripe-message my-3 font-medium">{message}</p>
           {status == "pending" && (
-            <p className="stripe-message my-3">
+            <p className="stripe-message my-3 ">
               For Stripe verification, you need to upload a ID document. You can
               check the acceptable ID documents for your preferred country{" "}
-              <a
+              <Link
                 className="text-primary"
                 target="_blank"
                 rel="noreferrer"
                 href="https://docs.stripe.com/acceptable-verification-documents"
               >
                 (here) .
-              </a>
+              </Link>
             </p>
           )}
           {status == "pending" && (
             <>
-              <Link className="d-block text-primary" href="/support/faq/stripe">
+              <Link className="block text-primary" href="/support/faq/stripe">
                 Help with Stripe
               </Link>
               <br />
@@ -517,11 +520,7 @@ const StripeDetails = (props: Prop) => {
               style={buttonStyle}
               onClick={() => setStep(1)}
             >
-              {generatingLink ? (
-                <Spinner animation="border" />
-              ) : (
-                "Begin Stripe Activation"
-              )}
+              {generatingLink ? <Spinner /> : "Begin Stripe Activation"}
             </StyledButton>
           )}
 
@@ -529,13 +528,12 @@ const StripeDetails = (props: Prop) => {
             ["pending", "currently_due"].includes(stripeStatus) &&
             showBtn) ||
             isUserStripeVerified(stripe).length > 0) && (
-            <StyledButton
-              style={buttonStyle}
-              disabled={loading}
+            <CustomButton
+              text={loading ? <Spinner /> : "Go to Stripe"}
+              className="px-4 py-2 font-semibold text-black rounded-md bg-primary text-[14px] transition-transform duration-200 hover:scale-105  mt-5"
               onClick={() => verificationHandler()}
-            >
-              {loading ? <Spinner animation="border" /> : "Go to Stripe"}
-            </StyledButton>
+              disabled={loading}
+            />
           )}
         </div>
       </div>

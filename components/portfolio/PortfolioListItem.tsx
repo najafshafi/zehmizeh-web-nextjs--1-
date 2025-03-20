@@ -119,7 +119,7 @@ const PortfolioListItem = ({ data, onUpdate, allowEdit }: Props) => {
         onClick={goToDetailsPage}
       >
         <div className="cover-img flex align-items-end gap-3">
-          <div className="flex justify-content-between items-center p-3 gap-3 flex-1">
+          <div className="flex justify-between items-center p-3 gap-3 flex-1">
             <div className="project-name fs-20 fw-700">
               {data.project_name && capitalizeFirstLetter(data.project_name)}
             </div>

@@ -272,7 +272,7 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
 
           <div>
             {/* START ----------------------------------------- Attachments */}
-            <div className="images-upload flex items-center justify-content-between">
+            <div className="images-upload flex items-center justify-between">
               <div>
                 <div className="fs-18 font-normal">
                   Add album&apos;s images, videos, audio, or document files{" "}

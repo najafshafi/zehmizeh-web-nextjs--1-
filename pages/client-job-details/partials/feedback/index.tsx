@@ -22,7 +22,7 @@ const Feedback = ({
   onSubmitFeedback,
 }: Porps) => {
   return (
-    <FeedbackWrapper className="d-flex flex-column">
+    <FeedbackWrapper className="flex flex-column">
       {feedbackData && !feedbackData?.client && (
         <AddReviewForm
           jobPostId={jobPostId}
@@ -38,8 +38,8 @@ const Feedback = ({
         {feedbackData && feedbackData?.freelancer && (
           <div className="client-feedback">
             <div className="fs-20 fw-700">Received</div>
-            <div className="review-content d-flex flex-wrap align-items-start">
-              <div className="client-details d-flex align-items-center">
+            <div className="review-content flex flex-wrap align-items-start">
+              <div className="client-details flex items-center">
                 <BlurredImage
                   src={
                     freelancerDetails?.user_image ||

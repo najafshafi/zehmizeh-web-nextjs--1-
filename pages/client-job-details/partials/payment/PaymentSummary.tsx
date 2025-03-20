@@ -28,7 +28,7 @@ const PaymentSummary = () => {
   return (
     <Wrapper>
       <div className="fees-calculation mt-5 pt-4">
-        <div className="fs-1rem fw-700 d-flex align-items-center justify-content-between mt-1">
+        <div className="fs-1rem fw-700 flex items-center justify-between mt-1">
           <span className="payable-label fs-1rem font-normal">
             {jobType === "hourly"
               ? "Price for Hours Submitted"
@@ -36,9 +36,9 @@ const PaymentSummary = () => {
           </span>
           {numberWithCommas(amount, "USD")}
         </div>
-        <div className="fs-1rem fw-700 d-flex align-items-center justify-content-between mt-1">
+        <div className="fs-1rem fw-700 flex items-center justify-between mt-1">
           <span className="payable-label fs-1rem font-normal">
-            <div className="d-flex flex-row align-items-center justify-content-start">
+            <div className="flex flex-row items-center justify-content-start">
               ZehMizeh Fee
               <Tooltip
                 customTrigger={
@@ -54,7 +54,7 @@ const PaymentSummary = () => {
           {/* {zehMizehCharge} {'=>'} {minFixedAmount} */}
           {numberWithCommas(zehMizehCharge, "USD")}
         </div>
-        <div className="fs-24 fw-700 d-flex align-items-center justify-content-between mt-3 pt-2 total-amount">
+        <div className="fs-24 fw-700 flex items-center justify-between mt-3 pt-2 total-amount">
           <span className="payable-label fs-1rem font-normal">Total</span>
           {numberWithCommas(totalPayableAmount, "USD")}
         </div>

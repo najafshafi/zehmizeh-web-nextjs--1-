@@ -2,49 +2,49 @@
  * This is the main component of this route
  */
 
-import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap';
-import toast from 'react-hot-toast';
-import classNames from 'classnames';
-import Loader from 'components/Loader';
-import BackButton from 'components/ui/BackButton';
-import DetailsBanner from './partials/DetailsBanner';
-import { StyledButton } from 'components/forms/Buttons';
-import Tabs from 'components/ui/Tabs';
-import GeneralDetails from './partials/GeneralDetails';
-import Feedback from './partials/feedback';
-import Milestones from './partials/milestones';
-import HoursManagement from './partials/hours-management';
-import Applicants from './partials/applicants';
-import SubmitEndJobModal from './modals/SubmitEndJobModal';
-import QuickOptions from './quick-options/QuickOptions';
-import DeletePropmpt from 'components/ui/DeletePropmpt';
-import JobEndRequestByFreelancer from './partials/JobEndRequestByFreelancer';
-import ConfirmEndRequestPrompt from './partials/ConfirmEndRequestPrompt';
-import FinalMilestoneModal from './quick-options/FinalMilestoneModal';
-import { Wrapper } from './client-job-details.styled';
-import useStartPageFromTop from 'helpers/hooks/useStartPageFromTop';
-import useResponsive from 'helpers/hooks/useResponsive';
-import useJobDetails from './useJobDetails';
-import { ReactComponent as TrashIcon } from 'assets/icons/trash-orange.svg';
-import { ReactComponent as EditIcon } from 'assets/icons/edit-blue.svg';
-import SingleMessaging from 'pages/messaging/SingleMessaging';
-import { deleteJob } from 'helpers/http/client';
-import { PaymentProvider } from './controllers/usePayments';
-import useLocationSearch from 'helpers/hooks/useSearchLocation';
-import { JobCloseMessageWrapper } from './partials/hours-management/hours-management.styled';
-import { cancelClosureRequest } from 'helpers/http/jobs';
-import { Invitees } from './partials/invitees';
-import NoDataFound from 'components/ui/NoDataFound';
-import { ChangeBudgetRequestModal } from '../../components/changeBudget/ChangeBudgetRequestModal';
-import { ChangeBudgetDeniedModal } from 'components/changeBudget/ChangeBudgetDeniedModal';
-import { PostVisibilityConfirmationModal } from './modals/PostVisibilityConfirmationModal';
-import { postAJob } from 'helpers/http/post-job';
-import { editUser } from 'helpers/http/auth';
-import useClientProfile from 'controllers/useClientProfile';
-import { USER_PROFILE_SETTINGS_KEY } from 'helpers/const/constants';
-import { StatusBadge } from 'components/styled/Badges';
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Spinner } from "react-bootstrap";
+import toast from "react-hot-toast";
+import classNames from "classnames";
+import Loader from "components/Loader";
+import BackButton from "components/ui/BackButton";
+import DetailsBanner from "./partials/DetailsBanner";
+import { StyledButton } from "components/forms/Buttons";
+import Tabs from "components/ui/Tabs";
+import GeneralDetails from "./partials/GeneralDetails";
+import Feedback from "./partials/feedback";
+import Milestones from "./partials/milestones";
+import HoursManagement from "./partials/hours-management";
+import Applicants from "./partials/applicants";
+import SubmitEndJobModal from "./modals/SubmitEndJobModal";
+import QuickOptions from "./quick-options/QuickOptions";
+import DeletePropmpt from "components/ui/DeletePropmpt";
+import JobEndRequestByFreelancer from "./partials/JobEndRequestByFreelancer";
+import ConfirmEndRequestPrompt from "./partials/ConfirmEndRequestPrompt";
+import FinalMilestoneModal from "./quick-options/FinalMilestoneModal";
+import { Wrapper } from "./client-job-details.styled";
+import useStartPageFromTop from "helpers/hooks/useStartPageFromTop";
+import useResponsive from "helpers/hooks/useResponsive";
+import useJobDetails from "./useJobDetails";
+import { ReactComponent as TrashIcon } from "assets/icons/trash-orange.svg";
+import { ReactComponent as EditIcon } from "assets/icons/edit-blue.svg";
+import SingleMessaging from "pages/messaging/SingleMessaging";
+import { deleteJob } from "helpers/http/client";
+import { PaymentProvider } from "./controllers/usePayments";
+import useLocationSearch from "helpers/hooks/useSearchLocation";
+import { JobCloseMessageWrapper } from "./partials/hours-management/hours-management.styled";
+import { cancelClosureRequest } from "helpers/http/jobs";
+import { Invitees } from "./partials/invitees";
+import NoDataFound from "components/ui/NoDataFound";
+import { ChangeBudgetRequestModal } from "../../components/changeBudget/ChangeBudgetRequestModal";
+import { ChangeBudgetDeniedModal } from "components/changeBudget/ChangeBudgetDeniedModal";
+import { PostVisibilityConfirmationModal } from "./modals/PostVisibilityConfirmationModal";
+import { postAJob } from "helpers/http/post-job";
+import { editUser } from "helpers/http/auth";
+import useClientProfile from "controllers/useClientProfile";
+import { USER_PROFILE_SETTINGS_KEY } from "helpers/const/constants";
+import { StatusBadge } from "components/styled/Badges";
 
 export type TcomponentConnectorRef = React.MutableRefObject<{
   openMilestoneListModal: () => void;
@@ -57,33 +57,45 @@ const ClientJobDetails = () => {
   const location = useLocation();
   const params = useLocationSearch();
   const { id } = useParams<{ id: string }>();
-  const [showFreelancerEndRequestModal, setShowFreelancerEndRequestModal] = useState<boolean>(false);
-  const [showConfirmEndRequestPromptModal, setShowConfirmEndRequestPromptModal] = useState<{
+  const [showFreelancerEndRequestModal, setShowFreelancerEndRequestModal] =
+    useState<boolean>(false);
+  const [
+    showConfirmEndRequestPromptModal,
+    setShowConfirmEndRequestPromptModal,
+  ] = useState<{
     show: boolean;
     completionStatus?: string;
   }>({
     show: false,
   });
   const [loading, setLoading] = useState<boolean>(false);
-  const [showSubmitEndJobModal, setShowSubmitEndJobModal] = useState<boolean>(false);
-  const [showEndJobStatusModal, setShowEndJobStatusModal] = useState<boolean>(false);
-  const [endJobStatus, setEndJobStatus] = useState<string>('');
+  const [showSubmitEndJobModal, setShowSubmitEndJobModal] =
+    useState<boolean>(false);
+  const [showEndJobStatusModal, setShowEndJobStatusModal] =
+    useState<boolean>(false);
+  const [endJobStatus, setEndJobStatus] = useState<string>("");
   const [showEndJobButton, setShowEndJobButton] = useState<boolean>(false);
   const [showDeleteJobModal, setShowDeleteJobModal] = useState<boolean>(false);
-  const [finalMilestoneModal, setFinalMilestoneModal] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<string>('gen_details');
+  const [finalMilestoneModal, setFinalMilestoneModal] =
+    useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<string>("gen_details");
   const [totalProposals, setTotalProposals] = useState<number>(0);
   const [totalInvitees, setTotalInvitees] = useState<number>(0);
   const [isHidden, setIsHidden] = useState<boolean>(false);
-  const [isPostVisibilityConfirmationModalOpen, setIsPostVisibilityConfirmationModalOpen] = useState(false);
-  const [isLoadingPostVisibilityModal, setIsLoadingPostVisibilityModal] = useState(false);
+  const [
+    isPostVisibilityConfirmationModalOpen,
+    setIsPostVisibilityConfirmationModalOpen,
+  ] = useState(false);
+  const [isLoadingPostVisibilityModal, setIsLoadingPostVisibilityModal] =
+    useState(false);
 
-  const { jobdetails, isLoading, refetch, tabItems, isRefetching } = useJobDetails(id);
+  const { jobdetails, isLoading, refetch, tabItems, isRefetching } =
+    useJobDetails(id);
 
   const { profileData, refetchData } = useClientProfile();
 
   // Ref that connects function and variable across different chilren of this component
-  const componentConnectorRef = useRef<TcomponentConnectorRef['current']>({
+  const componentConnectorRef = useRef<TcomponentConnectorRef["current"]>({
     openMilestoneListModal: () => {
       //
     },
@@ -99,21 +111,34 @@ const ClientJobDetails = () => {
       setTotalProposals(jobdetails?.applicants ?? 0);
       setTotalInvitees(jobdetails?.invite_count ?? 0);
 
-      if (jobdetails.status === 'active' && jobdetails?.milestone.filter((x: any) => x.is_final_milestone).length > 0) {
+      if (
+        jobdetails.status === "active" &&
+        jobdetails?.milestone.filter((x: any) => x.is_final_milestone).length >
+          0
+      ) {
         goToMileStoneTab();
       }
 
-      if (jobdetails?.is_closure_request_accepted && jobdetails?.status === 'active') {
+      if (
+        jobdetails?.is_closure_request_accepted &&
+        jobdetails?.status === "active"
+      ) {
         toggleSubmitEndJobModal();
       }
 
-      const final_milestone = jobdetails?.milestone?.filter((jb) => jb.is_final_milestone);
+      const final_milestone = jobdetails?.milestone?.filter(
+        (jb) => jb.is_final_milestone
+      );
       if (
         final_milestone.length > 0 &&
-        (final_milestone[0]?.hourly_status === 'paid' || final_milestone[0]?.hourly_status === 'released') &&
-        jobdetails?.status === 'active' &&
+        (final_milestone[0]?.hourly_status === "paid" ||
+          final_milestone[0]?.hourly_status === "released") &&
+        jobdetails?.status === "active" &&
         !jobdetails?.milestone
-          ?.filter((data: any) => data.hourly_status === 'paid' || data.hourly_status === 'released')
+          ?.filter(
+            (data: any) =>
+              data.hourly_status === "paid" || data.hourly_status === "released"
+          )
           .includes(false)
       ) {
         setShowEndJobButton(true);
@@ -121,10 +146,12 @@ const ClientJobDetails = () => {
       }
 
       if (
-        jobdetails?.status === 'active' &&
+        jobdetails?.status === "active" &&
         jobdetails?.is_closure_request &&
-        jobdetails?.milestone.filter((x) => x.is_final_milestone && x.hourly_status === 'pending').length > 0 &&
-        jobdetails?.budget?.type == 'hourly'
+        jobdetails?.milestone.filter(
+          (x) => x.is_final_milestone && x.hourly_status === "pending"
+        ).length > 0 &&
+        jobdetails?.budget?.type == "hourly"
       ) {
         setFinalMilestoneModal(true);
       }
@@ -135,15 +162,15 @@ const ClientJobDetails = () => {
   /** This will check if applicants tab was opened previously then it will make that tab active again */
   useEffect(() => {
     if (params) {
-      if ('applicants' in params) {
-        setActiveTab('applicants');
+      if ("applicants" in params) {
+        setActiveTab("applicants");
       }
     }
   }, [params]);
 
   const onTabChange = (tab: string) => {
-    if (tab === 'applicants') {
-      if (activeTab !== 'applicants') {
+    if (tab === "applicants") {
+      if (activeTab !== "applicants") {
         makeTabPersistent();
       }
     } else {
@@ -160,16 +187,25 @@ const ClientJobDetails = () => {
     const decodedUrl = decodeURIComponent(location.pathname);
     const subUrl = decodedUrl.split(`/client-job-details/${id}/`)[1];
 
-    const key = subUrl && tabItems?.length > 0 && tabItems.find((tab) => subUrl.includes(tab?.key))?.key;
+    const key =
+      subUrl &&
+      tabItems?.length > 0 &&
+      tabItems.find((tab) => subUrl.includes(tab?.key))?.key;
     if (key) {
       setActiveTab(key);
     } else {
-      if (tabItems?.length > 0 && tabItems.findIndex((tab) => tab?.key === 'm_stone') >= 0) {
-        setActiveTab('m_stone');
-      } else if (tabItems?.length > 0 && tabItems.findIndex((tab) => tab?.key === 'applicants') >= 0) {
-        setActiveTab('applicants');
+      if (
+        tabItems?.length > 0 &&
+        tabItems.findIndex((tab) => tab?.key === "m_stone") >= 0
+      ) {
+        setActiveTab("m_stone");
+      } else if (
+        tabItems?.length > 0 &&
+        tabItems.findIndex((tab) => tab?.key === "applicants") >= 0
+      ) {
+        setActiveTab("applicants");
       } else {
-        setActiveTab('gen_details');
+        setActiveTab("gen_details");
       }
     }
   }, [id, jobdetails?.status, location.pathname, tabItems]);
@@ -186,7 +222,7 @@ const ClientJobDetails = () => {
     setLoading(true);
     const promise = cancelClosureRequest(jobdetails.job_post_id);
     toast.promise(promise, {
-      loading: 'Please wait...',
+      loading: "Please wait...",
       success: (res) => {
         setLoading(false);
         refetch();
@@ -194,7 +230,7 @@ const ClientJobDetails = () => {
       },
       error: (err) => {
         setLoading(false);
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
@@ -205,23 +241,23 @@ const ClientJobDetails = () => {
    */
   const makeTabPersistent = () => {
     const url = window.location.href;
-    const newUrl = url + '?applicants';
+    const newUrl = url + "?applicants";
 
-    window.history.replaceState({ path: newUrl }, '', newUrl);
+    window.history.replaceState({ path: newUrl }, "", newUrl);
   };
 
   /** @function This will remove the persisted tab */
   const removePersistedTab = () => {
     const url = window.location.href;
     const r = new URL(url);
-    r.searchParams.delete('applicants');
+    r.searchParams.delete("applicants");
     const newUrl = r.href;
 
-    window.history.replaceState({ path: newUrl }, '', newUrl);
+    window.history.replaceState({ path: newUrl }, "", newUrl);
   };
 
   const goToMileStoneTab = () => {
-    setActiveTab('m_stone');
+    setActiveTab("m_stone");
   };
 
   const refreshOnStatusChange = (tab: string) => () => {
@@ -254,7 +290,7 @@ const ClientJobDetails = () => {
     setShowConfirmEndRequestPromptModal({
       show: false,
     });
-    refreshOnStatusChange('feedback')();
+    refreshOnStatusChange("feedback")();
   };
 
   const onConfirm = () => {
@@ -263,8 +299,8 @@ const ClientJobDetails = () => {
   };
 
   const onEndJobModal = (status: string) => {
-    if (status === 'error' || status === 'close') {
-      if (jobdetails?.closure_req_submitted_by === 'FREELANCER') {
+    if (status === "error" || status === "close") {
+      if (jobdetails?.closure_req_submitted_by === "FREELANCER") {
         setShowEndJobStatusModal(false);
         setShowFreelancerEndRequestModal(true);
       }
@@ -281,13 +317,13 @@ const ClientJobDetails = () => {
         setShowEndJobStatusModal(false);
         setLoading(!loading);
       }
-    } else if (status === 'success') {
+    } else if (status === "success") {
       setShowSubmitEndJobModal(false);
       setShowEndJobStatusModal(false);
       setShowFreelancerEndRequestModal(false);
       refetch();
-    } else if (jobdetails?.closure_req_submitted_by === 'FREELANCER') {
-      if (status === 'continue') {
+    } else if (jobdetails?.closure_req_submitted_by === "FREELANCER") {
+      if (status === "continue") {
         setShowFreelancerEndRequestModal(false);
       } else {
         setShowEndJobStatusModal(false);
@@ -303,7 +339,7 @@ const ClientJobDetails = () => {
   };
 
   const onBack = () => {
-    navigate('/client-jobs/');
+    navigate("/client-jobs/");
   };
 
   const toggleDeleteJobModal = () => {
@@ -315,7 +351,7 @@ const ClientJobDetails = () => {
     const promise = deleteJob(jobdetails?.job_post_id);
 
     toast.promise(promise, {
-      loading: 'Deleting the project...',
+      loading: "Deleting the project...",
       success: (res) => {
         onBack();
         setLoading(false);
@@ -323,7 +359,7 @@ const ClientJobDetails = () => {
       },
       error: (err) => {
         setLoading(false);
-        return err?.response || 'error';
+        return err?.response || "error";
       },
     });
   };
@@ -342,7 +378,12 @@ const ClientJobDetails = () => {
       if (Array.isArray(jobdetails?.milestone)) {
         jobdetails.milestone.forEach((submission) => {
           if (is_all_paid) {
-            is_all_paid = ['paid', 'cancelled', 'decline', 'decline_dispute'].includes(submission.hourly_status);
+            is_all_paid = [
+              "paid",
+              "cancelled",
+              "decline",
+              "decline_dispute",
+            ].includes(submission.hourly_status);
           }
         });
       }
@@ -350,13 +391,13 @@ const ClientJobDetails = () => {
       if (is_all_paid) return setShowEndJobStatusModal(true);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.log('error: ', error.message);
+      console.log("error: ", error.message);
     }
   };
 
   const isFinalHourSubmitted = () => {
     if (!jobdetails) return false;
-    if (jobdetails.budget.type !== 'hourly') return false;
+    if (jobdetails.budget.type !== "hourly") return false;
     if (!Array.isArray(jobdetails?.milestone)) return false;
 
     let final_milestone = false;
@@ -392,14 +433,14 @@ const ClientJobDetails = () => {
 
     setIsLoadingPostVisibilityModal(true);
     toast.promise(apiCall(isDoNotShowWarningChecked), {
-      loading: 'please wait...',
+      loading: "please wait...",
       success: () => {
         setIsLoadingPostVisibilityModal(false);
         setIsPostVisibilityConfirmationModalOpen(false);
         setIsHidden((prev) => !prev);
         refetch();
         if (isDoNotShowWarningChecked) refetchData();
-        return 'Updated post visibility successfully';
+        return "Updated post visibility successfully";
       },
       error: (error) => {
         setIsLoadingPostVisibilityModal(false);
@@ -410,9 +451,9 @@ const ClientJobDetails = () => {
 
   // If do not show again is checked then not opening modal again and
   // directly changing value
-  const handlePostVisibilityButtonClick = (value: 'PUBLIC' | 'HIDDEN') => {
+  const handlePostVisibilityButtonClick = (value: "PUBLIC" | "HIDDEN") => {
     // Not allowing click if option is already selected
-    if ((value === 'HIDDEN' && isHidden) || (value === 'PUBLIC' && !isHidden)) {
+    if ((value === "HIDDEN" && isHidden) || (value === "PUBLIC" && !isHidden)) {
       return;
     }
 
@@ -429,28 +470,30 @@ const ClientJobDetails = () => {
 
   // If job not found then redirecting to 404 page
   if (!isLoading && !isRefetching && !jobdetails) {
-    navigate('/404', { replace: true });
+    navigate("/404", { replace: true });
   }
 
   return (
     <Wrapper className="px-4 px-lg-0">
       {/* Back button header */}
-      <div className="d-flex justify-content-between align-items-center">
+      <div className="flex justify-between items-center">
         <BackButton onBack={onBack}>
-          {isRefetching ? <Spinner animation="border" size="sm" className="ms-1" /> : null}
+          {isRefetching ? (
+            <Spinner animation="border" size="sm" className="ms-1" />
+          ) : null}
         </BackButton>
         {/* START ----------------------------------------- Post visibility switch */}
-        {jobdetails?.status === 'prospects' && !isRefetching && !isLoading && (
+        {jobdetails?.status === "prospects" && !isRefetching && !isLoading && (
           <div className="post-visibility-switch">
             <div
-              className={classNames({ 'active user-select-none': !isHidden })}
-              onClick={() => handlePostVisibilityButtonClick('PUBLIC')}
+              className={classNames({ "active user-select-none": !isHidden })}
+              onClick={() => handlePostVisibilityButtonClick("PUBLIC")}
             >
               Public
             </div>
             <div
-              className={classNames({ 'active user-select-none': isHidden })}
-              onClick={() => handlePostVisibilityButtonClick('HIDDEN')}
+              className={classNames({ "active user-select-none": isHidden })}
+              onClick={() => handlePostVisibilityButtonClick("HIDDEN")}
             >
               Hidden
             </div>
@@ -461,13 +504,15 @@ const ClientJobDetails = () => {
 
       {(isLoading || isRefetching) && <Loader />}
 
-      {!isLoading && !isRefetching && jobdetails ? <DetailsBanner data={jobdetails} refetch={refetch} /> : null}
+      {!isLoading && !isRefetching && jobdetails ? (
+        <DetailsBanner data={jobdetails} refetch={refetch} />
+      ) : null}
 
       {!isLoading && !isRefetching && jobdetails && (
         <>
           {/* Tabs */}
-          <div className="tabs-quick-options d-flex align-items-center justify-content-between flex-wrap">
-            {jobdetails?.status !== 'draft' ? (
+          <div className="tabs-quick-options flex items-center justify-between flex-wrap">
+            {jobdetails?.status !== "draft" ? (
               <Tabs
                 tabs={tabItems}
                 activeTab={activeTab}
@@ -497,7 +542,9 @@ const ClientJobDetails = () => {
                     freelancerData: jobdetails?.userdata,
                     isClosureRequest: jobdetails?.is_closure_request,
                     closureReqBy: jobdetails?.closure_req_submitted_by,
-                    isFinalMilestonePosted: jobdetails?.milestone.filter((x) => x.is_final_milestone).length > 0,
+                    isFinalMilestonePosted:
+                      jobdetails?.milestone.filter((x) => x.is_final_milestone)
+                        .length > 0,
                     openEndJobStatusModal: showEndJobStatusModal,
                     enableEndJobButton: showEndJobButton,
                     milestones: jobdetails?.milestone,
@@ -515,13 +562,17 @@ const ClientJobDetails = () => {
               </PaymentProvider>
 
               {/* Moving Draft/Prospects options out of QuickOptions to show independent of desktop/mobile */}
-              {jobdetails?.status === 'draft' && (
-                <div className="d-flex align-items-center justify-content-between">
-                  <StyledButton className="align-left" padding="1rem 2rem" onClick={onEdit}>
+              {jobdetails?.status === "draft" && (
+                <div className="flex items-center justify-between">
+                  <StyledButton
+                    className="align-left"
+                    padding="1rem 2rem"
+                    onClick={onEdit}
+                  >
                     Continue Posting
                   </StyledButton>
                   <div
-                    className="round-button d-flex justify-content-center align-items-center pointer"
+                    className="round-button flex justify-center items-center pointer"
                     onClick={!loading && toggleDeleteJobModal}
                   >
                     <TrashIcon />
@@ -529,17 +580,17 @@ const ClientJobDetails = () => {
                 </div>
               )}
 
-              {jobdetails?.status === 'prospects' && (
-                <div className="proposal-actions d-flex align-items-center flex-wrap gap-3 justify-content-center w-100">
+              {jobdetails?.status === "prospects" && (
+                <div className="proposal-actions flex items-center flex-wrap gap-3 justify-center w-100">
                   <div
-                    className="edit-btn d-flex justify-content-center align-items-center pointer"
+                    className="edit-btn flex justify-center items-center pointer"
                     onClick={!loading && onEdit}
                   >
                     <EditIcon stroke="#0067FF" fill="#0067FF" />
                     <span>Edit</span>
                   </div>
                   <div
-                    className="delete-btn p-2 pointer d-flex align-items-center"
+                    className="delete-btn p-2 pointer flex items-center"
                     onClick={!loading && toggleDeleteJobModal}
                   >
                     <TrashIcon />
@@ -548,39 +599,46 @@ const ClientJobDetails = () => {
                 </div>
               )}
               {/* Moving Job status out of QuickOptions to show independent of desktop/mobile */}
-              {jobdetails?.status === 'active' &&
+              {jobdetails?.status === "active" &&
               jobdetails?.is_closure_request &&
-              jobdetails?.closure_req_submitted_by === 'CLIENT' &&
+              jobdetails?.closure_req_submitted_by === "CLIENT" &&
               !showEndJobButton ? (
                 <StatusBadge
                   color="darkPink"
-                  className={classNames({ 'mt-4': isMobile }, 'closure-request-status-badge')}
+                  className={classNames(
+                    { "mt-4": isMobile },
+                    "closure-request-status-badge"
+                  )}
                 >
-                  {jobdetails?.milestone.filter((x) => x.is_final_milestone).length > 0
-                    ? 'Final Hours Submitted by Freelancer'
-                    : 'Closure Requested - Waiting for Freelancer Response'}
+                  {jobdetails?.milestone.filter((x) => x.is_final_milestone)
+                    .length > 0
+                    ? "Final Hours Submitted by Freelancer"
+                    : "Closure Requested - Waiting for Freelancer Response"}
                 </StatusBadge>
               ) : null}
             </div>
           </div>
 
-          {activeTab == 'gen_details' && <GeneralDetails data={jobdetails} />}
+          {activeTab == "gen_details" && <GeneralDetails data={jobdetails} />}
 
-          {activeTab === 'invitees' && (
+          {activeTab === "invitees" && (
             <Invitees
               jobPostId={jobdetails?.job_post_id}
-              refetch={refreshOnStatusChange('invitees')}
+              refetch={refreshOnStatusChange("invitees")}
               jobStatus={jobdetails?.status}
             />
           )}
 
-          {activeTab == 'messages' && <SingleMessaging id={id} />}
+          {activeTab == "messages" && <SingleMessaging id={id} />}
 
-          {activeTab == 'feedback' && jobdetails?.is_completed === 0 && (
-            <NoDataFound className="py-5" title="You can't submit review to freelancer." />
+          {activeTab == "feedback" && jobdetails?.is_completed === 0 && (
+            <NoDataFound
+              className="py-5"
+              title="You can't submit review to freelancer."
+            />
           )}
 
-          {activeTab == 'feedback' && jobdetails?.is_completed === 1 && (
+          {activeTab == "feedback" && jobdetails?.is_completed === 1 && (
             <Feedback
               feedbackData={jobdetails?.feedback}
               freelancerDetails={jobdetails?.userdata}
@@ -591,9 +649,9 @@ const ClientJobDetails = () => {
             />
           )}
 
-          {activeTab === 'm_stone' && (
+          {activeTab === "m_stone" && (
             <PaymentProvider>
-              {jobdetails.proposal?.approved_budget?.type == 'fixed' && (
+              {jobdetails.proposal?.approved_budget?.type == "fixed" && (
                 <Milestones
                   milestone={jobdetails?.milestone}
                   refetch={refetch}
@@ -602,18 +660,18 @@ const ClientJobDetails = () => {
                   componentConnectorRef={componentConnectorRef}
                 />
               )}
-              {jobdetails.proposal?.approved_budget?.type == 'hourly' && (
+              {jobdetails.proposal?.approved_budget?.type == "hourly" && (
                 <>
                   {jobdetails.is_closure_request &&
-                  jobdetails.closure_req_submitted_by == 'FREELANCER' &&
-                  jobdetails.status === 'active' &&
+                  jobdetails.closure_req_submitted_by == "FREELANCER" &&
+                  jobdetails.status === "active" &&
                   isFinalHourSubmitted() === false ? (
                     <JobCloseMessageWrapper>
                       <h3>Freelancer requested to close the project</h3>
                       <div className="mt-4 btn-wrappers">
                         <StyledButton
                           padding="1rem 2rem"
-                          className={isMobile ? 'mt-4 w-100' : ''}
+                          className={isMobile ? "mt-4 w-100" : ""}
                           onClick={handleCloseJob}
                           // variant="outline-dark"
                         >
@@ -622,7 +680,7 @@ const ClientJobDetails = () => {
                         <StyledButton
                           onClick={onCancelClosureRequest}
                           padding="1rem 2rem"
-                          className={isMobile ? 'mt-4 w-100' : ''}
+                          className={isMobile ? "mt-4 w-100" : ""}
                           variant="outline-dark"
                         >
                           Decline - I Want to Continue
@@ -643,11 +701,11 @@ const ClientJobDetails = () => {
             </PaymentProvider>
           )}
 
-          {activeTab === 'applicants' && (
+          {activeTab === "applicants" && (
             <Applicants
               jobTitle={jobdetails?.job_title}
               jobPostId={jobdetails?.job_post_id}
-              refetch={refreshOnStatusChange('applicants')}
+              refetch={refreshOnStatusChange("applicants")}
               jobStatus={jobdetails?.status}
             />
           )}
@@ -687,9 +745,13 @@ const ClientJobDetails = () => {
             </div>
           ) : null*/}
 
-          <SubmitEndJobModal show={showSubmitEndJobModal} onConfirm={onConfirm} loading={loading} />
+          <SubmitEndJobModal
+            show={showSubmitEndJobModal}
+            onConfirm={onConfirm}
+            loading={loading}
+          />
 
-          {jobdetails?.budget?.type !== 'hourly' && (
+          {jobdetails?.budget?.type !== "hourly" && (
             <JobEndRequestByFreelancer
               jobPostId={id}
               refetch={refetch}
@@ -720,9 +782,9 @@ const ClientJobDetails = () => {
             onDelete={onDelete}
             loading={loading}
             text={
-              jobdetails?.status === 'draft'
-                ? 'Are you sure you want to delete this draft? This cannot be undone.'
-                : 'Are you sure you want to delete this project posting? This cannot be undone.'
+              jobdetails?.status === "draft"
+                ? "Are you sure you want to delete this draft? This cannot be undone."
+                : "Are you sure you want to delete this project posting? This cannot be undone."
             }
           />
           <PostVisibilityConfirmationModal
@@ -737,8 +799,15 @@ const ClientJobDetails = () => {
           />
           {jobdetails?.proposal?.approved_budget && (
             <>
-              <ChangeBudgetRequestModal jobDetails={jobdetails} userType="client" />
-              <ChangeBudgetDeniedModal jobDetails={jobdetails} refetch={refetch} userType="client" />
+              <ChangeBudgetRequestModal
+                jobDetails={jobdetails}
+                userType="client"
+              />
+              <ChangeBudgetDeniedModal
+                jobDetails={jobdetails}
+                refetch={refetch}
+                userType="client"
+              />
             </>
           )}
         </>

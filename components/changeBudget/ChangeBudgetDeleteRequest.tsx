@@ -58,7 +58,7 @@ export const ChangeBudgetDeleteRequest = ({
             Are you sure you want to delete this request?
           </div>
 
-          <div className="d-flex flex-row justify-content-center gap-4 mt-4">
+          <div className="flex flex-row justify-center gap-4 mt-4">
             <StyledButton
               variant="secondary"
               type="submit"

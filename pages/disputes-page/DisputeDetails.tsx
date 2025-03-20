@@ -76,7 +76,7 @@ const DisputeDetails = ({ show, onCloseModal, dispute_id }: Props) => {
 
             {/* Submitted by */}
             <div className="support-request--by p-4">
-              <div className="flex align-items-center justify-between">
+              <div className="flex items-center justify-between">
                 <div className="light-black light-text text-sm font-normal">
                   Dispute Submitted By:
                 </div>
@@ -103,15 +103,15 @@ const DisputeDetails = ({ show, onCloseModal, dispute_id }: Props) => {
                     : `${data?.userdata?.first_name} ${data?.userdata?.last_name} (${data?.userdata?.user_type})`}
                 </div>
               </div>
-              {/* <div className="d-flex align-items-center gap-3 mt-3 flex-wrap">
-                <div className="user-email d-flex align-items-center gap-2">
+              {/* <div className="flex items-center gap-3 mt-3 flex-wrap">
+                <div className="user-email flex items-center gap-2">
                   <EmailIcon />
                   <div className="fs-18 font-normal">
                     {data?.userdata?.u_email_id}
                   </div>
                 </div>
                 <div className="divider d-none d-lg-block" />
-                <div className="user-email d-flex align-items-center gap-2">
+                <div className="user-email flex items-center gap-2">
                   <CallIcon />
                   <div className="fs-18 font-normal">
                     {data?.userdata?.formatted_phonenumber ||
@@ -164,15 +164,15 @@ const DisputeDetails = ({ show, onCloseModal, dispute_id }: Props) => {
                       : `${data?.userdata?.first_name} ${data?.userdata?.last_name} (${data?.userdata?.user_type})`}
                   </div>
                 </div>
-                {/* <div className="d-flex align-items-center mt-3 gap-3 flex-wrap">
-                  <div className="user-email d-flex align-items-center gap-2">
+                {/* <div className="flex items-center mt-3 gap-3 flex-wrap">
+                  <div className="user-email flex items-center gap-2">
                     <EmailIcon />
                     <div className="fs-18 font-normal">
                       {otherUserData?.u_email_id}
                     </div>
                   </div>
                   <div className="divider d-none d-lg-block" />
-                  <div className="user-email d-flex align-items-center gap-2">
+                  <div className="user-email flex items-center gap-2">
                     <CallIcon />
                     <div className="fs-18 font-normal">
                       {otherUserData?.formatted_phonenumber ||

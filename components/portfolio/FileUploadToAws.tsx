@@ -97,13 +97,13 @@ const FileUploadToAws = ({
   };
 
   return (
-    <Wrapper className="flex items-center justify-content-center pointer">
+    <Wrapper className="flex items-center justify-center pointer">
       <FileUploader
         handleChange={handleChange}
         name="file"
         types={CONSTANTS.PORTFOLIO_ATTACHMENT_SUPPORTED_TYPES}
         multiple
-        classes="upload-layout flex items-center justify-content-center pointer"
+        classes="upload-layout flex items-center justify-center pointer"
       >
         {loading ? <Spinner animation="border" /> : <PlusIcon />}
       </FileUploader>

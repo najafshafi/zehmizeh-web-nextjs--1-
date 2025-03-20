@@ -68,7 +68,7 @@ const StripeCompleteWarning = ({ show, toggle, stripeStatus }: Props) => {
           {(stripeStatus === "pending" ||
             stripeStatus === "currently_due" ||
             stripeStatus === "bank_account_pending") && (
-            <div className="d-flex mt-4 justify-content-center">
+            <div className="flex mt-4 justify-center">
               <Link to="/freelancer/account/Payment%20Details">
                 <StyledButton
                   className="fs-16 font-normal"

@@ -1,19 +1,19 @@
-"use client"
-import { useState, useMemo } from 'react';
-import toast from 'react-hot-toast';
-import { components } from 'react-select';
-import AsyncSelect from 'react-select/async';
-import { FormWrapper } from './steps.styled';
-import { StyledButton } from '@/components/forms/Buttons';
-import { getLanguages } from '@/helpers/http/common';
-import { MultiSelectCustomStyle } from './multiSelectCustomStyle';
-import { IClientDetails } from '@/helpers/types/client.type';
-import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
+"use client";
+import { useState, useMemo } from "react";
+import toast from "react-hot-toast";
+import { components } from "react-select";
+import AsyncSelect from "react-select/async";
+import { FormWrapper } from "./steps.styled";
+import { StyledButton } from "@/components/forms/Buttons";
+import { getLanguages } from "@/helpers/http/common";
+import { MultiSelectCustomStyle } from "./multiSelectCustomStyle";
+import { IClientDetails } from "@/helpers/types/client.type";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 
 type TData = Partial<IClientDetails & IFreelancerDetails>;
 
 type Props = {
-  languagesProps?: TData['languages'];
+  languagesProps?: TData["languages"];
   onUpdate: (data: TData) => void;
   onPrevious: () => void;
   skipForNow: () => void;
@@ -36,7 +36,7 @@ const Languages = ({
   const handleUpdate = () => {
     // Validations and parent function call to store the data in parent
     if (!languages || languages?.length == 0) {
-      toast.error('Please add at least one language.');
+      toast.error("Please add at least one language.");
     } else {
       onUpdate({ languages });
     }
@@ -46,7 +46,7 @@ const Languages = ({
     // This will be called when user types and will call languages api with the keyword
 
     const languagesLocal: { label: string; value: string }[] = [];
-    return getLanguages(inputValue || '').then((res) => {
+    return getLanguages(inputValue || "").then((res) => {
       res.data.forEach(function (item) {
         const obj = {
           label: item.language_name,
@@ -76,7 +76,7 @@ const Languages = ({
   };
 
   return (
-    <FormWrapper className="d-flex flex-column">
+    <FormWrapper className="flex flex-column">
       <div>
         <div className="form-group">
           <div>
@@ -100,7 +100,7 @@ const Languages = ({
           />
         </div>
       </div>
-      <div className="d-flex justify-content-center justify-content-md-end gap-3">
+      <div className="flex justify-center justify-content-md-end gap-3">
         <StyledButton variant="outline-dark" onClick={onPrevious}>
           Previous
         </StyledButton>
@@ -122,7 +122,7 @@ const NoOptionsMessage = (props: any) => {
       <div>
         {props?.selectProps?.inputValue
           ? `No result found for '${props?.selectProps?.inputValue}'`
-          : 'Search...'}
+          : "Search..."}
       </div>
     </components.NoOptionsMessage>
   );

@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
-import styled from 'styled-components';
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { StyledButton } from 'components/forms/Buttons';
-import { showErr } from 'helpers/utils/misc';
-import PaymentSummary from './PaymentSummary';
-import { usePayments } from 'pages/client-job-details/controllers/usePayments';
+import { useState } from "react";
+import styled from "styled-components";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { StyledButton } from "components/forms/Buttons";
+import { showErr } from "helpers/utils/misc";
+import PaymentSummary from "./PaymentSummary";
+import { usePayments } from "pages/client-job-details/controllers/usePayments";
 
 const Wrapper = styled.div`
   .payable-label {
@@ -28,8 +28,8 @@ type Props = {
 const CARD_ELEMENT_OPTIONS = {
   style: {
     base: {
-      '::placeholder': {
-        textTransform: 'capitalize',
+      "::placeholder": {
+        textTransform: "capitalize",
       },
     },
   },
@@ -60,7 +60,7 @@ export default function AddCardForm({
         showErr(data.error.message);
       }
     } catch (err) {
-      showErr('Something went wrong, please try again');
+      showErr("Something went wrong, please try again");
     } finally {
       setLoading(false);
     }
@@ -76,7 +76,7 @@ export default function AddCardForm({
         <div>
           <PaymentSummary />
 
-          <div className="d-flex align-items-center justify-content-center gap-3 mt-3 flex-wrap">
+          <div className="flex items-center justify-center gap-3 mt-3 flex-wrap">
             {/* This cancel button will cancel the add card form and will show the saved card list */}
             <StyledButton
               variant="outline-dark"
@@ -87,7 +87,7 @@ export default function AddCardForm({
             </StyledButton>
 
             <StyledButton type="submit" disabled={processingPayment || loading}>
-              {jobType === 'hourly' ? 'Pay' : 'Deposit Milestone Payment'}
+              {jobType === "hourly" ? "Pay" : "Deposit Milestone Payment"}
             </StyledButton>
           </div>
         </div>

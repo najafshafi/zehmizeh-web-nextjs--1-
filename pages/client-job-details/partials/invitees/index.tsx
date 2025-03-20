@@ -179,7 +179,7 @@ export const Invitees = ({
   };
 
   return (
-    <InviteesWrapper className="d-flex flex-column">
+    <InviteesWrapper className="flex flex-column">
       {isLoading && <Loader />}
 
       {!isLoading && data?.length == 0 && (
@@ -191,21 +191,21 @@ export const Invitees = ({
         data?.map((item: any) => (
           <InviteesListItem
             key={item?.invite_id}
-            className="d-flex flex-wrap justify-content-between"
+            className="flex flex-wrap justify-between"
           >
             {item?.edited_at && (
               <p className="updated-on">
                 Updated on - {formatDateAndTime(item.edited_at)}
               </p>
             )}
-            <div className="applicant-details d-flex gap-4 flex-wrap">
+            <div className="applicant-details flex gap-4 flex-wrap">
               <BlurredImage
                 src={item?.user_image || "/images/default_avatar.png"}
                 height="80px"
                 width="80px"
               />
-              <div className="main-details d-flex flex-column">
-                <div className="d-flex align-items-center gap-2">
+              <div className="main-details flex flex-column">
+                <div className="flex items-center gap-2">
                   <div className="fs-24 font-normal line-height-140 capitalize">
                     <Link to={`/freelancer/${item?.user_id}`}>
                       {item?.first_name} {item?.last_name}
@@ -233,9 +233,9 @@ export const Invitees = ({
                     </span>
                   </div>
                 )}
-                <div className="location-and-ratings d-flex align-items-center gap-2 flex-wrap">
+                <div className="location-and-ratings flex items-center gap-2 flex-wrap">
                   {(item?.location?.state || item?.location?.country_name) && (
-                    <div className="rounded-chip d-flex width-fit-content align-items-center">
+                    <div className="rounded-chip flex width-fit-content items-center">
                       <LocationIcon />
                       <div className="fs-1rem font-normal mx-1 light-text">
                         {separateValuesWithComma([
@@ -245,7 +245,7 @@ export const Invitees = ({
                       </div>
                     </div>
                   )}
-                  <div className="rounded-chip d-flex width-fit-content align-items-center">
+                  <div className="rounded-chip flex width-fit-content items-center">
                     <StarIcon />
                     <div className="fs-1rem font-normal mx-1">
                       {item?.avg_rate ? item?.avg_rate?.toFixed(1) : 0}
@@ -257,12 +257,12 @@ export const Invitees = ({
                 </div>
               </div>
             </div>
-            <div className="right-section d-flex flex-column justify-content-between align-items-start align-items-lg-end">
+            <div className="right-section flex flex-column justify-between align-items-start align-items-lg-end">
               <div className="fs-24 fw-700">
                 {/* {numberWithCommas(item?.proposed_budget?.amount, 'USD')} */}
                 {/* {item?.proposed_budget.type == 'hourly' ? '/hr' : ''} */}
               </div>
-              <div className="d-flex gap-2 align-items-center">
+              <div className="flex gap-2 items-center">
                 {jobStatus === "prospects" && (
                   <StyledButton
                     padding="1rem 1.5rem"
@@ -291,7 +291,7 @@ export const Invitees = ({
 
       {/* Pagination */}
       {!isLoading && data?.length > 0 && (
-        <div className="d-flex justify-content-center mt-3">
+        <div className="flex justify-center mt-3">
           <PaginationComponent
             total={Math.ceil(totalResults / RECORDS_PER_PAGE)}
             onPageChange={onPageChange}

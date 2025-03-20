@@ -1,8 +1,8 @@
 // app/components/PaginationComponent.tsx
-'use client'; // Mark as client component since it handles state and navigation
+"use client"; // Mark as client component since it handles state and navigation
 
-import styled from 'styled-components';
-import ChevronUp from '@/public/icons/chevronUp.svg';
+import styled from "styled-components";
+import ChevronUp from "@/public/icons/chevronUp.svg";
 
 const PaginationWrap = styled.div`
   .pagination {
@@ -13,7 +13,7 @@ const PaginationWrap = styled.div`
   }
 
   .previous-next {
-    a {
+    button {
       border: none;
       display: flex;
       justify-content: center;
@@ -41,7 +41,7 @@ const PaginationWrap = styled.div`
   }
 
   li {
-    a {
+    button {
       position: relative;
       display: flex;
       align-items: center;
@@ -49,6 +49,7 @@ const PaginationWrap = styled.div`
       height: 3rem;
       width: 3rem;
       border-radius: 10px;
+      border: none;
       line-height: 1.25;
       background-color: #fff;
       margin-right: 10px;
@@ -59,14 +60,14 @@ const PaginationWrap = styled.div`
     }
 
     &.active {
-      a {
+      button {
         background-color: #343a40 !important;
         border-color: #343a40;
         color: #fff !important;
       }
     }
 
-    a:hover {
+    button:hover {
       transition: all 0.2s ease-in-out;
       transform: scale(1.1);
     }
@@ -79,8 +80,12 @@ interface PaginationProps {
   onPageChange: (page: { selected: number }) => void; // Match Jobs.tsx expectation
 }
 
-export default function PaginationComponent({ total, currentPage, onPageChange }: PaginationProps) {
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768; // Simple mobile check
+export default function PaginationComponent({
+  total,
+  currentPage,
+  onPageChange,
+}: PaginationProps) {
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768; // Simple mobile check
 
   // Generate page numbers
   const pageRangeDisplayed = isMobile ? 0 : 3;
@@ -121,24 +126,28 @@ export default function PaginationComponent({ total, currentPage, onPageChange }
         <ul>
           {start > 1 && (
             <>
-              <li className={currentPage === 1 ? 'active' : ''}>
-                <a onClick={() => handlePageClick(1)}>1</a>
+              <li className={currentPage === 1 ? "active" : ""}>
+                <button onClick={() => handlePageClick(1)}>1</button>
               </li>
-              {start > 2 && <li className="break-me">...</li>}
+              {start > 2 && <li className="break-me p-3 ">...</li>}
             </>
           )}
 
-          {Array.from({ length: end - start + 1 }, (_, i) => start + i).map((page) => (
-            <li key={page} className={currentPage === page ? 'active' : ''}>
-              <a onClick={() => handlePageClick(page)}>{page}</a>
-            </li>
-          ))}
+          {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(
+            (page) => (
+              <li key={page} className={currentPage === page ? "active" : ""}>
+                <button onClick={() => handlePageClick(page)}>{page}</button>
+              </li>
+            )
+          )}
 
           {end < totalPages && (
             <>
-              {end < totalPages - 1 && <li className="break-me">...</li>}
-              <li className={currentPage === totalPages ? 'active' : ''}>
-                <a onClick={() => handlePageClick(totalPages)}>{totalPages}</a>
+              {end < totalPages - 1 && <li className="break-me p-3">...</li>}
+              <li className={currentPage === totalPages ? "active" : ""}>
+                <button onClick={() => handlePageClick(totalPages)}>
+                  {totalPages}
+                </button>
               </li>
             </>
           )}
@@ -146,7 +155,9 @@ export default function PaginationComponent({ total, currentPage, onPageChange }
 
         <div className="previous-next">
           <button
-            onClick={() => handlePageClick(Math.min(currentPage + 1, totalPages))}
+            onClick={() =>
+              handlePageClick(Math.min(currentPage + 1, totalPages))
+            }
             className="next btn"
             disabled={currentPage === totalPages}
           >

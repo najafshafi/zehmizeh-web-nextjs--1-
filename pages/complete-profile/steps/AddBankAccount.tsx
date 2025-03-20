@@ -1,20 +1,20 @@
-"use client"
-import { useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation'; // Changed from react-router-dom
-import toast from 'react-hot-toast';
-import { Form } from 'react-bootstrap';
-import Tooltip from '@/components/ui/Tooltip';
-import ErrorMessage from '@/components/ui/ErrorMessage';
-import { StyledButton } from '@/components/forms/Buttons';
-import { StyledFormGroup } from './steps.styled';
-import { validateAccountDetailsWithRouting } from '@/helpers/validation/common';
-import { getYupErrors } from '@/helpers/utils/misc';
-import { managePayment } from '@/helpers/http/freelancer';
+"use client";
+import { useState, useCallback } from "react";
+import { useRouter } from "next/navigation"; // Changed from react-router-dom
+import toast from "react-hot-toast";
+import { Form } from "react-bootstrap";
+import Tooltip from "@/components/ui/Tooltip";
+import ErrorMessage from "@/components/ui/ErrorMessage";
+import { StyledButton } from "@/components/forms/Buttons";
+import { StyledFormGroup } from "./steps.styled";
+import { validateAccountDetailsWithRouting } from "@/helpers/validation/common";
+import { getYupErrors } from "@/helpers/utils/misc";
+import { managePayment } from "@/helpers/http/freelancer";
 
 const initialState = {
-  accountHolderName: '',
-  accountNumber: '',
-  routingNumber: '',
+  accountHolderName: "",
+  accountNumber: "",
+  routingNumber: "",
 };
 
 type Props = {
@@ -54,23 +54,23 @@ const AddBankAccount = ({ onPrevious }: Props) => {
     setLoading(true);
     const { accountHolderName, accountNumber, routingNumber } = formState;
     const body = {
-      action: 'add_account',
+      action: "add_account",
       account_holder_name: accountHolderName,
-      account_holder_type: 'individual',
+      account_holder_type: "individual",
       account_number: accountNumber,
       routing_number: routingNumber,
     };
     const promise = managePayment(body);
     toast.promise(promise, {
-      loading: 'Loading...',
+      loading: "Loading...",
       success: (res) => {
         setLoading(false);
-        router.push('/login'); // Changed from navigate
+        router.push("/login"); // Changed from navigate
         return res.message;
       },
       error: (err) => {
         setLoading(false);
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
@@ -85,7 +85,7 @@ const AddBankAccount = ({ onPrevious }: Props) => {
             placeholder="Account holder’s name"
             className="form-input"
             value={formState?.accountHolderName}
-            onChange={(e) => handleChange('accountHolderName', e.target.value)}
+            onChange={(e) => handleChange("accountHolderName", e.target.value)}
           />
           {errors?.accountHolderName && (
             <ErrorMessage message={errors.accountHolderName} />
@@ -95,10 +95,10 @@ const AddBankAccount = ({ onPrevious }: Props) => {
         {/* Israel and Belgium takes IBAN number as account number  */}
         <StyledFormGroup>
           <Form.Control
-            placeholder={'Bank account number'}
+            placeholder={"Bank account number"}
             className="form-input"
             value={formState?.accountNumber}
-            onChange={(e) => handleChange('accountNumber', e.target.value)}
+            onChange={(e) => handleChange("accountNumber", e.target.value)}
           />
           {errors?.accountNumber && (
             <ErrorMessage message={errors.accountNumber} />
@@ -110,7 +110,7 @@ const AddBankAccount = ({ onPrevious }: Props) => {
             placeholder="Routing number"
             className="form-input"
             value={formState?.routingNumber}
-            onChange={(e) => handleChange('routingNumber', e.target.value)}
+            onChange={(e) => handleChange("routingNumber", e.target.value)}
           />
           {errors?.routingNumber && (
             <ErrorMessage message={errors.routingNumber} />
@@ -118,7 +118,7 @@ const AddBankAccount = ({ onPrevious }: Props) => {
         </StyledFormGroup>
       </div>
 
-      <div className="d-flex justify-content-center justify-content-md-end gap-3 mt-4">
+      <div className="flex justify-center justify-content-md-end gap-3 mt-4">
         <StyledButton
           variant="outline-dark"
           disabled={loading}

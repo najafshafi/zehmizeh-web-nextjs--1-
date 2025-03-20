@@ -50,12 +50,12 @@ export const HiringMoreFreelancerModal = ({
         freelancers?
       </p>
 
-      <div className="d-flex gap-3 align-items-center justify-content-center">
+      <div className="flex gap-3 items-center justify-center">
         <StyledButton
           onClick={() => {
             setShowInformationModal(true);
           }}
-          className="d-flex align-items-center gap-3 capitalize"
+          className="flex items-center gap-3 capitalize"
           disabled={loading}
         >
           Accept & Leave Open
@@ -84,13 +84,13 @@ export const HiringMoreFreelancerModal = ({
         will be extended again.
       </p>
 
-      <div className="d-flex gap-3 align-items-center justify-content-center">
+      <div className="flex gap-3 items-center justify-center">
         <StyledButton
           onClick={() => {
             handleClick("ACCEPT_AND_LEAVE_OPEN");
           }}
           disabled={loading}
-          className="d-flex align-items-center gap-3 capitalize"
+          className="flex items-center gap-3 capitalize"
         >
           Close
         </StyledButton>

@@ -1,9 +1,9 @@
-import { Modal, Button, Form } from 'react-bootstrap';
-import { StyledModal } from 'components/styled/StyledModal';
-import CardsList from './CardsList';
-import BankAccountsList from './BankAccountsList';
-import { useAuth } from 'helpers/contexts/auth-context';
-import { usePayments } from 'pages/client-job-details/controllers/usePayments';
+import { Modal, Button, Form } from "react-bootstrap";
+import { StyledModal } from "components/styled/StyledModal";
+import CardsList from "./CardsList";
+import BankAccountsList from "./BankAccountsList";
+import { useAuth } from "helpers/contexts/auth-context";
+import { usePayments } from "pages/client-job-details/controllers/usePayments";
 
 type Props = {
   show: boolean;
@@ -21,7 +21,7 @@ function PaymentModal({ show, onPay, onCancel, processingPayment }: Props) {
   };
 
   const onClose = () => {
-    onPaymentMethodChange('OTHER')();
+    onPaymentMethodChange("OTHER")();
     onCancel();
   };
 
@@ -31,40 +31,40 @@ function PaymentModal({ show, onPay, onCancel, processingPayment }: Props) {
         <Button variant="transparent" className="close" onClick={onClose}>
           &times;
         </Button>
-        <div className="content d-flex flex-column">
+        <div className="content flex flex-column">
           <div className="modal-title fs-32 fw-700">Payment Details</div>
-          {user?.location?.country_short_name === 'US' && (
-            <div className="d-flex align-items-center gap-4 mt-4">
+          {user?.location?.country_short_name === "US" && (
+            <div className="flex items-center gap-4 mt-4">
               <Form.Check
                 inline
                 label="Credit Card"
                 name="budget_type"
                 type="radio"
-                id={'c_card'}
-                onChange={onPaymentMethodChange('OTHER')}
-                checked={selectedPaymentMethod === 'OTHER'}
-                className="d-inline-flex align-items-center g-1 me-2"
+                id={"c_card"}
+                onChange={onPaymentMethodChange("OTHER")}
+                checked={selectedPaymentMethod === "OTHER"}
+                className="d-inline-flex items-center g-1 me-2"
               />
               <Form.Check
                 inline
                 label="Bank Account"
                 name="budget_type"
                 type="radio"
-                id={'bank'}
-                onChange={onPaymentMethodChange('ACH')}
-                checked={selectedPaymentMethod === 'ACH'}
-                className="d-inline-flex align-items-center g-1 me-2"
+                id={"bank"}
+                onChange={onPaymentMethodChange("ACH")}
+                checked={selectedPaymentMethod === "ACH"}
+                className="d-inline-flex items-center g-1 me-2"
               />
             </div>
           )}
-          {selectedPaymentMethod == 'OTHER' && (
+          {selectedPaymentMethod == "OTHER" && (
             <CardsList
               onPay={onPay}
               processingPayment={processingPayment}
               onCancel={onCancel}
             />
           )}
-          {selectedPaymentMethod == 'ACH' && (
+          {selectedPaymentMethod == "ACH" && (
             <BankAccountsList
               onPay={onPay}
               processingPayment={processingPayment}

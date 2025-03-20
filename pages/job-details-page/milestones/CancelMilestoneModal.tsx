@@ -47,7 +47,7 @@ const CancelMileStoneModal = ({
         <Button variant="transparent" className="close" onClick={toggle}>
           &times;
         </Button>
-        <div className="d-flex flex-column gap-md-3 gap-0">
+        <div className="flex flex-column gap-md-3 gap-0">
           <div className="heading font-normal text-center">
             Are you sure you want to cancel
             {cancelStateData.milestoneStatus === "pending" ? (
@@ -69,7 +69,7 @@ const CancelMileStoneModal = ({
               </div>
             </div>
           ) : null}
-          <div className="d-flex flex-column flex-md-row justify-content-center gap-3">
+          <div className="flex flex-column flex-md-row justify-center gap-3">
             <StyledButton
               className="fs-16 font-normal"
               variant="outline-dark"

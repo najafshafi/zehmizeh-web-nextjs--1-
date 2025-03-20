@@ -343,7 +343,7 @@ const AddHoursForm = ({
               />
             </span>
             {amount !== "" && (
-              <div className="mt-2 d-flex align-items-center">
+              <div className="mt-2 flex items-center">
                 <div className="fs-1rem font-normal">
                   {/* You will get{' '}
                   <span className="fw-700">{calculateFinalAmount}</span> */}
@@ -420,7 +420,7 @@ const AddHoursForm = ({
               <ErrorMessage message={errors.screenshot_link} />
             )}
           </StyledFormGroup>
-          <div className="d-flex g-2 bottom-buttons flex-wrap">
+          <div className="flex g-2 bottom-buttons flex-wrap">
             <StyledButton
               className={
                 isMobile ? "fs-16 font-normal w-100" : "fs-16 font-normal"

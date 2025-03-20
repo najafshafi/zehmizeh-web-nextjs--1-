@@ -82,8 +82,8 @@ const JobDetailsBanner = ({
   const expirationDays = getJobExpirationInDays(data);
 
   return ["draft", "prospects", "deleted"].includes(data?.status) ? (
-    <DraftProspectJobBanner className="d-flex flex-column gap-3">
-      <div className="header d-flex justify-content-between align-items-start flex-wrap gap-3">
+    <DraftProspectJobBanner className="flex flex-column gap-3">
+      <div className="header flex justify-between align-items-start flex-wrap gap-3">
         <header className="banner-title fs-24 font-normal">
           {convertToTitleCase(data.job_title)}
         </header>
@@ -101,7 +101,7 @@ const JobDetailsBanner = ({
           )}
         </div>
       </div>
-      <div className="budget-and-earnings d-flex flex-column flex-lg-row align-items-lg-center gap-3">
+      <div className="budget-and-earnings flex flex-column flex-lg-row align-items-lg-center gap-3">
         {/* START ----------------------------------------- Started on */}
         <div>
           <span className="light-text fs-20 font-normal">{dateLabel}</span>
@@ -158,12 +158,12 @@ const JobDetailsBanner = ({
         />
       )}
       <InProgressClosedJobWrapper>
-        <div className="header d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
-          <div className="job-basic-details d-flex flex-column">
+        <div className="header flex flex-column flex-md-row justify-between align-items-start gap-3">
+          <div className="job-basic-details flex flex-column">
             <header className="banner-title fs-24 font-normal">
               {convertToTitleCase(data.job_title)}
             </header>
-            <div className="d-flex flex-column flex-lg-row align-lg-items-center gap-3">
+            <div className="flex flex-column flex-lg-row align-lg-items-center gap-3">
               <div>
                 <span className="light-text fs-20 font-normal">
                   {dateLabel}
@@ -174,9 +174,9 @@ const JobDetailsBanner = ({
                 </span>
               </div>
               {data.status === "active" && (
-                <div className="d-flex align-items-center gap-3">
+                <div className="flex items-center gap-3">
                   <Divider />
-                  <div className="d-flex align-items-center gap-2">
+                  <div className="flex items-center gap-2">
                     <span className="light-text fs-20 font-normal">
                       Due Date:{" "}
                     </span>
@@ -193,9 +193,9 @@ const JobDetailsBanner = ({
                 </div>
               )}
               {data.status === "closed" && (
-                <div className="d-flex align-items-center gap-3">
+                <div className="flex items-center gap-3">
                   <Divider />
-                  <div className="d-flex align-items-center gap-2">
+                  <div className="flex items-center gap-2">
                     <span className="light-text fs-20 font-normal">
                       Ended:{" "}
                     </span>
@@ -226,7 +226,7 @@ const JobDetailsBanner = ({
               src={data?.userdata?.user_image || "/images/default_avatar.png"}
               height="5.25rem"
               width="5.25rem"
-              className="d-flex justify-content-center"
+              className="flex justify-center"
             />
             <div className="hired-freelancer-name">
               <div className="fs-20 font-normal capitalize">
@@ -237,7 +237,7 @@ const JobDetailsBanner = ({
           </div>
         </div>
 
-        <div className="budget-and-earnings gap-md-4 gap-3 d-flex flex-column flex-md-row align-items-md-center justify-content-between">
+        <div className="budget-and-earnings gap-md-4 gap-3 flex flex-column flex-md-row align-items-md-center justify-between">
           <div className="flex-1">
             <label className="light-text fs-1rem font-normal">
               Total Budget

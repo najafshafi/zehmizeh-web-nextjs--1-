@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const page = () => {
@@ -27,13 +28,13 @@ const page = () => {
             </div>
             <p className="text-lg mt-2">
               Please don&apos;t hesitate to reach out to{" "}
-              <a
+              <Link
                 className="text-[#f2b420]"
                 href="mailto:info@zehmizeh.com"
                 target="blank"
               >
                 info@zehmizeh.com
-              </a>{" "}
+              </Link>{" "}
               with any questions.
             </p>
             <p className="text-lg mt-4">

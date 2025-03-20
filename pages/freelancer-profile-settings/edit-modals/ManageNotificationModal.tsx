@@ -70,7 +70,7 @@ const ManageNotificationModal = ({
               onChange={(dt) => setSelectedOPT(dt)}
             />
           </div>
-          <div className="mt-4 flex items-center justify-content-center">
+          <div className="mt-4 flex items-center justify-center">
             <StyledButton
               disabled={loading}
               style={{ minWidth: "10rem" }}

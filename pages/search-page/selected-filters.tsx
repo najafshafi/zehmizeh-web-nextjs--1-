@@ -50,13 +50,10 @@ export default function SelectedFilters() {
   };
 
   return (
-    <div className="my-4 g-2 d-flex flex-wrap">
+    <div className="my-4 g-2 flex flex-wrap">
       {filters?.job_status &&
         filters?.job_status?.map((status: string) => (
-          <FilterChip
-            className="filter-chip d-flex align-items-center"
-            key={status}
-          >
+          <FilterChip className="filter-chip flex items-center" key={status}>
             Job Type: {status === "prospects" ? "Open" : status}
             <CrossIcon
               className="pointer"
@@ -66,10 +63,7 @@ export default function SelectedFilters() {
         ))}
       {filters?.languages &&
         filters?.languages?.map((language: string) => (
-          <FilterChip
-            className="filter-chip d-flex align-items-center"
-            key={language}
-          >
+          <FilterChip className="filter-chip flex items-center" key={language}>
             {language.split("#")[0]}
             <CrossIcon
               className="pointer"
@@ -79,10 +73,7 @@ export default function SelectedFilters() {
         ))}
       {filters?.location &&
         filters?.location?.map((location: string) => (
-          <FilterChip
-            className="filter-chip d-flex align-items-center"
-            key={location}
-          >
+          <FilterChip className="filter-chip flex items-center" key={location}>
             Location: {location}
             <CrossIcon
               className="pointer"
@@ -92,10 +83,7 @@ export default function SelectedFilters() {
         ))}
       {filters?.categories &&
         filters?.categories?.map((category: string) => (
-          <FilterChip
-            className="filter-chip d-flex align-items-center"
-            key={category}
-          >
+          <FilterChip className="filter-chip flex items-center" key={category}>
             {category.split("#")[0]}
             <CrossIcon
               className="pointer"
@@ -105,10 +93,7 @@ export default function SelectedFilters() {
         ))}
       {filters?.skills &&
         filters?.skills?.map((skill: string) => (
-          <FilterChip
-            className="filter-chip d-flex align-items-center"
-            key={skill}
-          >
+          <FilterChip className="filter-chip flex items-center" key={skill}>
             {skill.split("#")[0]}
             <CrossIcon
               className="pointer"
@@ -119,7 +104,7 @@ export default function SelectedFilters() {
       {filters?.job_type &&
         filters?.job_type?.map((jobTypeItem: string) => (
           <FilterChip
-            className="filter-chip d-flex align-items-center"
+            className="filter-chip flex items-center"
             key={jobTypeItem}
           >
             Project Type: {textForUI(jobTypeItem)}
@@ -133,7 +118,7 @@ export default function SelectedFilters() {
       {Array.isArray(filters?.hourly_rate) &&
         filters?.hourly_rate?.map((hourly_rate: string) => (
           <FilterChip
-            className="filter-chip d-flex align-items-center"
+            className="filter-chip flex items-center"
             key={hourly_rate}
           >
             Hourly Rate: {hourly_rate}
@@ -147,7 +132,7 @@ export default function SelectedFilters() {
       {Array.isArray(filters?.fixed_budget) &&
         filters?.fixed_budget?.map((fixed_budget: string) => (
           <FilterChip
-            className="filter-chip d-flex align-items-center"
+            className="filter-chip flex items-center"
             key={fixed_budget}
           >
             Fix Budget: {fixed_budget}
@@ -161,7 +146,7 @@ export default function SelectedFilters() {
       {filters?.account_type &&
         filters?.account_type?.map((talentTypeItem: string) => (
           <FilterChip
-            className="filter-chip d-flex align-items-center"
+            className="filter-chip flex items-center"
             key={talentTypeItem}
           >
             Account Type: {talentTypeItem}
@@ -174,7 +159,7 @@ export default function SelectedFilters() {
       {filters?.freelancerFilters &&
         filters?.freelancerFilters?.map((freelancer: string) => (
           <FilterChip
-            className="filter-chip d-flex align-items-center"
+            className="filter-chip flex items-center"
             key={freelancer}
           >
             My Freelancer: {freelancer}
@@ -186,10 +171,7 @@ export default function SelectedFilters() {
         ))}
       {filters?.rating &&
         filters?.rating?.map((rating: string) => (
-          <FilterChip
-            className="filter-chip d-flex align-items-center"
-            key={rating}
-          >
+          <FilterChip className="filter-chip flex items-center" key={rating}>
             Rating: {RATINGS_FILTER_ENUM[rating]}
             <CrossIcon
               className="pointer"
@@ -201,7 +183,7 @@ export default function SelectedFilters() {
       {filters?.hourly_rate && !Array.isArray(filters?.hourly_rate) && (
         <>
           {(filters?.hourly_rate?.min || filters?.hourly_rate?.max) && (
-            <FilterChip className="filter-chip d-flex align-items-center">
+            <FilterChip className="filter-chip flex items-center">
               Hourly rate: ${filters?.hourly_rate?.min ?? 0} - $
               {filters?.hourly_rate?.max ?? 0}
               <CrossIcon
@@ -214,7 +196,7 @@ export default function SelectedFilters() {
           )}
 
           {filters?.hourly_rate?.isNAChecked && (
-            <FilterChip className="filter-chip d-flex align-items-center">
+            <FilterChip className="filter-chip flex items-center">
               NA Checked
               <CrossIcon
                 className="pointer"

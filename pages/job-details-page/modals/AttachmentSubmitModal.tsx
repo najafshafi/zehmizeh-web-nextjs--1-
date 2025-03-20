@@ -88,7 +88,7 @@ const AttachmentSubmitModal = ({
               Completed Work on this Milestone
             </div>
             {!!existingWork.length && (
-              <div className="d-flex align-items-center gap-4 flex-wrap my-3">
+              <div className="flex items-center gap-4 flex-wrap my-3">
                 {existingWork.map((file, index: number) => (
                   <div key={`milestone-${index}`}>
                     <AttachmentPreview
@@ -129,7 +129,7 @@ const AttachmentSubmitModal = ({
           </div>
         </div>
 
-        <div className="d-flex justify-content-md-end justify-content-center mt-4">
+        <div className="flex justify-content-md-end justify-center mt-4">
           <StyledButton
             className="fs-16 font-normal"
             variant="primary"

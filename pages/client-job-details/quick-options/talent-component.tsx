@@ -86,8 +86,8 @@ const TalentComponent = ({
     <>
       <TalentComponentWrapper
         isSelected={isSelected}
-        className={cns("d-flex pointer align-items-start", {
-          "flex-column g-2 align-items-center": isMobile,
+        className={cns("flex pointer align-items-start", {
+          "flex-column g-2 items-center": isMobile,
         })}
         onClick={onSelect}
       >
@@ -100,9 +100,7 @@ const TalentComponent = ({
         <div className="talent__details w-100">
           <div
             className={
-              isMobile
-                ? "text-center"
-                : "d-flex flex-wrap justify-content-between"
+              isMobile ? "text-center" : "flex flex-wrap justify-between"
             }
           >
             <div>
@@ -129,7 +127,7 @@ const TalentComponent = ({
               />
             </div>
           )}
-          <div className="skills d-flex align-items-center flex-wrap">
+          <div className="skills flex items-center flex-wrap">
             {data?.skills?.map((skill: any, index) => (
               <StatusBadge key={skill.id} color={COLORS[index % COLORS.length]}>
                 {skill.name}
@@ -146,11 +144,11 @@ export default TalentComponent;
 
 const OtherDetails = ({ data }: any) => {
   return (
-    <div className="talent__other-details d-flex align-items-center flex-wrap">
-      <div className="d-flex budget width-fit-content align-items-center">
+    <div className="talent__other-details flex items-center flex-wrap">
+      <div className="flex budget width-fit-content items-center">
         <DollarCircleIcon />
         {data.hourly_rate ? (
-          <div className="fs-1rem font-normal d-flex mx-1">
+          <div className="fs-1rem font-normal flex mx-1">
             {data.hourly_rate}
             <div className="budget-label fs-1rem fw-300">/hr</div>
           </div>
@@ -160,9 +158,9 @@ const OtherDetails = ({ data }: any) => {
       </div>
 
       {(data.location?.state || data?.location?.country_name) && (
-        <div className="d-flex budget align-items-center">
+        <div className="flex budget items-center">
           <LocationIcon />
-          <div className="d-flex fs-1rem font-normal mx-1">
+          <div className="flex fs-1rem font-normal mx-1">
             {separateValuesWithComma([
               data?.location?.state,
               data?.location?.country_name,
@@ -171,9 +169,9 @@ const OtherDetails = ({ data }: any) => {
         </div>
       )}
       {data.ratings !== null && (
-        <div className="d-flex budget align-items-center">
+        <div className="flex budget items-center">
           <StarIcon />
-          <div className="ms-1 d-flex align-items-center fs-1rem font-normal">
+          <div className="ms-1 flex items-center fs-1rem font-normal">
             {data.rating}
             <div className="ms-1 budget-label fs-sm fw-300">
               Ratings ({data?.rating})

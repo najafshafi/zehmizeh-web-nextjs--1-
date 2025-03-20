@@ -104,7 +104,7 @@ const AboutMe = ({ aboutMe, onUpdate, onPrevious, skipForNow }: Props) => {
 
   return (
     <Container>
-      <FormWrapper className="d-flex flex-column">
+      <FormWrapper className="flex flex-column">
         <div className={user_type === "client" ? "mt-4" : ""}>
           <div className={`fs-18 font-weight-bold mb-2`}>
             {titleHandler()}
@@ -152,7 +152,7 @@ const AboutMe = ({ aboutMe, onUpdate, onPrevious, skipForNow }: Props) => {
             maxChars={CONSTANTS.ABOUT_ME_MAXIMUM_CHARACTERS}
           />
         </div>
-        <div className="d-flex justify-content-center justify-content-md-end gap-3">
+        <div className="flex justify-center justify-content-md-end gap-3">
           {user_type !== "client" && (
             <StyledButton
               variant="outline-dark"

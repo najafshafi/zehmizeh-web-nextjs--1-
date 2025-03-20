@@ -95,7 +95,7 @@ const PersonalDetails = ({
               to share your professional logo or a cartoon avatar instead.
             </p>
           </div>
-          <div className="d-flex justify-content-center">
+          <div className="flex justify-center">
             <div
               className="profile__img pointer"
               onClick={() => setShowEditPictureModal((prev) => !prev)}
@@ -105,7 +105,7 @@ const PersonalDetails = ({
                 src={formState?.user_image || "/images/default_avatar.png"}
                 alt="freelancer-profile"
               />
-              <div className="edit-picture-btn d-flex align-items-center justify-content-center">
+              <div className="edit-picture-btn flex items-center justify-center">
                 <EditBlueIcon />
               </div>
             </div>
@@ -205,11 +205,11 @@ const PersonalDetails = ({
   };
 
   return (
-    <FormWrapper className="d-flex flex-column">
+    <FormWrapper className="flex flex-column">
       <Container className="mt-3 px-0">{UI()}</Container>
 
       {!client && (
-        <div className="d-flex justify-content-center justify-content-md-end gap-3">
+        <div className="flex justify-center justify-content-md-end gap-3">
           <StyledButton variant="dark" onClick={skipForNow}>
             Skip
           </StyledButton>

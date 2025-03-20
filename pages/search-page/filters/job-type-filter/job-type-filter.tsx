@@ -1,4 +1,4 @@
-import Checkbox from "@/components/forms/CheckBox2";
+import Checkbox from "@/components/forms/FilterCheckBox2";
 import HourlyRateFilter from "./hourly-rate-filter";
 import FixedBudgetFilter from "./fixed-budget-filter";
 import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
@@ -26,7 +26,7 @@ const JobTypeFilter = () => {
 
   return (
     <div>
-      <div className="filter__checkbox__row d-flex align-items-center">
+      <div className="filter__checkbox__row flex items-center">
         <Checkbox
           checked={filters?.job_type?.includes("hourly")}
           toggle={() => onSelectItem("hourly")}
@@ -35,7 +35,7 @@ const JobTypeFilter = () => {
       </div>
       {filters?.job_type?.includes("hourly") && <HourlyRateFilter />}
 
-      <div className="filter__checkbox__row d-flex align-items-center">
+      <div className="filter__checkbox__row flex items-center">
         <Checkbox
           checked={filters?.job_type?.includes("fixed")}
           toggle={() => onSelectItem("fixed")}

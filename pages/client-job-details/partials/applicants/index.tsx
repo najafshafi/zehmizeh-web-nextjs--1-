@@ -202,7 +202,7 @@ const Applicants = ({ jobPostId, refetch, jobStatus, jobTitle }: Prop) => {
         sorting={sortKey}
         setSorting={setSorting}
       />
-      <ApplicantsWrapper className="d-flex flex-column">
+      <ApplicantsWrapper className="flex flex-column">
         {isLoading && <Loader />}
 
         {!isLoading && data?.length == 0 && (
@@ -221,22 +221,22 @@ const Applicants = ({ jobPostId, refetch, jobStatus, jobTitle }: Prop) => {
           data?.map((item: any) => (
             <ApplicantListItem
               key={item?.proposal_id}
-              className="d-flex flex-wrap justify-content-between"
+              className="flex flex-wrap justify-between"
             >
               {item?.edited_at && (
                 <p className="updated-on">
                   Updated on - {formatDateAndTime(item.edited_at)}
                 </p>
               )}
-              <div className="applicant-details d-flex gap-4 flex-wrap">
+              <div className="applicant-details flex gap-4 flex-wrap">
                 <BlurredImage
                   src={item?.user_image || "/images/default_avatar.png"}
                   height="80px"
                   width="80px"
                 />
-                <div className="main-details d-flex flex-column flex-1">
-                  <div className="d-flex justify-content-between">
-                    <div className="d-flex align-items-center gap-2">
+                <div className="main-details flex flex-column flex-1">
+                  <div className="flex justify-between">
+                    <div className="flex items-center gap-2">
                       <div className="fs-24 font-normal line-height-140 capitalize">
                         <Link to={`/freelancer/${item?.user_id}`}>
                           {item?.first_name} {item?.last_name}
@@ -269,7 +269,7 @@ const Applicants = ({ jobPostId, refetch, jobStatus, jobTitle }: Prop) => {
                     </div>
                   </div>
 
-                  <div className="d-flex justify-content-between align-items-end">
+                  <div className="flex justify-between align-items-end">
                     <div>
                       <div className="description fs-18 font-normal light-text line-height-140 capital-first-ltr mb-2">
                         {item?.job_title}
@@ -282,10 +282,10 @@ const Applicants = ({ jobPostId, refetch, jobStatus, jobTitle }: Prop) => {
                           </span>
                         </div>
                       )}
-                      <div className="location-and-ratings d-flex align-items-center gap-2 flex-wrap mb-2">
+                      <div className="location-and-ratings flex items-center gap-2 flex-wrap mb-2">
                         {(item?.location?.state ||
                           item?.location?.country_name) && (
-                          <div className="rounded-chip d-flex width-fit-content align-items-center">
+                          <div className="rounded-chip flex width-fit-content items-center">
                             <LocationIcon />
                             <div className="fs-1rem font-normal mx-1 light-text">
                               {separateValuesWithComma([
@@ -295,7 +295,7 @@ const Applicants = ({ jobPostId, refetch, jobStatus, jobTitle }: Prop) => {
                             </div>
                           </div>
                         )}
-                        <div className="rounded-chip d-flex width-fit-content align-items-center">
+                        <div className="rounded-chip flex width-fit-content items-center">
                           <StarIcon />
                           <div className="fs-1rem font-normal mx-1">
                             {item?.avg_rate ? item?.avg_rate?.toFixed(1) : 0}
@@ -306,7 +306,7 @@ const Applicants = ({ jobPostId, refetch, jobStatus, jobTitle }: Prop) => {
                         </div>
                       </div>
                     </div>
-                    <div className="d-flex gap-2 mt-4">
+                    <div className="flex gap-2 mt-4">
                       <StyledButton
                         padding="0.875rem 1.5rem"
                         variant="primary"
@@ -334,7 +334,7 @@ const Applicants = ({ jobPostId, refetch, jobStatus, jobTitle }: Prop) => {
 
         {/* Pagination */}
         {!isLoading && data?.length > 0 && (
-          <div className="d-flex justify-content-center mt-3">
+          <div className="flex justify-center mt-3">
             <PaginationComponent
               total={Math.ceil(totalResults / RECORDS_PER_PAGE)}
               onPageChange={onPageChange}

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import Checkbox from '@/components/forms/Checkbox';
+import Checkbox from '@/components/forms/FilterCheckBox2';
 import { getSkillsApi } from '@/helpers/http/common';
 import { useSearchFilters } from '@/helpers/contexts/search-filter-context';
 import { TJobDetails } from '@/helpers/types/job.type';

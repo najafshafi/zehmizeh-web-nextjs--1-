@@ -149,7 +149,7 @@ const BankAccountsList = ({ onPay, processingPayment }: Props) => {
       <PaymentSummary />
 
       <p className="mt-4 mb-0">Note: Payments via bank can take 4-5 business days to process</p>
-      <div className="d-flex justify-content-center">
+      <div className="flex justify-center">
         <StyledButton disabled={processingPayment} onClick={onContinuePay} className="mt-3 w-100">
           {jobType === 'hourly' ? 'Pay' : 'Deposit Milestone Payment'}
         </StyledButton>

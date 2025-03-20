@@ -176,7 +176,6 @@ const NavbarProfile = () => {
                 height={50}
                 alt="User avatar"
                 priority
-                style={{ width: "auto", height: "auto" }}
               />
               <p className="flex items-center gap-2 text-lg text-[#212529]">
                 {user?.first_name && user?.last_name
@@ -227,30 +226,94 @@ const NavbarProfile = () => {
 
       {isMobileMenuOpen && (
         <nav
-          className="absolute top-full left-0 w-full bg-secondary shadow-md flex flex-col gap-4 py-4 md:pl-[100px] pl-[15px] border-b border-customYellow animate-slide-down"
+          className="absolute top-full h-screen left-0 w-full bg-secondary shadow-md flex flex-col gap-4 py-4 md:pl-[100px] pl-[15px] border-b border-customYellow animate-slide-down"
           aria-label="Mobile navigation"
         >
-          <div className="px-4 mb-2">
-            <NotificationDropdown />
+          <div className="flex items-center justify-between pr-4">
+            <div className="px-4 mb-2">
+              <NotificationDropdown />
+            </div>
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                className="flex items-center gap-2"
+                aria-expanded={isProfileDropdownOpen}
+                aria-label="Profile menu"
+              >
+                <Image
+                  src={user?.user_image}
+                  width={40}
+                  height={40}
+                  alt="User avatar"
+                  priority
+                />
+                <p className="flex items-center gap-2 text-lg text-[#212529]">
+                  {user?.first_name && user?.last_name
+                    ? `${user.first_name} ${user.last_name}`
+                    : "User"}
+                  <IoIosArrowDown
+                    size={20}
+                    className={`transition-transform ${
+                      isProfileDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </p>
+              </button>
+              {isProfileDropdownOpen && (
+                <div
+                  className="absolute right-0 mt-[0.125rem] w-[200px] bg-white rounded-md z-50"
+                  style={{ boxShadow: "rgba(0, 0, 0, 0.25) 0px 0px 15px" }}
+                >
+                  <ul className="py-[14px] px-1 text-gray-700" role="menu">
+                    {menuItems.map((item) => (
+                      <li key={item.href} role="menuitem">
+                        <Link
+                          href={item.href}
+                          className="block px-4 py-2 hover:text-[#283eff]"
+                          onClick={() => setIsProfileDropdownOpen(false)}
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                    <li role="menuitem">
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
+                      >
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+            <p className="font-bold text-xl">
+              <span dir="rtl">בס"ד</span>
+            </p>
           </div>
+
           {navigationItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="font-semibold text-black py-3 border-b border-gray-300 text-[18px] hover:text-black/60"
+              className=" text-black py-2 border-b border-gray-300 text-[18px] hover:text-black/60"
               onClick={() => setIsMobileMenuOpen(false)}
+              style={{ fontWeight: "550" }}
             >
               {item.label}
             </Link>
           ))}
-          <CustomButton
-            text="Find Projects"
-            className="px-9 py-4 w-fit mx-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
-            onClick={() => {
-              setIsMobileMenuOpen(false);
-              router.push("/search?type=jobs&page=1"); // Update with actual route
-            }}
-          />
+          <div className="flex justify-center">
+            <CustomButton
+              text="Find Projects"
+              className="px-9 py-4 w-fit mx-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                router.push("/search?type=jobs&page=1"); // Update with actual route
+              }}
+            />
+          </div>
         </nav>
       )}
     </header>

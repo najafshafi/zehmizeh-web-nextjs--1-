@@ -1,18 +1,18 @@
-import useOnClickOutside from '@/helpers/hooks/useClickOutside';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { RiCheckboxBlankCircleLine } from 'react-icons/ri';
-import { RiCheckboxCircleFill } from 'react-icons/ri';
+import useOnClickOutside from "@/helpers/hooks/useClickOutside";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { RiCheckboxBlankCircleLine } from "react-icons/ri";
+import { RiCheckboxCircleFill } from "react-icons/ri";
 import Link from "next/link";
-import { FaRocket } from 'react-icons/fa';
-import useResponsive from '@/helpers/hooks/useResponsive';
-import { CSSTransition } from 'react-transition-group';
-import { GetStartedWrapper } from './style';
-import { IoMdClose } from 'react-icons/io';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { Modal } from 'react-bootstrap';
-import { StyledButton } from '@/components/forms/Buttons';
-import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
-import { FREELANCER_PROFILE_TABS } from '@/helpers/const/tabs';
+import { FaRocket } from "react-icons/fa";
+import useResponsive from "@/helpers/hooks/useResponsive";
+import { CSSTransition } from "react-transition-group";
+import { GetStartedWrapper } from "./style";
+import { IoMdClose } from "react-icons/io";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { Modal } from "react-bootstrap";
+import { StyledButton } from "@/components/forms/Buttons";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+import { FREELANCER_PROFILE_TABS } from "@/helpers/const/tabs";
 
 type Props = {
   user: IFreelancerDetails;
@@ -34,23 +34,23 @@ export const GetStarted = ({ user, isLoading }: Props) => {
   const requiredData = useMemo(() => {
     return [
       {
-        label: 'Add Headline',
+        label: "Add Headline",
         isCompleted: !!user?.job_title,
         link: `/freelancer/account/${FREELANCER_PROFILE_TABS.PROFILE}?openModal=headline`,
       },
       {
-        label: 'Add About Me',
+        label: "Add About Me",
         isCompleted: !!user?.about_me,
         link: `/freelancer/account/${FREELANCER_PROFILE_TABS.PROFILE}?openModal=about_me`,
       },
       {
-        label: 'Add Skills',
+        label: "Add Skills",
         isCompleted: user?.skills && user?.skills?.length > 0,
         link: `/freelancer/account/${FREELANCER_PROFILE_TABS.PROFILE}?openModal=skills`,
       },
       {
-        label: 'Get Stripe account verified',
-        isCompleted: user?.stp_account_status === 'verified',
+        label: "Get Stripe account verified",
+        isCompleted: user?.stp_account_status === "verified",
         link: `/freelancer/account/${FREELANCER_PROFILE_TABS.PAYMENT_DETAILS}`,
       },
     ];
@@ -86,11 +86,11 @@ export const GetStarted = ({ user, isLoading }: Props) => {
   if (
     isShowingCompleteModal === 2 &&
     (user?.is_account_approved === null ||
-      typeof user?.is_account_approved === 'undefined')
+      typeof user?.is_account_approved === "undefined")
   ) {
     return (
       <StyledModal maxwidth={767} show size="sm" centered>
-        <Modal.Body className="d-flex flex-column justify-content-center align-items-center text-center">
+        <Modal.Body className="flex flex-column justify-center items-center text-center">
           <h4>Your Profile is Filled Out!</h4>
           <span className="mt-3">
             Well done - you have fulfilled the required sections of your
@@ -113,8 +113,8 @@ export const GetStarted = ({ user, isLoading }: Props) => {
   if (
     isLoading ||
     percentCompleted === 100 ||
-    !('about_me' in user) ||
-    !('job_title' in user)
+    !("about_me" in user) ||
+    !("job_title" in user)
   ) {
     return <></>;
   }
@@ -144,7 +144,7 @@ export const GetStarted = ({ user, isLoading }: Props) => {
       >
         <div
           ref={modalAnimationRef}
-          className={`get-started-modal shadow ${isMobile ? 'full-width' : ''}`}
+          className={`get-started-modal shadow ${isMobile ? "full-width" : ""}`}
         >
           <span className="fw-bold">Profile {percentCompleted}% Complete!</span>
           <div className="progress my-2">
@@ -164,8 +164,8 @@ export const GetStarted = ({ user, isLoading }: Props) => {
               return (
                 <li
                   key={label}
-                  className={`d-flex align-items-center py-1 ${
-                    isCompleted ? 'completed' : 'text-decoration-none'
+                  className={`flex items-center py-1 ${
+                    isCompleted ? "completed" : "text-decoration-none"
                   }`}
                 >
                   {isCompleted ? (

@@ -67,7 +67,7 @@ const Search = ({ searchTerm, onChange }: Props) => {
     <SearchWrapper
       focused={focused}
       onClick={() => toggleSearch(true)}
-      className="d-flex align-items-center pointer"
+      className="flex items-center pointer"
     >
       <input
         className="search-input"
@@ -77,7 +77,7 @@ const Search = ({ searchTerm, onChange }: Props) => {
         onChange={(e) => onChange(e.target.value)}
         value={searchTerm}
       />
-      <div className="search-icon-label d-flex align-items-center">
+      <div className="search-icon-label flex items-center">
         {focused ? <CrossIcon onClick={hideSearchbox} /> : <SearchIcon />}
         {!focused && (
           <div className="fs-18 font-normal">Search My Projects</div>

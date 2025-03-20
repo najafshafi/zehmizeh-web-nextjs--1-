@@ -136,10 +136,10 @@ const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
   return (
     <Wrapper>
       <div className="fs-32 fw-700">Close Project</div>
-      <div className="content d-flex flex-column">
+      <div className="content flex flex-column">
         <div>
           <div className="label fs-16 font-normal">Choose status</div>
-          <div className="status-options d-flex align-items-center flex-wrap">
+          <div className="status-options flex items-center flex-wrap">
             <div
               className={`option flex-1 text-center pointer ${
                 formState?.selectedStatus == "closed" ? "selected" : ""
@@ -166,7 +166,7 @@ const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
             </div>
             <div className="dropdown">
               <div
-                className="dropdown-button d-flex justify-content-between align-items-center pointer"
+                className="dropdown-button flex justify-between items-center pointer"
                 onClick={toggleDropdownOptions}
               >
                 <div className="dropdown-placeholder">

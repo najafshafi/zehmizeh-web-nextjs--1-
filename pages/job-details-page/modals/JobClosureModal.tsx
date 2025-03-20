@@ -16,7 +16,7 @@ const JobClosureModal = ({ show, onConfirm, loading = false }: Props) => {
   return (
     <StyledModal maxwidth={556} show={show} size="sm" centered scrollable>
       <Modal.Body>
-        <div className="d-flex flex-column justify-content-center">
+        <div className="flex flex-column justify-center">
           <div className="fs-24 fw-700 text-center mb-3">
             The client is ending this project.
           </div>
@@ -43,7 +43,7 @@ const JobClosureModal = ({ show, onConfirm, loading = false }: Props) => {
           <div className="fs-18 font-normal text-center">
             What would you like to do?
           </div>
-          <div className="d-flex flex-column gap-md-3 gap-2 mt-md-4 mt-3">
+          <div className="flex flex-column gap-md-3 gap-2 mt-md-4 mt-3">
             <StyledButton
               className="fs-16 font-normal w-100"
               variant="outline-dark"

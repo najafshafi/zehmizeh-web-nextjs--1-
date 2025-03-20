@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { TJobDetails } from '@/helpers/types/job.type';
 import useOnClickOutside from '@/helpers/hooks/useClickOutside';
 import { Form, Spinner } from 'react-bootstrap';
-import Checkbox from '@/components/forms/Checkbox';
+import Checkbox from '@/components/forms/FilterCheckBox2';
 import { SkillAndCategoryFilterWrapper } from './skillAndCategoryStyled';
 import { IoMdClose } from 'react-icons/io';
 

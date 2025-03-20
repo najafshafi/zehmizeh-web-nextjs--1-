@@ -50,7 +50,7 @@ const ConfirmEndRequestPrompt = ({
 
   return (
     <StyledModal maxwidth={570} show={show} size="lg" onHide={toggle} centered>
-      <Modal.Body className="d-flex flex-column justify-content-center align-items-center">
+      <Modal.Body className="flex flex-column justify-center items-center">
         <Button variant="transparent" className="close" onClick={toggle}>
           &times;
         </Button>
@@ -58,7 +58,7 @@ const ConfirmEndRequestPrompt = ({
           <div className="fs-20 font-normal">
             Are you sure you want to end this job?
           </div>
-          <div className="mt-4 d-flex align-items-center justify-content-center gap-3 flex-wrap">
+          <div className="mt-4 flex items-center justify-center gap-3 flex-wrap">
             <StyledButton variant="outline-dark" onClick={toggle}>
               Go Back
             </StyledButton>

@@ -1,14 +1,14 @@
-import { StyledButton } from '@/components/forms/Buttons';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { queryKeys } from '@/helpers/const/queryKeys';
-import { useRefetch } from '@/helpers/hooks/useQueryData';
-import { budgetChangeAcceptOrDenied } from '@/helpers/http/proposals';
-import { TapiResponse } from '@/helpers/types/apiRequestResponse';
-import { TJobDetails } from '@/helpers/types/job.type';
-import { useMemo, useState } from 'react';
-import { Modal } from 'react-bootstrap';
-import toast from 'react-hot-toast';
-import styled from 'styled-components';
+import { StyledButton } from "@/components/forms/Buttons";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { queryKeys } from "@/helpers/const/queryKeys";
+import { useRefetch } from "@/helpers/hooks/useQueryData";
+import { budgetChangeAcceptOrDenied } from "@/helpers/http/proposals";
+import { TapiResponse } from "@/helpers/types/apiRequestResponse";
+import { TJobDetails } from "@/helpers/types/job.type";
+import { useMemo, useState } from "react";
+import { Modal } from "react-bootstrap";
+import toast from "react-hot-toast";
+import styled from "styled-components";
 
 const Wrapper = styled.div`
   .title {
@@ -28,14 +28,14 @@ const Wrapper = styled.div`
 
 type Props = {
   jobDetails: TJobDetails;
-  userType: 'client' | 'freelancer';
+  userType: "client" | "freelancer";
 };
 
 export const ChangeBudgetRequestModal = ({ jobDetails, userType }: Props) => {
   const jobTypeText =
-    jobDetails.proposal.approved_budget.type === 'fixed'
-      ? 'budget'
-      : 'hourly rate';
+    jobDetails.proposal.approved_budget.type === "fixed"
+      ? "budget"
+      : "hourly rate";
 
   const { refetch } = useRefetch(queryKeys.jobDetails(jobDetails.job_post_id));
 
@@ -47,13 +47,13 @@ export const ChangeBudgetRequestModal = ({ jobDetails, userType }: Props) => {
   */
   const shouldShowModal = useMemo(() => {
     let isCorrectUser = false;
-    if (jobDetails?.proposal?.budget_change?.requested_by === 'client')
-      isCorrectUser = userType === 'freelancer';
-    if (jobDetails?.proposal?.budget_change?.requested_by === 'freelancer')
-      isCorrectUser = userType === 'client';
+    if (jobDetails?.proposal?.budget_change?.requested_by === "client")
+      isCorrectUser = userType === "freelancer";
+    if (jobDetails?.proposal?.budget_change?.requested_by === "freelancer")
+      isCorrectUser = userType === "client";
 
     return (
-      jobDetails.proposal.budget_change.status === 'pending' && isCorrectUser
+      jobDetails.proposal.budget_change.status === "pending" && isCorrectUser
     );
   }, [
     jobDetails?.proposal?.budget_change?.requested_by,
@@ -65,7 +65,7 @@ export const ChangeBudgetRequestModal = ({ jobDetails, userType }: Props) => {
   const apiCall = async (isAccepted: boolean) => {
     const res = await budgetChangeAcceptOrDenied({
       job_post_id: jobDetails.job_post_id,
-      status: isAccepted ? 'accepted' : 'denied',
+      status: isAccepted ? "accepted" : "denied",
     });
     await refetch();
     return res;
@@ -75,14 +75,14 @@ export const ChangeBudgetRequestModal = ({ jobDetails, userType }: Props) => {
     setLoading(true);
 
     toast.promise(apiCall(isAccepted), {
-      loading: 'Please wait...',
+      loading: "Please wait...",
       success: (res: TapiResponse<unknown>) => {
         setLoading(false);
         return res?.message;
       },
       error: (err) => {
         setLoading(false);
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
@@ -93,39 +93,39 @@ export const ChangeBudgetRequestModal = ({ jobDetails, userType }: Props) => {
       header: string,
       contentText: string;
 
-    if (userType === 'client') {
+    if (userType === "client") {
       header = `Your Freelancer is Requesting a ${jobTypeText} Increase`;
       contentText = `Your freelancer has requested the project's ${jobTypeText} be raised from <b>$${jobDetails.proposal.approved_budget.amount}</b> to <b>$${jobDetails.proposal.budget_change.amount}</b>.<br/>If you agree to this ${jobTypeText}, click the 'Accept Increase' button
               below.<br/>If you do not want to increase for now, click the 'Decline' button
               below.`;
       buttons = [
         {
-          text: 'Decline',
+          text: "Decline",
           onClick: () => handleSubmit(false),
-          variant: 'secondary',
+          variant: "secondary",
         },
         {
-          text: 'Accept Increase',
+          text: "Accept Increase",
           onClick: () => handleSubmit(true),
-          variant: 'primary',
+          variant: "primary",
         },
       ];
     }
-    if (userType === 'freelancer') {
+    if (userType === "freelancer") {
       header = `Your Client is Requesting a ${jobTypeText} Decrease`;
       contentText = `Your client has requested the project's ${jobTypeText} be reduced from <b>$${jobDetails.proposal.approved_budget.amount}</b> to <b>$${jobDetails.proposal.budget_change.amount}</b> \nIf you agree to this ${jobTypeText}, click the 'Accept Decrease' button
               below.\nIf you do not want to decrease for now, click the 'Decline' button
               below.`;
       buttons = [
         {
-          text: 'Decline',
+          text: "Decline",
           onClick: () => handleSubmit(false),
-          variant: 'secondary',
+          variant: "secondary",
         },
         {
-          text: 'Accept Decrease',
+          text: "Accept Decrease",
           onClick: () => handleSubmit(true),
-          variant: 'primary',
+          variant: "primary",
         },
       ];
     }
@@ -146,7 +146,7 @@ export const ChangeBudgetRequestModal = ({ jobDetails, userType }: Props) => {
           <div className="content">
             <p dangerouslySetInnerHTML={{ __html: textContent.contentText }} />
           </div>
-          <div className="mt-4 d-flex align-items-center justify-content-center gap-4">
+          <div className="mt-4 flex items-center justify-center gap-4">
             {textContent.buttons.map(({ onClick, text, variant }) => (
               <StyledButton
                 key={text}

@@ -40,7 +40,7 @@ const SingleUser = ({ conversation, onSelectChat }: Prop) => {
   return (
     <ChatSingleUser
       chatType={conversation.custom.type}
-      className={cns("d-flex align-items-center", {
+      className={cns("flex items-center", {
         active: conversation.id === selectedConversationId,
       })}
       onClick={() => onSelectChat(conversation)}

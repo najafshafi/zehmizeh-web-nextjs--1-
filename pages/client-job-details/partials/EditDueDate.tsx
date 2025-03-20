@@ -105,7 +105,7 @@ const EditDueDate = ({ show, toggle, update, data }: Props) => {
             isClearable={!!dueDate}
           />
 
-          <div className="mt-4 d-flex align-items-center justify-content-end gap-2">
+          <div className="mt-4 flex items-center justify-content-end gap-2">
             <StyledButton
               variant="primary"
               type="submit"

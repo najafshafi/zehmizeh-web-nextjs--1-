@@ -1,10 +1,10 @@
 /*
  * This is a Success modal after ending a job
  */
-import { Modal, Button } from 'react-bootstrap';
-import styled from 'styled-components';
-import { StyledModal } from 'components/styled/StyledModal';
-import { ReactComponent as SuccessTickIcon } from 'assets/icons/success-tick.svg';
+import { Modal, Button } from "react-bootstrap";
+import styled from "styled-components";
+import { StyledModal } from "components/styled/StyledModal";
+import { ReactComponent as SuccessTickIcon } from "assets/icons/success-tick.svg";
 
 type Props = {
   show: boolean;
@@ -20,7 +20,7 @@ const SuccessModalContent = styled.div`
 const EndJobModal = ({ show, toggle }: Props) => {
   return (
     <StyledModal maxwidth={540} show={show} size="lg" onHide={toggle} centered>
-      <Modal.Body className="d-flex flex-column justify-content-center align-items-center">
+      <Modal.Body className="flex flex-column justify-center items-center">
         <Button variant="transparent" className="close" onClick={toggle}>
           &times;
         </Button>
