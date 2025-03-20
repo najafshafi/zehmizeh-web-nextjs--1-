@@ -108,7 +108,7 @@ const DeclineReasonPrompt = ({
               your freelancer has not yet delivered the work - close this window
               and communicate with them in the “Messages” tab.
             </div>
-            <div className="d-flex align-itms-center justify-content-center gap-3 flex-wrap mt-4">
+            <div className="flex align-itms-center justify-center gap-3 flex-wrap mt-4">
               <StyledButton variant="outline-dark" onClick={closeWarning}>
                 Terminate Milestone
               </StyledButton>
@@ -127,7 +127,7 @@ const DeclineReasonPrompt = ({
             </div>
             <FormWrapper>
               <Form onSubmit={submitDeclineReason}>
-                <div className="d-flex g-2 flex-wrap mt-4 justify-content-center">
+                <div className="flex g-2 flex-wrap mt-4 justify-center">
                   <StyledButton
                     className="fs-16 font-normal"
                     variant="primary"

@@ -65,7 +65,7 @@ const StripeResetModal = ({ show, onClose, refetch }: Props) => {
           </div>
         </div>
 
-        <div className="flex justify-content-center">
+        <div className="flex justify-center">
           <StyledButton
             className="flex items-center gap-3"
             disabled={loading}

@@ -173,7 +173,7 @@ const AddMilestoneForm = ({
             maxLength={5}
           />
           {amount !== "" && (
-            <div className="mt-2 d-flex align-items-center">
+            <div className="mt-2 flex items-center">
               <div className="fs-1rem font-normal">
                 {/* You will get{' '}
                   <span className="fw-700">{calculateFinalAmount}</span> */}
@@ -247,7 +247,7 @@ const AddMilestoneForm = ({
           {errors?.dueDate && <ErrorMessage message={errors?.dueDate} />}
         </div>
 
-        <div className="d-flex g-2 bottom-buttons flex-wrap">
+        <div className="flex g-2 bottom-buttons flex-wrap">
           <StyledButton
             className="fs-16 font-normal btn"
             variant="outline-dark"

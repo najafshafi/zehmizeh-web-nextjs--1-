@@ -1,16 +1,16 @@
 "use client";
-import styled from 'styled-components';
-import { Dropdown } from 'react-bootstrap';
-import DownArrowIcon from '@/public/icons/chevronDown.svg';
+import styled from "styled-components";
+import { Dropdown } from "react-bootstrap";
+import DownArrowIcon from "@/public/icons/chevronDown.svg";
 
 const searchTypes = [
   {
-    label: 'Projects',
-    key: 'jobs',
+    label: "Projects",
+    key: "jobs",
   },
   {
-    label: 'Freelancers',
-    key: 'freelancers',
+    label: "Freelancers",
+    key: "freelancers",
   },
 ];
 
@@ -55,9 +55,9 @@ const SearchTypeDropdown = () => {
   return (
     <TypeDropdown className="pointer">
       <Dropdown.Toggle as={TypeDropdownToggle}>
-        <div className="d-flex align-items-center">
+        <div className="flex items-center">
           <div className="fs-18 mx-2">
-            {searchType == 'jobs' ? 'Jobs' : 'Freelancers'}
+            {searchType == "jobs" ? "Jobs" : "Freelancers"}
           </div>
           <DownArrowIcon className="dropdown-arrow" />
         </div>
@@ -66,7 +66,7 @@ const SearchTypeDropdown = () => {
         {searchTypes.map((item: any) => (
           <Dropdown.Item
             key={item.key}
-            className={`fs-20 ${searchType == item?.key ? 'fw-700' : 'fw-400'}`}
+            className={`fs-20 ${searchType == item?.key ? "fw-700" : "fw-400"}`}
             onClick={changeSearchType(item.key)}
           >
             <div>{item.label}</div>

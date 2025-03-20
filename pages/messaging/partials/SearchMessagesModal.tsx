@@ -170,7 +170,7 @@ const SearchMessagesModal = ({
         />
 
         {!isFetching && searchTerm === "" && searchResults?.length === 0 && (
-          <div className="d-flex justify-content-center mt-4">
+          <div className="flex justify-center mt-4">
             <span className="text-center fs-18 opacity-50 mx-5">
               Search for messages within message thread of "{jobTitle}" project.
             </span>
@@ -181,7 +181,7 @@ const SearchMessagesModal = ({
           <div className="search-results">
             {searchResults?.map((msg: MessageProps) => (
               <div
-                className="msg-item p-3 pointer d-flex gap-2"
+                className="msg-item p-3 pointer flex gap-2"
                 key={msg.chat_id}
                 onClick={onSelect(msg)}
               >

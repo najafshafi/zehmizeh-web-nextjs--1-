@@ -1,8 +1,8 @@
 /*
  * This is the ...Talent Type... filter
  */
-import Checkbox from '@/components/forms/Checkbox';
-import { useSearchFilters } from '@/helpers/contexts/search-filter-context';
+import Checkbox from "@/components/forms/FilterCheckBox2";
+import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
 
 const PortfolioFilter = () => {
   const { filters, updateFilterHandler } = useSearchFilters();
@@ -14,28 +14,24 @@ const PortfolioFilter = () => {
     } else {
       selectedJobType.push(item);
     }
-    updateFilterHandler('hasPortfolio', selectedJobType);
+    updateFilterHandler("hasPortfolio", selectedJobType);
   };
 
   return (
     <div>
-      <div className="filter__checkbox__row d-flex align-items-center">
+      <div className="filter__checkbox__row flex items-center">
         <Checkbox
-          checked={filters?.hasPortfolio?.includes('portfolioAdded')}
-          toggle={() => onSelectItem('portfolioAdded')}
-        />{' '}
-        <div className="checkbox-label fs-1rem fw-400">
-          Portfolio Added
-        </div>
+          checked={filters?.hasPortfolio?.includes("portfolioAdded")}
+          toggle={() => onSelectItem("portfolioAdded")}
+        />{" "}
+        <div className="checkbox-label fs-1rem fw-400">Portfolio Added</div>
       </div>
-      <div className="filter__checkbox__row d-flex align-items-center">
+      <div className="filter__checkbox__row flex items-center">
         <Checkbox
-          checked={filters?.hasPortfolio?.includes('noPortfolio')}
-          toggle={() => onSelectItem('noPortfolio')}
-        />{' '}
-        <div className="checkbox-label fs-1rem fw-400">
-          No Portfolio
-        </div>
+          checked={filters?.hasPortfolio?.includes("noPortfolio")}
+          toggle={() => onSelectItem("noPortfolio")}
+        />{" "}
+        <div className="checkbox-label fs-1rem fw-400">No Portfolio</div>
       </div>
     </div>
   );

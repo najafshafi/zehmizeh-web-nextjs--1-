@@ -127,7 +127,7 @@ const InviteFreelancer = ({ show, jobPostId, toggle, onNext }: Props) => {
 
           {/* Pagination */}
           {!isLoading && data?.data?.length > 0 && (
-            <div className="d-flex justify-content-center mt-3">
+            <div className="flex justify-center mt-3">
               <PaginationComponent
                 total={Math.ceil(data?.total / RECORDS_PER_PAGE)}
                 onPageChange={onPageChange}
@@ -136,7 +136,7 @@ const InviteFreelancer = ({ show, jobPostId, toggle, onNext }: Props) => {
             </div>
           )}
 
-          <div className="d-flex g-2 bottom-buttons flex-wrap">
+          <div className="flex g-2 bottom-buttons flex-wrap">
             <StyledButton
               className="fs-16 font-normal"
               variant="primary"

@@ -1,16 +1,19 @@
-import { useEffect, useRef, useState } from 'react';
-import { MessageContainer } from './messaging.styled';
-import ChatPanel from './partials/ChatPanel';
-import { useAuth } from '@/helpers/contexts/auth-context';
-import { AppDispatch, RootState } from '@/store/redux/store';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { fetchChatList, selectChatHandler } from '@/store/redux/slices/chatSlice';
-import axios, { CancelTokenSource } from 'axios';
-import * as I from '@/store/redux/slices/chat.interface';
-import { Spinner } from 'react-bootstrap';
-import { talkJsFetchSingleConversation } from '@/helpers/http/common';
-import TalkJS from '@/pages/talk-js';
+import { useEffect, useRef, useState } from "react";
+import { MessageContainer } from "./messaging.styled";
+import ChatPanel from "./partials/ChatPanel";
+import { useAuth } from "@/helpers/contexts/auth-context";
+import { AppDispatch, RootState } from "@/store/redux/store";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import {
+  fetchChatList,
+  selectChatHandler,
+} from "@/store/redux/slices/chatSlice";
+import axios, { CancelTokenSource } from "axios";
+import * as I from "@/store/redux/slices/chat.interface";
+import { Spinner } from "react-bootstrap";
+import { talkJsFetchSingleConversation } from "@/helpers/http/common";
+import TalkJS from "@/pages/talk-js";
 
 function SingleMessaging({ id }: { id: string }) {
   const { chatList, loading } = useSelector((state: RootState) => state.chat);
@@ -23,9 +26,14 @@ function SingleMessaging({ id }: { id: string }) {
   const cancelTokenRef = useRef<CancelTokenSource>();
   const { user } = useAuth();
 
-  const onSelectChat = (chatItem: I.Invite & I.Proposal & I.Job, index: number) => {
+  const onSelectChat = (
+    chatItem: I.Invite & I.Proposal & I.Job,
+    index: number
+  ) => {
     const remoteUserId =
-      user.user_id !== chatItem._from_user_data.user_id ? chatItem._from_user_data : chatItem._to_user_data;
+      user.user_id !== chatItem._from_user_data.user_id
+        ? chatItem._from_user_data
+        : chatItem._to_user_data;
 
     const payload = { chatItem, index, remoteUserId: remoteUserId.user_id };
     dispatch(selectChatHandler(payload));
@@ -39,9 +47,11 @@ function SingleMessaging({ id }: { id: string }) {
     // if (!chatItem) return null;
 
     // dispatch(selectChatHandler({ chatItem, index }));
-    chatList['jobs'].map((chatItem: I.Invite & I.Proposal & I.Job, index: number) => {
-      if (chatItem._job_post_id === id) onSelectChat(chatItem, index);
-    });
+    chatList["jobs"].map(
+      (chatItem: I.Invite & I.Proposal & I.Job, index: number) => {
+        if (chatItem._job_post_id === id) onSelectChat(chatItem, index);
+      }
+    );
   };
 
   useEffect(() => {
@@ -69,7 +79,8 @@ function SingleMessaging({ id }: { id: string }) {
   };
 
   useEffect(() => {
-    if (chatList.jobs.length > 0 && newChatLoading === false) handleChatToActive();
+    if (chatList.jobs.length > 0 && newChatLoading === false)
+      handleChatToActive();
   }, [chatList, user, newChatLoading]);
 
   useEffect(() => {
@@ -79,7 +90,7 @@ function SingleMessaging({ id }: { id: string }) {
   if (isChatExist)
     return (
       <MessageContainer>
-        <TalkJS key={'single-chat-talkjs'} singleConversation={id} />
+        <TalkJS key={"single-chat-talkjs"} singleConversation={id} />
       </MessageContainer>
     );
 
@@ -93,7 +104,7 @@ function SingleMessaging({ id }: { id: string }) {
               flex: 1,
             }}
           >
-            <div className="d-flex align-items-center justify-content-center gap-4">
+            <div className="flex items-center justify-center gap-4">
               <Spinner animation="border" />
               <p className="mb-0">loading messages...</p>
             </div>

@@ -42,7 +42,7 @@ const MarkMilestoneAsCompleted = ({ stateData, toggle, onConfirm }: Props) => {
         <Button variant="transparent" className="close" onClick={toggle}>
           &times;
         </Button>
-        <div className="d-flex flex-column gap-md-3 gap-0">
+        <div className="flex flex-column gap-md-3 gap-0">
           <div className="heading font-normal text-center">
             You’re Changing Milestone Status to ‘Complete’
           </div>
@@ -53,7 +53,7 @@ const MarkMilestoneAsCompleted = ({ stateData, toggle, onConfirm }: Props) => {
             notified that you’re ready to have your payment delivered.
           </p>
 
-          <div className="d-flex flex-column flex-md-row justify-content-center gap-3">
+          <div className="flex flex-column flex-md-row justify-center gap-3">
             <StyledButton
               className="fs-16 font-normal"
               variant="outline-dark"

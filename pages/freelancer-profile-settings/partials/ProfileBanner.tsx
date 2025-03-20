@@ -77,7 +77,7 @@
 //           <Col md="10">
 //             <Row className="g-3">
 //               {/* Profile picture */}
-//               <Col md="3" className="flex justify-content-center items-center">
+//               <Col md="3" className="flex justify-center items-center">
 //                 <div className="profile__img pointer" onClick={togglePictureModal}>
 //                   <Image
 //                     className="img"
@@ -86,7 +86,7 @@
 //                     width={100}
 //                     height={100}
 //                   />
-//                   <div className="edit-picture-btn flex items-center justify-content-center">
+//                   <div className="edit-picture-btn flex items-center justify-center">
 //                     <EditBlueIcon />
 //                   </div>
 //                 </div>

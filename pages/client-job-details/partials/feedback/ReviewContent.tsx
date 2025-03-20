@@ -4,9 +4,9 @@ import { ReactComponent as FilledStarIconSmall } from "assets/icons/star-yellow.
 const ReviewContent = ({ review }: any) => {
   return (
     <>
-      <div className="d-flex align-items-center justify-content-between flex-wrap">
-        <div className="given-ratings d-flex">
-          <div className="stars d-flex align-items-center gap-1">
+      <div className="flex items-center justify-between flex-wrap">
+        <div className="given-ratings flex">
+          <div className="stars flex items-center gap-1">
             {Array(review?.rate)
               .fill(1)
               ?.map((item: any, i: number) => (

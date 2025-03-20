@@ -143,7 +143,7 @@ function UserList() {
 
         <div className="message-sidebar-header-right">
           <div
-            className="message-type-dropdown-toggle d-flex align-items-center gap-2"
+            className="message-type-dropdown-toggle flex items-center gap-2"
             onClick={() => showToggle("dropdown")}
           >
             <p className="mb-0 cursor-pointer capitalize">
@@ -309,7 +309,7 @@ const UserListItem = ({
   return (
     <ChatSingleUser
       chatType={activeTheme}
-      className={`d-flex align-items-center ${className}`}
+      className={`flex items-center ${className}`}
       onClick={onSelectChat}
       title={`Project: ${convertToTitleCase(data.job_title)}`}
     >

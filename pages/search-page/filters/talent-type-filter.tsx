@@ -1,8 +1,8 @@
 /*
  * This is the ...Talent Type... filter
  */
-import Checkbox from '@/components/forms/Checkbox';
-import { useSearchFilters } from '@/helpers/contexts/search-filter-context';
+import Checkbox from "@/components/forms/FilterCheckBox2";
+import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
 
 const TalentTypeFilter = () => {
   const { filters, updateFilterHandler } = useSearchFilters();
@@ -14,23 +14,23 @@ const TalentTypeFilter = () => {
     } else {
       selectedJobType.push(item);
     }
-    updateFilterHandler('account_type', selectedJobType);
+    updateFilterHandler("account_type", selectedJobType);
   };
 
   return (
     <div>
-      <div className="filter__checkbox__row d-flex align-items-center">
+      <div className="filter__checkbox__row flex items-center">
         <Checkbox
-          checked={filters?.account_type?.includes('freelancer')}
-          toggle={() => onSelectItem('freelancer')}
-        />{' '}
+          checked={filters?.account_type?.includes("freelancer")}
+          toggle={() => onSelectItem("freelancer")}
+        />{" "}
         <div className="checkbox-label fs-1rem fw-400">Freelancers</div>
       </div>
-      <div className="filter__checkbox__row d-flex align-items-center">
+      <div className="filter__checkbox__row flex items-center">
         <Checkbox
-          checked={filters?.account_type?.includes('agency')}
-          toggle={() => onSelectItem('agency')}
-        />{' '}
+          checked={filters?.account_type?.includes("agency")}
+          toggle={() => onSelectItem("agency")}
+        />{" "}
         <div className="checkbox-label fs-1rem fw-400">Agencies</div>
       </div>
     </div>

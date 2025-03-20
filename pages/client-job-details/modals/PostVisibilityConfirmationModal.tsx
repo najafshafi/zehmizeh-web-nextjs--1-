@@ -86,7 +86,7 @@ export const PostVisibilityConfirmationModal = ({
             &times;
           </Button>
         )}
-        <div className="d-flex flex-column align-items-center">
+        <div className="flex flex-column items-center">
           <div className="fs-24 font-normal text-center mb-3">
             {content.title}
           </div>
@@ -95,7 +95,7 @@ export const PostVisibilityConfirmationModal = ({
             dangerouslySetInnerHTML={{ __html: content.text }}
           />
           <div
-            className={classNames("d-flex justify-content-center gap-4", {
+            className={classNames("flex justify-center gap-4", {
               "flex-row": !isMobile,
               "flex-column w-100": isMobile,
             })}
@@ -117,7 +117,7 @@ export const PostVisibilityConfirmationModal = ({
           </div>
           <Form.Check
             type="checkbox"
-            className="d-inline-flex align-items-center g-1 me-2 mt-4 user-select-none"
+            className="d-inline-flex items-center g-1 me-2 mt-4 user-select-none"
             id={`post-visibility-warning`}
             label="Do not show this warning in the future"
             disabled={isLoading}

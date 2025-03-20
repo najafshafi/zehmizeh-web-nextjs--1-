@@ -88,7 +88,7 @@ const BankAccount = ({
 
   return (
     <StyledBankItem
-      className="flex justify-content-between mb-2 gap-2 p-4"
+      className="flex justify-between mb-2 gap-2 p-4"
       key={item?.user_bank_id}
     >
       <div>

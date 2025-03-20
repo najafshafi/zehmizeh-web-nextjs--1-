@@ -1,25 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
-import axios from 'axios';
-import { pxToRem, showErr } from '@/helpers/utils/misc';
-import styled from 'styled-components';
-import { generateAwsUrl, talkJsCreateNewThread, talkJsFetchSingleConversation } from '@/helpers/http/common';
-import  Attachment  from '@/public/icons/attachment.svg';
-import AttachmentPreview from '@/components/ui/AttachmentPreview';
-import { useAuth } from '@/helpers/contexts/auth-context';
-import { useWebSpellChecker } from '@/helpers/hooks/useWebSpellChecker';
-import { useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/store/redux/store';
-import { AddMessagePayload } from '@/store/redux/slices/chat.interface';
-import { useDispatch } from 'react-redux';
-import messageService from '@/helpers/http/message';
-import MessageInput from './MessageInput';
-import { StyledButton } from '@/components/forms/Buttons';
-import Tooltip from 'rc-tooltip';
-import { addNewMessage } from '@/store/redux/slices/talkjsSlice';
-import { appendNewMessage } from '@/store/redux/slices/chatSlice';
-import { Link, useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import React, { useEffect, useState } from "react";
+import { Spinner } from "react-bootstrap";
+import axios from "axios";
+import { pxToRem, showErr } from "@/helpers/utils/misc";
+import styled from "styled-components";
+import {
+  generateAwsUrl,
+  talkJsCreateNewThread,
+  talkJsFetchSingleConversation,
+} from "@/helpers/http/common";
+import Attachment from "@/public/icons/attachment.svg";
+import AttachmentPreview from "@/components/ui/AttachmentPreview";
+import { useAuth } from "@/helpers/contexts/auth-context";
+import { useWebSpellChecker } from "@/helpers/hooks/useWebSpellChecker";
+import { useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/redux/store";
+import { AddMessagePayload } from "@/store/redux/slices/chat.interface";
+import { useDispatch } from "react-redux";
+import messageService from "@/helpers/http/message";
+import MessageInput from "./MessageInput";
+import { StyledButton } from "@/components/forms/Buttons";
+import Tooltip from "rc-tooltip";
+import { addNewMessage } from "@/store/redux/slices/talkjsSlice";
+import { appendNewMessage } from "@/store/redux/slices/chatSlice";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Notice = styled.div`
   width: 100%;
@@ -38,7 +42,7 @@ const Notice = styled.div`
 `;
 
 const Wrapper = styled.div.attrs({
-  className: 'd-flex align-items-center justify-content-between px-3',
+  className: "flex items-center justify-between px-3",
 })`
   width: 100%;
   min-height: ${pxToRem(74)};
@@ -114,8 +118,13 @@ interface Prop {
   conversationId?: string;
 }
 
-export default function CreateMessage({ disabled = false, conversationId }: Prop) {
-  const { activeChat, loading, activeTab } = useSelector((state: RootState) => state.chat);
+export default function CreateMessage({
+  disabled = false,
+  conversationId,
+}: Prop) {
+  const { activeChat, loading, activeTab } = useSelector(
+    (state: RootState) => state.chat
+  );
   // checking for the chat thred  in talkjs
   const [newChatLoading, setNewChatLoading] = useState<boolean>(true);
   const [isChatExist, setIsChatExist] = useState<boolean>(false);
@@ -125,16 +134,18 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
   const navigate = useNavigate();
   const { user } = useAuth();
   const remoteUser =
-    user.user_id !== activeChat?._from_user_data.user_id ? activeChat?._from_user_data : activeChat?._to_user_data;
+    user.user_id !== activeChat?._from_user_data.user_id
+      ? activeChat?._from_user_data
+      : activeChat?._to_user_data;
   useWebSpellChecker();
 
   const [uploadLoading, setUploadLoading] = useState(false);
-  const [messageText, setMessageText] = useState('');
+  const [messageText, setMessageText] = useState("");
   const [files, setFiles] = useState([]);
 
   const clearMessageInput = () => {
-    const element = document.getElementById('wsc-check');
-    if (element) element.innerHTML = '';
+    const element = document.getElementById("wsc-check");
+    if (element) element.innerHTML = "";
   };
 
   const addMessageToArr = (message: AddMessagePayload) => {
@@ -151,7 +162,7 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
       const message: AddMessagePayload = {
         to_user_id: remoteUser?.user_id,
         job_post_id: activeChat?._job_post_id,
-        type: 'TEXT',
+        type: "TEXT",
         message_text: messageText,
         tab: activeTab,
         custom_chat_id: new Date().getTime(),
@@ -163,7 +174,7 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
       dispatch(addNewMessage({ message }));
       message._from_user_id = user.user_id;
       addMessageToArr(message);
-      setMessageText('');
+      setMessageText("");
       clearMessageInput();
     }
   };
@@ -177,7 +188,7 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
       const message: AddMessagePayload = {
         to_user_id: remoteUser?.user_id,
         job_post_id: activeChat?._job_post_id,
-        type: 'FILE',
+        type: "FILE",
         message_text: `${file.fileUrl}#docname=${file.fileName}`,
         tab: activeTab,
         custom_chat_id: new Date().getTime() + i,
@@ -188,7 +199,7 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
 
       dispatch(addNewMessage({ message }));
       addMessageToArr(message);
-      setMessageText('');
+      setMessageText("");
       clearMessageInput();
       setFiles([]);
     }
@@ -212,7 +223,7 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
       const name = uploadfile.name;
 
       if (fileSize > 100) {
-        showErr('File size must not exceed 100MB.');
+        showErr("File size must not exceed 100MB.");
         return;
       }
       setUploadLoading(true);
@@ -220,7 +231,7 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
       // eslint-disable-next-line no-debugger
 
       const res = await generateAwsUrl({
-        folder: 'chat',
+        folder: "chat",
         file_name: file.name,
         content_type: file.type,
       });
@@ -229,7 +240,7 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
       const contentType = file.type;
 
       await axios.put(uploadURL, file, {
-        headers: { 'Content-Type': contentType },
+        headers: { "Content-Type": contentType },
       });
 
       setUploadLoading(false);
@@ -238,12 +249,12 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
         success: true,
         data: {
           fileName: name,
-          fileUrl: uploadURL?.split('?')[0],
+          fileUrl: uploadURL?.split("?")[0],
         },
       };
     } catch (error) {
       setUploadLoading(false);
-      showErr('Error uploading image.');
+      showErr("Error uploading image.");
       return {
         success: false,
       };
@@ -252,7 +263,7 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
 
   // Clearing the typed message when the chat is changed
   useEffect(() => {
-    setMessageText('');
+    setMessageText("");
     clearMessageInput();
   }, [activeChat?._job_post_id]);
 
@@ -296,7 +307,8 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
 
   const createTalkJSConversation = async () => {
     if (threadLoading) return false;
-    const { _job_post_id, job_title, _from_user_data, _to_user_data } = activeChat;
+    const { _job_post_id, job_title, _from_user_data, _to_user_data } =
+      activeChat;
     const payload = {
       conversationId,
       // doesn't matter if the ID's flip over, we just need both id's
@@ -314,16 +326,16 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
     const promise = talkJsCreateNewThread(payload);
 
     toast.promise(promise, {
-      loading: 'create thread...',
+      loading: "create thread...",
       success: () => {
         navigate(`/messages-new/${conversationId}`);
         setThreadLoading(false);
-        return 'thread created successfully';
+        return "thread created successfully";
       },
       error: (err) => {
         console.log(err.response.data);
         setThreadLoading(false);
-        return 'Error: ' + err.toString();
+        return "Error: " + err.toString();
       },
     });
   };
@@ -338,8 +350,11 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
     return (
       <Notice>
         <p>
-          Chat using our new module from{' '}
-          <Link className="new-module-link" to={`/messages-new/${conversationId}`}>
+          Chat using our new module from{" "}
+          <Link
+            className="new-module-link"
+            to={`/messages-new/${conversationId}`}
+          >
             here.
           </Link>
         </p>
@@ -350,10 +365,13 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
     return (
       <Notice>
         <p>
-          The chat module is depreciated due to several technical glitch, click{' '}
-          <span className="new-module-link" onClick={() => createTalkJSConversation()}>
+          The chat module is depreciated due to several technical glitch, click{" "}
+          <span
+            className="new-module-link"
+            onClick={() => createTalkJSConversation()}
+          >
             here
-          </span>{' '}
+          </span>{" "}
           to chat.
         </p>
       </Notice>
@@ -363,7 +381,7 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
     <form className="w-100" onSubmit={sendMessage}>
       <Wrapper>
         {isFileUploaded() ? (
-          <div className="d-flex gap-5 flex-wrap align-items-center justify-content-center">
+          <div className="flex gap-5 flex-wrap items-center justify-center">
             {files?.map((file, index) => (
               <AttachmentPreview
                 key={`attch-prev-${index}`}
@@ -395,10 +413,10 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
             disabled={disabled}
             setMessageText={setMessageText}
             onSendMessage={() => sendMessage()}
-            placeholder={'Write your message...'}
+            placeholder={"Write your message..."}
           />
         )}
-        <div className="actions align-items-center mt-0">
+        <div className="actions items-center mt-0">
           {/* START ----------------------------------------- Showing remaining messages user can send for proposal messages limit */}
           {/* {(isProposalConversation || isInviteConversation) && (
             <OverlayTrigger
@@ -416,12 +434,22 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
           )} */}
           {/* END ------------------------------------------- Showing total messages user can send for proposal messages limit */}
 
-          <Tooltip mouseEnterDelay={1} placement="top" overlay={<span>Send (Ctrl+Enter)</span>}>
+          <Tooltip
+            mouseEnterDelay={1}
+            placement="top"
+            overlay={<span>Send (Ctrl+Enter)</span>}
+          >
             <StyledButton
               padding="4px 10px"
               type="submit"
-              disabled={(!messageText && !isFileUploaded()) || loading.sendingMessage}
-              className={(!messageText && !isFileUploaded()) || loading.sendingMessage ? 'submit-disabled' : ''}
+              disabled={
+                (!messageText && !isFileUploaded()) || loading.sendingMessage
+              }
+              className={
+                (!messageText && !isFileUploaded()) || loading.sendingMessage
+                  ? "submit-disabled"
+                  : ""
+              }
               variant="primary"
             >
               Send
@@ -441,7 +469,7 @@ export default function CreateMessage({ disabled = false, conversationId }: Prop
                 />
                 <label htmlFor="upload">
                   <Attachment stroke="currentColor" />
-                </label>{' '}
+                </label>{" "}
               </>
             )}
           </div>

@@ -92,7 +92,7 @@ export const AcceptAndPaynowModal = ({
             </p>
           )}
         </div>
-        <div className="d-flex flex-row gap-4 mt-4">
+        <div className="flex flex-row gap-4 mt-4">
           <StyledButton variant="secondary" onClick={toggle}>
             I'll Review the Work First
           </StyledButton>

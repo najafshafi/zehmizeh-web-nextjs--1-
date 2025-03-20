@@ -1,5 +1,5 @@
 import { useSearchFilters } from '@/helpers/contexts/search-filter-context';
-import Checkbox from '@/components/forms/Checkbox';
+import Checkbox from '@/components/forms/FilterCheckBox2';
 import * as S from './Filters.styled';
 import { useState } from 'react';
 

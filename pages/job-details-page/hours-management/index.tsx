@@ -128,11 +128,11 @@ const HoursManagement = ({
         milestone?.map((item: any, index: number) => (
           <MileStoneListItem
             key={item.milestone_id}
-            className="d-flex flex-column gap-2 milestone-item"
+            className="flex flex-column gap-2 milestone-item"
             data-hourly-status={item.hourly_status}
           >
             <div>
-              <div className="d-flex justify-content-between gap-3">
+              <div className="flex justify-between gap-3">
                 <div
                   className={classNames(
                     "heading fs-20 font-normal capital-first-ltr",
@@ -178,7 +178,7 @@ const HoursManagement = ({
               </div>
               <div
                 className={classNames(
-                  "d-flex flex-md-row flex-column justify-content-between align-items-md-end gap-2",
+                  "flex flex-md-row flex-column justify-between align-items-md-end gap-2",
                   {
                     "mt-3": item.hourly_status !== "pending",
                   }
@@ -216,7 +216,7 @@ const HoursManagement = ({
                 </div>
               </div>
             </div>
-            <div className="d-flex flex-md-row flex-column justify-content-between align-items-md-end gap-3">
+            <div className="flex flex-md-row flex-column justify-between align-items-md-end gap-3">
               <div>
                 <StyledHtmlText
                   needToBeShorten
@@ -225,7 +225,7 @@ const HoursManagement = ({
                 />
 
                 {item?.attachments ? (
-                  <div className="d-flex items-center justify-content-start gap-3">
+                  <div className="flex items-center justify-content-start gap-3">
                     {item?.attachments?.split(",").map((att, index) => (
                       <div className="mt-3" key={`attachments-${index}`}>
                         <AttachmentPreview

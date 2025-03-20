@@ -215,7 +215,7 @@ const AddMilestoneForm = ({
           </div>
           <div className="form-group">
             <FormLabel className="fs-1rem fw-300">
-              <div className="d-flex align-items-center">
+              <div className="flex items-center">
                 <p className="mb-0 fw-600">
                   Milestone Fee<span className="mandatory">&nbsp;*</span>
                 </p>
@@ -242,7 +242,7 @@ const AddMilestoneForm = ({
               maxLength={5}
             />
             {formState.amount !== "" && (
-              <div className="mt-2 d-flex align-items-center">
+              <div className="mt-2 flex items-center">
                 <Tooltip className="me-2">
                   <div>
                     <div className="mt-1">
@@ -308,7 +308,7 @@ const AddMilestoneForm = ({
             {errors?.dueDate && <ErrorMessage message={errors?.dueDate} />}
           </div>
 
-          <div className="d-flex g-2 bottom-buttons">
+          <div className="flex g-2 bottom-buttons">
             <StyledButton
               className={
                 isMobile ? "fs-16 font-normal w-100" : "fs-16 font-normal"

@@ -1,25 +1,25 @@
-"use client"
-import { useState } from 'react';
-import { FormWrapper } from './steps.styled';
-import { StyledButton } from '@/components/forms/Buttons';
-import { IClientDetails } from '@/helpers/types/client.type';
-import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
-import { CategorySkillSelectModal } from '@/components/skills-form/CategorySelectModal';
+"use client";
+import { useState } from "react";
+import { FormWrapper } from "./steps.styled";
+import { StyledButton } from "@/components/forms/Buttons";
+import { IClientDetails } from "@/helpers/types/client.type";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+import { CategorySkillSelectModal } from "@/components/skills-form/CategorySelectModal";
 import {
   getCategories,
   getRelevantSkillsBasedOnCategory,
   getSkills,
-} from '@/helpers/utils/helper';
+} from "@/helpers/utils/helper";
 
 type Props = {
-  selectedSkills?: Partial<IClientDetails & IFreelancerDetails>['skills'];
-  selectedCategories: Partial<IClientDetails & IFreelancerDetails>['skills'];
+  selectedSkills?: Partial<IClientDetails & IFreelancerDetails>["skills"];
+  selectedCategories: Partial<IClientDetails & IFreelancerDetails>["skills"];
   onUpdate: (data: Partial<IClientDetails & IFreelancerDetails>) => void;
   onPrevious: () => void;
   skipForNow: () => void;
 };
 
-const initialErrorMessages = { skills: '', categories: '' };
+const initialErrorMessages = { skills: "", categories: "" };
 
 const Skills = ({
   selectedSkills,
@@ -38,28 +38,28 @@ const Skills = ({
     if (getCategories(categoryAndSkillData)?.length === 0)
       return setError((prev) => ({
         ...prev,
-        categories: 'Please add at least one skill category.',
+        categories: "Please add at least one skill category.",
       }));
 
     if (getSkills(categoryAndSkillData)?.length === 0)
       return setError((prev) => ({
         ...prev,
-        skills: 'Please add at least one skill for each skill category.',
+        skills: "Please add at least one skill for each skill category.",
       }));
 
     onUpdate({ skills: categoryAndSkillData });
   };
 
   return (
-    <FormWrapper className="d-flex flex-column">
+    <FormWrapper className="flex flex-column">
       <CategorySkillSelectModal
         type="CATEGORY"
         label="Skill Categories"
         labelClassName="fs-18 font-weight-bold"
         subText={{
           content:
-            'When you think of the types of services you would like to offer on ZMZ, which of the categories listed below would they fall into? Select all that apply.',
-          className: 'text-secondary',
+            "When you think of the types of services you would like to offer on ZMZ, which of the categories listed below would they fall into? Select all that apply.",
+          className: "text-secondary",
         }}
         errorMessage={error.categories}
         formData={getCategories(categoryAndSkillData)}
@@ -68,7 +68,7 @@ const Skills = ({
             ...getSkills(categoryAndSkillData),
             ...categories,
           ])
-            .filter((x) => 'skills' in x)
+            .filter((x) => "skills" in x)
             .map((x) => x.skills)
             .flat();
 
@@ -82,8 +82,8 @@ const Skills = ({
         labelClassName="fs-18 font-weight-bold"
         subText={{
           content:
-            'Select the freelancing skills you would like to offer as a service on ZMZ.',
-          className: 'text-secondary',
+            "Select the freelancing skills you would like to offer as a service on ZMZ.",
+          className: "text-secondary",
         }}
         errorMessage={error.skills}
         categories={getCategories(categoryAndSkillData)}
@@ -95,7 +95,7 @@ const Skills = ({
         noResultFoundText="No Results Found. Please Select Category first to See Skills."
         isMandatory
       />
-      <div className="d-flex justify-content-center justify-content-md-end gap-3">
+      <div className="flex justify-center justify-content-md-end gap-3">
         <StyledButton variant="outline-dark" onClick={onPrevious}>
           Previous
         </StyledButton>

@@ -142,7 +142,7 @@ const ProposalMessageModal = ({
               <ErrorMessage>{errors?.message?.message}</ErrorMessage>
             </div>
 
-            <div className="d-flex justify-content-center mt-4">
+            <div className="flex justify-center mt-4">
               <StyledButton
                 style={{ padding: "1rem 4rem" }}
                 className={isMobile ? "w-100" : null}

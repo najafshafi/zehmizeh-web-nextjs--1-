@@ -2,43 +2,48 @@
  * This is the main component of this route *
  */
 
-import { useEffect, useMemo, useState } from 'react';
-import toast from 'react-hot-toast';
+import { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 
-import Spinner from "@/components/forms/Spin/Spinner"
-import { useRouter, usePathname } from 'next/navigation';
-import { Wrapper } from './job-details.styled';
-import SingleMessaging from '@/pages/messaging/SingleMessaging';
-import Loader from '@/components/Loader';
-import BackButton from '@/components/ui/BackButton';
-import DetailsBanner from './DetailsBanner';
-import Tabs from '@/components/ui/Tabs';
-import { StyledButton } from '@/components/forms/Buttons';
-import RequestEndJobModal from './modals/RequestEndJobModal';
-import GeneralDetails from './GeneralDetails';
-import ProposalDetails from './ProposalDetails';
-import Feedback from './feedback';
-import Milestones from './milestones';
-import HoursManagement from './hours-management';
-import useStartPageFromTop from '@/helpers/hooks/useStartPageFromTop';
-import useResponsive from '@/helpers/hooks/useResponsive';
-import useJobDetails from './useJobDetails';
-import JobClosureModal from './modals/JobClosureModal';
-import StripeCompleteWarning from '@/components/jobs/StripeCompleteWarning';
-import AddHoursForm from './hours-management/AddHoursForm';
-import AddMilestoneForm from './milestones/AddMilestoneForm';
-import { cancelClosureRequest, acceptClosureRequest, jobClosureRequest, endJob } from '@/helpers/http/jobs';
-import { getUser } from '@/helpers/http/auth';
-import { useAuth } from '@/helpers/contexts/auth-context';
-import { StatusBadge } from '@/components/styled/Badges';
-import { changeStatusDisplayFormat } from '@/helpers/utils/misc';
-import { JobClosuremodalProjectBased } from './JobClosureModalProjectBased';
-import NoDataFound from '@/components/ui/NoDataFound';
-import { ChangeBudgetDeniedModal } from '@/components/changeBudget/ChangeBudgetDeniedModal';
-import { ChangeBudgetRequestModal } from '@/components/changeBudget/ChangeBudgetRequestModal';
-import { goBack } from '@/helpers/utils/goBack';
-import { isProjectHiddenForFreelancer } from '@/helpers/utils/helper';
-import moment from 'moment';
+import Spinner from "@/components/forms/Spin/Spinner";
+import { useRouter, usePathname } from "next/navigation";
+import { Wrapper } from "./job-details.styled";
+import SingleMessaging from "@/pages/messaging/SingleMessaging";
+import Loader from "@/components/Loader";
+import BackButton from "@/components/ui/BackButton";
+import DetailsBanner from "./DetailsBanner";
+import Tabs from "@/components/ui/Tabs";
+import { StyledButton } from "@/components/forms/Buttons";
+import RequestEndJobModal from "./modals/RequestEndJobModal";
+import GeneralDetails from "./GeneralDetails";
+import ProposalDetails from "./ProposalDetails";
+import Feedback from "./feedback";
+import Milestones from "./milestones";
+import HoursManagement from "./hours-management";
+import useStartPageFromTop from "@/helpers/hooks/useStartPageFromTop";
+import useResponsive from "@/helpers/hooks/useResponsive";
+import useJobDetails from "./useJobDetails";
+import JobClosureModal from "./modals/JobClosureModal";
+import StripeCompleteWarning from "@/components/jobs/StripeCompleteWarning";
+import AddHoursForm from "./hours-management/AddHoursForm";
+import AddMilestoneForm from "./milestones/AddMilestoneForm";
+import {
+  cancelClosureRequest,
+  acceptClosureRequest,
+  jobClosureRequest,
+  endJob,
+} from "@/helpers/http/jobs";
+import { getUser } from "@/helpers/http/auth";
+import { useAuth } from "@/helpers/contexts/auth-context";
+import { StatusBadge } from "@/components/styled/Badges";
+import { changeStatusDisplayFormat } from "@/helpers/utils/misc";
+import { JobClosuremodalProjectBased } from "./JobClosureModalProjectBased";
+import NoDataFound from "@/components/ui/NoDataFound";
+import { ChangeBudgetDeniedModal } from "@/components/changeBudget/ChangeBudgetDeniedModal";
+import { ChangeBudgetRequestModal } from "@/components/changeBudget/ChangeBudgetRequestModal";
+import { goBack } from "@/helpers/utils/goBack";
+import { isProjectHiddenForFreelancer } from "@/helpers/utils/helper";
+import moment from "moment";
 
 const JobDetails = () => {
   const user = useAuth();
@@ -46,12 +51,12 @@ const JobDetails = () => {
   const { isMobile, isTablet } = useResponsive();
   const router = useRouter();
   const pathname = usePathname();
-  
+
   // Extract the job ID and subtab from pathname
-  const pathParts = pathname?.split('/') || [];
+  const pathParts = pathname?.split("/") || [];
   const id = pathParts[2]; // Extract job ID from URL path
   const subtab = pathParts[3]; // Extract subtab from URL path
-  
+
   const [showEndJobModal, setShowEndJobModal] = useState<boolean>(false);
   const [showJobClosureModal, setShowJobClosureModal] = useState<{
     show: boolean;
@@ -65,14 +70,15 @@ const JobDetails = () => {
   const [checkingBanks, setCheckingBanks] = useState<boolean>(false);
   const [stripeWarningModalState, setStripeModalWarningState] = useState({
     show: false,
-    stripeStatus: '',
+    stripeStatus: "",
   });
 
   const [isFinalHours, setIsFinalHours] = useState(false);
 
   /* This will load the job details */
-  const { jobdetails, isLoading, refetch, tabItems, isRefetching } = useJobDetails(id);
-  const [activeTab, setActiveTab] = useState<string>(subtab || 'gen_details');
+  const { jobdetails, isLoading, refetch, tabItems, isRefetching } =
+    useJobDetails(id);
+  const [activeTab, setActiveTab] = useState<string>(subtab || "gen_details");
 
   const onTabChange = (value: string) => {
     /* This function will make the selected tab as active and change the below content */
@@ -81,8 +87,8 @@ const JobDetails = () => {
   };
 
   useEffect(() => {
-    if (user.user.user_type !== 'freelancer') {
-      router.push('/client/dashboard');
+    if (user.user.user_type !== "freelancer") {
+      router.push("/client/dashboard");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
@@ -102,12 +108,13 @@ const JobDetails = () => {
        * as that will be the first step */
 
       if (
-        jobdetails?.status === 'active' &&
+        jobdetails?.status === "active" &&
         jobdetails?.is_closure_request &&
         !jobdetails?.is_closure_request_accepted &&
-        jobdetails?.closure_req_submitted_by === 'CLIENT' &&
-        jobdetails?.milestone.filter((x: any) => x.is_final_milestone).length === 0 &&
-        !pathname?.includes('dontShowJobClosureModal')
+        jobdetails?.closure_req_submitted_by === "CLIENT" &&
+        jobdetails?.milestone.filter((x: any) => x.is_final_milestone)
+          .length === 0 &&
+        !pathname?.includes("dontShowJobClosureModal")
       ) {
         setShowJobClosureModal({
           show: true,
@@ -119,10 +126,13 @@ const JobDetails = () => {
 
   useEffect(() => {
     if (pathname) {
-      const pathParts = pathname.split('/');
+      const pathParts = pathname.split("/");
       if (pathParts.length >= 4) {
         const tabValue = pathParts[3];
-        if (tabValue && tabItems.some((tab: { key: string }) => tab.key === tabValue)) {
+        if (
+          tabValue &&
+          tabItems.some((tab: { key: string }) => tab.key === tabValue)
+        ) {
           setActiveTab(tabValue);
         }
       }
@@ -157,9 +167,9 @@ const JobDetails = () => {
   };
 
   const onConfirm = (selectedOption: string) => {
-    if (selectedOption === 'decide_later') {
+    if (selectedOption === "decide_later") {
       onCancelClosureRequest();
-    } else if (selectedOption === 'end_job') {
+    } else if (selectedOption === "end_job") {
       onAcceptClosureRequest();
     } else {
       toast.dismiss();
@@ -170,17 +180,19 @@ const JobDetails = () => {
     }
   };
 
-  const onConfirmProjectBasedCloseJob = (selectedOption: 'not_yet' | 'decline_closure' | 'accept') => {
+  const onConfirmProjectBasedCloseJob = (
+    selectedOption: "not_yet" | "decline_closure" | "accept"
+  ) => {
     switch (selectedOption) {
-      case 'not_yet': {
+      case "not_yet": {
         setShowJobClosureModal({ show: false, loading: false });
         break;
       }
-      case 'decline_closure': {
+      case "decline_closure": {
         onCancelClosureRequest();
         break;
       }
-      case 'accept': {
+      case "accept": {
         onConfirmEndJobRequest();
         break;
       }
@@ -194,7 +206,7 @@ const JobDetails = () => {
       job_id: jobdetails.job_post_id,
     };
     setShowJobClosureModal((prev) => ({ ...prev, loading: true }));
-    toast.loading('Please wait...');
+    toast.loading("Please wait...");
     acceptClosureRequest(body)
       .then((res) => {
         toast.dismiss();
@@ -217,12 +229,12 @@ const JobDetails = () => {
   const onConfirmEndJobRequest = () => {
     const body = {
       job_id: jobdetails.job_post_id,
-      status: 'in-complete',
-      reason: 'freelancer hasnt been paid at all',
-      incomplete_description: '',
+      status: "in-complete",
+      reason: "freelancer hasnt been paid at all",
+      incomplete_description: "",
     };
     setShowJobClosureModal((prev) => ({ ...prev, loading: true }));
-    toast.loading('Please wait...');
+    toast.loading("Please wait...");
     endJob(body)
       .then((res) => {
         toast.dismiss();
@@ -247,7 +259,7 @@ const JobDetails = () => {
     const promise = cancelClosureRequest(jobdetails.job_post_id);
 
     toast.promise(promise, {
-      loading: 'Please wait...',
+      loading: "Please wait...",
       success: (res) => {
         refetch();
         closeJobClosureModal();
@@ -255,7 +267,7 @@ const JobDetails = () => {
       },
       error: (err) => {
         closeJobClosureModal();
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
@@ -306,14 +318,14 @@ const JobDetails = () => {
   const closeStripeModal = () => {
     setStripeModalWarningState({
       show: false,
-      stripeStatus: '',
+      stripeStatus: "",
     });
   };
 
   const onCloseJob = () => {
     const promise = jobClosureRequest({ job_id: jobdetails.job_post_id });
     toast.promise(promise, {
-      loading: 'Loading...',
+      loading: "Loading...",
       error: (err) => {
         toggleEndJobModal();
         return err?.response?.data?.message;
@@ -328,46 +340,52 @@ const JobDetails = () => {
 
   // If job not found then redirecting to 404 page
   if (!isLoading && !isRefetching && !jobdetails) {
-    router.push('/404');
+    router.push("/404");
   }
 
   const status = useMemo(() => {
     if (jobdetails?.status) {
       switch (jobdetails?.status) {
-        case 'active': {
-          if (jobdetails?.proposal?.status === 'denied') {
-            return { text: 'Declined', color: 'darkPink' };
+        case "active": {
+          if (jobdetails?.proposal?.status === "denied") {
+            return { text: "Declined", color: "darkPink" };
           }
           // If client requests to close project
-          if (jobdetails?.budget?.type === 'fixed' && jobdetails?.is_closure_request)
+          if (
+            jobdetails?.budget?.type === "fixed" &&
+            jobdetails?.is_closure_request
+          )
             return {
-              text: 'Client Requested to End the Project',
-              color: 'darkPink',
+              text: "Client Requested to End the Project",
+              color: "darkPink",
             };
 
-          if (jobdetails?.proposal?.status === 'awarded')
-            return { text: 'Awarded to Another Freelancer', color: 'darkPink' };
+          if (jobdetails?.proposal?.status === "awarded")
+            return { text: "Awarded to Another Freelancer", color: "darkPink" };
 
-          return { text: 'Work in Progress', color: 'blue' };
+          return { text: "Work in Progress", color: "blue" };
         }
-        case 'deleted':
-          return { text: 'Canceled by Client', color: 'darkPink' };
-        case 'prospects': {
-          if (jobdetails?.proposal?.status === 'pending') return { color: 'yellow', text: 'Pending' };
-          if (jobdetails?.proposal?.status === 'denied') return { text: 'Declined', color: 'darkPink' };
+        case "deleted":
+          return { text: "Canceled by Client", color: "darkPink" };
+        case "prospects": {
+          if (jobdetails?.proposal?.status === "pending")
+            return { color: "yellow", text: "Pending" };
+          if (jobdetails?.proposal?.status === "denied")
+            return { text: "Declined", color: "darkPink" };
           return {
             text: changeStatusDisplayFormat(jobdetails?.status),
-            color: 'yellow',
+            color: "yellow",
           };
         }
-        case 'closed': {
-          if (jobdetails?.proposal?.status === 'denied') return { text: 'Declined', color: 'darkPink' };
-          return { text: 'Closed', color: 'green' };
+        case "closed": {
+          if (jobdetails?.proposal?.status === "denied")
+            return { text: "Declined", color: "darkPink" };
+          return { text: "Closed", color: "green" };
         }
         default:
           return {
             text: changeStatusDisplayFormat(jobdetails?.status),
-            color: 'yellow',
+            color: "yellow",
           };
       }
     }
@@ -375,7 +393,11 @@ const JobDetails = () => {
   }, [jobdetails]);
 
   if (isProjectHiddenForFreelancer(jobdetails)) {
-    toast.error(`Client has hidden this post - ${moment(jobdetails?.is_hidden?.date).format('MMM DD, YYYY')}`);
+    toast.error(
+      `Client has hidden this post - ${moment(
+        jobdetails?.is_hidden?.date
+      ).format("MMM DD, YYYY")}`
+    );
     router.back();
     return <></>;
   }
@@ -383,13 +405,17 @@ const JobDetails = () => {
   return (
     <Wrapper className="w-full px-4 lg:px-0">
       {/* Back button header */}
-      <BackButton route={user.user.user_type === 'freelancer' ? '/jobs' : '/client-jobs'} />
+      <BackButton
+        route={user.user.user_type === "freelancer" ? "/jobs" : "/client-jobs"}
+      />
 
       {isLoading || isRefetching ? <Loader /> : null}
 
       {/* Details Banner */}
 
-      {!isLoading && !isRefetching && jobdetails && <DetailsBanner data={jobdetails} refetch={refetch} />}
+      {!isLoading && !isRefetching && jobdetails && (
+        <DetailsBanner data={jobdetails} refetch={refetch} />
+      )}
 
       {!isLoading && !isRefetching && jobdetails && (
         <>
@@ -398,15 +424,26 @@ const JobDetails = () => {
             <div className="actions flex items-center justify-between flex-wrap gap-3">
               <div className="flex items-center justify-between w-full flex-wrap gap-3">
                 <div>
-                  <Tabs tabs={tabItems} activeTab={activeTab} onTabChange={onTabChange} fontSize="1rem" />
+                  <Tabs
+                    tabs={tabItems}
+                    activeTab={activeTab}
+                    onTabChange={onTabChange}
+                    fontSize="1rem"
+                  />
                 </div>
                 <div>
                   {status && (
                     <div className="flex gap-3">
-                      <StatusBadge color={status.color}>{status.text}</StatusBadge>
-                      {jobdetails?.proposal?.status === 'pending' && (
-                        <StatusBadge color={jobdetails?.proposal?.is_viewed ? 'green' : 'red'}>
-                          {jobdetails?.proposal?.is_viewed ? 'Read' : 'Unread'}
+                      <StatusBadge color={status.color}>
+                        {status.text}
+                      </StatusBadge>
+                      {jobdetails?.proposal?.status === "pending" && (
+                        <StatusBadge
+                          color={
+                            jobdetails?.proposal?.is_viewed ? "green" : "red"
+                          }
+                        >
+                          {jobdetails?.proposal?.is_viewed ? "Read" : "Unread"}
                         </StatusBadge>
                       )}
                     </div>
@@ -416,42 +453,63 @@ const JobDetails = () => {
               {/* Swapping Propose New Milestone/Submit New Hours button with Request to close job */}
 
               <div className="flex items-center justify-between flex-1">
-                {activeTab === 'm_stone' &&
-                jobdetails.proposal?.approved_budget?.type == 'hourly' &&
-                jobdetails.status !== 'closed' &&
-                !(jobdetails?.is_closure_request && jobdetails?.closure_req_submitted_by) ? (
+                {activeTab === "m_stone" &&
+                jobdetails.proposal?.approved_budget?.type == "hourly" &&
+                jobdetails.status !== "closed" &&
+                !(
+                  jobdetails?.is_closure_request &&
+                  jobdetails?.closure_req_submitted_by
+                ) ? (
                   <div className="flex justify-center items-center">
                     <StyledButton
-                      style={{ minWidth: '22rem' }}
+                      style={{ minWidth: "22rem" }}
                       className={`
-                      ${isMobile ? 'add-button' : 'submit-hours-button add-button'}
+                      ${
+                        isMobile
+                          ? "add-button"
+                          : "submit-hours-button add-button"
+                      }
                     `}
                       padding="1rem 2rem"
                       onClick={() => {
                         setIsFinalHours(false);
                         handleAddHours();
                       }}
-                      disabled={checkingBanks || jobdetails?.milestone.filter((x: any) => x.is_final_milestone).length > 0}
+                      disabled={
+                        checkingBanks ||
+                        jobdetails?.milestone.filter(
+                          (x: any) => x.is_final_milestone
+                        ).length > 0
+                      }
                     >
                       Submit Hours {checkingBanks && <Spinner />}
                     </StyledButton>
                   </div>
                 ) : null}
-                {activeTab === 'm_stone' &&
-                jobdetails?.status === 'active' &&
+                {activeTab === "m_stone" &&
+                jobdetails?.status === "active" &&
                 !jobdetails?.is_closure_request &&
-                jobdetails?.budget?.type == 'hourly' ? (
+                jobdetails?.budget?.type == "hourly" ? (
                   <div
-                    className={`flex justify-end items-center ${isMobile || isTablet ? '' : 'w-full'}`}
+                    className={`flex justify-end items-center ${
+                      isMobile || isTablet ? "" : "w-full"
+                    }`}
                   >
                     <StyledButton
                       minWidth="21rem"
-                      className={isMobile ? 'add-button w-full' : 'add-button w-30'}
+                      className={
+                        isMobile ? "add-button w-full" : "add-button w-30"
+                      }
                       padding="1rem 2rem"
                       onClick={toggleEndJobModal}
                       backgroundcolor="white"
                       border="true"
-                      disabled={checkingBanks || jobdetails?.milestone.filter((x: any) => x.is_final_milestone).length > 0}
+                      disabled={
+                        checkingBanks ||
+                        jobdetails?.milestone.filter(
+                          (x: any) => x.is_final_milestone
+                        ).length > 0
+                      }
                     >
                       Request to Close Project
                     </StyledButton>
@@ -459,7 +517,7 @@ const JobDetails = () => {
                 ) : null}
               </div>
 
-              {/* <div className="d-flex justify-content-end align-items-center w-100">
+              {/* <div className="flex justify-content-end items-center w-100">
                 <StyledButton
                   variant="outline-dark"
                   onClick={toggleEndJobModal}
@@ -469,13 +527,18 @@ const JobDetails = () => {
                 </StyledButton>
               </div> */}
 
-              {jobdetails.proposal?.approved_budget?.type == 'fixed' &&
-                jobdetails.status !== 'closed' &&
-                activeTab === 'm_stone' &&
-                !(jobdetails?.is_closure_request && jobdetails?.closure_req_submitted_by) && (
+              {jobdetails.proposal?.approved_budget?.type == "fixed" &&
+                jobdetails.status !== "closed" &&
+                activeTab === "m_stone" &&
+                !(
+                  jobdetails?.is_closure_request &&
+                  jobdetails?.closure_req_submitted_by
+                ) && (
                   <div className="flex justify-center items-center">
                     <StyledButton
-                      className={isMobile ? 'add-button w-full' : 'add-button w-30'}
+                      className={
+                        isMobile ? "add-button w-full" : "add-button w-30"
+                      }
                       padding="1rem 2rem"
                       onClick={handleAddMilestone}
                       disabled={checkingBanks}
@@ -486,28 +549,35 @@ const JobDetails = () => {
                   </div>
                 )}
 
-              {jobdetails?.status === 'active' ? (
+              {jobdetails?.status === "active" ? (
                 <>
                   {jobdetails?.is_closure_request ? (
                     <>
-                      {jobdetails?.budget?.type === 'hourly' && (
+                      {jobdetails?.budget?.type === "hourly" && (
                         <>
                           <div className="opacity-50 flex md:justify-end justify-center flex-1">
-                            {jobdetails?.closure_req_submitted_by === 'FREELANCER'
-                              ? 'Request to close project submitted.'
-                              : jobdetails?.milestone.filter((x: any) => x.is_final_milestone).length > 0 &&
-                                (jobdetails?.milestone[0]?.hourly_status === 'paid' ||
-                                  jobdetails?.milestone[0]?.hourly_status === 'released')
-                              ? 'Waiting for client to end the project'
-                              : jobdetails?.milestone.filter((x: any) => x.is_final_milestone).length > 0
-                              ? 'Final Hours Submitted'
+                            {jobdetails?.closure_req_submitted_by ===
+                            "FREELANCER"
+                              ? "Request to close project submitted."
+                              : jobdetails?.milestone.filter(
+                                  (x: any) => x.is_final_milestone
+                                ).length > 0 &&
+                                (jobdetails?.milestone[0]?.hourly_status ===
+                                  "paid" ||
+                                  jobdetails?.milestone[0]?.hourly_status ===
+                                    "released")
+                              ? "Waiting for client to end the project"
+                              : jobdetails?.milestone.filter(
+                                  (x: any) => x.is_final_milestone
+                                ).length > 0
+                              ? "Final Hours Submitted"
                               : jobdetails?.is_closure_request_accepted
-                              ? 'Accepted client closure request'
-                              : 'Client has requested to End the Project'}
+                              ? "Accepted client closure request"
+                              : "Client has requested to End the Project"}
                           </div>
                         </>
                       )}
-                      {jobdetails?.budget?.type === 'fixed' && (
+                      {jobdetails?.budget?.type === "fixed" && (
                         <div className="w-full text-center">
                           <StyledButton
                             className="add-button"
@@ -533,20 +603,23 @@ const JobDetails = () => {
 
           {/* The following will render the content of the selected tab */}
 
-          {activeTab == 'proposal_sent' && (
+          {activeTab == "proposal_sent" && (
             <ProposalDetails
-              isDeleted={jobdetails.status === 'deleted'}
+              isDeleted={jobdetails.status === "deleted"}
               data={jobdetails?.proposal}
               jobDetails={jobdetails}
               refetch={refetch}
             />
           )}
-          {activeTab == 'gen_details' && <GeneralDetails data={jobdetails} />}
-          {activeTab == 'messages' && id && <SingleMessaging id={id} />}
-          {activeTab == 'feedback' && jobdetails?.is_completed === 0 && (
-            <NoDataFound className="py-5" title="You can't submit review to client." />
+          {activeTab == "gen_details" && <GeneralDetails data={jobdetails} />}
+          {activeTab == "messages" && id && <SingleMessaging id={id} />}
+          {activeTab == "feedback" && jobdetails?.is_completed === 0 && (
+            <NoDataFound
+              className="py-5"
+              title="You can't submit review to client."
+            />
           )}
-          {activeTab == 'feedback' && jobdetails?.is_completed === 1 && (
+          {activeTab == "feedback" && jobdetails?.is_completed === 1 && (
             <Feedback
               feedbackData={jobdetails?.feedback}
               clientDetails={jobdetails?.userdata}
@@ -557,9 +630,9 @@ const JobDetails = () => {
               onSubmitFeedback={refetch}
             />
           )}
-          {activeTab === 'm_stone' && (
+          {activeTab === "m_stone" && (
             <>
-              {jobdetails.proposal?.approved_budget?.type == 'fixed' && (
+              {jobdetails.proposal?.approved_budget?.type == "fixed" && (
                 <Milestones
                   milestone={jobdetails?.milestone}
                   jobStatus={jobdetails.status}
@@ -569,18 +642,28 @@ const JobDetails = () => {
                   restrictPostingMilestone={jobdetails?.is_closure_request}
                   remainingBudget={
                     jobdetails?.milestone?.filter(
-                      (y: any) => !['cancelled', 'decline_dispute', 'decline'].includes(y.status)
+                      (y: any) =>
+                        !["cancelled", "decline_dispute", "decline"].includes(
+                          y.status
+                        )
                     )?.length > 0
                       ? jobdetails.proposal?.approved_budget?.amount -
                         jobdetails?.milestone
-                          ?.filter((y: any) => !['cancelled', 'decline_dispute', 'decline'].includes(y.status))
+                          ?.filter(
+                            (y: any) =>
+                              ![
+                                "cancelled",
+                                "decline_dispute",
+                                "decline",
+                              ].includes(y.status)
+                          )
                           .map((x: any) => x.amount)
                           .reduce((a: number, b: number) => a + b)
                       : jobdetails.proposal?.approved_budget?.amount
                   }
                 />
               )}
-              {jobdetails.proposal?.approved_budget?.type == 'hourly' && (
+              {jobdetails.proposal?.approved_budget?.type == "hourly" && (
                 <HoursManagement
                   milestone={jobdetails?.milestone}
                   refetch={refetch}
@@ -594,23 +677,26 @@ const JobDetails = () => {
       )}
 
       {/* START ----------------------------------------- Project based project closure modal */}
-      {!!jobdetails?.is_closure_request && jobdetails?.budget?.type === 'fixed' && showJobClosureModal.show && (
-        <JobClosuremodalProjectBased
-          show={showJobClosureModal.show}
-          loading={showJobClosureModal.loading || false}
-          onConfirm={onConfirmProjectBasedCloseJob}
-        />
-      )}
+      {!!jobdetails?.is_closure_request &&
+        jobdetails?.budget?.type === "fixed" &&
+        showJobClosureModal.show && (
+          <JobClosuremodalProjectBased
+            show={showJobClosureModal.show}
+            loading={showJobClosureModal.loading || false}
+            onConfirm={onConfirmProjectBasedCloseJob}
+          />
+        )}
       {/* END ------------------------------------------- Project based project closure modal */}
 
       {/* START ----------------------------------------- Hourly based project closure modal */}
-      {!!jobdetails?.is_closure_request && jobdetails?.budget?.type !== 'fixed' && (
-        <JobClosureModal 
-          show={showJobClosureModal.show} 
-          loading={showJobClosureModal.loading || false} 
-          onConfirm={onConfirm} 
-        />
-      )}
+      {!!jobdetails?.is_closure_request &&
+        jobdetails?.budget?.type !== "fixed" && (
+          <JobClosureModal
+            show={showJobClosureModal.show}
+            loading={showJobClosureModal.loading || false}
+            onConfirm={onConfirm}
+          />
+        )}
       {/* END ------------------------------------------- Hourly based project closure modal */}
 
       <AddHoursForm
@@ -629,18 +715,29 @@ const JobDetails = () => {
         clientUserId={jobdetails?._client_user_id}
         jobPostId={jobdetails?.job_post_id}
         remainingBudget={
-          jobdetails?.milestone?.filter((y: any) => !['cancelled', 'decline_dispute', 'decline'].includes(y.status))
-            ?.length > 0
+          jobdetails?.milestone?.filter(
+            (y: any) =>
+              !["cancelled", "decline_dispute", "decline"].includes(y.status)
+          )?.length > 0
             ? jobdetails?.proposal?.approved_budget?.amount -
               jobdetails?.milestone
-                ?.filter((y: any) => !['cancelled', 'decline_dispute', 'decline'].includes(y.status))
+                ?.filter(
+                  (y: any) =>
+                    !["cancelled", "decline_dispute", "decline"].includes(
+                      y.status
+                    )
+                )
                 .map((x: any) => x.amount)
                 .reduce((a: number, b: number) => a + b)
             : jobdetails?.proposal?.approved_budget?.amount
         }
       />
       {/* <NextStepModal show={showNextStepModal} toggle={closeNextStepModal} /> */}
-      <RequestEndJobModal show={showEndJobModal} toggle={toggleEndJobModal} onConfirm={() => onCloseJob()} />
+      <RequestEndJobModal
+        show={showEndJobModal}
+        toggle={toggleEndJobModal}
+        onConfirm={() => onCloseJob()}
+      />
 
       {/* Stripe | bank details popup */}
       <StripeCompleteWarning
@@ -650,8 +747,15 @@ const JobDetails = () => {
       />
       {jobdetails?.proposal?.approved_budget && (
         <>
-          <ChangeBudgetRequestModal jobDetails={jobdetails} userType="freelancer" />
-          <ChangeBudgetDeniedModal jobDetails={jobdetails} refetch={refetch} userType="freelancer" />
+          <ChangeBudgetRequestModal
+            jobDetails={jobdetails}
+            userType="freelancer"
+          />
+          <ChangeBudgetDeniedModal
+            jobDetails={jobdetails}
+            refetch={refetch}
+            userType="freelancer"
+          />
         </>
       )}
     </Wrapper>

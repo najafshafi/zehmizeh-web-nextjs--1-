@@ -89,7 +89,7 @@ const SavedCards = ({ cards, processingPayment, onPay }: Props) => {
 
       <PaymentSummary />
 
-      <div className="d-flex justify-content-center">
+      <div className="flex justify-center">
         <StyledButton
           disabled={processingPayment}
           onClick={onContinuePaying}

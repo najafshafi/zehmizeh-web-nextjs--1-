@@ -15,7 +15,7 @@ const SubmitEndJobModal = ({ show, onConfirm, loading }: Props) => {
         <div className="fs-24 font-normal text-center mb-3">
           The freelancer has accepted your request to end the project
         </div>
-        <div className="d-flex flex-row justify-content-center gap-md-3 gap-2 mt-md-4 mt-3">
+        <div className="flex flex-row justify-center gap-md-3 gap-2 mt-md-4 mt-3">
           <StyledButton
             className="fs-16 font-normal"
             variant="primary"

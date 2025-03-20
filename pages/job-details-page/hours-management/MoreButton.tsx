@@ -1,6 +1,6 @@
-import { UserDropdown, UserDropdownToggle } from './hours-management.styled';
-import { Dropdown } from 'react-bootstrap';
-import  MoreIcon  from '@/public/icons/more.svg';
+import { UserDropdown, UserDropdownToggle } from "./hours-management.styled";
+import { Dropdown } from "react-bootstrap";
+import MoreIcon from "@/public/icons/more.svg";
 
 type Props = {
   onDelete: () => void;
@@ -11,7 +11,7 @@ const MoreButton = ({ onDelete, handleEdit }: Props) => {
   return (
     <UserDropdown>
       <Dropdown.Toggle as={UserDropdownToggle}>
-        <div className="more-popover d-flex justify-content-center align-items-center pointer">
+        <div className="more-popover flex justify-center items-center pointer">
           <MoreIcon />
         </div>
       </Dropdown.Toggle>

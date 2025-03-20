@@ -1,9 +1,9 @@
-import { StyledButton } from 'components/forms/Buttons';
-import { StatusBadge } from 'components/styled/Badges';
-import { endJob, jobClosureRequest } from 'helpers/http/jobs';
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import styled from 'styled-components';
+import { StyledButton } from "components/forms/Buttons";
+import { StatusBadge } from "components/styled/Badges";
+import { endJob, jobClosureRequest } from "helpers/http/jobs";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import styled from "styled-components";
 
 type Props = {
   onEndJob: (onlyToggleModal?: boolean) => void;
@@ -30,7 +30,7 @@ export const CloseProjectWithoutFeedback = ({
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const isHourlyBasedProject = jobDetails?.budget?.type === 'hourly';
+  const isHourlyBasedProject = jobDetails?.budget?.type === "hourly";
 
   const handleJobClosureRequest = () => {
     setLoading(true);
@@ -38,7 +38,7 @@ export const CloseProjectWithoutFeedback = ({
       job_id: jobPostId,
     };
 
-    toast.loading('Please wait...');
+    toast.loading("Please wait...");
     jobClosureRequest(body)
       .then((res) => {
         setLoading(false);
@@ -61,11 +61,11 @@ export const CloseProjectWithoutFeedback = ({
     setLoading(true);
     const body: any = {
       job_id: jobPostId,
-      status: 'in-complete',
-      reason: 'freelancer hasnt been paid at all',
-      incomplete_description: '',
+      status: "in-complete",
+      reason: "freelancer hasnt been paid at all",
+      incomplete_description: "",
     };
-    toast.loading('Please wait...');
+    toast.loading("Please wait...");
     endJob(body)
       .then((res) => {
         setLoading(false);
@@ -106,7 +106,7 @@ export const CloseProjectWithoutFeedback = ({
               </span>
             </div>
           </div>
-          <div className="d-flex flex-column align-items-center">
+          <div className="flex flex-column items-center">
             <StyledButton
               padding="0.75rem 2rem"
               variant="primary"
@@ -120,7 +120,7 @@ export const CloseProjectWithoutFeedback = ({
                 }
               }}
             >
-              {isHourlyBasedProject ? 'Close Project' : 'Continue'}
+              {isHourlyBasedProject ? "Close Project" : "Continue"}
             </StyledButton>
           </div>
         </div>
@@ -147,7 +147,7 @@ export const CloseProjectWithoutFeedback = ({
               </p>
             </div>
           </div>
-          <div className="d-flex flex-row justify-content-center gap-3">
+          <div className="flex flex-row justify-center gap-3">
             <div>
               <StyledButton
                 padding="0.75rem 2rem"

@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Modal, Button, Form, Spinner } from 'react-bootstrap';
-import styled from 'styled-components';
-import { StyledButton } from '@/components/forms/Buttons';
-import { StyledModal } from '@/components/styled/StyledModal';
-import TextEditor from '@/components/forms/TextEditor';
-import toast from 'react-hot-toast';
+import { useState, useEffect } from "react";
+import { Modal, Button, Form, Spinner } from "react-bootstrap";
+import styled from "styled-components";
+import { StyledButton } from "@/components/forms/Buttons";
+import { StyledModal } from "@/components/styled/StyledModal";
+import TextEditor from "@/components/forms/TextEditor";
+import toast from "react-hot-toast";
 
 type Props = {
   show: boolean;
@@ -32,15 +32,15 @@ const InviteFreelancerMessageModal = ({
   inviteMessage,
   isEditFlag,
 }: Props) => {
-  const [message, setMessage] = useState<string>('');
+  const [message, setMessage] = useState<string>("");
   const onCloseModal = () => {
-    setMessage('');
+    setMessage("");
     toggle();
   };
 
   useEffect(() => {
     if (show) {
-      setMessage('');
+      setMessage("");
     }
   }, [show]);
 
@@ -51,11 +51,17 @@ const InviteFreelancerMessageModal = ({
   const handleSubmit = (e: any) => {
     e.preventDefault();
     onInvite(message);
-    setMessage('');
+    setMessage("");
   };
 
   return (
-    <StyledModal show={show} size="lg" onHide={onCloseModal} centered maxwidth={765}>
+    <StyledModal
+      show={show}
+      size="lg"
+      onHide={onCloseModal}
+      centered
+      maxwidth={765}
+    >
       <Modal.Body>
         <Button variant="transparent" className="close" onClick={onCloseModal}>
           &times;
@@ -64,15 +70,23 @@ const InviteFreelancerMessageModal = ({
           <Form onSubmit={handleSubmit}>
             <div className="content">
               <h3 className="fs-36 fw-700">
-                {freelancerName ? 'Write Your Personal Invitation' : 'Message Freelancers'}
+                {freelancerName
+                  ? "Write Your Personal Invitation"
+                  : "Message Freelancers"}
               </h3>
               {freelancerName ? (
                 <div className="fs-20 fw-400">
-                  Share a message{' with'}
-                  <span className="fw-700 text-capitalize">{freelancerName && ` ${freelancerName}. `}</span> (Optional)
+                  Share a message{" with"}
+                  <span className="fw-700 text-capitalize">
+                    {freelancerName && ` ${freelancerName}. `}
+                  </span>{" "}
+                  (Optional)
                 </div>
               ) : (
-                <div className="fs-20 fw-400">Share a message with the freelancers you're inviting (Optional)</div>
+                <div className="fs-20 fw-400">
+                  Share a message with the freelancers you're inviting
+                  (Optional)
+                </div>
               )}
               {!isEditFlag && (
                 <Form.Group className="mt-4">
@@ -86,11 +100,15 @@ const InviteFreelancerMessageModal = ({
               )}
               {isEditFlag === true && (
                 <Form.Group className="mt-4">
-                  <TextEditor value={inviteMessage} onChange={onDescriptionChange} maxChars={1000} />
+                  <TextEditor
+                    value={inviteMessage}
+                    onChange={onDescriptionChange}
+                    maxChars={1000}
+                  />
                 </Form.Group>
               )}
             </div>
-            <div className="bottom-buttons d-flex">
+            <div className="bottom-buttons flex">
               {!isEditFlag && (
                 <StyledButton
                   className="fs-16 fw-400"
@@ -99,7 +117,7 @@ const InviteFreelancerMessageModal = ({
                   type="submit"
                   disabled={loading}
                 >
-                  {loading ? <Spinner animation="border" /> : 'Send Invitation'}
+                  {loading ? <Spinner animation="border" /> : "Send Invitation"}
                 </StyledButton>
               )}
               {isEditFlag === true && (
@@ -110,7 +128,7 @@ const InviteFreelancerMessageModal = ({
                   type="submit"
                   disabled={loading}
                 >
-                  {loading ? <Spinner animation="border" /> : 'Edit Invitation'}
+                  {loading ? <Spinner animation="border" /> : "Edit Invitation"}
                 </StyledButton>
               )}
             </div>

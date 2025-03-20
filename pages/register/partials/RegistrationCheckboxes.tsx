@@ -1,12 +1,12 @@
-import { StyledButton } from '@/components/forms/Buttons';
-import Checkbox from '@/components/forms/CheckBox';
-import LoadingButtons from '@/components/LoadingButtons';
-import { useAuth } from '@/helpers/contexts/auth-context';
-import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
-import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-import Link from 'next/link';
-import { TRegisterProps } from '../types/commonProp';
+import { StyledButton } from "@/components/forms/Buttons";
+import Checkbox from "@/components/forms/CheckBox";
+import LoadingButtons from "@/components/LoadingButtons";
+import { useAuth } from "@/helpers/contexts/auth-context";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import Link from "next/link";
+import { TRegisterProps } from "../types/commonProp";
 
 type Props = {
   payload: Partial<IFreelancerDetails>;
@@ -46,7 +46,9 @@ const RegistrationCheckboxes = ({ shouldShow, payload, setStep }: Props) => {
     }
 
     if (!isAllBoxesChecked) {
-      toast.error('Users must agree to all Terms and acknowledgments to register.');
+      toast.error(
+        "Users must agree to all Terms and acknowledgments to register."
+      );
       return;
     }
 
@@ -57,39 +59,57 @@ const RegistrationCheckboxes = ({ shouldShow, payload, setStep }: Props) => {
 
   return (
     <div>
-      <div className="d-flex align-items-center mt-4">
-        <Checkbox checked={termsChecked} toggle={() => setTermsChecked((prev) => !prev)} />
+      <div className="flex items-center mt-4">
+        <Checkbox
+          checked={termsChecked}
+          toggle={() => setTermsChecked((prev) => !prev)}
+        />
         <span className="ms-2">
           I agree to all of ZehMizeh's
-          <Link href="/terms-of-service" className="yellow-link" target="_blank">
-            {' '}
+          <Link
+            href="/terms-of-service"
+            className="yellow-link"
+            target="_blank"
+          >
+            {" "}
             Terms & Conditions.
           </Link>
         </span>
       </div>
 
-      <div className="d-flex align-items-center mt-4">
-        <Checkbox toggle={() => toggleCheckBoxHandler('box1')} checked={checked.box1} />
+      <div className="flex items-center mt-4">
+        <Checkbox
+          toggle={() => toggleCheckBoxHandler("box1")}
+          checked={checked.box1}
+        />
         <span className="ms-2">
-          I am aware that ZMZ is intended for hiring freelancers to complete projects and not as a job portal for hiring
-          permanent employees.
+          I am aware that ZMZ is intended for hiring freelancers to complete
+          projects and not as a job portal for hiring permanent employees.
         </span>
       </div>
 
-      <div className="d-flex align-items-center mt-4">
-        <Checkbox toggle={() => toggleCheckBoxHandler('box2')} checked={checked.box2} />
+      <div className="flex items-center mt-4">
+        <Checkbox
+          toggle={() => toggleCheckBoxHandler("box2")}
+          checked={checked.box2}
+        />
         <span className="ms-2">
           I understand that the work on ZMZ <b>must be deliverable online </b>
-          and that ZMZ does not platform work that would require users to meet in person.
+          and that ZMZ does not platform work that would require users to meet
+          in person.
         </span>
       </div>
 
-      <div className="d-flex align-items-center mt-4">
-        <Checkbox toggle={() => toggleCheckBoxHandler('box3')} checked={checked.box3} />
+      <div className="flex items-center mt-4">
+        <Checkbox
+          toggle={() => toggleCheckBoxHandler("box3")}
+          checked={checked.box3}
+        />
         <span className="ms-2">
-          I understand that payment for projects found on ZMZ <b>must be made through ZMZ's payment system</b> and that
-          payment through any other method constitutes theft from the company (a violation of our Terms of Service and
-          Halacha).
+          I understand that payment for projects found on ZMZ{" "}
+          <b>must be made through ZMZ's payment system</b> and that payment
+          through any other method constitutes theft from the company (a
+          violation of our Terms of Service and Halacha).
         </span>
       </div>
 
@@ -97,18 +117,22 @@ const RegistrationCheckboxes = ({ shouldShow, payload, setStep }: Props) => {
       <div className="text-center my-3 mt-4">
         <br />
         <h4 className="align-self-center">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link href="/login" className="yellow-link">
             Log in
           </Link>
         </h4>
       </div>
-      <div className="d-flex flex-row justify-content-between">
-        <StyledButton disabled={isLoading} variant="secondary" onClick={() => setStep(2)}>
+      <div className="flex flex-row justify-between">
+        <StyledButton
+          disabled={isLoading}
+          variant="secondary"
+          onClick={() => setStep(2)}
+        >
           Back
         </StyledButton>
         <StyledButton disabled={isLoading} onClick={handleSubmit}>
-          {isLoading ? <LoadingButtons /> : 'Submit'}
+          {isLoading ? <LoadingButtons /> : "Submit"}
         </StyledButton>
       </div>
       {/* END ------------------------------------------- Footer */}

@@ -238,7 +238,7 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
     StepUI = (
       <div>
         <div className="fs-32 font-normal">{textContent.headers.step1}</div>
-        <div className="mt-4 d-flex flex-row justify-content-center gap-4">
+        <div className="mt-4 flex flex-row justify-center gap-4">
           {textContent.buttons.step1.map(({ onClick, text }) => {
             return (
               <StyledButton
@@ -271,7 +271,7 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
             maxLength={approvedBudget.type === "fixed" ? 5 : 3}
           />
         </div>
-        <div className="mt-4 d-flex align-items-center justify-content-center gap-2">
+        <div className="mt-4 flex items-center justify-center gap-2">
           <StyledButton
             variant="primary"
             disabled={loading}

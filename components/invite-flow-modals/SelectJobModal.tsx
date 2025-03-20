@@ -1,20 +1,20 @@
-import { useState, useMemo, useEffect } from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import styled from 'styled-components';
-import { StyledModal } from '@/components/styled/StyledModal';
-import { StyledButton } from '@/components/forms/Buttons';
-import { StatusBadge } from '@/components/styled/Badges';
-import Loader from '@/components/Loader';
-import Search from '@/components/forms/Search';
-import useMyJobs from '@/controllers/use-jobs';
-import useDebounce from '@/helpers/hooks/useDebounce';
-import { breakpoints } from '@/helpers/hooks/useResponsive';
-import StyledHtmlText from '@/components/ui/StyledHtmlText';
-import NoDataFound from '@/components/ui/NoDataFound';
-import { convertToTitleCase, showFormattedBudget } from '@/helpers/utils/misc';
-import { checkIsProposalExists } from '@/helpers/http/proposals';
+import { useState, useMemo, useEffect } from "react";
+import { Modal, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import styled from "styled-components";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import { StatusBadge } from "@/components/styled/Badges";
+import Loader from "@/components/Loader";
+import Search from "@/components/forms/Search";
+import useMyJobs from "@/controllers/use-jobs";
+import useDebounce from "@/helpers/hooks/useDebounce";
+import { breakpoints } from "@/helpers/hooks/useResponsive";
+import StyledHtmlText from "@/components/ui/StyledHtmlText";
+import NoDataFound from "@/components/ui/NoDataFound";
+import { convertToTitleCase, showFormattedBudget } from "@/helpers/utils/misc";
+import { checkIsProposalExists } from "@/helpers/http/proposals";
 
 type Props = {
   show: boolean;
@@ -72,12 +72,22 @@ const Wrapper = styled.div`
   }
 `;
 
-const SelectJobModal = ({ show, toggle, freelancerName, onNext, freelancerId }: Props) => {
-  const [selectedJobId, setSelectedJobId] = useState<string>('');
-  const COLORS = useMemo(() => ['orange', 'green', 'blue'], []);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+const SelectJobModal = ({
+  show,
+  toggle,
+  freelancerName,
+  onNext,
+  freelancerId,
+}: Props) => {
+  const [selectedJobId, setSelectedJobId] = useState<string>("");
+  const COLORS = useMemo(() => ["orange", "green", "blue"], []);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const debouncedSearchQuery = useDebounce(searchTerm, 500);
-  const { myJobs, isLoading, refetch, isRefetching } = useMyJobs('prospects', debouncedSearchQuery, freelancerId);
+  const { myJobs, isLoading, refetch, isRefetching } = useMyJobs(
+    "prospects",
+    debouncedSearchQuery,
+    freelancerId
+  );
 
   const navigate = useNavigate();
 
@@ -86,8 +96,8 @@ const SelectJobModal = ({ show, toggle, freelancerName, onNext, freelancerId }: 
   };
 
   const onContinue = async () => {
-    if (selectedJobId == '') {
-      toast.error('Please select a project.');
+    if (selectedJobId == "") {
+      toast.error("Please select a project.");
       return;
     }
 
@@ -98,19 +108,19 @@ const SelectJobModal = ({ show, toggle, freelancerName, onNext, freelancerId }: 
 
     const promise = checkIsProposalExists(payload);
     toast.promise(promise, {
-      loading: 'please wait...',
+      loading: "please wait...",
       error: (error) => {
         return error.message;
       },
       success: ({ proposal }) => {
         onNext(selectedJobId, !!proposal);
-        return proposal ? 'Proposal already exists' : null;
+        return proposal ? "Proposal already exists" : null;
       },
     });
   };
 
   const onCreateNewJob = () => {
-    navigate('/post-new-job', {
+    navigate("/post-new-job", {
       state: {
         freelancerId: freelancerId,
         freelancerName: freelancerName,
@@ -134,9 +144,11 @@ const SelectJobModal = ({ show, toggle, freelancerName, onNext, freelancerId }: 
           <div className="my-jobs">
             <h3 className="fs-36 fw-700">Select Posted Project</h3>
             <div className="fs-20 fw-400">
-              Select the project you would like <span className="fw-700 text-capitalize">{freelancerName}</span> to
-              submit a proposal for. (Projects the freelancer{' '}
-              <span className="fw-700">has already submitted proposals to</span> are excluded from the list below.)
+              Select the project you would like{" "}
+              <span className="fw-700 text-capitalize">{freelancerName}</span>{" "}
+              to submit a proposal for. (Projects the freelancer{" "}
+              <span className="fw-700">has already submitted proposals to</span>{" "}
+              are excluded from the list below.)
             </div>
             <div className="search">
               <Search
@@ -153,10 +165,12 @@ const SelectJobModal = ({ show, toggle, freelancerName, onNext, freelancerId }: 
                   myJobs?.map((item) => (
                     <div
                       key={item.job_post_id}
-                      className={`job-item pointer ${selectedJobId == item.job_post_id ? ' active' : ''}`}
+                      className={`job-item pointer ${
+                        selectedJobId == item.job_post_id ? " active" : ""
+                      }`}
                       onClick={() => selectJob(item.job_post_id)}
                     >
-                      <div className="d-flex flex-wrap justify-content-between">
+                      <div className="flex flex-wrap justify-between">
                         <div className="job-item__details__title fs-24 fw-400">
                           {convertToTitleCase(item.job_title)}
                         </div>
@@ -168,11 +182,14 @@ const SelectJobModal = ({ show, toggle, freelancerName, onNext, freelancerId }: 
                           needToBeShorten={true}
                         />
                       </div>
-                      <div className="skills d-flex align-items-center flex-wrap gap-2">
+                      <div className="skills flex items-center flex-wrap gap-2">
                         {item?.skills?.map(
                           (skill, index: number) =>
                             (skill.label || skill.name) && (
-                              <StatusBadge key={skill.id} color={COLORS[index % COLORS.length]}>
+                              <StatusBadge
+                                key={skill.id}
+                                color={COLORS[index % COLORS.length]}
+                              >
                                 {skill.name ?? skill?.label}
                               </StatusBadge>
                             )
@@ -188,7 +205,7 @@ const SelectJobModal = ({ show, toggle, freelancerName, onNext, freelancerId }: 
                     </div>
                   ))
                 ) : (
-                  // <div className="no-data mt-4 fs-1rem fw-400 d-flex align-items-center justify-content-center">
+                  // <div className="no-data mt-4 fs-1rem fw-400 flex items-center justify-center">
                   //   No data found for '{searchTerm}'
                   // </div>
                   <NoDataFound
@@ -203,7 +220,7 @@ const SelectJobModal = ({ show, toggle, freelancerName, onNext, freelancerId }: 
               </div>
             )}
           </div>
-          <div className="d-flex g-2 bottom-buttons flex-wrap">
+          <div className="flex g-2 bottom-buttons flex-wrap">
             <StyledButton
               className="fs-16 fw-400"
               variant="outline-dark"
@@ -212,7 +229,12 @@ const SelectJobModal = ({ show, toggle, freelancerName, onNext, freelancerId }: 
             >
               Create New Project
             </StyledButton>
-            <StyledButton className="fs-16 fw-400" variant="primary" padding="0.8125rem 2rem" onClick={onContinue}>
+            <StyledButton
+              className="fs-16 fw-400"
+              variant="primary"
+              padding="0.8125rem 2rem"
+              onClick={onContinue}
+            >
               Continue
             </StyledButton>
           </div>
@@ -228,20 +250,22 @@ const BudgetAndDate = ({ budget, expectedDate, isProposal }: any) => {
   if (isProposal) {
     return (
       <div className="budget-row fs-20 fw-400">
-        Open to Proposals ({budget.type === 'fixed' ? 'Project-Based' : 'Hourly'})
+        Open to Proposals (
+        {budget.type === "fixed" ? "Project-Based" : "Hourly"})
       </div>
     );
   }
-  if (budget.type == 'fixed') {
+  if (budget.type == "fixed") {
     return (
       <div className="budget-row fs-20 fw-400">
         {showFormattedBudget(budget)} ({budget.type})
       </div>
     );
-  } else if (budget.type == 'hourly') {
+  } else if (budget.type == "hourly") {
     return (
       <div className="budget-row fs-20 fw-400">
-        {showFormattedBudget(budget)} ({budget.type}){expectedDate && <span>&nbsp; | &nbsp;{expectedDate}</span>}
+        {showFormattedBudget(budget)} ({budget.type})
+        {expectedDate && <span>&nbsp; | &nbsp;{expectedDate}</span>}
       </div>
     );
   } else return null;

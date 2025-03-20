@@ -244,10 +244,10 @@ const HoursManagement = ({
         milestoneHandler(milestone)?.map((item: any, index: number, self) => (
           <MileStoneListItem
             key={item?.hourly_id}
-            className="d-flex flex-column milestone-item"
+            className="flex flex-column milestone-item"
             data-hourly-status={item.hourly_status}
           >
-            <div className="d-flex flex-md-row flex-column justify-content-between gap-md-3 gap-4">
+            <div className="flex flex-md-row flex-column justify-between gap-md-3 gap-4">
               <div>
                 <div className="fs-20 font-normal capital-first-ltr">
                   {item.is_final_milestone
@@ -277,7 +277,7 @@ const HoursManagement = ({
                 {/* END ----------------------------------------- Showing price client has to pay including fees */}
               </div>
               {item.hourly_status !== "pending" ? (
-                <div className="d-flex flex-column align-items-md-end">
+                <div className="flex flex-column align-items-md-end">
                   {[
                     "paid",
                     "under_dispute",
@@ -378,7 +378,7 @@ const HoursManagement = ({
                 </div>
               ) : null}
             </div>
-            <div className="d-flex mt-md-3 flex-md-row flex-column justify-content-between align-items-md-end gap-3">
+            <div className="flex mt-md-3 flex-md-row flex-column justify-between align-items-md-end gap-3">
               <div>
                 <StyledHtmlText
                   needToBeShorten
@@ -393,7 +393,7 @@ const HoursManagement = ({
                   </MilestoneHintText>
                 )}
                 {item?.attachments ? (
-                  <div className="d-flex items-center justify-content-start gap-3">
+                  <div className="flex items-center justify-content-start gap-3">
                     {item?.attachments?.split(",").map((att, index) => (
                       <div className="mt-3" key={`attachments-${index}`}>
                         <AttachmentPreview
@@ -426,7 +426,7 @@ const HoursManagement = ({
               "under_dispute",
               "decline_dispute",
             ].includes(item.hourly_status) ? (
-              <div className="d-flex flex-md-row flex-column mt-3 gap-3 justify-content-md-end justify-content-center">
+              <div className="flex flex-md-row flex-column mt-3 gap-3 justify-content-md-end justify-center">
                 <StyledButton
                   variant="outline-dark"
                   padding="1rem 2rem"

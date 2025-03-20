@@ -119,18 +119,18 @@ const Feedback = ({
   return (
     <Wrapper>
       <div className="fs-32 fw-700">Close Project</div>
-      <div className="content d-flex flex-column">
+      <div className="content flex flex-column">
         {endJobState?.selectedStatus == "in-complete" ? (
           <>
-            <div className="ratings d-flex flex-column disabled">
+            <div className="ratings flex flex-column disabled">
               <div className="ratings__label fs-16 font-normal text-uppercase">
                 RATE YOUR EXPERIENCE WITH {freelancerName}
               </div>
-              <div className="d-flex align-items-center">
+              <div className="flex items-center">
                 <div className="ratings__range-label fs-18 font-normal">
                   Worst
                 </div>
-                <div className="ratings__stars d-flex align-items-center mx-3">
+                <div className="ratings__stars flex items-center mx-3">
                   {Array(5)
                     .fill(1)
                     .map((item: any, index) => (
@@ -162,15 +162,15 @@ const Feedback = ({
         ) : (
           <>
             <div>
-              <div className="ratings d-flex flex-column">
+              <div className="ratings flex flex-column">
                 <div className="ratings__label fs-16 font-normal text-uppercase">
                   RATE YOUR EXPERIENCE WITH {freelancerName}
                 </div>
-                <div className="d-flex align-items-center">
+                <div className="flex items-center">
                   <div className="ratings__range-label fs-18 font-normal">
                     Worst
                   </div>
-                  <div className="ratings__stars d-flex align-items-center mx-3">
+                  <div className="ratings__stars flex items-center mx-3">
                     {Array(5)
                       .fill(1)
                       .map((item: any, index) => (
@@ -204,7 +204,7 @@ const Feedback = ({
             </div>
           </>
         )}
-        <div className="bottom-buttons d-flex">
+        <div className="bottom-buttons flex">
           <StyledButton
             padding="0.75rem 2rem"
             variant="primary"

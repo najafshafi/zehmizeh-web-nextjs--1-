@@ -468,7 +468,7 @@ function ChatPanel({
   ) {
     return (
       <ChatPanelWrapper className="m--chatpanel">
-        <header className="m-panel--header m--chatpanel-header d-flex justify-content-between align-items-center"></header>
+        <header className="m-panel--header m--chatpanel-header flex justify-between items-center"></header>
         {(loading.message || loading.list) && !ignoreMessageLoading ? (
           <section
             className="m--chatpanel-body"
@@ -480,7 +480,7 @@ function ChatPanel({
             <CreateMessage disabled={true} />
           </section>
         ) : (
-          <section className="m--chatpanel-body d-flex align-items-center justify-content-center my-4">
+          <section className="m--chatpanel-body flex items-center justify-center my-4">
             {/* <RxEnvelopeClosed size={100} /> */}
             <MessageIcon />
             <h5 className="my-4">
@@ -496,8 +496,8 @@ function ChatPanel({
   if (errors.messages)
     return (
       <ChatPanelWrapper className="m--chatpanel">
-        <header className="m-panel--header m--chatpanel-header d-flex justify-content-between align-items-center"></header>
-        <section className="m--chatpanel-body d-flex align-items-center justify-content-center my-4">
+        <header className="m-panel--header m--chatpanel-header flex justify-between items-center"></header>
+        <section className="m--chatpanel-body flex items-center justify-center my-4">
           <MdErrorOutline size={100} />
           <h5
             className="my-4 mx-auto"
@@ -519,8 +519,8 @@ function ChatPanel({
       <header
         className={
           !isDesktop
-            ? "m-panel--header m--chatpanel-header d-flex flex-column justify-content-between align-items-start my-2"
-            : "m-panel--header m--chatpanel-header d-flex justify-content-between align-items-center"
+            ? "m-panel--header m--chatpanel-header flex flex-column justify-between align-items-start my-2"
+            : "m-panel--header m--chatpanel-header flex justify-between items-center"
         }
       >
         <div className="m--chatpanel-activeUser">
@@ -542,7 +542,7 @@ function ChatPanel({
           <></>
         ) : (
           backToProposalInviteJobButton.text && (
-            <div className="d-flex gap-3">
+            <div className="flex gap-3">
               <div>
                 <TimezoneUI
                   isFromSingleMessaging={isFromSingleMessaging}

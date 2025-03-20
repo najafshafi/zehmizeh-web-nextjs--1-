@@ -49,7 +49,7 @@ const MoreButton = ({ onDelete, onMakeDefault, disabled = false }: Props) => {
   return (
     <UserDropdown>
       <Dropdown.Toggle disabled={disabled}>
-        <div className="flex justify-content-center items-center pointer">
+        <div className="flex justify-center items-center pointer">
           <MoreIcon />
         </div>
       </Dropdown.Toggle>

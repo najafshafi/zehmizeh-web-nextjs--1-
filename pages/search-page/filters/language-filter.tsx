@@ -4,7 +4,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import SearhableDropdown from "@/components/forms/SearchableDropdown2";
-import Checkbox from "@/components/forms/CheckBox2";
+import Checkbox from "@/components/forms/FilterCheckBox2";
 import useDebounce from "@/helpers/hooks/useDebounce";
 import { getLanguages } from "@/helpers/http/common";
 import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
@@ -71,7 +71,7 @@ const LanguageFilter = () => {
       {filters?.languages?.length > 0 &&
         filters?.languages?.map((item: any, index) => (
           <div
-            className="filter__checkbox__row d-flex align-items-center"
+            className="filter__checkbox__row flex items-center"
             key={`skill-key-${index}`}
           >
             <Checkbox

@@ -390,10 +390,10 @@ const Milestones = ({
         milestone?.map((item: any, i, self) => (
           <MileStoneListItem
             key={`item?.milestone_id` + item?.title}
-            className="d-flex flex-column milestone-item"
+            className="flex flex-column milestone-item"
             data-milestone-status={item.status}
           >
-            <div className="d-flex flex-md-row flex-column justify-content-between gap-md-3 gap-4">
+            <div className="flex flex-md-row flex-column justify-between gap-md-3 gap-4">
               <div>
                 <div className="fs-20 font-normal capital-first-ltr">
                   {convertToTitleCase(item.title)}
@@ -412,7 +412,7 @@ const Milestones = ({
                 {/* END ------------------------------------------- Showing price client has to pay including fees */}
               </div>
               <div className="status">
-                <div className="d-flex flex-column align-items-md-end">
+                <div className="flex flex-column align-items-md-end">
                   <>
                     <StatusBadge
                       color={PAYMENT_STATUS[item?.status]?.color || "green"}
@@ -455,7 +455,7 @@ const Milestones = ({
                 </div>
               </div>
             </div>
-            <div className="d-flex mt-md-1 flex-md-row flex-column justify-content-between align-items-md-end gap-3">
+            <div className="flex mt-md-1 flex-md-row flex-column justify-between align-items-md-end gap-3">
               <div>
                 <StyledHtmlText
                   needToBeShorten
@@ -472,7 +472,7 @@ const Milestones = ({
             </div>
             {/* Only show attachments if milestone is not under dispute */}
             {item?.attachments && item?.status !== "under_dispute" && (
-              <div className="d-flex align-items-center gap-4 flex-wrap mt-3">
+              <div className="flex items-center gap-4 flex-wrap mt-3">
                 {item?.attachments
                   .split(",")
                   .map((attachment, index: number) => (
@@ -503,7 +503,7 @@ const Milestones = ({
                   </MilestoneHintText>
                 )}
                 <div className="divider my-4" />
-                <div className="bottom-buttons d-flex align-items-center gap-4">
+                <div className="bottom-buttons flex items-center gap-4">
                   {!moreThanOnePendingMilestone && (
                     <>
                       <StyledButton
@@ -540,7 +540,7 @@ const Milestones = ({
             )}
 
             {item.status === "completed_by_freelancer" && (
-              <div className="mlstn-completed-notice d-flex align-items-center gap-3 mt-4 rounded-lg p-md-3 p-2">
+              <div className="mlstn-completed-notice flex items-center gap-3 mt-4 rounded-lg p-md-3 p-2">
                 <span>
                   <Info />
                 </span>
@@ -554,7 +554,7 @@ const Milestones = ({
 
             {/* Deliver payment button on after accepting milestone */}
             {["paid"].includes(item.status) && (
-              <div className="bottom-buttons d-flex align-items-center gap-3 flex-wrap">
+              <div className="bottom-buttons flex items-center gap-3 flex-wrap">
                 {deliverPaymentBtn(item)}
               </div>
             )}
@@ -566,7 +566,7 @@ const Milestones = ({
             ].includes(item?.status) ? (
               <>
                 <div className="divider my-4" />
-                <div className="bottom-buttons d-flex align-items-center gap-3 flex-wrap">
+                <div className="bottom-buttons flex items-center gap-3 flex-wrap">
                   {item.status === "request_revision" ? (
                     /* Revisions requested */
                     <StyledButton

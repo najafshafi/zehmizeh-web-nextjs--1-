@@ -1,7 +1,7 @@
 "use client";
-import { StyledModal } from '@/components/styled/StyledModal';
-import { useEffect, useState } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
+import { StyledModal } from "@/components/styled/StyledModal";
+import { useEffect, useState } from "react";
+import { Button, Form, Modal } from "react-bootstrap";
 
 type Props = {
   show: boolean;
@@ -39,7 +39,7 @@ export const WarningFreelancerMessageModal = ({
         <Button variant="transparent" className="close" onClick={closeModal}>
           &times;
         </Button>
-        <div className="d-flex flex-column justify-content-center align-items-center">
+        <div className="flex flex-column justify-center items-center">
           <h4>Note: The Freelancer Has NOT Been Hired</h4>
 
           {/* <p className="mt-4 mb-2">
@@ -57,7 +57,7 @@ export const WarningFreelancerMessageModal = ({
           </p>
           <Form.Check
             type="checkbox"
-            className="d-inline-flex align-items-center g-1 user-select-none"
+            className="d-inline-flex items-center g-1 user-select-none"
             label="I understand"
             checked={firstCheckbox}
             onChange={(e) => {
@@ -73,7 +73,7 @@ export const WarningFreelancerMessageModal = ({
             violation of our Terms of Service and Halacha).
           </p> */}
           <p className="mt-4 mb-1 text-center">
-            Payments for ZMZ projects must be made on ZMZ.{' '}
+            Payments for ZMZ projects must be made on ZMZ.{" "}
           </p>
           <p>
             <span className="font-weight-bold">
@@ -83,7 +83,7 @@ export const WarningFreelancerMessageModal = ({
           </p>
           <Form.Check
             type="checkbox"
-            className="d-inline-flex align-items-center g-1 user-select-none"
+            className="d-inline-flex items-center g-1 user-select-none"
             label="I understand"
             checked={secondCheckbox}
             onChange={(e) => {

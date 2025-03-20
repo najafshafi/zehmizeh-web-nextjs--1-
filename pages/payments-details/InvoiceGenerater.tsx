@@ -157,7 +157,7 @@ function InvoiceGenerater() {
     <Wrapper>
       <BackButton className="mt-4 d-print-none" />
       <InvoiceBody id="invoice">
-        <header className="d-flex justify-content-between mt-4">
+        <header className="flex justify-between mt-4">
           <div>
             <span className="capitalize">
               {[invoice?.userData.first_name, invoice?.userData.last_name].join(
@@ -178,7 +178,7 @@ function InvoiceGenerater() {
             alt="logo"
           />
         </header>
-        <section className="d-flex justify-content-between mt-5">
+        <section className="flex justify-between mt-5">
           <div>
             <b className="fs-14">Bill to:</b> <br />
             ZehMizeh
@@ -312,7 +312,7 @@ function InvoiceGenerater() {
           </table>
         </div>
       </InvoiceBody>
-      <div className="text-center d-flex g-2 justify-content-center mt-5 d-print-none">
+      <div className="text-center flex g-2 justify-center mt-5 d-print-none">
         <StyledButton size="sm" onClick={exportPdf}>
           Download
         </StyledButton>

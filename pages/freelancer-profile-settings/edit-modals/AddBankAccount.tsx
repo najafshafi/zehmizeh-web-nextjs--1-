@@ -321,7 +321,7 @@ const AddBankAccount = ({ show, onClose, onUpdate }: Props) => {
             {/* END ------------------------------------------- Transit and institution number for canadata */}
           </div>
 
-          <div className="flex justify-content-center justify-content-md-end mt-4">
+          <div className="flex justify-center justify-content-md-end mt-4">
             <StyledButton disabled={loading} onClick={validateForm}>
               Add
             </StyledButton>

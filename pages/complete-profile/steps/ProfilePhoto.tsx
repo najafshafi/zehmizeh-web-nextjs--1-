@@ -40,8 +40,8 @@ export const ProfilePhoto = ({
   };
 
   return (
-    <FormWrapper className="d-flex flex-column">
-      <Container className="mt-3 px-0 d-flex flex-column">
+    <FormWrapper className="flex flex-column">
+      <Container className="mt-3 px-0 flex flex-column">
         <div className="fs-sm font-normal mb-3">
           <b className="fs-18">Profile Pic</b> (Optional)
           <p className="mt-2 mb-0 text-justify fs-base text-secondary">
@@ -52,7 +52,7 @@ export const ProfilePhoto = ({
         </div>
 
         <div
-          className="profile__img pointer d-flex justify-content-center align-self-center my-3"
+          className="profile__img pointer flex justify-center align-self-center my-3"
           onClick={() => setShowEditPictureModal((prev) => !prev)}
         >
           <img
@@ -60,7 +60,7 @@ export const ProfilePhoto = ({
             src={formState?.user_image || "/images/default_avatar.png"}
             alt="freelancer-profile"
           />
-          <div className="edit-picture-btn d-flex align-items-center justify-content-center">
+          <div className="edit-picture-btn flex items-center justify-center">
             <EditBlueIcon />
           </div>
         </div>
@@ -71,7 +71,7 @@ export const ProfilePhoto = ({
           profilePic={formState?.user_image || null}
         />
       </Container>
-      <div className="d-flex justify-content-center justify-content-md-end gap-3">
+      <div className="flex justify-center justify-content-md-end gap-3">
         <StyledButton
           variant="outline-dark"
           disabled={updatingProfile}

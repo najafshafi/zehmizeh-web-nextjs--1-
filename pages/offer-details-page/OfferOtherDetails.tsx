@@ -5,6 +5,7 @@ import StyledHtmlText from "@/components/ui/StyledHtmlText";
 import AttachmentPreview from "@/components/ui/AttachmentPreview";
 import { getCategories, getSkills } from "@/helpers/utils/helper";
 import { TJobDetails } from "@/helpers/types/job.type";
+import Link from "next/link";
 
 type Props = {
   data: TJobDetails;
@@ -106,14 +107,14 @@ const OfferOtherDetails = ({ data, isProposalSubmitted }: Props) => {
                             }
                             return (
                               <div key={referenceLink}>
-                                <a
+                                <Link
                                   className="text-primary"
                                   href={referenceLink}
                                   target="_blank"
                                   rel="noreferrer"
                                 >
                                   {referenceLink}
-                                </a>
+                                </Link>
                               </div>
                             );
                           })}

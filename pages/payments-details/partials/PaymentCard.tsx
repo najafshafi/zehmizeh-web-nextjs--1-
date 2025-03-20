@@ -46,7 +46,7 @@ const PaymentCard = ({ data }: Props) => {
         "refund-row": data.payment_type === "refund",
       })}
     >
-      <Card.Body className="d-flex flex-column gap-3">
+      <Card.Body className="flex flex-column gap-3">
         <div>
           <div className="card-label fs-sm font-normal">PROJECT NAME</div>
           <div className="fs-20 font-normal">
@@ -57,7 +57,7 @@ const PaymentCard = ({ data }: Props) => {
           <div className="card-label fs-sm font-normal">SUMMARY</div>
           <div className="fs-20 font-normal">{data.milestone?.title}</div>
         </div>
-        <div className="d-flex align-items-center flex-wrap gap-2">
+        <div className="flex items-center flex-wrap gap-2">
           <div className="flex-1">
             <div className="card-label fs-sm font-normal">RECEIVED ON</div>
             <div className="fs-20 font-normal">

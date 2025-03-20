@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import styled from "styled-components";
 import { IDENTITY_DOCS } from "@/helpers/const/constants";
+import Link from "next/link";
 
 const A = styled.a`
   color: ${(props) => props.theme.colors.lightBlue};
@@ -117,7 +118,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: any) => {
           For more details, please click{" "}
           <span>
             {country?.country_short_name && (
-              <a
+              <Link
                 href={`https://docs.stripe.com/acceptable-verification-documents?country=${country.country_short_name}`}
                 className="text-primary"
                 target="_blank"
@@ -125,7 +126,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: any) => {
               >
                 {" "}
                 (here) .
-              </a>
+              </Link>
             )}
           </span>
         </div>

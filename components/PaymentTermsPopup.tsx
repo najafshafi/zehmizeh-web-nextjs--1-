@@ -31,7 +31,7 @@ const PaymentTermsPopup = ({
             </p>
           </div>
 
-          <div className="flex gap-3 justify-content-center items-center">
+          <div className="flex gap-3 justify-center items-center">
             <StyledButton
               variant="outline-dark"
               onClick={onClose}
