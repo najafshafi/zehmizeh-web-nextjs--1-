@@ -619,13 +619,13 @@ const ProposalDetailsModal = ({
                 </Link>
               )}
 
-              <div className="content d-flex flex-column">
+              <div className="content flex flex-col">
                 {/* Freelancer details */}
 
-                <div className="freelancer-details d-flex flex-wrap">
-                  <div className="freelancer-details__content d-flex flex-column">
+                <div className="freelancer-details flex flex-wrap">
+                  <div className="freelancer-details__content flex flex-col">
                     {/* START ----------------------------------------- Freelancer name */}
-                    <div className="d-flex align-items-center gap-2">
+                    <div className="flex items-center gap-2">
                       {/* START ----------------------------------------- Freelancer image */}
                       <BlurredImage
                         src={
@@ -640,7 +640,7 @@ const ProposalDetailsModal = ({
                         <Link
                           className={classNames(
                             { "navigation-link": replyOnProjectPageBtn },
-                            "me-2"
+                            "mr-2"
                           )}
                           to={`/freelancer/${proposalDetails?.user_id}`}
                         >
@@ -670,13 +670,13 @@ const ProposalDetailsModal = ({
                     </div>
                     {/* END ------------------------------------------- Freelancer name */}
                     {/* START ----------------------------------------- Designation */}
-                    <div className="fs-18 font-normal light-text capital-first-ltr">
+                    <div className="text-lg font-normal light-text capital-first-ltr">
                       {proposalDetails?.job_title}
                     </div>
                     {proposalDetails?.invite_message && (
-                      <div className="fs-18 fw-700">
+                      <div className="text-lg font-bold">
                         <span>Invite Message</span>
-                        <div className="fs-18 font-normal light-text capital-first-ltr">
+                        <div className="text-lg font-normal light-text capital-first-ltr">
                           <div
                             dangerouslySetInnerHTML={{
                               __html: proposalDetails?.invite_message,
@@ -692,9 +692,9 @@ const ProposalDetailsModal = ({
                     {type === "proposal" &&
                       (proposalDetails?.location?.state ||
                         proposalDetails?.location?.country_name) && (
-                        <div className="d-flex align-items-center gap-2">
+                        <div className="flex items-center gap-2">
                           <LocationIcon />
-                          <div className="fs-18 font-normal light-text">
+                          <div className="text-lg font-normal light-text">
                             {separateValuesWithComma([
                               proposalDetails?.location?.state,
                               proposalDetails?.location?.country_name,
@@ -707,11 +707,11 @@ const ProposalDetailsModal = ({
                 </div>
 
                 {/* START ----------------------------------------- Description */}
-                <div className="proposal-details-item d-flex flex-column">
-                  <div className="fs-18 fw-700">
+                <div className="proposal-details-item flex flex-col">
+                  <div className="text-lg font-bold">
                     {type === "proposal" && <span>Proposal</span>}
                     {proposalDetails?.date_created && type === "proposal" && (
-                      <div className="fs-1rem fw-300">
+                      <div className="text-base font-light">
                         Submitted:{" "}
                         {moment(proposalDetails.date_created).format(
                           "MMM DD, YYYY"
@@ -720,7 +720,7 @@ const ProposalDetailsModal = ({
                     )}
                     {type === "invite" && <span>Invite</span>}
                     {proposalDetails?.date_created && type === "invite" && (
-                      <div className="fs-1rem fw-300">
+                      <div className="text-base font-light">
                         Sent:{" "}
                         {moment(proposalDetails.date_created).format(
                           "MMM DD, YYYY"
@@ -728,7 +728,7 @@ const ProposalDetailsModal = ({
                       </div>
                     )}
                   </div>
-                  <div className="description-text fs-18 font-normal">
+                  <div className="description-text text-lg font-normal">
                     <StyledHtmlText
                       htmlString={proposalDetails?.description}
                       id={`proposal_${selectedProposalId}`}
@@ -737,13 +737,13 @@ const ProposalDetailsModal = ({
                 </div>
                 {/* END ------------------------------------------- Description */}
 
-                <div className="proposal-details-item d-flex flex-column">
-                  <div className="d-flex gap-2 items-center">
+                <div className="proposal-details-item flex flex-col">
+                  <div className="flex gap-2 items-center">
                     {/* START ----------------------------------------- Price */}
                     {type === "proposal" && (
-                      <div className="row-item d-flex align-items-center">
-                        <div className="fs-1rem fw-700">Price:</div>
-                        <div className="fs-1rem fw-300">
+                      <div className="row-item flex items-center">
+                        <div className="text-base font-bold">Price:</div>
+                        <div className="text-base font-light">
                           {numberWithCommas(
                             proposalDetails?.proposed_budget?.amount,
                             "USD"
@@ -790,9 +790,11 @@ const ProposalDetailsModal = ({
 
                   {/* START ----------------------------------------- Time estimation */}
                   {proposalDetails?.proposed_budget?.time_estimation && (
-                    <div className="row-item d-flex align-items-center">
-                      <div className="fs-1rem fw-700">Time Estimation: </div>
-                      <div className="fs-1rem fw-300">
+                    <div className="row-item flex items-center">
+                      <div className="text-base font-bold">
+                        Time Estimation:{" "}
+                      </div>
+                      <div className="text-base font-light">
                         {getTimeEstimation(
                           proposalDetails?.proposed_budget?.time_estimation,
                           proposalDetails?.proposed_budget?.type == "hourly"
@@ -806,11 +808,11 @@ const ProposalDetailsModal = ({
 
                   {/* START ----------------------------------------- Terms and conditions */}
                   {proposalDetails?.terms_and_conditions && (
-                    <div className="d-flex flex-column">
-                      <div className="fs-1rem fw-700">
+                    <div className="flex flex-col">
+                      <div className="text-base font-bold">
                         Special Terms & Conditions:
                       </div>
-                      <div className="description-text fs-18 fw-300">
+                      <div className="description-text text-lg font-light">
                         <StyledHtmlText
                           id="termsAndConditions"
                           htmlString={proposalDetails.terms_and_conditions}
@@ -823,9 +825,9 @@ const ProposalDetailsModal = ({
 
                   {/* START ----------------------------------------- Questions */}
                   {proposalDetails?.questions && (
-                    <div className="d-flex flex-column">
-                      <div className="fs-1rem fw-700">Questions:</div>
-                      <div className="description-text fs-18 fw-300">
+                    <div className="flex flex-col">
+                      <div className="text-base font-bold">Questions:</div>
+                      <div className="description-text text-lg font-light">
                         <StyledHtmlText
                           id="questions"
                           htmlString={proposalDetails.questions}
@@ -840,8 +842,8 @@ const ProposalDetailsModal = ({
                   {proposalDetails?.attachments &&
                     proposalDetails?.attachments?.length > 0 && (
                       <div className="row-item">
-                        <div className="fs-1rem fw-700">Attachments:</div>
-                        <div className="d-flex flex-wrap mt-2">
+                        <div className="text-base font-bold">Attachments:</div>
+                        <div className="flex flex-wrap mt-2">
                           {proposalDetails.attachments.map((attachment) => (
                             <div className="m-1" key={attachment}>
                               <AttachmentPreview
@@ -864,7 +866,7 @@ const ProposalDetailsModal = ({
                 proposalDetails?._job_post_id && (
                   <>
                     <div className="divider" />
-                    <div className="bottom-buttons d-flex flex-wrap gap-3">
+                    <div className="bottom-buttons flex flex-wrap gap-3">
                       {buttonsUI.messageFreelancerOrGotoChat}
                       {buttonsUI.declineProposal}
                       {buttonsUI.acceptProposal}
@@ -875,7 +877,7 @@ const ProposalDetailsModal = ({
               {proposalStatus.pending && (
                 <>
                   <div className="divider" />
-                  <div className="bottom-buttons d-flex flex-wrap gap-3">
+                  <div className="bottom-buttons flex flex-wrap gap-3">
                     {buttonsUI.messageFreelancerOrGotoChat}
                     {buttonsUI.declineProposal}
                     {buttonsUI.acceptProposal}
@@ -888,10 +890,10 @@ const ProposalDetailsModal = ({
               {proposalStatus.denied && (
                 <>
                   <div className="divider" />
-                  <div className="bottom-buttons d-flex flex-wrap gap-3">
+                  <div className="bottom-buttons flex flex-wrap gap-3">
                     <StyledButton
                       padding="1rem 2rem"
-                      className={isMobile ? "w-100" : null}
+                      className={isMobile ? "w-full" : null}
                       variant="primary"
                       onClick={onAcceptDecline("pending")}
                       disabled={loading}
@@ -908,10 +910,10 @@ const ProposalDetailsModal = ({
               {inviteStatus.pending && (
                 <>
                   <div className="divider" />
-                  <div className="bottom-buttons d-flex flex-wrap gap-3">
+                  <div className="bottom-buttons flex flex-wrap gap-3">
                     <StyledButton
                       padding="1rem 2rem"
-                      className={isMobile ? "w-100" : null}
+                      className={isMobile ? "w-full" : null}
                       variant="primary"
                       disabled={loading}
                       onClick={() => {
@@ -923,7 +925,7 @@ const ProposalDetailsModal = ({
                     </StyledButton>
                     <StyledButton
                       padding="1rem 2rem"
-                      className={isMobile ? "w-100" : null}
+                      className={isMobile ? "w-full" : null}
                       variant="outline-dark"
                       onClick={() => updateStatus("canceled")}
                       disabled={loading}
@@ -938,10 +940,10 @@ const ProposalDetailsModal = ({
               {inviteStatus.canceled && (
                 <>
                   <div className="divider" />
-                  <div className="bottom-buttons d-flex flex-wrap gap-3">
+                  <div className="bottom-buttons flex flex-wrap gap-3">
                     <StyledButton
                       padding="1rem 2rem"
-                      className={isMobile ? "w-100" : null}
+                      className={isMobile ? "w-full" : null}
                       variant="primary"
                       disabled={loading}
                       onClick={() => updateStatus("pending")}
@@ -956,10 +958,10 @@ const ProposalDetailsModal = ({
               {inviteStatus.read && proposalDetails?.threadExists && (
                 <>
                   <div className="divider" />
-                  <div className="bottom-buttons d-flex flex-wrap gap-3">
+                  <div className="bottom-buttons flex flex-wrap gap-3">
                     <StyledButton
                       padding="1rem 2rem"
-                      className={isMobile ? "w-100" : null}
+                      className={isMobile ? "w-full" : null}
                       variant="primary"
                       disabled={loading}
                       onClick={() => {

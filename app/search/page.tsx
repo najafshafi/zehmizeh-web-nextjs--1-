@@ -4,7 +4,7 @@ import Search from "@/pages/search-page/Search";
 
 const page = () => {
   return (
-    <div className="pt-[90px] bg-secondary flex flex-col items-center">
+    <div className="pt-[90px]">
       <SearchFilterProvider>
         <Search />
       </SearchFilterProvider>

@@ -1,11 +1,23 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Modal, Button, Form, Spinner, Dropdown } from "react-bootstrap";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  Fragment,
+} from "react";
+import { Dialog, Transition, Listbox } from "@headlessui/react";
+import {
+  ChevronUpDownIcon,
+  CheckIcon,
+  XMarkIcon,
+} from "@heroicons/react/20/solid";
+import Spinner from "@/components/forms/Spin/Spinner";
 import toast from "react-hot-toast";
 import moment from "moment";
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import TextEditor from "@/components/forms/TextEditor";
-import { StyledModal } from "@/components/styled/StyledModal";
 import CustomUploader, {
   TCustomUploaderFile,
 } from "@/components/ui/CustomUploader";
@@ -34,6 +46,28 @@ type Props = {
   onSubmitProposal: () => void;
 };
 
+type FormState = {
+  costOrHourlyRate: string;
+  estimation: {
+    number: string;
+    duration: string;
+  };
+  proposalMessage: string;
+  attachments: { fileUrl: string; fileName?: string }[];
+  termsAndConditions: string;
+  questions: string;
+};
+
+type FormErrors = {
+  costOrHourlyRate?: string;
+  estimation?: string;
+  proposalMessage?: string;
+  termsAndConditions?: string;
+  questions?: string;
+  fileUploadError?: string;
+  [key: string]: string | undefined;
+};
+
 const FormWrapper = styled.div`
   .subtitle {
     margin-top: 2rem;
@@ -43,14 +77,6 @@ const FormWrapper = styled.div`
   }
   .form-group {
     margin-bottom: 1.875rem;
-    .dropdown {
-      display: inline;
-      margin-right: 10px;
-      .dropdown-toggle {
-        border: 1px solid #ced4da;
-        border-radius: 7px;
-      }
-    }
   }
   .form-label {
     margin-bottom: 0.75rem;
@@ -102,22 +128,21 @@ const SubmitProposalModal = ({
   }
   /* END ------------------------------------------- Modifying estimation for project-based projects to accomodate new duration dropdown change */
 
-  const initialState = {
+  const initialState: FormState = {
     costOrHourlyRate: data?.proposed_budget?.amount?.toString() || "",
     estimation: modifiedEstimation,
     proposalMessage: (isEdit && data?.description) || "",
     attachments: (isEdit && data?.attachments?.length > 0
-      ? data.attachments.map((prev) => ({ fileUrl: prev }))
-      : []) as { fileUrl: string; fileName: string }[],
-    // attachments: [],
+      ? data.attachments.map((prev: string) => ({ fileUrl: prev }))
+      : []) as { fileUrl: string; fileName?: string }[],
     termsAndConditions: data?.terms_and_conditions || "",
     questions: data?.questions || "",
   };
 
   /* START ----------------------------------------- States */
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const [step, setStep] = useState<1 | 2>(1);
-  const [formState, setFormState] = useState(initialState);
+  const [formState, setFormState] = useState<FormState>(initialState);
   const [loading, setLoading] = useState<boolean>(false);
   const [liveError, setLiveError] = useState<boolean>(false);
   /* END ------------------------------------------- States */
@@ -143,8 +168,8 @@ const SubmitProposalModal = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [show]);
 
-  const handleChange = useCallback((field, value) => {
-    setFormState((prevFormState: any) => {
+  const handleChange = useCallback((field: keyof FormState, value: any) => {
+    setFormState((prevFormState) => {
       return { ...prevFormState, [field]: value };
     });
   }, []);
@@ -165,15 +190,15 @@ const SubmitProposalModal = ({
     handleChange("attachments", attachments);
   };
 
-  const onDescriptionChange = (data: any) => {
+  const onDescriptionChange = (data: string) => {
     handleChange("proposalMessage", data);
   };
 
-  const onTermsAndConditionsChange = (data) => {
+  const onTermsAndConditionsChange = (data: string) => {
     handleChange("termsAndConditions", data);
   };
 
-  const onQuestionsChange = (data) => {
+  const onQuestionsChange = (data: string) => {
     handleChange("questions", data);
   };
 
@@ -221,14 +246,14 @@ const SubmitProposalModal = ({
       questions,
       termsAndConditions,
     } = formState;
-    let body: any = {};
+    let body: Record<string, any> = {};
     body = {
       delivery_time: moment(new Date()).format("DD-MM-YYYY"),
       description: proposalMessage,
       terms_and_conditions: termsAndConditions,
       questions,
     };
-    if (isEdit) {
+    if (isEdit && data.proposed_budget) {
       body = {
         ...body,
         proposal_id: data.proposal_id,
@@ -305,6 +330,19 @@ const SubmitProposalModal = ({
   const step1Ref = useRef(null);
   const step2Ref = useRef(null);
 
+  // Number options for dropdown
+  const numberOptions = [...Array(10).keys()]
+    .map((i) => ({
+      id: (i + 1).toString(),
+      label: (i + 1).toString(),
+    }))
+    .concat(
+      [15, 20, 30, 50, "100+"].map((num) => ({
+        id: num.toString(),
+        label: num.toString(),
+      }))
+    );
+
   const Step1UI = (
     <CSSTransition
       nodeRef={step1Ref}
@@ -323,23 +361,23 @@ const SubmitProposalModal = ({
           {!isEdit && (
             <p>
               {!seeMore && (
-                <SeeMore className="fs-14" onClick={() => setSeeMore(true)}>
+                <SeeMore className="text-sm" onClick={() => setSeeMore(true)}>
                   What&apos;s in a Proposal?
                 </SeeMore>
               )}
               {seeMore && (
-                <span className="fs-14 my-2">
+                <span className="text-sm my-3">
                   Your proposal should describe your approach to the project -
-                  how you plan to tackle it, what tools or techniques you’ll
-                  use, and how long you think it will take.
-                  <p className="my-2">
+                  how you plan to tackle it, what tools or techniques
+                  you&apos;ll use, and how long you think it will take.
+                  <p className="my-3">
                     This is also your opportunity to sell yourself as the best
                     freelancer for this project. Try to demonstrate your
                     expertise, show that you understand the client&apos;s needs,
                     and highlight any relevant experience that makes you the
                     ideal candidate.
                   </p>
-                  <p className="my-2">
+                  <p className="my-3">
                     And as always - be polite and courteous!
                   </p>
                   <b>
@@ -351,7 +389,7 @@ const SubmitProposalModal = ({
               )}
               {seeMore && (
                 <SeeMore
-                  className="fs-14"
+                  className="text-sm"
                   onClick={() => setSeeMore((prev) => !prev)}
                 >
                   {seeMore ? "See Less" : "See More"}
@@ -366,7 +404,7 @@ const SubmitProposalModal = ({
             maxChars={2000}
           />
           {errors?.proposalMessage && (
-            <p style={{ position: "relative", bottom: "40px" }}>
+            <p className="relative -bottom-10">
               <ErrorMessage message={errors.proposalMessage} />
             </p>
           )}
@@ -382,18 +420,19 @@ const SubmitProposalModal = ({
             <span className="mandatory">&nbsp;*</span>
           </div>
           <div className="flex items-center mx-4 mt-3">
-            <div className="me-4 text-end" style={{ flex: "none" }}>
+            <div className="mr-5 text-right" style={{ flex: "none" }}>
               <p className="mb-0">
                 {isHourlyJob
                   ? "Your Hourly Rate: "
                   : "Total to Complete Project: "}
               </p>
 
-              <p className="fw-500 ms-2 fs-sm mb-0">
+              <p className="font-medium ml-3 text-sm mb-0">
                 {isHourlyJob ? "(Max $999/hr)" : "(Max $99,999)"}
               </p>
             </div>
-            <Form.Control
+            <input
+              type="text"
               placeholder="Enter here"
               value={formState.costOrHourlyRate}
               onChange={(e) =>
@@ -402,7 +441,7 @@ const SubmitProposalModal = ({
                   e.target.value.replace(/\D/g, "")
                 )
               }
-              className="proposal-form-input"
+              className="proposal-form-input w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
               maxLength={isHourlyJob ? 3 : 5}
             />
           </div>
@@ -413,14 +452,14 @@ const SubmitProposalModal = ({
 
           {formState.costOrHourlyRate ? (
             <div className="mt-2 flex items-center">
-              <Tooltip className="me-2">
+              <Tooltip className="mr-2">
                 <div>
                   <div className="mt-1">
                     Final takeaway: {calculateFinalAmount}
                   </div>
                 </div>
               </Tooltip>
-              <div className="fs-1rem font-normal mt-1">
+              <div className="text-base font-normal mt-1">
                 ZehMizeh Fee: &nbsp;{zehmizehFees}%
               </div>
             </div>
@@ -433,77 +472,166 @@ const SubmitProposalModal = ({
           <div className="proposal-heading font-normal">
             Time Estimation (Optional)
           </div>
-          <div className="fs-1rem fw-300 mb-2">
+          <div className="text-sm font-light mb-2">
             How long would you estimate this project would take you?
           </div>
           <div className="flex items-center">
             {/* START ----------------------------------------- Number */}
-            <Dropdown>
-              <Dropdown.Toggle variant="" id="estimation-time">
-                {formState.estimation?.number || "-"}
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                {new Array(10).fill(null).map((_, index) => {
-                  const num = index + 1;
-                  return (
-                    <Dropdown.Item
-                      onClick={() =>
-                        handleChange("estimation", {
-                          ...formState.estimation,
-                          number: num,
-                        })
-                      }
-                      key={`time-estimate-${num}`}
-                    >
-                      {num}
-                    </Dropdown.Item>
-                  );
-                })}
-
-                {[15, 20, 30, 50, "100+"].map((num) => (
-                  <Dropdown.Item
-                    onClick={() =>
-                      handleChange("estimation", {
-                        ...formState.estimation,
-                        number: num,
-                      })
-                    }
-                    key={`time-estimate-${num}`}
+            <div className="mr-2">
+              <Listbox
+                value={formState.estimation.number}
+                onChange={(value) =>
+                  handleChange("estimation", {
+                    ...formState.estimation,
+                    number: value,
+                  })
+                }
+              >
+                <div className="relative mt-1">
+                  <Listbox.Button className="relative w-full py-2 pl-3 pr-10 text-left bg-white border border-gray-300 rounded-lg shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm">
+                    <span className="block truncate">
+                      {formState.estimation?.number || "-"}
+                    </span>
+                    <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                      <ChevronUpDownIcon
+                        className="w-5 h-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </Listbox.Button>
+                  <Transition
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
                   >
-                    {num}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
+                    <Listbox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                      {numberOptions.map((option) => (
+                        <Listbox.Option
+                          key={`time-estimate-${option.id}`}
+                          className={({ active }) =>
+                            `${
+                              active
+                                ? "text-amber-900 bg-amber-100"
+                                : "text-gray-900"
+                            }
+                            cursor-default select-none relative py-2 pl-10 pr-4`
+                          }
+                          value={option.id}
+                        >
+                          {({ selected, active }) => (
+                            <>
+                              <span
+                                className={`${
+                                  selected ? "font-medium" : "font-normal"
+                                } block truncate`}
+                              >
+                                {option.label}
+                              </span>
+                              {selected ? (
+                                <span
+                                  className={`${
+                                    active ? "text-amber-600" : "text-amber-600"
+                                  }
+                                  absolute inset-y-0 left-0 flex items-center pl-3`}
+                                >
+                                  <CheckIcon
+                                    className="w-5 h-5"
+                                    aria-hidden="true"
+                                  />
+                                </span>
+                              ) : null}
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </Listbox>
+            </div>
             {/* END ------------------------------------------- Number */}
             {/* START ----------------------------------------- Duration */}
-            <Dropdown>
-              <Dropdown.Toggle variant="" id="dropdown-time-duration">
-                {CONSTANTS.ESTIMATION_VALUES.find(
-                  (estimation) =>
-                    estimation.id === formState.estimation.duration
-                )?.label || "-"}
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                {CONSTANTS.ESTIMATION_VALUES.map(({ id, label }) => (
-                  <Dropdown.Item
-                    onClick={() =>
-                      handleChange("estimation", {
-                        ...formState.estimation,
-                        duration: id,
-                      })
-                    }
-                    key={id}
+            <div className="mr-2">
+              <Listbox
+                value={formState.estimation.duration}
+                onChange={(value) =>
+                  handleChange("estimation", {
+                    ...formState.estimation,
+                    duration: value,
+                  })
+                }
+              >
+                <div className="relative mt-1">
+                  <Listbox.Button className="relative w-full py-2 pl-3 pr-10 text-left bg-white border border-gray-300 rounded-lg shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm">
+                    <span className="block truncate">
+                      {CONSTANTS.ESTIMATION_VALUES.find(
+                        (estimation) =>
+                          estimation.id === formState.estimation.duration
+                      )?.label || "-"}
+                    </span>
+                    <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                      <ChevronUpDownIcon
+                        className="w-5 h-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </Listbox.Button>
+                  <Transition
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
                   >
-                    {label}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
+                    <Listbox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                      {CONSTANTS.ESTIMATION_VALUES.map(({ id, label }) => (
+                        <Listbox.Option
+                          key={id}
+                          className={({ active }) =>
+                            `${
+                              active
+                                ? "text-amber-900 bg-amber-100"
+                                : "text-gray-900"
+                            }
+                            cursor-default select-none relative py-2 pl-10 pr-4`
+                          }
+                          value={id}
+                        >
+                          {({ selected, active }) => (
+                            <>
+                              <span
+                                className={`${
+                                  selected ? "font-medium" : "font-normal"
+                                } block truncate`}
+                              >
+                                {label}
+                              </span>
+                              {selected ? (
+                                <span
+                                  className={`${
+                                    active ? "text-amber-600" : "text-amber-600"
+                                  }
+                                  absolute inset-y-0 left-0 flex items-center pl-3`}
+                                >
+                                  <CheckIcon
+                                    className="w-5 h-5"
+                                    aria-hidden="true"
+                                  />
+                                </span>
+                              ) : null}
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </Listbox>
+            </div>
             {/* END ------------------------------------------- Duration */}
             {Object.values(formState.estimation).some((x) => x) && (
               <span
-                className="fs-14 pointer text-warning"
+                className="text-sm cursor-pointer text-yellow-500"
                 onClick={() => {
                   handleChange("estimation", { duration: "", number: "" });
                 }}
@@ -533,7 +661,7 @@ const SubmitProposalModal = ({
           <div className="proposal-heading font-normal">
             Special Terms & Conditions (Optional)
           </div>
-          <div className="fs-1rem fw-300 mb-2">
+          <div className="text-sm font-light mb-2">
             If you have specific terms and conditions you would like to add to
             your proposal, add them here.
           </div>
@@ -544,7 +672,7 @@ const SubmitProposalModal = ({
             maxChars={2000}
           />
           {errors?.termsAndConditions && (
-            <p style={{ position: "relative", bottom: "40px" }}>
+            <p className="relative -bottom-10">
               <ErrorMessage message={errors.termsAndConditions} />
             </p>
           )}
@@ -556,7 +684,7 @@ const SubmitProposalModal = ({
           <div className="proposal-heading font-normal">
             Questions (Optional)
           </div>
-          <div className="fs-1rem fw-300 mb-2">
+          <div className="text-sm font-light mb-2">
             If you have specific questions about the project, submit them here.
             These can be discussed if the client reaches out about your
             proposal.
@@ -568,7 +696,7 @@ const SubmitProposalModal = ({
             maxChars={2000}
           />
           {errors?.questions && (
-            <p style={{ position: "relative", bottom: "40px" }}>
+            <p className="relative -bottom-10">
               <ErrorMessage message={errors.questions} />
             </p>
           )}
@@ -580,7 +708,7 @@ const SubmitProposalModal = ({
           <div className="proposal-heading font-normal">
             Attachments (Optional)
           </div>
-          <div className="fs-1rem fw-300 mb-2">
+          <div className="text-sm font-light mb-2">
             If you have work samples similar to this project that you&apos;d
             like to share, you can attach them here.
           </div>
@@ -588,7 +716,7 @@ const SubmitProposalModal = ({
             placeholder="Attach file"
             handleMultipleUploadImage={handleUploadImage}
             attachments={formState.attachments}
-            removeAttachment={removeAttachment}
+            removeAttachment={(index) => removeAttachment(index)}
             multiple
             limit={CONSTANTS.ATTACHMENTS_LIMIT}
             acceptedFormats={[
@@ -612,64 +740,99 @@ const SubmitProposalModal = ({
 
   return (
     <>
-      <StyledModal
-        maxwidth={718}
-        show={show}
-        size="lg"
-        onHide={onCloseModal}
-        centered
-      >
-        <Button variant="transparent" className="close" onClick={onCloseModal}>
-          &times;
-        </Button>
-        <Modal.Body className="overflow-hidden">
-          <FormWrapper>
-            <div className="content">
-              <div className="d-flex flex-direction-row justify-content-between">
-                <h3 className="fs-36 fw-700">{title}</h3>
-                <StatusBadge className="page-number" color="yellow">
-                  Page {step}/2
-                </StatusBadge>
-              </div>
-              {step === 1 && (
-                <div className="subtitle fs-24 font-normal">
-                  Enter the details of your proposal below.{" "}
-                </div>
-              )}
-              {Step1UI}
-              {Step2UI}
-            </div>
-            <div className="bottom-buttons d-flex">
-              {step === 2 && (
-                <StyledButton
-                  className="fs-16 font-normal me-4"
-                  variant="secondary"
-                  padding="0.8125rem 2rem"
-                  disabled={loading}
-                  onClick={() => setStep(1)}
-                >
-                  Back
-                </StyledButton>
-              )}
-              <StyledButton
-                className="fs-16 font-normal"
-                variant="primary"
-                padding="0.8125rem 2rem"
-                disabled={loading}
-                onClick={() => (step === 1 ? setStep(2) : validate())}
+      <Transition appear show={show} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={onCloseModal}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
               >
-                {step === 1 ? (
-                  <span>Next</span>
-                ) : (
-                  <span>
-                    {loading ? <Spinner animation="border" /> : "Submit"}
-                  </span>
-                )}
-              </StyledButton>
+                <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <button
+                    type="button"
+                    className="absolute top-3 right-3 text-gray-400 hover:text-gray-500"
+                    onClick={onCloseModal}
+                  >
+                    <XMarkIcon className="h-6 w-6" />
+                  </button>
+
+                  <div className="overflow-hidden">
+                    <FormWrapper>
+                      <div className="content">
+                        <div className="flex flex-row justify-between">
+                          <h3 className="text-2xl font-bold">{title}</h3>
+                          <StatusBadge className="page-number" color="yellow">
+                            Page {step}/2
+                          </StatusBadge>
+                        </div>
+                        {step === 1 && (
+                          <div className="subtitle text-2xl font-normal">
+                            Enter the details of your proposal below.{" "}
+                          </div>
+                        )}
+                        {Step1UI}
+                        {Step2UI}
+                      </div>
+                      <div className="bottom-buttons flex">
+                        {step === 2 && (
+                          <StyledButton
+                            className="text-sm font-normal mr-5"
+                            variant="secondary"
+                            padding="0.8125rem 2rem"
+                            disabled={loading}
+                            onClick={() => setStep(1)}
+                          >
+                            Back
+                          </StyledButton>
+                        )}
+                        <StyledButton
+                          className="text-sm font-normal"
+                          variant="primary"
+                          padding="0.8125rem 2rem"
+                          disabled={loading}
+                          onClick={() => (step === 1 ? setStep(2) : validate())}
+                        >
+                          {step === 1 ? (
+                            <span>Next</span>
+                          ) : (
+                            <span>
+                              {loading ? (
+                                <div className="flex items-center">
+                                  <Spinner loadingText="Submitting..." />
+                                </div>
+                              ) : (
+                                "Submit"
+                              )}
+                            </span>
+                          )}
+                        </StyledButton>
+                      </div>
+                    </FormWrapper>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
             </div>
-          </FormWrapper>
-        </Modal.Body>
-      </StyledModal>
+          </div>
+        </Dialog>
+      </Transition>
     </>
   );
 };
