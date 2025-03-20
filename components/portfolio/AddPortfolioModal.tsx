@@ -2,47 +2,38 @@ import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import * as useFormPg from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Modal, Button, Form } from "react-bootstrap";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { StyledButton } from "@/components/forms/Buttons";
 import { addEditPortfolio } from "@/helpers/http/portfolio";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import AttachmentPreview from "@/components/ui/AttachmentPreview";
 import FileUploadToAws from "./FileUploadToAws";
-import styled from "styled-components";
 import { components } from "react-select";
 import AsyncSelect from "react-select/async";
 import { MultiSelectCustomStyle } from "@/pages/freelancer-profile-settings/edit-modals/multiSelectCustomStyle";
 import { getSkills } from "@/helpers/http/common";
 import { CONSTANTS } from "@/helpers/const/constants";
 import { portfolioValidation } from "@/helpers/validation/portfolioValidation";
+import { VscClose } from "react-icons/vsc";
 
-type AttachmentProps = { fileUrl?: string; fileName?: string };
+interface AttachmentProps {
+  fileUrl?: string;
+  fileName?: string;
+}
 
-export const Wrapper = styled(Form)`
-  .styled-form {
-    margin-top: 1.25rem;
-    .form-input {
-      margin-top: 6px;
-      padding: 1rem 1.25rem;
-      border-radius: 7px;
-      border: 1px solid ${(props) => props.theme.colors.gray6};
-    }
-  }
-  .gray-labels {
-    color: ${(props) => props.theme.colors.blue};
-  }
-  .max-count {
-    color: ${(props) => props.theme.colors.gray8};
-  }
-`;
+interface Portfolio {
+  portfolio_id?: string;
+  project_name?: string;
+  project_year?: string;
+  project_description?: string;
+  project_skills?: string;
+  image_urls?: string[];
+}
 
-type Props = {
+interface Props {
   show: boolean;
   onClose: () => void;
   onUpdate: () => void;
-  portfolio?: any;
-};
+  portfolio?: Portfolio;
+}
 
 const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
   const [attachments, setAttachments] = useState<AttachmentProps[]>([]);
@@ -50,7 +41,9 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
   const jsonData = portfolio?.project_skills;
   const parsedSkills = jsonData?.startsWith("[") && JSON.parse(jsonData);
 
-  const [skills, setSkills] = useState<any[]>(parsedSkills);
+  const [skills, setSkills] = useState<Array<{ id: string; name: string }>>(
+    parsedSkills || []
+  );
 
   const formInitials = {
     project_name: portfolio?.project_name ?? "",
@@ -61,30 +54,29 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
 
   const getDefaultSkillOptions = useMemo(() => {
     if (skills?.length > 0) {
-      return skills?.map((item: any) => {
-        return { label: item.name, value: item.id };
-      });
+      return skills?.map((item) => ({
+        label: item.name,
+        value: item.id,
+      }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return [];
   }, [parsedSkills]);
 
-  const { useForm }: any = useFormPg;
+  const { useForm } = useFormPg;
   const { register, handleSubmit, formState, reset } = useForm({
     defaultValues: formInitials,
     resolver: yupResolver(portfolioValidation),
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: typeof formInitials) => {
     if (attachments?.length === 0) {
       toast.error("Please upload at least one attachment.");
       return;
     }
 
-    const attachmentUrls = attachments?.map((attachment: any) => {
-      return attachment.fileUrl;
-    });
+    const attachmentUrls = attachments?.map((attachment) => attachment.fileUrl);
 
-    const body: any = {
+    const body = {
       action: "add_portfolio",
       project_name: data.project_name?.replace(/'/g, `''`),
       project_year: data.project_year,
@@ -107,48 +99,42 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
       success: (res: { message: string }) => {
         onCloseModal();
         onUpdate();
-
         return res.message;
       },
       error: (err) => {
         if (err && err?.response && err?.response?.data)
-          return err?.response?.data?.message ?? "Unexpected Error Occured.";
+          return err?.response?.data?.message ?? "Unexpected Error Occurred.";
       },
     });
   };
 
-  /** @function This will reset the form and close the modal */
   const onCloseModal = () => {
     reset();
     setAttachments([]);
     onClose();
   };
 
-  /** @function This will append the uploaded file urls to current ones */
   const onFileUpload = (uploads: { fileUrl: string; fileName: string }[]) => {
     setAttachments([...attachments, ...uploads]);
   };
 
-  /** @function This will remove the attachment from the list */
   const removeAttachment = (index: number) => () => {
     const newAttachments = [...attachments];
     newAttachments.splice(index, 1);
     setAttachments(newAttachments);
   };
 
-  const { errors }: any = formState;
+  const { errors } = formState;
 
   const handler = () => {
     if (!portfolio) return null;
 
-    const attData = portfolio?.image_urls?.map((url: string) => {
-      return {
-        fileUrl: url,
-        fileName: url.split("/")[url.split("/").length - 1],
-      };
-    });
+    const attData = portfolio?.image_urls?.map((url: string) => ({
+      fileUrl: url,
+      fileName: url.split("/")[url.split("/").length - 1],
+    }));
 
-    setAttachments(attData);
+    setAttachments(attData || []);
   };
 
   useEffect(() => {
@@ -161,181 +147,190 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
     styles: MultiSelectCustomStyle,
   };
 
-  const skillOptions = (inputValue: string) => {
-    const skills: any = [];
-    return getSkills(inputValue || "").then((res) => {
-      res.data.forEach(function (item: any) {
-        const obj = {
-          label: item.skill_name,
-          value: item.skill_id,
-        };
-        skills.push(obj);
+  const skillOptions = async (inputValue: string) => {
+    const skills = [];
+    const res = await getSkills(inputValue || "");
+    res.data.forEach((item: { skill_name: string; skill_id: string }) => {
+      skills.push({
+        label: item.skill_name,
+        value: item.skill_id,
       });
-      return skills;
     });
+    return skills;
   };
 
-  const onSelectSkill = (selected: any) => {
-    const data = selected.map((item: any) => {
-      return {
-        id: item.value,
-        name: item.label,
-      };
-    });
+  const onSelectSkill = (selected: Array<{ value: string; label: string }>) => {
+    const data = selected.map((item) => ({
+      id: item.value,
+      name: item.label,
+    }));
     setSkills(data);
   };
 
+  if (!show) return null;
+
   return (
-    <StyledModal
-      maxwidth={678}
-      show={show}
-      size="sm"
-      onHide={onCloseModal}
-      centered
-    >
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={onCloseModal}>
-          &times;
-        </Button>
-        <Wrapper
-          className="content flex flex-column gap-4"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="modal-title fs-28 font-normal">
-            {portfolio ? "Edit" : "Add New"} Portfolio Album
-          </div>
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div
+          className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          onClick={onCloseModal}
+        />
 
-          {/* START ----------------------------------------- Album Name */}
-          <div className="mt-0 styled-form">
-            <div className="fs-sm font-normal">
-              Album Name<span className="mandatory">&nbsp;*</span>
-            </div>
-            <Form.Control
-              placeholder="Enter album name"
-              className="form-input"
-              maxLength={100}
-              {...register("project_name")}
+        <div className="inline-block transform   text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[678px] sm:align-middle">
+          <div className="relative bg-white rounded-lg py-[2rem] px-[1rem] md:py-[3.20rem] md:px-12 ">
+            <VscClose
+              className="absolute top-4 md:top-0 right-4 md:-right-8 text-2xl text-black md:text-white hover:text-gray-200 cursor-pointer"
+              onClick={onClose}
             />
-            <ErrorMessage>{errors.project_name?.message}</ErrorMessage>
-          </div>
-          {/* END ------------------------------------------- Album Name */}
 
-          {/* START ----------------------------------------- Album Year */}
-          <div className="mt-0 styled-form">
-            <div className="fs-sm font-normal">Album Year</div>
-            <Form.Control
-              placeholder="Enter album year"
-              className="form-input"
-              type="number"
-              {...register("project_year", {
-                max: 4,
-                onChange: (e) => {
-                  const value = e.target.value;
-                  e.target.value = Number(value.toString().slice(0, 4)) || "";
-                  return e;
-                },
-              })}
-            />
-            <ErrorMessage>{errors.project_year?.message}</ErrorMessage>
-          </div>
-          {/* END ------------------------------------------- Album Year */}
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <h2 className="text-[#212529] text-[1.75rem] font-normal text-left">
+                {portfolio ? "Edit" : "Add New"} Portfolio Album
+              </h2>
 
-          {/* START ----------------------------------------- Album Skills */}
-          <div className="mt-0 styled-form">
-            <div className="fs-sm font-normal">Album Skills</div>
-            <AsyncSelect
-              {...multiSelectProps}
-              placeholder={"Enter your skills"}
-              components={{ NoOptionsMessage }}
-              loadOptions={skillOptions}
-              onChange={onSelectSkill}
-              value={getDefaultSkillOptions}
-              isOptionDisabled={() => skills?.length > 14}
-              defaultOptions={true}
-            />
-          </div>
-          {/* END ------------------------------------------- Album Skills */}
-
-          {/* START ----------------------------------------- Album Description */}
-          <div className="mt-0 styled-form">
-            <div className="fs-sm font-normal">Enter Album Description</div>
-            <textarea
-              // style={{resize: 'none'}}
-              placeholder="Enter album description"
-              className="w-100 form-input form-control"
-              maxLength={500}
-              {...register("project_description")}
-            />
-            <ErrorMessage>{errors.project_description?.message}</ErrorMessage>
-          </div>
-          {/* END ------------------------------------------- Album Description */}
-
-          <div>
-            {/* START ----------------------------------------- Attachments */}
-            <div className="images-upload flex items-center justify-content-between">
-              <div>
-                <div className="fs-18 font-normal">
-                  Add album&apos;s images, videos, audio, or document files{" "}
-                  <span className="fw-300">(25 max)</span>
-                </div>
-                <div className="fs-1rem fw-300 mt-2">
-                  To add files: click the &apos;+&apos; below, or drag and drop
-                  them into this window.{" "}
-                </div>
-                <div className="fs-1rem fw-300 mt-0">
-                  Supported file types:{" "}
-                  <span className="text-lowercase">
-                    {CONSTANTS.PORTFOLIO_ATTACHMENT_SUPPORTED_TYPES.join(", ")}
-                  </span>
-                </div>
-                <div className="fs-1rem fw-300 mt-0">
-                  Max size: {CONSTANTS.FILE_SIZE[30]}MB
-                </div>
-              </div>
-              <div className="max-count fs-18 font-normal">
-                {attachments?.length}/25
-              </div>
-            </div>
-            {/* END ------------------------------------------- Attachments */}
-
-            {/* Uploads preview and option to add new one at last */}
-            <div className="uploads-attached flex flex-wrap mt-3 gap-3">
-              {attachments?.map((item: AttachmentProps, index: number) => {
-                if (!item.fileName || !item.fileUrl) {
-                  return null;
-                }
-                return (
-                  <AttachmentPreview
-                    uploadedFile={item.fileUrl}
-                    fileName={item.fileName}
-                    key={item.fileUrl}
-                    onDelete={removeAttachment(index)}
-                  />
-                );
-              })}
-
-              {/* An option to add new one - File uploader */}
-              {attachments?.length !== 25 && (
-                <FileUploadToAws
-                  onFileUpload={onFileUpload}
-                  attachments={attachments}
+              {/* Album Name */}
+              <div className="space-y-2">
+                <label className="text-sm font-normal text-gray-700">
+                  Album Name<span className="text-red-500">&nbsp;*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter album name"
+                  className="w-full rounded-lg border border-gray-300 px-5 py-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                  maxLength={100}
+                  {...register("project_name")}
                 />
-              )}
-            </div>
-          </div>
+                <ErrorMessage>{errors.project_name?.message}</ErrorMessage>
+              </div>
 
-          <div className="flex justify-content-end">
-            <StyledButton type="submit">Continue</StyledButton>
+              {/* Album Year */}
+              <div className="space-y-2">
+                <label className="text-sm font-normal text-gray-700">
+                  Album Year
+                </label>
+                <input
+                  type="number"
+                  placeholder="Enter album year"
+                  className="w-full rounded-lg border border-gray-300 px-5 py-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                  {...register("project_year", {
+                    max: 4,
+                    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                      const value = e.target.value;
+                      e.target.value =
+                        Number(value.toString().slice(0, 4)) || "";
+                      return e;
+                    },
+                  })}
+                />
+                <ErrorMessage>{errors.project_year?.message}</ErrorMessage>
+              </div>
+
+              {/* Album Skills */}
+              <div className="space-y-2">
+                <label className="text-sm font-normal text-gray-700">
+                  Album Skills
+                </label>
+                <AsyncSelect
+                  {...multiSelectProps}
+                  placeholder="Enter your skills"
+                  components={{ NoOptionsMessage }}
+                  loadOptions={skillOptions}
+                  onChange={onSelectSkill}
+                  value={getDefaultSkillOptions}
+                  isOptionDisabled={() => skills?.length > 14}
+                  defaultOptions={true}
+                />
+              </div>
+
+              {/* Album Description */}
+              <div className="space-y-2">
+                <label className="text-sm font-normal text-gray-700">
+                  Enter Album Description
+                </label>
+                <textarea
+                  placeholder="Enter album description"
+                  className="w-full rounded-lg border border-gray-300 px-5 py-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                  maxLength={500}
+                  {...register("project_description")}
+                />
+                <ErrorMessage>
+                  {errors.project_description?.message}
+                </ErrorMessage>
+              </div>
+
+              {/* Attachments Section */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <p className="text-lg font-normal">
+                      Add album&apos;s images, videos, audio, or document files{" "}
+                      <span className="font-light">(25 max)</span>
+                    </p>
+                    <p className="text-sm font-light">
+                      To add files: click the &apos;+&apos; below, or drag and
+                      drop them into this window.
+                    </p>
+                    <p className="text-sm font-light">
+                      Supported file types:{" "}
+                      <span className="lowercase">
+                        {CONSTANTS.PORTFOLIO_ATTACHMENT_SUPPORTED_TYPES.join(
+                          ", "
+                        )}
+                      </span>
+                    </p>
+                    <p className="text-sm font-light">
+                      Max size: {CONSTANTS.FILE_SIZE[30]}MB
+                    </p>
+                  </div>
+                  <div className="text-lg font-normal text-gray-800">
+                    {attachments?.length}/25
+                  </div>
+                </div>
+
+                {/* Uploads preview */}
+                <div className="flex flex-wrap gap-3">
+                  {attachments?.map((item, index) => {
+                    if (!item.fileName || !item.fileUrl) return null;
+                    return (
+                      <AttachmentPreview
+                        key={item.fileUrl}
+                        uploadedFile={item.fileUrl}
+                        fileName={item.fileName}
+                        onDelete={removeAttachment(index)}
+                      />
+                    );
+                  })}
+
+                  {/* Add new file option */}
+                  {attachments?.length !== 25 && (
+                    <FileUploadToAws
+                      onFileUpload={onFileUpload}
+                      attachments={attachments}
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-end">
+                <button
+                  type="submit"
+                  className="rounded-full bg-[#F7B500] px-8 py-4 text-lg font-medium text-[#1d1e1b] hover:bg-[#E5A800] focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
+                >
+                  Continue
+                </button>
+              </div>
+            </form>
           </div>
-        </Wrapper>
-      </Modal.Body>
-    </StyledModal>
+        </div>
+      </div>
+    </div>
   );
 };
 
 export default AddPortfolioModal;
 
-const NoOptionsMessage = (props: any) => {
+const NoOptionsMessage = (props: { selectProps: { inputValue: string } }) => {
   return (
     <components.NoOptionsMessage {...props}>
       <div>
