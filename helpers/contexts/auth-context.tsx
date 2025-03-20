@@ -1,3 +1,4 @@
+"use client";
 import React, { useCallback, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';

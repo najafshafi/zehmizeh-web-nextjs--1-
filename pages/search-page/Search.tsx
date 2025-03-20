@@ -1,16 +1,26 @@
+"use client";
+
 /*
  * This is the main component of this route
  */
-import { MainContainer } from './Search.styled';
-import SearchBox from '@/components/search/SearchBox';
-import Banner from './banner';
-import FiltersAndListings from './filters-and-listings';
-import { useSearchFilters } from '@/helpers/contexts/search-filter-context';
-import { ModalAfterPostingProject } from './modals/ModalAfterPostingProject';
+import { MainContainer } from "./Search.styled";
+import SearchBox from "@/components/search-comp/SearchBox";
+import Banner from "./banner";
+import FiltersAndListings from "./filters-and-listings";
+import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
+import { ModalAfterPostingProject } from "./modals/ModalAfterPostingProject";
 const isFreelancerLaunch = false;
 
 export default function Search() {
-  const { searchType, data, loading, page, setPage, searchTerm, setSearchTerm } = useSearchFilters();
+  const {
+    searchType,
+    data,
+    loading,
+    page,
+    setPage,
+    searchTerm,
+    setSearchTerm,
+  } = useSearchFilters();
 
   const onSearch = (keyword: string) => {
     // This will just set the search keyword in state
@@ -25,9 +35,10 @@ export default function Search() {
         <SearchBox onSubmit={onSearch} searchType={searchType} />
         {isFreelancerLaunch && (
           <div className="info mt-5 text-center fs-20 fw-400">
-            ZehMizeh is not currently open for clients to join, which means there’s no one to post any projects for now.
-            Clients will officially be invited to the site on <b>December 2022</b>, so mark your calendar and keep your
-            eye on this board!
+            ZehMizeh is not currently open for clients to join, which means
+            there&apos;s no one to post any projects for now. Clients will
+            officially be invited to the site on <b>December 2022</b>, so mark
+            your calendar and keep your eye on this board!
           </div>
         )}
       </Banner>

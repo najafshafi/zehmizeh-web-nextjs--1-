@@ -1,18 +1,19 @@
 /*
  * This will display filters and list of Jobs / Talents
  */
-import { useMemo, useState } from 'react';
-import styled from 'styled-components';
-import Loader from '@/components/Loader';
-import NoDataFound from '@/components/ui/NoDataFound';
-  import PaginationComponent from '@/components/ui/Pagination';
-import JobCard from './job-card';
-import TalentCard from './talent-card';
-import SelectedFilters from './selected-filters';
-import Filters from './filters/Filters';
-import MobileFilterModal from './filters/MobileFilterModal';
-import useResponsive from '@/helpers/hooks/useResponsive';
-import { useSearchFilters } from '@/helpers/contexts/search-filter-context';
+"use client";
+import { useMemo, useState } from "react";
+import styled from "styled-components";
+import Loader from "@/components/Loader";
+import NoDataFound from "@/components/ui/NoDataFound";
+import PaginationComponent from "@/components/ui/Pagination";
+import JobCard from "./job-card";
+import TalentCard from "./talent-card";
+import SelectedFilters from "./selected-filters";
+import Filters from "./filters/Filters";
+import MobileFilterModal from "./filters/MobileFilterModal";
+import useResponsive from "@/helpers/hooks/useResponsive";
+import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
 
 const Wrapper = styled.div`
   background: ${(props) => props.theme.colors.white};
@@ -69,7 +70,10 @@ export default function FiltersAndListings({
   const RECORDS_PER_PAGE = 10; // Per page 10 records will be displayed
 
   // Calculating total pages based on the number of records and records per page
-  const totalPages = useMemo<number>(() => Math.ceil(totalResult / RECORDS_PER_PAGE), [totalResult]);
+  const totalPages = useMemo<number>(
+    () => Math.ceil(totalResult / RECORDS_PER_PAGE),
+    [totalResult]
+  );
 
   return (
     <Wrapper className="content d-flex justify-content-center">
@@ -90,7 +94,7 @@ export default function FiltersAndListings({
 
       {/* Lisings */}
       <div className="search-result-container w-100">
-        {!loading && searchTerm !== '' && (
+        {!loading && searchTerm !== "" && (
           <div className="search-result-text fs-24 fw-400 mb-4">
             {searchTerm ? (
               <>
@@ -114,10 +118,14 @@ export default function FiltersAndListings({
           <>
             <div className="search-work__list">
               {data?.map((item: any, index: number) =>
-                searchType == 'freelancers' ? (
+                searchType == "freelancers" ? (
                   <TalentCard key={item.user_id} data={item} />
                 ) : (
-                  <JobCard index={index} key={item.job_post_id} workDetails={item} />
+                  <JobCard
+                    index={index}
+                    key={item.job_post_id}
+                    workDetails={item}
+                  />
                 )
               )}
             </div>
@@ -125,17 +133,31 @@ export default function FiltersAndListings({
             {/* Pagination */}
             {totalPages > 0 && (
               <div className="d-flex align-items-center justify-content-center">
-                <PaginationComponent total={totalPages} onPageChange={onPageChanged} currentPage={currentPage} />
+                <PaginationComponent
+                  total={totalPages}
+                  onPageChange={onPageChanged}
+                  currentPage={currentPage}
+                />
               </div>
             )}
           </>
         ) : (
-          <NoDataFound title={searchType == 'freelancers' ? 'No matching freelancers found!' : ''} />
+          <NoDataFound
+            title={
+              searchType == "freelancers"
+                ? "No matching freelancers found!"
+                : ""
+            }
+          />
         )}
       </div>
 
       {/* Mobile filter */}
-      <MobileFilterModal isSkillAndCategoryModalOpen={!!modalOpen} show={showFilterModal} onClose={toggleFilterModal} />
+      <MobileFilterModal
+        isSkillAndCategoryModalOpen={!!modalOpen}
+        show={showFilterModal}
+        onClose={toggleFilterModal}
+      />
     </Wrapper>
   );
 }

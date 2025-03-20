@@ -1,12 +1,13 @@
-import { useEffect } from 'react';
-import styled from 'styled-components';
-import { Form, Spinner } from 'react-bootstrap';
-import SearchTypeDropdown from './SearchTypeDropdown';
-import { useAuth } from 'helpers/contexts/auth-context';
-import { ReactComponent as SearchIcon } from 'assets/icons/search.svg';
-import { ReactComponent as CrossIcon } from 'assets/icons/cross-black.svg';
-import { useSearchFilters } from 'helpers/contexts/search-filter-context';
-import SearchTypeDropdownForClient from './searchTypeDropdownForClient';
+"use client";
+import { useEffect } from "react";
+import styled from "styled-components";
+import { Form, Spinner } from "react-bootstrap";
+import SearchTypeDropdown from "./SearchTypeDropdown";
+import { useAuth } from "@/helpers/contexts/auth-context";
+import SearchIcon from "@/public/icons/search.svg";
+import CrossIcon from "@/public/icons/cross-black.svg";
+import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
+import SearchTypeDropdownForClient from "./searchTypeDropdownForClient";
 
 const Wrapper = styled.div`
   max-width: 822px;
@@ -49,7 +50,7 @@ const SearchBox = ({
 }: {
   fetching?: boolean;
   onSubmit?: any;
-  searchType: 'freelancers' | 'jobs';
+  searchType: "freelancers" | "jobs";
 }) => {
   const { user } = useAuth();
 
@@ -73,14 +74,14 @@ const SearchBox = ({
      * when the search is cleared, it should automatically call api to search without keyword without clicking on the find button
      * So I added this, is this good?
      */
-    if (e.target.value == '') {
+    if (e.target.value == "") {
       onSubmit(e.target.value);
     }
   };
 
   useEffect(() => {
     if (!searchTerm) {
-      setSearchTerm('');
+      setSearchTerm("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
@@ -93,7 +94,7 @@ const SearchBox = ({
             <SearchIcon />
             <Form.Control
               placeholder={
-                searchType === 'freelancers' ? 'Search' : 'Search for Projects'
+                searchType === "freelancers" ? "Search" : "Search for Projects"
               }
               value={searchTerm}
               onChange={onChange}
@@ -104,10 +105,10 @@ const SearchBox = ({
             {searchTerm && (
               <CrossIcon
                 onClick={() => {
-                  setSearchTerm('');
-                  setSearchTypeForNameOrProfile('');
-                  onSubmit('');
-                  setSearchTypeForNameOrProfile('');
+                  setSearchTerm("");
+                  setSearchTypeForNameOrProfile("");
+                  onSubmit("");
+                  setSearchTypeForNameOrProfile("");
                 }}
                 className="me-4 cursor-pointer"
               />
@@ -116,14 +117,14 @@ const SearchBox = ({
 
           {!user && <SearchTypeDropdown />}
 
-          {searchType === 'freelancers' && <SearchTypeDropdownForClient />}
+          {searchType === "freelancers" && <SearchTypeDropdownForClient />}
 
           {/* Find button for desktop */}
           <div
             onClick={handleSubmit(searchTerm, searchTypeForNameOrProfile)}
             className="button pointer justify-content-center align-items-center fw-400 fs-1rem d-none d-lg-flex"
           >
-            {searchType === 'freelancers' ? 'Find Freelancer' : 'Find Projects'}
+            {searchType === "freelancers" ? "Find Freelancer" : "Find Projects"}
           </div>
         </div>
         {/* Find button mobile view */}
@@ -131,7 +132,7 @@ const SearchBox = ({
           onClick={handleSubmit(searchTerm, searchTypeForNameOrProfile)}
           className="mt-3 button mobile pointer justify-content-center align-items-center fw-400 fs-1rem d-lg-none d-flex"
         >
-          {searchType === 'freelancers' ? 'Find Freelancer' : 'Find Projects'}
+          {searchType === "freelancers" ? "Find Freelancer" : "Find Projects"}
         </div>
       </Form>
     </Wrapper>

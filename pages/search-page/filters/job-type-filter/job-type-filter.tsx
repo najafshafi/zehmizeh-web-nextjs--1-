@@ -1,7 +1,7 @@
-import Checkbox from '@/components/forms/Checkbox';
-import HourlyRateFilter from './hourly-rate-filter';
-import FixedBudgetFilter from './fixed-budget-filter';
-import { useSearchFilters } from '@/helpers/contexts/search-filter-context';
+import Checkbox from "@/components/forms/CheckBox2";
+import HourlyRateFilter from "./hourly-rate-filter";
+import FixedBudgetFilter from "./fixed-budget-filter";
+import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
 
 const JobTypeFilter = () => {
   const { filters, updateFilterHandler } = useSearchFilters();
@@ -13,14 +13,14 @@ const JobTypeFilter = () => {
     } else {
       selectedJobType.push(item);
     }
-    updateFilterHandler('job_type', selectedJobType);
+    updateFilterHandler("job_type", selectedJobType);
 
-    if (!selectedJobType.includes('hourly') && filters.hourly_rate.length > 0) {
-      updateFilterHandler('hourly_rate', []);
+    if (!selectedJobType.includes("hourly") && filters.hourly_rate.length > 0) {
+      updateFilterHandler("hourly_rate", []);
     }
 
-    if (!selectedJobType.includes('fixed') && filters.fixed_budget.length > 0) {
-      updateFilterHandler('fixed_budget', []);
+    if (!selectedJobType.includes("fixed") && filters.fixed_budget.length > 0) {
+      updateFilterHandler("fixed_budget", []);
     }
   };
 
@@ -28,21 +28,21 @@ const JobTypeFilter = () => {
     <div>
       <div className="filter__checkbox__row d-flex align-items-center">
         <Checkbox
-          checked={filters?.job_type?.includes('hourly')}
-          toggle={() => onSelectItem('hourly')}
-        />{' '}
+          checked={filters?.job_type?.includes("hourly")}
+          toggle={() => onSelectItem("hourly")}
+        />{" "}
         <div className="checkbox-label fs-1rem fw-400">Hourly</div>
       </div>
-      {filters?.job_type?.includes('hourly') && <HourlyRateFilter />}
+      {filters?.job_type?.includes("hourly") && <HourlyRateFilter />}
 
       <div className="filter__checkbox__row d-flex align-items-center">
         <Checkbox
-          checked={filters?.job_type?.includes('fixed')}
-          toggle={() => onSelectItem('fixed')}
-        />{' '}
+          checked={filters?.job_type?.includes("fixed")}
+          toggle={() => onSelectItem("fixed")}
+        />{" "}
         <div className="checkbox-label fs-1rem fw-400">Project-Based</div>
       </div>
-      {filters?.job_type?.includes('fixed') && <FixedBudgetFilter />}
+      {filters?.job_type?.includes("fixed") && <FixedBudgetFilter />}
     </div>
   );
 };

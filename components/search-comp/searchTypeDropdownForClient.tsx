@@ -1,18 +1,19 @@
-import styled from 'styled-components';
-import { Dropdown } from 'react-bootstrap';
-import { ReactComponent as DownArrowIcon } from 'assets/icons/chevronDown.svg';
-import { useEffect } from 'react';
-import { useSearchFilters } from 'helpers/contexts/search-filter-context';
+"use client";
+import styled from "styled-components";
+import { Dropdown } from "react-bootstrap";
+import DownArrowIcon from "@/public/icons/chevronDown.svg";
+import { useEffect } from "react";
+import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
 
 const searchTypes = [
   {
-    label: 'Search Profiles',
-    key: 'profile',
+    label: "Search Profiles",
+    key: "profile",
   },
   {
-    label: 'Search Names',
-    key: 'name',
-  }
+    label: "Search Names",
+    key: "name",
+  },
 ];
 
 const TypeDropdown = styled(Dropdown)`
@@ -50,7 +51,7 @@ const SearchTypeDropdownForClient = () => {
 
   useEffect(() => {
     if (!searchTypeForNameOrProfile) {
-      setSearchTypeForNameOrProfile('');
+      setSearchTypeForNameOrProfile("");
     }
   }, [searchTypeForNameOrProfile]);
 
@@ -59,9 +60,9 @@ const SearchTypeDropdownForClient = () => {
       <Dropdown.Toggle as={TypeDropdownToggle}>
         <div className="d-flex align-items-center">
           <div className="fs-18 mx-2">
-            {searchTypeForNameOrProfile == 'name'
-              ? 'Search Names'
-              : 'Search Profiles'}
+            {searchTypeForNameOrProfile == "name"
+              ? "Search Names"
+              : "Search Profiles"}
           </div>
           <DownArrowIcon className="dropdown-arrow" />
         </div>
@@ -70,7 +71,7 @@ const SearchTypeDropdownForClient = () => {
         {searchTypes.map((item: any) => (
           <Dropdown.Item
             key={item.key}
-            className={`fs-20 ${item == 'name' ? 'fw-700' : 'fw-400'}`}
+            className={`fs-20 ${item == "name" ? "fw-700" : "fw-400"}`}
             onClick={() => setSearchTypeForNameOrProfile(item.key)}
           >
             <div>{item.label}</div>

@@ -2,13 +2,13 @@
  * This is the Location filter
  */
 
-import React, { useEffect } from 'react';
-import styled from 'styled-components';
-import SearhableDropdown from '@/components/forms/SearhableDropdown';
-import Checkbox from '@/components/forms/Checkbox';
-import useDebounce from '@/helpers/hooks/useDebounce';
-import { getCountries } from '@/helpers/http/common';
-import { useSearchFilters } from '@/helpers/contexts/search-filter-context';
+import React, { useEffect } from "react";
+import styled from "styled-components";
+import SearhableDropdown from "@/components/forms/SearchableDropdown2";
+import Checkbox from "@/components/forms/CheckBox2";
+import useDebounce from "@/helpers/hooks/useDebounce";
+import { getCountries } from "@/helpers/http/common";
+import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
 
 const LocationFilterWrapper = styled.div`
   margin-top: 1.125rem;
@@ -16,7 +16,7 @@ const LocationFilterWrapper = styled.div`
 
 const LocationFilter = () => {
   const { filters, updateFilterHandler, isFilterApplied } = useSearchFilters();
-  const [searchQuery, setSearchQuery] = React.useState<any>('');
+  const [searchQuery, setSearchQuery] = React.useState<any>("");
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const [searchResults, setSearchResults] = React.useState<any>([]);
   const [fetching, setFetching] = React.useState<boolean>(false);
@@ -25,8 +25,8 @@ const LocationFilter = () => {
     // This will fetch the countries when input is typed, with that keyword
     const countries: { label: string; value: string }[] = [];
     setFetching(true);
-    if (debouncedSearchQuery !== '') {
-      getCountries(debouncedSearchQuery || '').then((res) => {
+    if (debouncedSearchQuery !== "") {
+      getCountries(debouncedSearchQuery || "").then((res) => {
         res.data.forEach(function (item: any) {
           const obj = {
             label: item.country_name,
@@ -47,12 +47,12 @@ const LocationFilter = () => {
     } else {
       selectedLocations.push(item);
     }
-    updateFilterHandler('location', selectedLocations);
+    updateFilterHandler("location", selectedLocations);
   };
 
   useEffect(() => {
     if (!isFilterApplied) {
-      setSearchQuery('');
+      setSearchQuery("");
     }
   }, [isFilterApplied]);
 
@@ -72,7 +72,7 @@ const LocationFilter = () => {
             className="filter__checkbox__row d-flex align-items-center"
             key={`location-${item}`}
           >
-            <Checkbox checked={true} toggle={() => onSelectItem(item)} />{' '}
+            <Checkbox checked={true} toggle={() => onSelectItem(item)} />{" "}
             <div className="checkbox-label fs-1rem fw-400">{item}</div>
           </div>
         ))}

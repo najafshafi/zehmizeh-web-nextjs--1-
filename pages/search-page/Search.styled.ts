@@ -1,4 +1,6 @@
-import styled from 'styled-components';
+"use client";
+
+import styled from "styled-components";
 
 export const MainContainer = styled.div`
   min-height: 80vh;
@@ -69,7 +71,7 @@ export const SliderWrapper = styled.div`
     position: absolute;
     top: 35%;
     bottom: 0;
-    content: '$';
+    content: "$";
     left: 1rem;
   }
 `;

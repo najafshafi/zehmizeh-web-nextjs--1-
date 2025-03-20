@@ -1,6 +1,7 @@
+"use client";
 import styled from 'styled-components';
 import { Dropdown } from 'react-bootstrap';
-import { ReactComponent as DownArrowIcon } from 'assets/icons/chevronDown.svg';
+import DownArrowIcon from '@/public/icons/chevronDown.svg';
 
 const searchTypes = [
   {
