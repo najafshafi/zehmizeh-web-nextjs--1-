@@ -202,7 +202,6 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
                   {...register("project_name")}
                 />
                 <ErrorMessage>{errors.project_name?.message}</ErrorMessage>
-
               </div>
 
               {/* Album Year */}

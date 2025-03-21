@@ -1,14 +1,15 @@
+"use client";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import { transition } from "styles/transitions";
-import DeletePrompt from "components/ui/DeletePropmpt";
-import { deletePortfolio } from "helpers/http/portfolio";
-import { capitalizeFirstLetter } from "helpers/utils/misc";
-import { ReactComponent as GalleryIcon } from "../../public/icons/gallery.svg";
-import { ReactComponent as DeleteIcon } from "../../public/icons/trash.svg";
-import { coverImgHandler } from "helpers/utils/coverImgHandler";
+import { useRouter } from "next/navigation";
+import { transition } from "@/styles/transitions";
+import DeletePrompt from "@/components/ui/DeletePropmpt";
+import { deletePortfolio } from "@/helpers/http/portfolio";
+import { capitalizeFirstLetter } from "@/helpers/utils/misc";
+import GalleryIcon from "@/public/icons/gallery.svg";
+import DeleteIcon from "@/public/icons/trash.svg";
+import { coverImgHandler } from "@/helpers/utils/coverImgHandler";
 
 type Props = {
   data: {
@@ -21,7 +22,7 @@ type Props = {
   allowEdit: boolean;
 };
 
-const StyledPortfolioListItem = styled.div<{ coverImage: string }>`
+const StyledPortfolioListItem = styled.div<{ $coverImage: string }>`
   border-radius: 0.5rem;
   .cover-img {
     border-radius: 0.5rem;
@@ -31,7 +32,7 @@ const StyledPortfolioListItem = styled.div<{ coverImage: string }>`
         rgba(0, 0, 0, 0) 50%,
         rgba(0, 0, 0, 0.85) 100%
       ),
-      url(${props.coverImage})`};
+      url(${props.$coverImage})`};
     width: 100%;
     position: relative;
     aspect-ratio: 1;
@@ -66,7 +67,7 @@ const StyledPortfolioListItem = styled.div<{ coverImage: string }>`
 `;
 
 const PortfolioListItem = ({ data, onUpdate, allowEdit }: Props) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [showDeletePrompt, setShowDeletePrompt] = useState<boolean>(false);
 
@@ -97,7 +98,7 @@ const PortfolioListItem = ({ data, onUpdate, allowEdit }: Props) => {
 
   /** @function - This function will navigate to the project details page */
   const goToDetailsPage = () => {
-    navigate(`/freelancer/portfolio/${data.portfolio_id}`);
+    router.push(`/freelancer/portfolio/${data.portfolio_id}`);
   };
 
   /** @function - This will stop propagation of parent click and will open the delete prompt */
@@ -114,7 +115,7 @@ const PortfolioListItem = ({ data, onUpdate, allowEdit }: Props) => {
   return (
     <>
       <StyledPortfolioListItem
-        coverImage={coverImgHandler(data.image_urls[0])}
+        $coverImage={coverImgHandler(data.image_urls[0])}
         className="pointer"
         onClick={goToDetailsPage}
       >

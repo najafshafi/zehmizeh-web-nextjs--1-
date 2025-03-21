@@ -1,5 +1,5 @@
-import { ReactComponent as NoPortfolio } from "../../public/icons/no-portfolio.svg";
-import { StyledButton } from "components/forms/Buttons";
+import NoPortfolio from "@/public/icons/no-portfolio.svg";
+import { StyledButton } from "@/components/forms/Buttons";
 
 const NoPortfolioView = ({
   onAddProject,
