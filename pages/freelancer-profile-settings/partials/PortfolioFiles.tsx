@@ -1,10 +1,20 @@
 "use client"; // Ensure this is a client component
-import { useState } from 'react';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { GridContainer, ImagePreviewWrapper, PortfolioBox } from './portfolioStyles';
-import { Button } from 'react-bootstrap';
-import { coverImgHandler, isAudio, isPDF, isVideo } from '@/helpers/utils/coverImgHandler';
-import Image from 'next/image';
+import { useState } from "react";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "@hello-pangea/dnd";
+import { Button } from "react-bootstrap";
+import {
+  coverImgHandler,
+  isAudio,
+  isPDF,
+  isVideo,
+} from "@/helpers/utils/coverImgHandler";
+import Image from "next/image";
+import { VscClose } from "react-icons/vsc";
 
 // const getItems = (count: any) =>
 //   Array.from({ length: count }, (v, k) => k).map((k) => ({
@@ -13,36 +23,39 @@ import Image from 'next/image';
 //   }));
 
 interface Props {
-  files: string[] | any;
+  files: string[];
   onPosChange: (data: string[]) => void;
   allowEdit: boolean;
 }
 
-const PortfolioFiles = (props: Props) => {
-  const [filesArr, setFilesArr] = useState(props.files);
+const PortfolioFiles = ({ files, onPosChange, allowEdit }: Props) => {
+  const [filesArr, setFilesArr] = useState<string[]>(files);
   const [previewURL, setPreviewURL] = useState<string>();
 
-  const onDragEnd = (result: any) => {
-    // dropped outside the list
+  const onDragEnd = (result: DropResult) => {
     if (!result.destination) {
       return;
     }
 
-    const newFileArr: any = reorder(filesArr, result.source.index, result.destination.index);
-
+    const newFileArr = reorder(
+      filesArr,
+      result.source.index,
+      result.destination.index
+    );
     setFilesArr(newFileArr);
-    props.onPosChange(newFileArr);
+    onPosChange(newFileArr);
   };
 
   const previewHandler = (val: string) => {
     setPreviewURL(val);
-    document.body.style.overflow = val ? 'hidden' : 'unset';
+    document.body.style.overflow = val ? "hidden" : "unset";
   };
 
-  // fake data generator
-
-  // a little function to help us with reordering the result
-  const reorder = (list: any, startIndex: any, endIndex: any) => {
+  const reorder = (
+    list: string[],
+    startIndex: number,
+    endIndex: number
+  ): string[] => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
@@ -52,62 +65,100 @@ const PortfolioFiles = (props: Props) => {
   return (
     <div>
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="droppable" direction="horizontal" key={'droppable-key'}>
-          {(provided: any) => (
-        <GridContainer ref={provided.innerRef} {...provided.droppableProps}>
-          {filesArr.map((file: any, index: number) => (
+        <Droppable droppableId="droppable" direction="horizontal">
+          {(provided) => (
             <div
-          key={file.id || index}
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
             >
-          <PortfolioBox onClick={() => previewHandler(file)} coverImage={coverImgHandler(file)}>
-            <div className="cover-img">
-              <div></div>
+              {filesArr.map((file, index) => (
+                <Draggable
+                  key={file}
+                  draggableId={file}
+                  index={index}
+                  isDragDisabled={!allowEdit}
+                >
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className={`relative aspect-square transition-shadow duration-200 ${
+                        snapshot.isDragging ? "shadow-lg" : ""
+                      }`}
+                    >
+                      <div
+                        className="relative w-full h-full rounded-lg overflow-hidden cursor-pointer"
+                        onClick={() => previewHandler(file)}
+                      >
+                        <Image
+                          src={coverImgHandler(file)}
+                          alt={`Portfolio item ${index + 1}`}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
             </div>
-          </PortfolioBox>
-            </div>
-          ))}
-          {provided.placeholder}
-        </GridContainer>
           )}
         </Droppable>
       </DragDropContext>
 
       {!!previewURL && (
-        <ImagePreviewWrapper>
-          <div className="img-previewer-background jjj" onClick={() => previewHandler('')}></div>
+        <div className="fixed inset-0 z-50">
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => previewHandler("")}
+          />
 
-          {isPDF(previewURL) && <iframe src={previewURL} className="previewer-box-pdf" />}
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <div className="relative bg-white rounded-xl w-full max-w-[678px] max-h-[90vh] overflow-y-auto py-[2rem] px-[1rem] md:py-[3.20rem] md:px-12">
+              <button
+                onClick={() => previewHandler("")}
+                className="absolute top-4 md:top-0 right-4 md:-right-8 text-2xl text-black md:text-white hover:text-gray-200 cursor-pointer"
+              >
+                <VscClose size={24} />
+              </button>
 
-          {isVideo(previewURL) && (
-            <video controls src={previewURL} className="previewer-box image">
-              This is video
-            </video>
-          )}
+              {isPDF(previewURL) && (
+                <iframe
+                  src={previewURL}
+                  className="w-full h-[80vh] rounded-lg"
+                />
+              )}
 
-          {isAudio(previewURL) && (
-            <audio controls src={previewURL} className="previewer-box h-25">
-              This is audio
-            </audio>
-          )}
+              {isVideo(previewURL) && (
+                <video controls src={previewURL} className="w-full rounded-lg">
+                  Your browser does not support the video tag.
+                </video>
+              )}
 
-          {!isVideo(previewURL) && !isPDF(previewURL) && !isAudio(previewURL) && (
-            <Image className="previewer-box image" alt='preview box' src={previewURL} 
-            width={100}
-            height={100}
-            />
-          )}
+              {isAudio(previewURL) && (
+                <audio controls src={previewURL} className="w-full">
+                  Your browser does not support the audio tag.
+                </audio>
+              )}
 
-          <Button
-            variant="transparent"
-            className="close homepage-video-close-btn portfolio-close-btn"
-            onClick={() => previewHandler('')}
-          >
-            &times;
-          </Button>
-        </ImagePreviewWrapper>
+              {!isVideo(previewURL) &&
+                !isPDF(previewURL) &&
+                !isAudio(previewURL) && (
+                  <div className="relative aspect-square w-full">
+                    <Image
+                      src={previewURL}
+                      alt="Preview"
+                      fill
+                      className="object-contain rounded-lg"
+                    />
+                  </div>
+                )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

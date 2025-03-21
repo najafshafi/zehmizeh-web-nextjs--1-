@@ -1,69 +1,85 @@
-import { Modal, Button, Form } from "react-bootstrap";
-import { StyledModal } from "@/components/styled/StyledModal";
-import styled from "styled-components";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useState } from "react";
-import { GridContainer, PortfolioBox } from "./portfolioStyles";
+import { useState, useEffect } from "react";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "@hello-pangea/dnd";
 import { toast } from "react-hot-toast";
 import { addEditPortfolio } from "@/helpers/http/portfolio";
+import { VscClose } from "react-icons/vsc";
+import Image from "next/image";
 
-export const Wrapper = styled(Form)`
-  .styled-form {
-    margin-top: 1.25rem;
-    .form-input {
-      margin-top: 6px;
-      padding: 1rem 1.25rem;
-      border-radius: 7px;
-      border: 1px solid ${(props) => props.theme.colors.gray6};
-    }
-  }
-  .gray-labels {
-    color: ${(props) => props.theme.colors.blue};
-  }
-  .max-count {
-    color: ${(props) => props.theme.colors.gray8};
-  }
-`;
+interface Portfolio {
+  portfolio_id: string;
+  project_name: string;
+  project_year: string;
+  project_description: string;
+  project_skills: string[];
+  image_urls: string[];
+}
 
-type Props = {
+interface Props {
   show: boolean;
   onClose: () => void;
   onUpdate: () => void;
-  portfolio: any;
+  portfolio: Portfolio;
   freelancerId: string;
   refetch: () => void;
-};
+}
 
-const ReArrangePorfolioItems = (props: Props) => {
-  const [filesArr, setFilesArr] = useState(props?.portfolio?.image_urls);
-  const [loading, setloading] = useState(false);
-  const { project_name } = props?.portfolio ?? {};
+const ReArrangePorfolioItems = ({
+  show,
+  onClose,
+  onUpdate,
+  portfolio,
+  freelancerId,
+  refetch,
+}: Props) => {
+  const [filesArr, setFilesArr] = useState<string[]>(
+    portfolio?.image_urls || []
+  );
+  const [loading, setLoading] = useState(false);
+  const { project_name } = portfolio ?? {};
 
-  // fake data generator
+  useEffect(() => {
+    if (show) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
 
-  // a little function to help us with reordering the result
-  const reorder = (list: any, startIndex: any, endIndex: any) => {
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [show]);
+
+  const reorder = (
+    list: string[],
+    startIndex: number,
+    endIndex: number
+  ): string[] => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
     return result;
   };
 
-  const isPDF = (url: string) => url?.split(".").pop() === "pdf";
-  const isVideo = (url: string) => url?.split(".").pop() === "mp4";
-  const isAudio = (url: string) =>
+  const isPDF = (url: string): boolean => url?.split(".").pop() === "pdf";
+  const isVideo = (url: string): boolean => url?.split(".").pop() === "mp4";
+  const isAudio = (url: string): boolean =>
     ["mp3", "wav"].includes(url?.split(".").pop() || "");
 
-  const coverImgHandler = (file: string) => {
-    if (isPDF(file)) file = "/images/pdf-file.svg";
-    if (isVideo(file)) file = "/images/video.png";
-    if (isAudio(file)) file = "/images/audio.png";
+  const coverImgHandler = (file: string): string => {
+    if (isPDF(file)) return "/images/pdf-file.svg";
+    if (isVideo(file)) return "/images/video.png";
+    if (isAudio(file)) return "/images/audio.png";
     return file;
   };
 
-  const updatedPorfolioHandler = (portFiles: any[]) => {
-    const data = { ...props?.portfolio };
-    const body: any = {
+  const updatedPorfolioHandler = async (portFiles: string[]) => {
+    const data = { ...portfolio };
+    const body = {
       action: "edit_portfolio",
       portfolio_id: data.portfolio_id,
       project_name: data.project_name,
@@ -74,98 +90,107 @@ const ReArrangePorfolioItems = (props: Props) => {
     };
 
     const promise = addEditPortfolio(body);
-    setloading(true);
+    setLoading(true);
     toast.promise(promise, {
       loading: "Please wait...",
       success: (res) => {
-        setloading(false);
+        setLoading(false);
         return res.message;
       },
       error: (err) => {
-        setloading(false);
+        setLoading(false);
         return err?.message || "error";
       },
     });
   };
 
-  const onDragEnd = (result: any) => {
-    // dropped outside the list
+  const onDragEnd = (result: DropResult) => {
     if (!result.destination) {
       return;
     }
 
-    const newFileArr: any = reorder(
+    const newFileArr = reorder(
       filesArr,
       result.source.index,
       result.destination.index
     );
 
     updatedPorfolioHandler(newFileArr);
-
     setFilesArr(newFileArr);
   };
 
+  if (!show) return null;
+
   return (
-    <StyledModal
-      show={props.show}
-      size="sm"
-      onHide={() => props.onClose()}
-      centered
-    >
-      <Modal.Body>
-        <Button
-          variant="transparent"
-          className="close"
-          onClick={() => props.onClose()}
-        >
-          &times;
-        </Button>
-        <Wrapper>
-          <h2 style={{ marginBottom: "2rem" }} className="line-break">
-            {project_name}
-          </h2>
-          <div>
+    <div className="fixed inset-0 z-50">
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
+      {/* Modal */}
+      <div className="fixed inset-0 flex items-center justify-center p-4">
+        <div className="rounded-xl bg-white w-full max-w-[678px] max-h-[90vh] py-[2rem] px-[1rem] md:p-11 relative">
+          <VscClose
+            className="absolute top-4 md:top-0 right-4 lg:-right-8 text-2xl text-black  lg:text-white hover:text-gray-200 cursor-pointer"
+            onClick={onClose}
+          />
+
+          <div className="content">
+            <h2 className="text-[#212529] text-[1.75rem] font-normal text-left mb-8 line-break">
+              {project_name}
+            </h2>
+
             <DragDropContext onDragEnd={onDragEnd}>
               <Droppable
                 droppableId="droppable"
                 direction="horizontal"
-                key={"droppable-key"}
+                isDropDisabled={loading}
               >
-                {(provided: any) => (
-                  <GridContainer
+                {(provided) => (
+                  <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
+                    className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
                   >
-                    {filesArr.map((file: any, index: number) => (
+                    {filesArr.map((file, index) => (
                       <Draggable
-                        isDragDisabled={loading}
                         key={`drag-key-${index + 1}`}
                         draggableId={`drag-id-${index + 1}`}
                         index={index}
+                        isDragDisabled={loading}
                       >
-                        {(provided: any) => (
-                          <>
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                            >
-                              <PortfolioBox coverImage={coverImgHandler(file)}>
-                                <div className="cover-img"></div>
-                              </PortfolioBox>
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className={`relative aspect-square transition-shadow duration-200 ${
+                              snapshot.isDragging ? "shadow-lg" : ""
+                            }`}
+                          >
+                            <div className="relative w-full h-full rounded-lg overflow-hidden">
+                              <Image
+                                src={coverImgHandler(file)}
+                                alt={`Portfolio item ${index + 1}`}
+                                fill
+                                className="object-cover"
+                              />
                             </div>
-                          </>
+                          </div>
                         )}
                       </Draggable>
                     ))}
-                  </GridContainer>
+                    {provided.placeholder}
+                  </div>
                 )}
               </Droppable>
             </DragDropContext>
           </div>
-        </Wrapper>
-      </Modal.Body>
-    </StyledModal>
+        </div>
+      </div>
+    </div>
   );
 };
 
