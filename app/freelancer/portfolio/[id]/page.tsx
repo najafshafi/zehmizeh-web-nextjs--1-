@@ -123,8 +123,10 @@ const PortfolioDetailPage = () => {
 
         <ContentContainer>
           <PageHeading>
-            {portfolioData?.project_name &&
-              capitalizeFirstLetter(portfolioData?.project_name)}
+            <div className="text-[40px] font-normal my-4">
+              {portfolioData?.project_name &&
+                capitalizeFirstLetter(portfolioData?.project_name)}
+            </div>
           </PageHeading>
 
           <GridContainer>
