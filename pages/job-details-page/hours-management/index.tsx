@@ -128,7 +128,7 @@ const HoursManagement = ({
         milestone?.map((item: any, index: number) => (
           <MileStoneListItem
             key={item.milestone_id}
-            className="flex flex-column gap-2 milestone-item"
+            className="flex flex-col gap-2 milestone-item"
             data-hourly-status={item.hourly_status}
           >
             <div>
@@ -178,7 +178,7 @@ const HoursManagement = ({
               </div>
               <div
                 className={classNames(
-                  "flex flex-md-row flex-column justify-between align-items-md-end gap-2",
+                  "flex flex-md-row flex-col justify-between align-items-md-end gap-2",
                   {
                     "mt-3": item.hourly_status !== "pending",
                   }
@@ -216,7 +216,7 @@ const HoursManagement = ({
                 </div>
               </div>
             </div>
-            <div className="flex flex-md-row flex-column justify-between align-items-md-end gap-3">
+            <div className="flex flex-md-row flex-col justify-between align-items-md-end gap-3">
               <div>
                 <StyledHtmlText
                   needToBeShorten

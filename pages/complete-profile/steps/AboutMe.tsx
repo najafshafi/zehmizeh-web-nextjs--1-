@@ -104,7 +104,7 @@ const AboutMe = ({ aboutMe, onUpdate, onPrevious, skipForNow }: Props) => {
 
   return (
     <Container>
-      <FormWrapper className="flex flex-column">
+      <FormWrapper className="flex flex-col">
         <div className={user_type === "client" ? "mt-4" : ""}>
           <div className={`fs-18 font-weight-bold mb-2`}>
             {titleHandler()}

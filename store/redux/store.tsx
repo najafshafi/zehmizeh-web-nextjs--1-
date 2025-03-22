@@ -7,25 +7,25 @@ import authReducer from "@/store/redux/slices/authSlice";
 // import counterReducer from "@/store/redux/slices/counterSlice";
 
 const persistConfig = {
-    key: "auth",
-    storage,
-    whitelist: ["auth"],
-  };
+  key: "auth",
+  storage,
+  whitelist: ["auth"],
+};
 
 const rootReducer = combineReducers({
-auth: authReducer,
-// counter: counterReducer,
+  auth: authReducer,
+  // counter: counterReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
-  
+
 export const store = configureStore({
-    reducer: persistedReducer,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        serializableCheck: false,
-      }),
-  });
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
 
 export const persistor = persistStore(store);
 

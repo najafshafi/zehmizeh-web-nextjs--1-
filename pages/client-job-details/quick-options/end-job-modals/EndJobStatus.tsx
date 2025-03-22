@@ -136,7 +136,7 @@ const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
   return (
     <Wrapper>
       <div className="fs-32 fw-700">Close Project</div>
-      <div className="content flex flex-column">
+      <div className="content flex flex-col">
         <div>
           <div className="label fs-16 font-normal">Choose status</div>
           <div className="status-options flex items-center flex-wrap">

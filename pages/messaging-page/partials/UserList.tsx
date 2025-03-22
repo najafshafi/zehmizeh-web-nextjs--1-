@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { convertToTitleCase } from "helpers/utils/misc";
+import { convertToTitleCase } from "@/helpers/utils/misc";
 import { getUserName } from "../controllers/useUsers";
 import cns from "classnames";
-import { Spinner } from "react-bootstrap";
-import SearchBox from "components/ui/SearchBox";
-import { useNavigate } from "react-router-dom";
-import BlurredImage from "components/ui/BlurredImage";
-import { AppDispatch, RootState } from "../../../redux/store";
+import Spinner from "@/components/forms/Spin/Spinner";
+import SearchBox from "@/components/ui/SearchBox";
+import { useRouter, useSearchParams } from "next/navigation";
+import BlurredImage from "@/components/ui/BlurredImage";
+import { AppDispatch, RootState } from "@/store/redux/store";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
@@ -14,30 +14,40 @@ import {
   onTabChange,
   searchChatList,
   selectChatHandler,
-} from "../../../redux/slices/chatSlice";
+} from "@/store/redux/slices/chatSlice";
 import {
   Invite,
   Job,
   Proposal,
   UnreadMessages,
-} from "../../../redux/slices/chat.interface";
+  InitialState as ChatState,
+} from "@/store/redux/slices/chat.interface";
 import { LiaAngleDownSolid } from "react-icons/lia";
 import { IoSearchOutline } from "react-icons/io5";
-import { useAuth } from "helpers/contexts/auth-context";
-import queryString from "query-string";
+import { useAuth } from "@/helpers/contexts/auth-context";
 import {
   MessageSidebarHeader,
   ChatSingleUser,
   Wrapper,
   SingleUserChatAction,
 } from "../messaging.styled";
-import { chatType } from "redux/slices/talkjs.interface";
+import { chatType } from "@/store/redux/slices/talkjs.interface";
+
+// Augment the RootState type
+declare module "@/store/redux/store" {
+  interface RootState {
+    chat: ChatState;
+  }
+}
 
 function UserList() {
   const { user } = useAuth();
   const dispatch: AppDispatch = useDispatch();
-  const navigate = useNavigate();
-  const { invite_id, proposal_id } = queryString.parse(location.search);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const invite_id = searchParams?.get("invite_id") || null;
+  const proposal_id = searchParams?.get("proposal_id") || null;
+
   const [chatTypes] = useState<
     { id: number; label: string; key: keyof UnreadMessages }[]
   >([
@@ -93,24 +103,25 @@ function UserList() {
 
     if (typeof id !== "number" || chatList[flag].length === 0) return;
 
-    chatList[activeTab].map((chat: Invite & Job & Proposal, index: number) => {
+    // Using forEach instead of map since we're not returning anything
+    chatList[activeTab].forEach((chat: any, index: number) => {
       if (
-        (flag === "invities" && chat.invite_id === id) ||
-        (flag === "proposals" && chat.proposal_id === id)
+        (flag === "invities" && (chat as Invite).invite_id === id) ||
+        (flag === "proposals" && (chat as Proposal).proposal_id === id)
       ) {
-        onSelectChatHandler(chat, index);
-        navigate("/messages-new");
+        onSelectChatHandler(chat as Invite & Proposal & Job, index);
+        router.push("/messages-new");
       }
     });
   };
 
-  const showToggle = (flag) => {
+  const showToggle = (flag: string) => {
     if (flag === "dropdown") setShow(!show);
     else setShowSearch(!showSearch);
   };
 
   const onChangeChatType = (type: keyof UnreadMessages) => {
-    if (window.location.pathname !== "/messages") navigate("/messages");
+    if (window.location.pathname !== "/messages") router.push("/messages");
     dispatch(onTabChange(type));
     setShow(false);
   };
@@ -120,8 +131,8 @@ function UserList() {
   }, [chatList, activeTab]);
 
   useEffect(() => {
-    const handleDocumentClick = (event) => {
-      if (!event.target.closest(`.message-type-dropdown-toggle`)) {
+    const handleDocumentClick = (event: MouseEvent) => {
+      if (!(event.target as Element).closest(`.message-type-dropdown-toggle`)) {
         setShow(false);
       }
     };
@@ -158,9 +169,7 @@ function UserList() {
           />
 
           <ul
-            className={`message-dropdown-options ${
-              show ? "d-block" : "d-none"
-            }`}
+            className={`message-dropdown-options ${show ? "block" : "hidden"}`}
           >
             {chatTypes.map((ct, index) => (
               <li
@@ -187,43 +196,42 @@ function UserList() {
       <Wrapper>
         {loading.list ? (
           <div className="text-center">
-            <Spinner animation="grow" />
+            <Spinner />
             <p>Loading chats...</p>
           </div>
         ) : (
           <>
-            {chatList[activeTab].map(
-              (usr: Invite & Job & Proposal, index: number) => {
-                if (search.chatList) {
-                  const remoteUser =
-                    user.user_id !== usr._from_user_data.user_id
-                      ? usr._from_user_data
-                      : usr._to_user_data;
+            {chatList[activeTab].map((usr: any, index: number) => {
+              const typedUsr = usr as Invite & Job & Proposal;
+              if (search.chatList) {
+                const remoteUser =
+                  user.user_id !== typedUsr._from_user_data.user_id
+                    ? typedUsr._from_user_data
+                    : typedUsr._to_user_data;
 
-                  const remoteUserFullName =
-                    `${remoteUser.first_name} ${remoteUser.last_name}`.toLocaleLowerCase();
+                const remoteUserFullName =
+                  `${remoteUser.first_name} ${remoteUser.last_name}`.toLocaleLowerCase();
 
-                  if (
-                    !remoteUserFullName.includes(
-                      search.chatList.toLocaleLowerCase()
-                    )
+                if (
+                  !remoteUserFullName.includes(
+                    search.chatList.toLocaleLowerCase()
                   )
-                    return <></>;
-                }
-                return (
-                  <UserListItem
-                    data={usr}
-                    className={cns({
-                      active:
-                        usr._job_post_id === activeChat?._job_post_id &&
-                        usr.proposal_id === activeChat.proposal_id,
-                    })}
-                    key={`${usr._job_post_id}_${index}`}
-                    onSelectChat={() => onSelectChatHandler(usr, index)}
-                  />
-                );
+                )
+                  return <></>;
               }
-            )}
+              return (
+                <UserListItem
+                  data={typedUsr}
+                  className={cns({
+                    active:
+                      typedUsr._job_post_id === activeChat?._job_post_id &&
+                      typedUsr.proposal_id === activeChat.proposal_id,
+                  })}
+                  key={`${typedUsr._job_post_id}_${index}`}
+                  onSelectChat={() => onSelectChatHandler(typedUsr, index)}
+                />
+              );
+            })}
           </>
         )}
 
@@ -315,7 +323,12 @@ const UserListItem = ({
     >
       <div className="userlistitem__avatar chat-user-list">
         <BlurredImage
-          state={[showImg, setShowImg]}
+          state={
+            [showImg, setShowImg] as [
+              boolean,
+              React.Dispatch<React.SetStateAction<boolean>>
+            ]
+          }
           src={remoteUser?.user_image || "/images/default_avatar.png"}
           height="48px"
           width="48px"

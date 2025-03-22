@@ -205,7 +205,7 @@ const PersonalDetails = ({
   };
 
   return (
-    <FormWrapper className="flex flex-column">
+    <FormWrapper className="flex flex-col">
       <Container className="mt-3 px-0">{UI()}</Container>
 
       {!client && (

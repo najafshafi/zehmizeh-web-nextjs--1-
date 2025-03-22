@@ -90,7 +90,7 @@ export const GetStarted = ({ user, isLoading }: Props) => {
   ) {
     return (
       <StyledModal maxwidth={767} show size="sm" centered>
-        <Modal.Body className="flex flex-column justify-center items-center text-center">
+        <Modal.Body className="flex flex-col justify-center items-center text-center">
           <h4>Your Profile is Filled Out!</h4>
           <span className="mt-3">
             Well done - you have fulfilled the required sections of your

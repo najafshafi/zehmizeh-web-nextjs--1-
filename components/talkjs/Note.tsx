@@ -1,6 +1,6 @@
-import { breakpoints } from '@/helpers/hooks/useResponsive';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import { breakpoints } from "@/helpers/hooks/useResponsive";
+import Link from "next/link";
+import styled from "styled-components";
 
 export const NoteWrap = styled.div`
   position: fixed;
@@ -29,11 +29,12 @@ export const NoteWrap = styled.div`
 export default function Note() {
   return (
     <NoteWrap>
-      Payments must be made through Zehmizeh. Paying outside violates our Terms and is against Halacha.{' '}
+      Payments must be made through Zehmizeh. Paying outside violates our Terms
+      and is against Halacha.{" "}
       <Link
-        to="/terms-of-service#13"
+        href="/terms-of-service#13"
         style={{
-          color: 'black',
+          color: "black",
         }}
       >
         View Terms

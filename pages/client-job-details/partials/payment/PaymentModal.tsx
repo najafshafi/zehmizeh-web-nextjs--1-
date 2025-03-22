@@ -31,7 +31,7 @@ function PaymentModal({ show, onPay, onCancel, processingPayment }: Props) {
         <Button variant="transparent" className="close" onClick={onClose}>
           &times;
         </Button>
-        <div className="content flex flex-column">
+        <div className="content flex flex-col">
           <div className="modal-title fs-32 fw-700">Payment Details</div>
           {user?.location?.country_short_name === "US" && (
             <div className="flex items-center gap-4 mt-4">

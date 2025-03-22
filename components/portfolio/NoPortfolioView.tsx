@@ -9,7 +9,7 @@ const NoPortfolioView = ({
   allowEdit: boolean;
 }) => {
   return (
-    <div className="my-5 flex flex-column justify-center items-center gap-5">
+    <div className="my-5 flex flex-col justify-center items-center gap-5">
       <NoPortfolio />
 
       {allowEdit && (

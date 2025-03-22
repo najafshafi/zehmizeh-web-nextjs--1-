@@ -92,7 +92,7 @@ export const MilestoneListModal = ({
                   </div>
                 )}
                 <div className="milestone-modal-list-checkbox mt-3 rounded border p-3">
-                  <div className="flex flex-column">
+                  <div className="flex flex-col">
                     <div className="flex items-center">
                       <Checkbox
                         checked={checkValues[index]}
@@ -113,7 +113,7 @@ export const MilestoneListModal = ({
               </div>
             );
           })}
-          <div className="flex items-center justify-content-end gap-4 mt-4">
+          <div className="flex items-center justify-end gap-4 mt-4">
             {jobdetails?.jobType !== "hourly" && (
               <StyledButton
                 variant="success"

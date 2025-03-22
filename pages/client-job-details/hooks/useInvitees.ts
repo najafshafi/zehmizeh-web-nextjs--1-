@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { getInvitees } from 'helpers/http/proposals';
+import { getInvitees } from '@/helpers/http/proposals';
 
 /*
  * This hook will load the dashboard stats

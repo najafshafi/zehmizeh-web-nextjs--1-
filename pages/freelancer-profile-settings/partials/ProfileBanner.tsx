@@ -92,7 +92,7 @@
 //                 </div>
 //               </Col>
 //               <Col md="9">
-//                 <div className="profile__details flex flex-column">
+//                 <div className="profile__details flex flex-col">
 //                   {/* Name and designation */}
 
 //                   <div className="profile__name-title">

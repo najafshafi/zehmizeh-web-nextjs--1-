@@ -76,7 +76,7 @@ const Languages = ({
   };
 
   return (
-    <FormWrapper className="flex flex-column">
+    <FormWrapper className="flex flex-col">
       <div>
         <div className="form-group">
           <div>

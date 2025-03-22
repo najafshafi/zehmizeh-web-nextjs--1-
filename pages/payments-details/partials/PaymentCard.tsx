@@ -46,7 +46,7 @@ const PaymentCard = ({ data }: Props) => {
         "refund-row": data.payment_type === "refund",
       })}
     >
-      <Card.Body className="flex flex-column gap-3">
+      <Card.Body className="flex flex-col gap-3">
         <div>
           <div className="card-label fs-sm font-normal">PROJECT NAME</div>
           <div className="fs-20 font-normal">

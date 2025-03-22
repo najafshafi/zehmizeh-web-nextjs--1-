@@ -51,7 +51,7 @@ const Skills = ({
   };
 
   return (
-    <FormWrapper className="flex flex-column">
+    <FormWrapper className="flex flex-col">
       <CategorySkillSelectModal
         type="CATEGORY"
         label="Skill Categories"

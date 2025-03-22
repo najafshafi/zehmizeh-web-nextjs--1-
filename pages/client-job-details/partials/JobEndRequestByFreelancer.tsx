@@ -49,7 +49,7 @@ const JobEndRequestByFreelancer = ({
   return (
     <StyledModal maxwidth={540} show={show} size="lg" centered>
       <Modal.Body>
-        <div className="flex flex-column justify-center items-center">
+        <div className="flex flex-col justify-center items-center">
           <div className="fs-20 font-normal text-center mb-2">
             The freelancer is requesting that you end this project. What would
             you like to do?

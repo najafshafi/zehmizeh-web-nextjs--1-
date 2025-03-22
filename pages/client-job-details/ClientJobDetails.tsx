@@ -712,7 +712,7 @@ const ClientJobDetails = () => {
 
           {/*isMobile ? (
             <div
-              className={classNames('justify-content-end', {
+              className={classNames('justify-end', {
                 'w-100': isMobile,
               })}
             >

@@ -1,8 +1,19 @@
 // src/redux/store.ts
-import { configureStore } from '@reduxjs/toolkit';
-import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
-import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
-import authReducer from './redux/slices/authSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+import authReducer from "./redux/slices/authSlice";
+import chatReducer from "./redux/slices/chatSlice";
+import talkJsChatReducer from "./redux/slices/talkjsSlice";
 
 // Create a noop storage for SSR
 const createNoopStorage = () => {
@@ -19,15 +30,18 @@ const createNoopStorage = () => {
   };
 };
 
-const storage = typeof window !== 'undefined' ? createWebStorage('local') : createNoopStorage();
+const storage =
+  typeof window !== "undefined"
+    ? createWebStorage("local")
+    : createNoopStorage();
 
 const persistConfig = {
-  key: 'root',
+  key: "root",
   storage,
-  whitelist: ['auth'], // Only persist auth state
-  blacklist: ['isLoading', 'isBootstrapping'], // Don't persist loading states
+  whitelist: ["auth"], // Only persist auth state
+  blacklist: ["isLoading", "isBootstrapping"], // Don't persist loading states
   timeout: 0, // No timeout
-  debug: process.env.NODE_ENV === 'development', // Enable debug in development
+  debug: process.env.NODE_ENV === "development", // Enable debug in development
 };
 
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);
@@ -35,6 +49,8 @@ const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
+    chat: chatReducer,
+    talkJsChat: talkJsChatReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

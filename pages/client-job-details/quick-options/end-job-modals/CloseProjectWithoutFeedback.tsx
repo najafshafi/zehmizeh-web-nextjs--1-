@@ -106,7 +106,7 @@ export const CloseProjectWithoutFeedback = ({
               </span>
             </div>
           </div>
-          <div className="flex flex-column items-center">
+          <div className="flex flex-col items-center">
             <StyledButton
               padding="0.75rem 2rem"
               variant="primary"

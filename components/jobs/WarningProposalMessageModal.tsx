@@ -39,7 +39,7 @@ export const WarningProposalMessageModal = ({
         <Button variant="transparent" className="close" onClick={closeModal}>
           &times;
         </Button>
-        <div className="flex flex-column justify-center items-center">
+        <div className="flex flex-col justify-center items-center">
           <h4>Note: You are NOT Hired.</h4>
 
           <p className="mt-4 mb-2">

@@ -390,10 +390,10 @@ const Milestones = ({
         milestone?.map((item: any, i, self) => (
           <MileStoneListItem
             key={`item?.milestone_id` + item?.title}
-            className="flex flex-column milestone-item"
+            className="flex flex-col milestone-item"
             data-milestone-status={item.status}
           >
-            <div className="flex flex-md-row flex-column justify-between gap-md-3 gap-4">
+            <div className="flex flex-md-row flex-col justify-between gap-md-3 gap-4">
               <div>
                 <div className="fs-20 font-normal capital-first-ltr">
                   {convertToTitleCase(item.title)}
@@ -412,7 +412,7 @@ const Milestones = ({
                 {/* END ------------------------------------------- Showing price client has to pay including fees */}
               </div>
               <div className="status">
-                <div className="flex flex-column align-items-md-end">
+                <div className="flex flex-col align-items-md-end">
                   <>
                     <StatusBadge
                       color={PAYMENT_STATUS[item?.status]?.color || "green"}
@@ -455,7 +455,7 @@ const Milestones = ({
                 </div>
               </div>
             </div>
-            <div className="flex mt-md-1 flex-md-row flex-column justify-between align-items-md-end gap-3">
+            <div className="flex mt-md-1 flex-md-row flex-col justify-between align-items-md-end gap-3">
               <div>
                 <StyledHtmlText
                   needToBeShorten

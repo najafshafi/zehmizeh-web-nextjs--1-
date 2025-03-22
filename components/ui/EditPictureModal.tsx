@@ -201,13 +201,13 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
           &times;
         </Button>
         <Wrapper>
-          <div className="content flex flex-column">
+          <div className="content flex flex-col">
             <div className="modal-title fs-28 font-normal">
               Edit Profile Picture
             </div>
           </div>
 
-          <div className="cropper flex flex-column justify-center items-center mt-5 mb-3">
+          <div className="cropper flex flex-col justify-center items-center mt-5 mb-3">
             {loadingImage && (
               <Spinner animation="grow" className="spinner mb-3" />
             )}

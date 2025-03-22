@@ -19,7 +19,7 @@ const Feedback = ({
   isClientFeedback,
 }: any) => {
   return (
-    <FeedbackWrapper className="flex flex-column">
+    <FeedbackWrapper className="flex flex-col">
       {isClientFeedback && !feedbackData?.freelancer && (
         <div className="review-heading-note text-center fs-20 font-normal">
           Your client has ended the project and shared a review. To read it,
@@ -41,7 +41,7 @@ const Feedback = ({
         <div className="">
           <div className="client-feedback">
             <div className="fs-20 fw-700">Received</div>
-            <div className="review-content flex flex-wrap align-items-start">
+            <div className="review-content flex flex-wrap items-start">
               <div className="client-details flex items-center">
                 <BlurredImage
                   src={

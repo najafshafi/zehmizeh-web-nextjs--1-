@@ -58,7 +58,7 @@ const ManageNotificationModal = ({
           &times;
         </Button>
         <Wrapper>
-          <div className="content flex flex-column">
+          <div className="content flex flex-col">
             <div className="modal-title fs-28 font-normal">
               Manage Notification
             </div>

@@ -29,7 +29,7 @@ const EndJobModal = ({ show, toggle, onConfirm }: Props) => {
         <Button variant="transparent" className="close" onClick={onCloseModal}>
           &times;
         </Button>
-        <div className="flex flex-column justify-center items-center">
+        <div className="flex flex-col justify-center items-center">
           {!errorMsg ? (
             <>
               <div className="description fs-20 font-normal text-center mb-2">

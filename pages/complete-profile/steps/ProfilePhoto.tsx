@@ -40,8 +40,8 @@ export const ProfilePhoto = ({
   };
 
   return (
-    <FormWrapper className="flex flex-column">
-      <Container className="mt-3 px-0 flex flex-column">
+    <FormWrapper className="flex flex-col">
+      <Container className="mt-3 px-0 flex flex-col">
         <div className="fs-sm font-normal mb-3">
           <b className="fs-18">Profile Pic</b> (Optional)
           <p className="mt-2 mb-0 text-justify fs-base text-secondary">
@@ -52,7 +52,7 @@ export const ProfilePhoto = ({
         </div>
 
         <div
-          className="profile__img pointer flex justify-center align-self-center my-3"
+          className="profile__img pointer flex justify-center self-center my-3"
           onClick={() => setShowEditPictureModal((prev) => !prev)}
         >
           <img

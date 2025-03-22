@@ -30,7 +30,7 @@ const DeletePrompt = ({
 }: Props) => {
   return (
     <StyledModal maxwidth={570} show={show} size="lg" onHide={toggle} centered>
-      <Modal.Body className="flex flex-column justify-center items-center">
+      <Modal.Body className="flex flex-col justify-center items-center">
         <Button variant="transparent" className="close" onClick={toggle}>
           &times;
         </Button>

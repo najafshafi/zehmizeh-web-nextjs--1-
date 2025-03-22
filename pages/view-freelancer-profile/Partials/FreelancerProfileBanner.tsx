@@ -342,7 +342,7 @@ const FreelancerProfileBanner = ({ data }: any) => {
       </div>
 
       {/* Boomark and invite button */}
-      <div className="flex flex-column justify-between items-md-end gap-4">
+      <div className="flex flex-col justify-between items-md-end gap-4">
         {bookmarkUI()}
         {inviteButtonUI()}
       </div>

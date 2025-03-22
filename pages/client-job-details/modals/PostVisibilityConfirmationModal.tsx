@@ -86,7 +86,7 @@ export const PostVisibilityConfirmationModal = ({
             &times;
           </Button>
         )}
-        <div className="flex flex-column items-center">
+        <div className="flex flex-col items-center">
           <div className="fs-24 font-normal text-center mb-3">
             {content.title}
           </div>
@@ -97,7 +97,7 @@ export const PostVisibilityConfirmationModal = ({
           <div
             className={classNames("flex justify-center gap-4", {
               "flex-row": !isMobile,
-              "flex-column w-100": isMobile,
+              "flex-col w-100": isMobile,
             })}
           >
             {content.buttons.map((button) => {

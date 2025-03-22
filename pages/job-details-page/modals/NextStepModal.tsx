@@ -40,7 +40,7 @@ const NextStepModal = ({ show, toggle }: Props) => {
           client. Visit the Help Center pages for more info about milestones,
           (see the yellow icon in the bottom-right corner).
         </div>
-        <div className="flex justify-content-end mt-3">
+        <div className="flex justify-end mt-3">
           <StyledButton onClick={toggle}>I Understand</StyledButton>
         </div>
       </Modal.Body>

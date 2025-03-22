@@ -119,10 +119,10 @@ const Feedback = ({
   return (
     <Wrapper>
       <div className="fs-32 fw-700">Close Project</div>
-      <div className="content flex flex-column">
+      <div className="content flex flex-col">
         {endJobState?.selectedStatus == "in-complete" ? (
           <>
-            <div className="ratings flex flex-column disabled">
+            <div className="ratings flex flex-col disabled">
               <div className="ratings__label fs-16 font-normal text-uppercase">
                 RATE YOUR EXPERIENCE WITH {freelancerName}
               </div>
@@ -162,7 +162,7 @@ const Feedback = ({
         ) : (
           <>
             <div>
-              <div className="ratings flex flex-column">
+              <div className="ratings flex flex-col">
                 <div className="ratings__label fs-16 font-normal text-uppercase">
                   RATE YOUR EXPERIENCE WITH {freelancerName}
                 </div>

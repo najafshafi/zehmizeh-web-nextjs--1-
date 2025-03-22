@@ -1,6 +1,6 @@
 import * as T from "./style";
-import { Spinner } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import Spinner from "@/components/forms/Spin/Spinner";
+import Link from "next/link";
 import { BsBell, BsBellSlash } from "react-icons/bs";
 import { ChatSidebarProps } from "@/helpers/types/chat.type";
 import SingleUser from "@/components/talkjs/singleUser";
@@ -40,13 +40,13 @@ export const ChatSidebar = ({
           >
             {permission === "granted" ? <BsBell /> : <BsBellSlash />}
           </T.NotificationToggle>
-          <Link to="/messages">Older chats</Link>
+          <Link href="/messages">Older chats</Link>
         </div>
       </T.ChatListHeader>
 
       {loading && chatUsers.length === 0 && (
         <div className="flex items-center justify-center gap-2 mt-5 fetching-chat-loader">
-          <Spinner animation="border" size="sm" />
+          <Spinner className="w-4 h-4" />
           <p className="mb-0">fetching chatlist...</p>
         </div>
       )}
