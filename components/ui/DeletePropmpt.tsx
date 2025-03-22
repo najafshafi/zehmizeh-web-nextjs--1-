@@ -23,6 +23,7 @@ const DeletePrompt = ({
   if (!show) return null;
 
   return (
+
     <div className="fixed inset-0 z-50">
       {/* Backdrop */}
       <div
@@ -65,6 +66,7 @@ const DeletePrompt = ({
                 )}
               </button>
             </div>
+
           </div>
         </div>
       </div>

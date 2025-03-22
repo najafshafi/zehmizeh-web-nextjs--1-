@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { SingleUserChatAction, UnreadCount } from "./style";
 import cns from "classnames";
 import { convertToTitleCase } from "@/helpers/utils/misc";
-import { ChatSingleUser } from "@/pages/messaging/messaging.styled";
+import { ChatSingleUser } from "@/pages/messaging-page/messaging.styled";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/redux/store";
@@ -46,7 +46,7 @@ const SingleUser = ({ conversation, onSelectChat }: Prop) => {
       onClick={() => onSelectChat(conversation)}
       title={`${convertToTitleCase(conversation?.custom?.projectName)}`}
     >
-      <div className="userlistitem__avatar chat-user-list">
+      <div className="userlistitem__avatar chat-user-list text-xs">
         <BlurredImage
           state={[showImg, setShowImg]}
           src={userImage}

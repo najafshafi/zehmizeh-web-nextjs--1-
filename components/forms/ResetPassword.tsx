@@ -1,26 +1,26 @@
-"use client"
-import React, { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-import cns from 'classnames';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import ReactOtpInput from 'react-otp-input';
-import { useForm } from 'react-hook-form';
-import styled from 'styled-components';
-import * as yup from 'yup';
-import YupPassword from 'yup-password';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { StyledButton } from '@/components/forms/Buttons';
-import AuthLayout from '@/components/layout/AuthLayout';
-import { LimitedH2 } from '@/components/styled/Auth.styled';
-import { useAuth } from '@/helpers/contexts/auth-context';
-import LoadingButtons from '@/components/LoadingButtons';
-import ErrorMessage from '@/components/ui/ErrorMessage';
-import { apiClient } from '@/helpers/http';
-import { showErr, showMsg } from '@/helpers/utils/misc';
-import auth from '@/helpers/http/auth';
-import useStartPageFromTop from '@/helpers/hooks/useStartPageFromTop';
-import EyeIcon from '@/public/icons/eyeicon.svg';
+"use client";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import cns from "classnames";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import ReactOtpInput from "react-otp-input";
+import { useForm } from "react-hook-form";
+import styled from "styled-components";
+import * as yup from "yup";
+import YupPassword from "yup-password";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { StyledButton } from "@/components/forms/Buttons";
+import AuthLayout from "@/components/layout/AuthLayout";
+import { LimitedH2 } from "@/components/styled/Auth.styled";
+import { useAuth } from "@/helpers/contexts/auth-context";
+import LoadingButtons from "@/components/LoadingButtons";
+import ErrorMessage from "@/components/ui/ErrorMessage";
+import { apiClient } from "@/helpers/http";
+import { showErr, showMsg } from "@/helpers/utils/misc";
+import auth from "@/helpers/http/auth";
+import useStartPageFromTop from "@/helpers/hooks/useStartPageFromTop";
+import EyeIcon from "@/public/icons/eyeicon.svg";
 
 const Wrapper = styled.div`
   .otp-input {
@@ -37,7 +37,7 @@ const Wrapper = styled.div`
 YupPassword(yup);
 
 const passwordError =
-  'Every password must include at least: 1 uppercase letter, 1 lowercase letter, 1 number, 1 symbol, and at least 8 characters';
+  "Every password must include at least: 1 uppercase letter, 1 lowercase letter, 1 number, 1 symbol, and at least 8 characters";
 
 interface FormData {
   password: string;
@@ -51,9 +51,9 @@ export default function ResetPassword() {
   const togglePasswordPreview = () => setIsPasswordPreview(!isPasswordPreview);
 
   const { isLoading, user, twoFactor } = useAuth();
-  const [otpId, setOtpId] = React.useState('');
+  const [otpId, setOtpId] = React.useState("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [otp, setOtp] = useState<string>('');
+  const [otp, setOtp] = useState<string>("");
   const router = useRouter();
 
   const onChange = (value) => {
@@ -64,7 +64,7 @@ export default function ResetPassword() {
     .object({
       password: yup
         .string()
-        .required('Password is required.')
+        .required("Password is required.")
         .min(8, passwordError)
         .matches(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*-?])[A-Za-z\d#$@!%&*-?]{8,30}$/,
@@ -72,35 +72,35 @@ export default function ResetPassword() {
         ),
       confirm: yup
         .string()
-        .required('Password is required.')
-        .oneOf([yup.ref('password'), null], "Passwords don't match."),
+        .required("Password is required.")
+        .oneOf([yup.ref("password"), null], "Passwords don't match."),
     })
     .required();
 
   useEffect(() => {
     if (!user?.email_id) {
-      router.push('/forgot-password');
+      router.push("/forgot-password");
       return;
     }
   }, [user?.email_id, router]);
 
   const handleOTP = (e: any) => {
     e.preventDefault();
-    if (otp === '') {
-      showErr('Please enter a valid OTP');
+    if (otp === "") {
+      showErr("Please enter a valid OTP");
       return;
     }
     const formdata = {
-      action: 'verify_otp',
+      action: "verify_otp",
       email_id: user?.email_id,
       user_otp: otp,
-      type: 'forgot_password',
+      type: "forgot_password",
     };
 
     setLoading(true);
 
     apiClient
-      .post('/auth/otp', formdata)
+      .post("/auth/otp", formdata)
       .then((res) => {
         setLoading(false);
         if (!res.data.status) {
@@ -123,15 +123,15 @@ export default function ResetPassword() {
     };
     setLoading(true);
     toast.promise(auth.resetPassword(payload), {
-      loading: 'Resetting password...',
+      loading: "Resetting password...",
       success: (res) => {
         setLoading(false);
-        router.push('/login');
+        router.push("/login");
         return res.message;
       },
       error: (err) => {
         setLoading(false);
-        return err?.response?.data?.message || err.toString() || 'Error';
+        return err?.response?.data?.message || err.toString() || "Error";
       },
     });
   };
@@ -161,9 +161,9 @@ export default function ResetPassword() {
 
   const onResend = () => {
     const formdata = {
-      action: 'resend_otp',
+      action: "resend_otp",
       email_id: user?.email_id,
-      type: 'forgot_password',
+      type: "forgot_password",
     };
     twoFactor(formdata, resetTimer);
   };
@@ -185,11 +185,11 @@ export default function ResetPassword() {
         <form className="mt-4 px-2" onSubmit={handleSubmit(onSubmit)}>
           <div className="relative mb-4 mt-5">
             <input
-              type={isPasswordPreview ? 'text' : 'password'}
+              type={isPasswordPreview ? "text" : "password"}
               className="peer m-0 block h-[58px] w-full rounded border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 pr-12 py-4 text-base font-normal leading-tight text-neutral-700 transition duration-200 ease-linear placeholder:text-transparent focus:border-primary focus:pb-[0.625rem] focus:pt-[1.625rem] focus:text-neutral-700 focus:shadow-twe-primary focus:outline-none peer-focus:text-primary dark:border-neutral-400 dark:text-neutral-700 dark:autofill:shadow-autofill dark:focus:border-primary dark:peer-focus:text-primary [&:not(:placeholder-shown)]:pb-[0.625rem] [&:not(:placeholder-shown)]:pt-[1.625rem]"
               id="password"
               placeholder="Submit a new password"
-              {...register('password')}
+              {...register("password")}
             />
             <label
               htmlFor="password"
@@ -197,11 +197,15 @@ export default function ResetPassword() {
             >
               Submit a new password
             </label>
-            <span 
-              className="pointer absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer" 
+            <span
+              className="pointer absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
               onClick={togglePasswordPreview}
             >
-              <EyeIcon  className={cns('input-icon w-5 h-5', { active: isPasswordPreview })} />
+              <EyeIcon
+                className={cns("input-icon w-5 h-5", {
+                  active: isPasswordPreview,
+                })}
+              />
             </span>
             <ErrorMessage className="text-start my-2">
               {errors.password?.message}
@@ -210,11 +214,11 @@ export default function ResetPassword() {
 
           <div className="relative mb-8 mt-4">
             <input
-              type={isPasswordPreview ? 'text' : 'password'}
+              type={isPasswordPreview ? "text" : "password"}
               className="peer m-0 block h-[58px] w-full rounded border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 pr-12 py-4 text-base font-normal leading-tight text-neutral-700 transition duration-200 ease-linear placeholder:text-transparent focus:border-primary focus:pb-[0.625rem] focus:pt-[1.625rem] focus:text-neutral-700 focus:shadow-twe-primary focus:outline-none peer-focus:text-primary dark:border-neutral-400 dark:text-neutral-700 dark:autofill:shadow-autofill dark:focus:border-primary dark:peer-focus:text-primary [&:not(:placeholder-shown)]:pb-[0.625rem] [&:not(:placeholder-shown)]:pt-[1.625rem]"
               id="confirm"
               placeholder="Confirm new password"
-              {...register('confirm')}
+              {...register("confirm")}
             />
             <label
               htmlFor="confirm"
@@ -222,11 +226,15 @@ export default function ResetPassword() {
             >
               Confirm new password
             </label>
-            <span 
-              className="pointer absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer" 
+            <span
+              className="pointer absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
               onClick={togglePasswordPreview}
             >
-              <EyeIcon  className={cns('input-icon w-5 h-5', { active: isPasswordPreview })} />
+              <EyeIcon
+                className={cns("input-icon w-5 h-5", {
+                  active: isPasswordPreview,
+                })}
+              />
             </span>
             <ErrorMessage className="text-start my-2">
               {errors.confirm?.message}
@@ -242,9 +250,9 @@ export default function ResetPassword() {
             disabled={loading}
             background="#F2B420"
           >
-            {loading ? <LoadingButtons /> : 'Reset'}
+            {loading ? <LoadingButtons /> : "Reset"}
           </StyledButton>
-          <h4 className="align-self-center mt-4">
+          <h4 className="self-center mt-4">
             <Link href="/login" className="yellow-link">
               Back to Login
             </Link>
@@ -258,21 +266,18 @@ export default function ResetPassword() {
       <h1>Enter Code</h1>
       <h2>Enter 6-digit code sent to &apos;{user?.email_id}&apos;</h2>
 
-      <form
-        className="mt-4"
-        onSubmit={handleOTP}
-      >
+      <form className="mt-4" onSubmit={handleOTP}>
         <Wrapper className="flex justify-center">
           <ReactOtpInput
             value={otp}
             onChange={onChange}
-            renderSeparator={<span style={{ color: '#909090' }}>-</span>}
+            renderSeparator={<span style={{ color: "#909090" }}>-</span>}
             numInputs={6}
             containerStyle="otp-input"
             inputStyle={{
-              maxWidth: '3.5rem',
-              width: '100%',
-              height: '3.5rem',
+              maxWidth: "3.5rem",
+              width: "100%",
+              height: "3.5rem",
               borderRadius: 7,
               margin: 8,
             }}
@@ -288,7 +293,7 @@ export default function ResetPassword() {
           </h4>
         ) : (
           <h4 className="mt-10 flex items-center justify-center gap-1">
-            Didn&apos;t receive code?{' '}
+            Didn&apos;t receive code?{" "}
             <StyledButton
               onClick={onResend}
               className="mt-4"
@@ -312,10 +317,10 @@ export default function ResetPassword() {
           height={56}
           background="#F2B420"
         >
-          {isLoading || loading ? <LoadingButtons /> : 'Submit'}
+          {isLoading || loading ? <LoadingButtons /> : "Submit"}
         </StyledButton>
-        
-        <h4 className="align-self-center mt-4">
+
+        <h4 className="self-center mt-4">
           <Link href="/login" className="yellow-link">
             Back to Login
           </Link>

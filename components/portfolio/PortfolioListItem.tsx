@@ -116,12 +116,12 @@ const PortfolioListItem = ({ data, onUpdate, allowEdit }: Props) => {
     <>
       <StyledPortfolioListItem
         $coverImage={coverImgHandler(data.image_urls[0])}
-        className="pointer"
+        className="cursor-pointer"
         onClick={goToDetailsPage}
       >
-        <div className="cover-img flex align-items-end gap-3">
+        <div className="cover-img flex items-end gap-3">
           <div className="flex justify-between items-center p-3 gap-3 flex-1">
-            <div className="project-name fs-20 fw-700">
+            <div className="project-name text-xl font-bold ">
               {data.project_name && capitalizeFirstLetter(data.project_name)}
             </div>
 
@@ -131,7 +131,7 @@ const PortfolioListItem = ({ data, onUpdate, allowEdit }: Props) => {
 
             {allowEdit && (
               <div
-                className="delete-btn p-2 pointer"
+                className="delete-btn p-3 cursor-pointer"
                 onClick={openDeletePrompt}
               >
                 <DeleteIcon />

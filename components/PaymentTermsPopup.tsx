@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { StyledModal } from "./styled/StyledModal";
-import { StyledButton } from "components/forms/Buttons";
+import { StyledButton } from "@/components/forms/Buttons";
 
 interface PaymentTermsPopupProps {
   show: boolean;
@@ -25,7 +25,7 @@ const PaymentTermsPopup = ({
             </p>
             <p className="fw-700 mb-2">
               Paying outside Zehmizeh is against Halacha and violates our{" "}
-              <Link to="/terms-of-service#13" className="text-warning">
+              <Link href="/terms-of-service#13" className="text-warning">
                 Terms
               </Link>
             </p>

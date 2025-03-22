@@ -192,6 +192,7 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
   if (!show) return null;
 
   return (
+
     <div className="fixed inset-0 z-50">
       {/* Backdrop */}
       <div
@@ -210,6 +211,7 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
 
           <div className="content flex flex-col">
             <h2 className="text-[#212529] text-[1.75rem] font-normal text-left mb-8">
+
               Edit Profile Picture
             </h2>
           </div>

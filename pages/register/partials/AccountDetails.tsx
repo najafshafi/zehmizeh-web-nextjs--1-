@@ -489,7 +489,7 @@ export const AccountDetails = ({ setStep, setPayload, shouldShow }: Props) => {
       {/* START ----------------------------------------- Footer */}
       <div className="text-center my-3 mt-4">
         <br />
-        <h4 className="align-self-center">
+        <h4 className="self-center">
           Already have an account?{" "}
           <Link href="/login" className="yellow-link">
             Log in

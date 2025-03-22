@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import Spinner from "@/components/forms/Spin/Spinner";
 import { useRouter, usePathname } from "next/navigation";
 import { Wrapper } from "./job-details.styled";
-import SingleMessaging from "@/pages/messaging/SingleMessaging";
+import SingleMessaging from "@/pages/messaging-page/SingleMessaging";
 import Loader from "@/components/Loader";
 import BackButton from "@/components/ui/BackButton";
 import DetailsBanner from "./DetailsBanner";
@@ -517,7 +517,7 @@ const JobDetails = () => {
                 ) : null}
               </div>
 
-              {/* <div className="flex justify-content-end items-center w-100">
+              {/* <div className="flex justify-end items-center w-100">
                 <StyledButton
                   variant="outline-dark"
                   onClick={toggleEndJobModal}

@@ -86,8 +86,8 @@ const TalentComponent = ({
     <>
       <TalentComponentWrapper
         isSelected={isSelected}
-        className={cns("flex pointer align-items-start", {
-          "flex-column g-2 items-center": isMobile,
+        className={cns("flex pointer items-start", {
+          "flex-col g-2 items-center": isMobile,
         })}
         onClick={onSelect}
       >

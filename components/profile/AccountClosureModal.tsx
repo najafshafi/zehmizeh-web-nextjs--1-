@@ -51,7 +51,7 @@ const AccountClosureModal = ({
             ZehMizeh will have no record of your personal banking and payment
             details after closure.
           </div>
-          <div className="flex flex-column gap-3 mt-md-4 mt-3">
+          <div className="flex flex-col gap-3 mt-md-4 mt-3">
             <StyledButton
               className="fs-16 font-normal"
               variant="primary"

@@ -111,7 +111,7 @@ const Jobs = ({
             <div className="ratings">
               <Ratings ratings={item.rate} />
             </div>
-            {/*<div className="job-client-details d-flex align-items-center">
+            {/*<div className="job-client-details d-flex items-center">
               <div className="light-text">From: </div>
               <BlurredImage
                 src={item?.user_image || '/images/default_avatar.png'}

@@ -3,6 +3,8 @@
 /*
  * This is a prompt modal for deleting..
  */
+
+"use client";
 import { useEffect, useMemo } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useInfiniteQuery } from "react-query";
@@ -171,7 +173,7 @@ const SearchMessagesModal = ({
 
         {!isFetching && searchTerm === "" && searchResults?.length === 0 && (
           <div className="flex justify-center mt-4">
-            <span className="text-center fs-18 opacity-50 mx-5">
+            <span className="text-center text-lg opacity-50 mx-5">
               Search for messages within message thread of "{jobTitle}" project.
             </span>
           </div>

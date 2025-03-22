@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { useQuery } from 'react-query';
-import { getJobDetails } from 'helpers/http/jobs';
-import { isNotAllowedToSubmitReview } from 'helpers/utils/helper';
-import { queryKeys } from 'helpers/const/queryKeys';
+import { getJobDetails } from '@/helpers/http/jobs';
+import { isNotAllowedToSubmitReview } from '@/helpers/utils/helper';
+import { queryKeys } from '@/helpers/const/queryKeys';
 
 const JOB_STATUS = {
   DRAFT: 'draft',

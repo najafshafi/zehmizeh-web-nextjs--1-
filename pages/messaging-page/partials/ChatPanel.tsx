@@ -13,7 +13,8 @@ import BackArrow from "@/public/icons/back-arrow.svg";
 import MessageIcon from "@/public/icons/MessageIcon.svg";
 import useResponsive, { breakpoints } from "@/helpers/hooks/useResponsive";
 import { useAuth } from "@/helpers/contexts/auth-context";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { MdErrorOutline } from "react-icons/md";
 import { formatDate } from "@/helpers/utils/formatter";
 import { useSelector } from "react-redux";
@@ -29,7 +30,7 @@ function ChatPanel({
   showMilestoneAlert = true,
   isFromSingleMessaging = false,
 }: any) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { isDesktop } = useResponsive();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchedChat, setSearchedChat] = useState(null);
@@ -94,7 +95,7 @@ function ChatPanel({
     : moment();
   const daysOfJobClosed = todaysDate.diff(jobClosedDate, "days");
 
-  const hintForMessageLimitInProposal: JSX.Element = useMemo(() => {
+  const hintForMessageLimitInProposal = useMemo(() => {
     if (!activeChat) return <></>;
     if (user?.user_type === "client" && activeTab === "proposals") {
       return (
@@ -113,15 +114,15 @@ function ChatPanel({
         <span style={{ color: "blue" }}>
           <b>NOTE: This freelancer has NOT been hired!</b>
           <br />
-          ‘Proposal’ chats are only meant to help you pick a freelancer -{" "}
+          'Proposal' chats are only meant to help you pick a freelancer -{" "}
           <b>not to work on projects.</b>
           <br />
-          To hire this freelancer, click the ‘Accept Proposal’ button on their
+          To hire this freelancer, click the 'Accept Proposal' button on their
           proposal{" "}
           <Link
             style={{ textDecoration: "underline" }}
             className="link"
-            to={`/client-job-details/${activeChat._job_post_id}/applicants`}
+            href={`/client-job-details/${activeChat._job_post_id}/applicants`}
           >
             HERE
           </Link>
@@ -144,7 +145,7 @@ function ChatPanel({
     }
   }, [activeChat, user?.user_type]);
 
-  const hintForMessageLimitInInvite: JSX.Element = useMemo(() => {
+  const hintForMessageLimitInInvite = useMemo(() => {
     if (!activeChat || activeTab !== "invities") return <></>;
     if (user?.user_type === "freelancer") {
       return (
@@ -156,7 +157,7 @@ function ChatPanel({
           <Link
             style={{ textDecoration: "underline" }}
             className="link"
-            to={`/offer-details/${activeChat._job_post_id}`}
+            href={`/offer-details/${activeChat._job_post_id}`}
           >
             HERE
           </Link>
@@ -171,7 +172,7 @@ function ChatPanel({
           <Link
             style={{ textDecoration: "underline" }}
             className="link"
-            to={`/client-job-details/${activeChat._job_post_id}/applicants`}
+            href={`/client-job-details/${activeChat._job_post_id}/applicants`}
           >
             HERE
           </Link>
@@ -208,32 +209,34 @@ function ChatPanel({
   if (activeTab === "proposals") {
     if (user?.user_type === "freelancer") {
       backToProposalInviteJobButton.onClick = () =>
-        navigate(`/job-details/${activeChat._job_post_id}/proposal_sent`);
+        router.push(`/job-details/${activeChat._job_post_id}/proposal_sent`);
       backToProposalInviteJobButton.text = "See My Proposal";
     } else {
       backToProposalInviteJobButton.text = "See All Proposals";
       backToProposalInviteJobButton.onClick = () =>
-        navigate(`/client-job-details/${activeChat._job_post_id}/applicants`);
+        router.push(
+          `/client-job-details/${activeChat._job_post_id}/applicants`
+        );
     }
   } else if (activeTab === "invities") {
     if (user?.user_type === "freelancer") {
       backToProposalInviteJobButton.text = "Go to Invite";
       backToProposalInviteJobButton.onClick = () =>
-        navigate(`/offer-details/${activeChat._job_post_id}`);
+        router.push(`/offer-details/${activeChat._job_post_id}`);
     } else {
       backToProposalInviteJobButton.text = "Go to Invites";
       backToProposalInviteJobButton.onClick = () =>
-        navigate(`/client-job-details/${activeChat._job_post_id}/invitees`);
+        router.push(`/client-job-details/${activeChat._job_post_id}/invitees`);
     }
   } else {
     if (user?.user_type === "freelancer") {
       backToProposalInviteJobButton.text = "Go to Project";
       backToProposalInviteJobButton.onClick = () =>
-        navigate(`/job-details/${activeChat._job_post_id}`);
+        router.push(`/job-details/${activeChat._job_post_id}`);
     } else {
       backToProposalInviteJobButton.text = "Go to Project";
       backToProposalInviteJobButton.onClick = () =>
-        navigate(`/client-job-details/${activeChat._job_post_id}`);
+        router.push(`/client-job-details/${activeChat._job_post_id}`);
     }
   }
   /* END ------------------------------------------- Back to proposal / invite / project button */
@@ -272,7 +275,7 @@ function ChatPanel({
                 <Link
                   style={{ textDecoration: "underline" }}
                   className="link"
-                  to={`/messages-new/${activeChat._job_post_id}`}
+                  href={`/messages-new/${activeChat._job_post_id}`}
                 >
                   HERE.
                 </Link>
@@ -290,7 +293,7 @@ function ChatPanel({
                 <Link
                   style={{ textDecoration: "underline" }}
                   className="link"
-                  to={`/messages-new/${activeChat._job_post_id}`}
+                  href={`/messages-new/${activeChat._job_post_id}`}
                 >
                   HERE.
                 </Link>
@@ -382,7 +385,7 @@ function ChatPanel({
                 <Link
                   style={{ textDecoration: "underline" }}
                   className="link"
-                  to={`/messages-new/proposal_${getProposalId(
+                  href={`/messages-new/proposal_${getProposalId(
                     activeChat._job_post_id,
                     remoteUser?.user_id
                   )}`}
@@ -404,7 +407,7 @@ function ChatPanel({
                 <Link
                   style={{ textDecoration: "underline" }}
                   className="link"
-                  to={`/messages-new/proposal_${getProposalId(
+                  href={`/messages-new/proposal_${getProposalId(
                     activeChat._job_post_id,
                     remoteUser?.user_id
                   )}`}
@@ -483,7 +486,7 @@ function ChatPanel({
           <section className="m--chatpanel-body flex items-center justify-center my-4">
             {/* <RxEnvelopeClosed size={100} /> */}
             <MessageIcon />
-            <h5 className="my-4">
+            <h5 className="my-4  text-xl font-semibold">
               Click on the chat you want to see from the list on the{" "}
               {!isDesktop ? "top" : "left"}…
             </h5>
@@ -519,7 +522,7 @@ function ChatPanel({
       <header
         className={
           !isDesktop
-            ? "m-panel--header m--chatpanel-header flex flex-column justify-between align-items-start my-2"
+            ? "m-panel--header m--chatpanel-header flex flex-col justify-between items-start my-2"
             : "m-panel--header m--chatpanel-header flex justify-between items-center"
         }
       >

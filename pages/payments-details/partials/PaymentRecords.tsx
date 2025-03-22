@@ -1,17 +1,67 @@
-import NoDataFound from '@/components/ui/NoDataFound';
-import { convertToTitleCase, formatLocalDate, numberWithCommas, pxToRem } from '@/helpers/utils/misc';
-import React from 'react';
-import { Button } from 'react-bootstrap';
-import Table from 'react-bootstrap/Table';
-import styled from 'styled-components';
-import { usePaymentController } from '../PaymentController';
-import Loader from '@/components/Loader';
-import PaginationComponent from '@/components/ui/Pagination';
-import InvoiceModal from './InvoiceModal';
-import Link from 'next/link';
-import useResponsive from '@/helpers/hooks/useResponsive';
-import PaymentCard from './PaymentCard';
-import classNames from 'classnames';
+import NoDataFound from "@/components/ui/NoDataFound";
+import {
+  convertToTitleCase,
+  formatLocalDate,
+  numberWithCommas,
+  pxToRem,
+} from "@/helpers/utils/misc";
+import React from "react";
+import styled from "styled-components";
+import { usePaymentController } from "../PaymentController";
+import Loader from "@/components/Loader";
+import PaginationComponent from "@/components/ui/Pagination";
+import InvoiceModal from "./InvoiceModal";
+import Link from "next/link";
+import useResponsive from "@/helpers/hooks/useResponsive";
+import PaymentCard from "./PaymentCard";
+import classNames from "classnames";
+
+// Define payment row type
+type PaymentRow = {
+  stripe_txn_id: string | number;
+  jobdata: {
+    job_title: string;
+  };
+  milestone:
+    | Array<{
+        milestone_id: string | number;
+        title: string;
+      }>
+    | {
+        title: string;
+      };
+  date_created: string;
+  amount: string | number;
+  charge_trans_id: string | number;
+  payment_type: string;
+};
+
+// Type for PaymentCard props
+type PaymentCardData = {
+  jobdata: {
+    job_title: string;
+  };
+  milestone: {
+    title: string;
+  };
+  date_created: string;
+  amount: string | number;
+  charge_trans_id: string | number;
+  payment_type: string;
+};
+
+// Function to adapt payment row to PaymentCard data format
+const adaptToPaymentCardData = (row: PaymentRow): PaymentCardData => {
+  // If milestone is an array, extract the first milestone's title
+  const milestone = Array.isArray(row.milestone)
+    ? { title: row.milestone[0]?.title || "" }
+    : row.milestone;
+
+  return {
+    ...row,
+    milestone,
+  };
+};
 
 const Wrapper = styled.div`
   margin: 12px;
@@ -50,19 +100,19 @@ const Wrapper = styled.div`
 
 const columns = [
   {
-    label: 'Project name',
+    label: "Project name",
   },
   {
-    label: 'Milestone/Hours Name',
+    label: "Milestone/Hours Name",
   },
   {
-    label: 'Received on',
+    label: "Received on",
   },
   {
-    label: 'Amount',
+    label: "Amount",
   },
   {
-    label: 'Action',
+    label: "Action",
   },
 ];
 function PaymentRecords() {
@@ -96,50 +146,71 @@ function PaymentRecords() {
     <Wrapper>
       {!isMobile
         ? payments?.payments?.length > 0 && (
-            <Table responsive>
-              <thead>
-                <tr>
-                  {columns.map((column) => (
-                    <th key={column.label}>{column.label}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {payments?.payments.map((row) => (
-                  <tr
-                    key={row.stripe_txn_id}
-                    className={classNames('', {
-                      'refund-row': row.payment_type === 'refund',
-                    })}
-                  >
-                    <td className="align-top capitalize-first-ltr">{convertToTitleCase(row.jobdata?.job_title)}</td>
-                    <td className="capitalize-first-ltr align-top">
-                      {row?.milestone &&
-                        Array.isArray(row?.milestone) &&
-                        row?.milestone?.map((ml: any) => (
-                          <p className="mb-0" key={`transcation-milestone-${ml?.milestone_id}`}>
-                            {ml?.title}
-                          </p>
-                        ))}
-                    </td>
-                    <td className="align-top">{formatLocalDate(row?.date_created, 'MMM D, YYYY')}</td>
-                    <td className="align-top">
-                      <b>{numberWithCommas(row?.amount, 'USD')}</b>
-                    </td>
-                    <td className="align-top">
-                      <Link href={`/invoice/${row?.charge_trans_id}`}>
-                        <Button className="download-btn fs-1rem p-0" variant="link">
-                          Download Invoice
-                        </Button>
-                      </Link>
-                    </td>
+            <div className="overflow-x-auto w-full">
+              <table className="w-full table">
+                <thead>
+                  <tr>
+                    {columns.map((column) => (
+                      <th key={column.label} className="text-left">
+                        {column.label}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                </thead>
+                <tbody>
+                  {payments?.payments.map((row: PaymentRow) => (
+                    <tr
+                      key={row.stripe_txn_id}
+                      className={classNames("", {
+                        "refund-row": row.payment_type === "refund",
+                      })}
+                    >
+                      <td className="align-top capitalize-first-ltr">
+                        {convertToTitleCase(row.jobdata?.job_title)}
+                      </td>
+                      <td className="capitalize-first-ltr align-top">
+                        {row?.milestone &&
+                          Array.isArray(row?.milestone) &&
+                          row?.milestone?.map((ml) => (
+                            <p
+                              className="mb-0"
+                              key={`transcation-milestone-${ml?.milestone_id}`}
+                            >
+                              {ml?.title}
+                            </p>
+                          ))}
+                      </td>
+                      <td className="align-top">
+                        {formatLocalDate(
+                          row?.date_created || "",
+                          "MMM D, YYYY"
+                        )}
+                      </td>
+                      <td className="align-top">
+                        <span className="font-bold">
+                          {numberWithCommas(row?.amount, "USD")}
+                        </span>
+                      </td>
+                      <td className="align-top">
+                        <Link href={`/invoice/${row?.charge_trans_id}`}>
+                          <button className="download-btn text-base p-0 text-blue-600 hover:text-blue-800 hover:underline bg-transparent border-none">
+                            Download Invoice
+                          </button>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )
         : payments?.payments?.length &&
-          payments?.payments.map((row) => <PaymentCard key={row.stripe_txn_id} data={row} />)}
+          payments?.payments.map((row: PaymentRow) => (
+            <PaymentCard
+              key={row.stripe_txn_id}
+              data={adaptToPaymentCardData(row)}
+            />
+          ))}
 
       {payments?.totalPages > 0 && (
         <div className="flex items-center justify-center">
@@ -150,7 +221,11 @@ function PaymentRecords() {
           />
         </div>
       )}
-      <InvoiceModal show={invoiceModal.show} onClose={onInvoiceModalClose} data={invoiceModal.data} />
+      <InvoiceModal
+        show={invoiceModal.show}
+        onClose={onInvoiceModalClose}
+        data={invoiceModal.data}
+      />
     </Wrapper>
   );
 }

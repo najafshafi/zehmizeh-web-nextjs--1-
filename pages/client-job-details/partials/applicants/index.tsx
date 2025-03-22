@@ -202,7 +202,7 @@ const Applicants = ({ jobPostId, refetch, jobStatus, jobTitle }: Prop) => {
         sorting={sortKey}
         setSorting={setSorting}
       />
-      <ApplicantsWrapper className="flex flex-column">
+      <ApplicantsWrapper className="flex flex-col">
         {isLoading && <Loader />}
 
         {!isLoading && data?.length == 0 && (
@@ -234,7 +234,7 @@ const Applicants = ({ jobPostId, refetch, jobStatus, jobTitle }: Prop) => {
                   height="80px"
                   width="80px"
                 />
-                <div className="main-details flex flex-column flex-1">
+                <div className="main-details flex flex-col flex-1">
                   <div className="flex justify-between">
                     <div className="flex items-center gap-2">
                       <div className="fs-24 font-normal line-height-140 capitalize">
@@ -269,7 +269,7 @@ const Applicants = ({ jobPostId, refetch, jobStatus, jobTitle }: Prop) => {
                     </div>
                   </div>
 
-                  <div className="flex justify-between align-items-end">
+                  <div className="flex justify-between items-end">
                     <div>
                       <div className="description fs-18 font-normal light-text line-height-140 capital-first-ltr mb-2">
                         {item?.job_title}

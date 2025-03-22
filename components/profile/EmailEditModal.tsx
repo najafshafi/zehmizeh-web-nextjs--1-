@@ -251,14 +251,14 @@ const EmailEditModal = ({
           &times;
         </Button>
 
-        <div className="flex flex-column gap-4">
+        <div className="flex flex-col gap-4">
           <header className="fs-28 font-normal">Edit Email</header>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <label className="flex items-center opacity-75">
               New Email<span className="mandatory">&nbsp;*</span>
             </label>
-            <div className="flex flex-md-row flex-column align-item-center position-relative gap-3">
+            <div className="flex md:flex-row flex-col align-item-center position-relative gap-3">
               <Form.Control
                 placeholder="Enter new email"
                 className="form-input full-width"
@@ -295,7 +295,7 @@ const EmailEditModal = ({
           {isOtpSent ? (
             <Form
               onSubmit={verifyOtpAndChangeEmail}
-              className="flex flex-column gap-4"
+              className="flex flex-col gap-4"
             >
               <div className="fs-15 font-normal opacity-75">
                 Check your email. We&apos;ve sent a 6 digit code. Do not share
@@ -316,7 +316,7 @@ const EmailEditModal = ({
                   margin: 8,
                 }}
               />
-              <div className="flex flex-column align-items-md-end items-center gap-4">
+              <div className="flex flex-col align-items-md-end items-center gap-4">
                 <StyledButton
                   padding="1.125rem 4.225rem"
                   type="submit"

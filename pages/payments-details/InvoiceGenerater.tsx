@@ -4,7 +4,7 @@ import React, { useCallback, useEffect } from "react";
 import styled from "styled-components";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import { useNavigate, useParams } from "react-router-dom";
+import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { getInvoice } from "@/helpers/http/invoice";
 import {
@@ -17,7 +17,7 @@ import BackButton from "@/components/ui/BackButton";
 import useResponsive from "@/helpers/hooks/useResponsive";
 import useStartPageFromTop from "@/helpers/hooks/useStartPageFromTop";
 import toast from "react-hot-toast";
-import { goBack } from "@/helpers/utils/goBack";
+import Image from "next/image";
 
 const Wrapper = styled.div`
   margin: 20px auto;
@@ -56,16 +56,27 @@ const InvoiceBody = styled.div`
     }
   }
 `;
+
+// Define types for milestone data
+type Milestone = {
+  hourly_id: string | number;
+  title: string;
+  total_amount?: number;
+  amount?: number;
+};
+
 function InvoiceGenerater() {
   useStartPageFromTop();
-  const { id } = useParams();
+  const router = useRouter();
+  const { id } = router.query;
   const { isMobile } = useResponsive();
-  const navigate = useNavigate();
 
   const exportPdf = useCallback(() => {
     toast.dismiss();
     toast.loading("Downloading PDF...");
     const input = document.getElementById("invoice");
+    if (!input || !id) return;
+
     html2canvas(input).then((canvas) => {
       if (canvas) {
         const imgData = canvas.toDataURL("image/png");
@@ -100,10 +111,10 @@ function InvoiceGenerater() {
         pdf.addImage(imgData, "PNG", xOffset, 0, finalWidth, finalHeight);
         pdf.save(`ZMZ Invoice (0000${id}).pdf`);
         toast.dismiss();
-        if (isMobile) goBack(navigate, "/payments");
+        if (isMobile) router.back();
       }
     });
-  }, [id, isMobile, navigate]);
+  }, [id, isMobile, router]);
 
   const feeBreakUpHandler = () => {
     const result = { subtotal: 0, fee: 0 };
@@ -123,7 +134,7 @@ function InvoiceGenerater() {
 
   const { data, isLoading, isRefetching } = useQuery(
     ["invoice", id],
-    () => getInvoice(id),
+    () => getInvoice(id as string),
     {
       enabled: !!id,
     }
@@ -172,10 +183,13 @@ function InvoiceGenerater() {
             ].join(", ")}
           </div>
 
-          <img
-            style={{ width: "60px", aspectRatio: "1/1" }}
+          <Image
+            style={{ aspectRatio: "1/1" }}
             src="/images/zehmizeh-logo.svg"
             alt="logo"
+            width={60}
+            height={60}
+            className="object-contain"
           />
         </header>
         <section className="flex justify-between mt-5">
@@ -232,7 +246,7 @@ function InvoiceGenerater() {
               ) : (
                 <>
                   {Array.isArray(invoice?.milestones) &&
-                    invoice?.milestones.map((milestone: any) => (
+                    invoice?.milestones.map((milestone: Milestone) => (
                       <tr
                         className="invoice-content"
                         key={`milestone-${milestone.hourly_id}`}
@@ -245,7 +259,7 @@ function InvoiceGenerater() {
                         </td>
                         <td>
                           {numberWithCommas(
-                            milestone?.total_amount ?? milestone?.amount,
+                            milestone?.total_amount || milestone?.amount || 0,
                             "USD"
                           )}
                         </td>
@@ -312,7 +326,7 @@ function InvoiceGenerater() {
           </table>
         </div>
       </InvoiceBody>
-      <div className="text-center flex g-2 justify-center mt-5 d-print-none">
+      <div className="text-center flex gap-2 justify-center mt-5 d-print-none">
         <StyledButton size="sm" onClick={exportPdf}>
           Download
         </StyledButton>

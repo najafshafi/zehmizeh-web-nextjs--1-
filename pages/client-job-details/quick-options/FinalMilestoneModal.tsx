@@ -23,7 +23,7 @@ const FinalMilestoneModal = ({ show, toggle, onConfirm, loading }: Props) => {
           would like to accept or decline the request.
         </div>
 
-        <div className="flex flex-column flex-md-row justify-center mt-4 gap-2">
+        <div className="flex flex-col md:flex-row justify-center mt-4 gap-2">
           <StyledButton
             className="fs-16 font-normal"
             variant="primary"

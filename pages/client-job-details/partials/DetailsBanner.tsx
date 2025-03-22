@@ -4,8 +4,8 @@
 import { useMemo, useState } from "react";
 import { useTheme } from "styled-components";
 import moment from "moment";
-import { StatusBadge } from "components/styled/Badges";
-import BlurredImage from "components/ui/BlurredImage";
+import { StatusBadge } from "@/components/styled/Badges";
+import BlurredImage from "@/components/ui/BlurredImage";
 import EditDueDate from "./EditDueDate";
 import {
   DraftProspectJobBanner,
@@ -16,15 +16,15 @@ import {
   changeStatusDisplayFormat,
   showFormattedBudget,
   convertToTitleCase,
-} from "helpers/utils/misc";
-import { JOBS_STATUS } from "pages/jobs/consts";
-import { ReactComponent as Edit } from "assets/icons/edit.svg";
-import { getJobExpirationInDays } from "helpers/utils/helper";
-import ChangeBudgetModal from "components/changeBudget/ChangeBudgetModal";
+} from "@/helpers/utils/misc";
+import { JOBS_STATUS } from "@/pages/jobs-page/consts";
+import Edit from "@/public/icons/edit.svg";
+import { getJobExpirationInDays } from "@/helpers/utils/helper";
+import ChangeBudgetModal from "@/components/changeBudget/ChangeBudgetModal";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { ChangeBudgetDeleteRequest } from "components/changeBudget/ChangeBudgetDeleteRequest";
-import { TJobDetails } from "helpers/types/job.type";
+import { ChangeBudgetDeleteRequest } from "@/components/changeBudget/ChangeBudgetDeleteRequest";
+import { TJobDetails } from "@/helpers/types/job.type";
 import MilestoneStats from "./MilestoneStats";
 
 const JobDetailsBanner = ({
@@ -82,8 +82,8 @@ const JobDetailsBanner = ({
   const expirationDays = getJobExpirationInDays(data);
 
   return ["draft", "prospects", "deleted"].includes(data?.status) ? (
-    <DraftProspectJobBanner className="flex flex-column gap-3">
-      <div className="header flex justify-between align-items-start flex-wrap gap-3">
+    <DraftProspectJobBanner className="flex flex-col gap-3">
+      <div className="header flex justify-between items-start flex-wrap gap-3">
         <header className="banner-title fs-24 font-normal">
           {convertToTitleCase(data.job_title)}
         </header>
@@ -101,7 +101,7 @@ const JobDetailsBanner = ({
           )}
         </div>
       </div>
-      <div className="budget-and-earnings flex flex-column flex-lg-row align-items-lg-center gap-3">
+      <div className="budget-and-earnings flex flex-col flex-lg-row align-items-lg-center gap-3">
         {/* START ----------------------------------------- Started on */}
         <div>
           <span className="light-text fs-20 font-normal">{dateLabel}</span>
@@ -158,12 +158,12 @@ const JobDetailsBanner = ({
         />
       )}
       <InProgressClosedJobWrapper>
-        <div className="header flex flex-column flex-md-row justify-between align-items-start gap-3">
-          <div className="job-basic-details flex flex-column">
+        <div className="header flex flex-col md:flex-row justify-between items-start gap-3">
+          <div className="job-basic-details flex flex-col">
             <header className="banner-title fs-24 font-normal">
               {convertToTitleCase(data.job_title)}
             </header>
-            <div className="flex flex-column flex-lg-row align-lg-items-center gap-3">
+            <div className="flex flex-col flex-lg-row align-lg-items-center gap-3">
               <div>
                 <span className="light-text fs-20 font-normal">
                   {dateLabel}
@@ -237,7 +237,7 @@ const JobDetailsBanner = ({
           </div>
         </div>
 
-        <div className="budget-and-earnings gap-md-4 gap-3 flex flex-column flex-md-row align-items-md-center justify-between">
+        <div className="budget-and-earnings gap-md-4 gap-3 flex flex-col md:flex-row align-items-md-center justify-between">
           <div className="flex-1">
             <label className="light-text fs-1rem font-normal">
               Total Budget

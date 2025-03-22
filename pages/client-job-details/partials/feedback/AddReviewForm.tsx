@@ -58,9 +58,9 @@ const AddReviewForm = ({
   };
 
   return (
-    <div className="content flex flex-column">
+    <div className="content flex flex-col">
       <div className="fs-24 font-normal">Give your review</div>
-      <div className="ratings flex flex-column">
+      <div className="ratings flex flex-col">
         <div className="ratings__label fs-16 font-normal">
           RATE YOUR EXPERIENCE WITH {freelancerName}
         </div>

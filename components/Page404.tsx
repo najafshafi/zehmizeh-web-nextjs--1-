@@ -28,7 +28,7 @@ function Page404() {
   const navigate = useNavigate();
 
   return (
-    <Wrapper className="flex justify-center items-center flex-column">
+    <Wrapper className="flex justify-center items-center flex-col">
       <Image
         src="images/notFound.png"
         width="250px"

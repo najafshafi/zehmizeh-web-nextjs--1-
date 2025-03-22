@@ -39,7 +39,7 @@ export const WarningFreelancerMessageModal = ({
         <Button variant="transparent" className="close" onClick={closeModal}>
           &times;
         </Button>
-        <div className="flex flex-column justify-center items-center">
+        <div className="flex flex-col justify-center items-center">
           <h4>Note: The Freelancer Has NOT Been Hired</h4>
 
           {/* <p className="mt-4 mb-2">

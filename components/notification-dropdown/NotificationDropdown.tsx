@@ -38,8 +38,8 @@ export const NotificationDropdown = ({
     return [...unReadNotification, ...readNotification];
   };
 
-  useEffect(() => {
-    if (user)
+  const fetchNotifications = () => {
+    if (user) {
       getNotifications().then((res) => {
         const notifications = res?.notifications;
         if (notifications?.length > 0) {
@@ -47,6 +47,19 @@ export const NotificationDropdown = ({
           setNotifications(notifyData);
         }
       });
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+
+    // Set up polling to check for new notifications every 30 seconds
+    const intervalId = setInterval(() => {
+      fetchNotifications();
+    }, 30000);
+
+    // Clean up the interval when component unmounts
+    return () => clearInterval(intervalId);
   }, [user]);
 
   useEffect(() => {

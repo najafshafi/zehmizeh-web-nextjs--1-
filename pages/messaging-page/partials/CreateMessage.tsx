@@ -22,7 +22,8 @@ import { StyledButton } from "@/components/forms/Buttons";
 import Tooltip from "rc-tooltip";
 import { addNewMessage } from "@/store/redux/slices/talkjsSlice";
 import { appendNewMessage } from "@/store/redux/slices/chatSlice";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 const Notice = styled.div`
@@ -131,7 +132,7 @@ export default function CreateMessage({
   const [threadLoading, setThreadLoading] = useState<boolean>(false);
 
   const dispatch: AppDispatch = useDispatch();
-  const navigate = useNavigate();
+  const router = useRouter();
   const { user } = useAuth();
   const remoteUser =
     user.user_id !== activeChat?._from_user_data.user_id
@@ -141,7 +142,7 @@ export default function CreateMessage({
 
   const [uploadLoading, setUploadLoading] = useState(false);
   const [messageText, setMessageText] = useState("");
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<any[]>([]);
 
   const clearMessageInput = () => {
     const element = document.getElementById("wsc-check");
@@ -208,10 +209,13 @@ export default function CreateMessage({
   const fileUploadHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFilesArr = [];
 
-    for (let i = 0; i < e.target.files.length; i++) {
-      const file = e.target.files[i];
-      const { success, data } = await uploadAttachement(file);
-      if (success) uploadedFilesArr.push(data);
+    if (e.target.files) {
+      for (let i = 0; i < e.target.files.length; i++) {
+        const file = e.target.files[i];
+        const result = await uploadAttachement(file);
+        if (result && result.success && result.data)
+          uploadedFilesArr.push(result.data);
+      }
     }
 
     setFiles([...files, ...uploadedFilesArr]);
@@ -328,7 +332,7 @@ export default function CreateMessage({
     toast.promise(promise, {
       loading: "create thread...",
       success: () => {
-        navigate(`/messages-new/${conversationId}`);
+        router.push(`/messages-new/${conversationId}`);
         setThreadLoading(false);
         return "thread created successfully";
       },
@@ -353,7 +357,7 @@ export default function CreateMessage({
           Chat using our new module from{" "}
           <Link
             className="new-module-link"
-            to={`/messages-new/${conversationId}`}
+            href={`/messages-new/${conversationId}`}
           >
             here.
           </Link>

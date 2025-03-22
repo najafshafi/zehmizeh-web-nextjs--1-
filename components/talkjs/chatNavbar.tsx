@@ -5,10 +5,10 @@ import Clock from "@/public/icons/clock.svg";
 import { useMemo } from "react";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import moment from "moment";
-import { ChatHeaderButton } from "@/pages/messaging/messaging.styled";
+import { ChatHeaderButton } from "@/pages/messaging-page/messaging.styled";
 import { chatTypeSolidColor } from "@/helpers/http/common";
 import { RemoteUserProp } from "@/store/redux/slices/talkjs.interface";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa6";
 import ExportChat from "./ExportChat";
 
@@ -94,7 +94,7 @@ const ChatNavbar = ({ setOpen, singleConversation }: Prop) => {
           Messages page. To move this project forward, visit its unique page -{" "}
           <Link
             className="link"
-            to={link}
+            href={link}
             style={{ textDecoration: "underline" }}
           >
             HERE
@@ -117,7 +117,7 @@ const ChatNavbar = ({ setOpen, singleConversation }: Prop) => {
           <Link
             style={{ textDecoration: "underline" }}
             className="link"
-            to={`/offer-details/${selectedConversation.custom.jobPostId}`}
+            href={`/offer-details/${selectedConversation.custom.jobPostId}`}
           >
             HERE
           </Link>
@@ -132,7 +132,7 @@ const ChatNavbar = ({ setOpen, singleConversation }: Prop) => {
           <Link
             style={{ textDecoration: "underline" }}
             className="link"
-            to={`/client-job-details/${selectedConversation.custom.jobPostId}/invitees`}
+            href={`/client-job-details/${selectedConversation.custom.jobPostId}/invitees`}
           >
             HERE
           </Link>
@@ -206,8 +206,8 @@ const ChatNavbar = ({ setOpen, singleConversation }: Prop) => {
               </T.MobileViewButtons>
             )}
             <div>
-              <h1>{remoteUser.username}</h1>
-              <p>{remoteUser.projectName}</p>
+              <h1 className="text-xl font-semibold">{remoteUser.username}</h1>
+              <p className="text-normal">{remoteUser.projectName}</p>
             </div>
           </div>
           {!singleConversation && (
@@ -223,21 +223,20 @@ const ChatNavbar = ({ setOpen, singleConversation }: Prop) => {
                     stroke={chatTypeSolidColor(
                       selectedConversation.custom.type
                     )}
-                    width={14}
-                    height={14}
                   />
+
                   <span>
                     {remoteUser.userType === "freelancer"
                       ? "Freelancer"
                       : "Client"}
-                    's timezone:{" "}
+                    &apos;s timezone:{" "}
                     {moment()
                       .tz(remoteUser?.timezone ?? "")
                       .format("hh:mm A")}
                   </span>
                 </ChatHeaderButton>
               )}
-              <Link to={jobDetailsPage}>
+              <Link href={jobDetailsPage}>
                 <ChatHeaderButton
                   variantType="primary"
                   variantColor={selectedConversation.custom.type}

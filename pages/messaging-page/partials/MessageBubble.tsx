@@ -56,7 +56,7 @@ function MessageBubble({
       {data.type === "FILE" ? (
         <div
           className={cns("message__content d-mflex g-1", {
-            "justify-content-end": authorType === "self",
+            "justify-end": authorType === "self",
           })}
         >
           <FileMsg
@@ -68,7 +68,7 @@ function MessageBubble({
       ) : (
         <div
           className={cns("message__content d-mflex g-1", {
-            "justify-content-end": authorType === "self",
+            "justify-end": authorType === "self",
           })}
         >
           {authorType !== "self" && (

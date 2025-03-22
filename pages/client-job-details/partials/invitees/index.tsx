@@ -3,29 +3,29 @@
  */
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import Loader from "components/Loader";
-import { StyledButton } from "components/forms/Buttons";
-import ProposalDetailsModal from "components/jobs/ProposalDetailsModal";
-import { StatusBadge } from "components/styled/Badges";
-import BlurredImage from "components/ui/BlurredImage";
-import PaginationComponent from "components/ui/Pagination";
-import NoDataFound from "components/ui/NoDataFound";
+import Loader from "@/components/Loader";
+import { StyledButton } from "@/components/forms/Buttons";
+import ProposalDetailsModal from "@/components/jobs/ProposalDetailsModal";
+import { StatusBadge } from "@/components/styled/Badges";
+import BlurredImage from "@/components/ui/BlurredImage";
+import PaginationComponent from "@/components/ui/Pagination";
+import NoDataFound from "@/components/ui/NoDataFound";
 import { InviteesWrapper, InviteesListItem } from "./invitees.styled";
 import useInvitees from "../../hooks/useInvitees";
-import { separateValuesWithComma } from "helpers/utils/misc";
-import { ReactComponent as LocationIcon } from "assets/icons/location-blue.svg";
-import { ReactComponent as StarIcon } from "assets/icons/star-yellow.svg";
+import { separateValuesWithComma } from "@/helpers/utils/misc";
+import LocationIcon from "@/public/icons/location-blue.svg";
+import StarIcon from "@/public/icons/star-yellow.svg";
 import moment from "moment";
-import { TJOB_STATUS } from "helpers/types/job.type";
-import { formatDateAndTime } from "helpers/utils/formatter";
-import { JOBS_STATUS } from "pages/jobs/consts";
+import { TJOB_STATUS } from "@/helpers/types/job.type";
+import { formatDateAndTime } from "@/helpers/utils/formatter";
+import { JOBS_STATUS } from "@/pages/jobs-page/consts";
 import toast from "react-hot-toast";
 import {
   talkJsCreateNewThread,
   talkJsFetchSingleConversation,
-} from "helpers/http/common";
-import { useAuth } from "helpers/contexts/auth-context";
-import ChatModal from "components/talkjs/chat-modal";
+} from "@/helpers/http/common";
+import { useAuth } from "@/helpers/contexts/auth-context";
+import ChatModal from "@/components/talkjs/chat-modal";
 
 const RECORDS_PER_PAGE = 10;
 
@@ -179,7 +179,7 @@ export const Invitees = ({
   };
 
   return (
-    <InviteesWrapper className="flex flex-column">
+    <InviteesWrapper className="flex flex-col">
       {isLoading && <Loader />}
 
       {!isLoading && data?.length == 0 && (
@@ -204,7 +204,7 @@ export const Invitees = ({
                 height="80px"
                 width="80px"
               />
-              <div className="main-details flex flex-column">
+              <div className="main-details flex flex-col">
                 <div className="flex items-center gap-2">
                   <div className="fs-24 font-normal line-height-140 capitalize">
                     <Link to={`/freelancer/${item?.user_id}`}>
@@ -257,7 +257,7 @@ export const Invitees = ({
                 </div>
               </div>
             </div>
-            <div className="right-section flex flex-column justify-between align-items-start align-items-lg-end">
+            <div className="right-section flex flex-col justify-between items-start align-items-lg-end">
               <div className="fs-24 fw-700">
                 {/* {numberWithCommas(item?.proposed_budget?.amount, 'USD')} */}
                 {/* {item?.proposed_budget.type == 'hourly' ? '/hr' : ''} */}
