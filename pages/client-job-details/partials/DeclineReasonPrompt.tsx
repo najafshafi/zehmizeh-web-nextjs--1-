@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Modal, Button, Form } from "react-bootstrap";
-import { StyledModal } from "components/styled/StyledModal";
-import { StyledButton } from "components/forms/Buttons";
-import { FormWrapper } from "./milestones/milestones.styled";
-import { manageMilestone } from "helpers/http/jobs";
-import { manageHours } from "helpers/http/jobs";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import { FormWrapper } from "@/pages/job-details-page/milestones/milestones.styled";
+import { manageMilestone } from "@/helpers/http/jobs";
+import { manageHours } from "@/helpers/http/jobs";
 
 type Props = {
   show: boolean;

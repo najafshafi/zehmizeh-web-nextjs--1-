@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { Card, Button } from "react-bootstrap";
 import Link from "next/link";
 import {
   convertToTitleCase,
@@ -24,7 +23,7 @@ type Props = {
   };
 };
 
-const Wrapper = styled(Card)`
+const Wrapper = styled.div`
   box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.04);
   border-radius: 0.75rem;
   .payment-invoice-download-btn {
@@ -42,31 +41,31 @@ const Wrapper = styled(Card)`
 const PaymentCard = ({ data }: Props) => {
   return (
     <Wrapper
-      className={classNames("payment-card mb-4", {
+      className={classNames("payment-card mb-4 bg-white p-4", {
         "refund-row": data.payment_type === "refund",
       })}
     >
-      <Card.Body className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3">
         <div>
-          <div className="card-label fs-sm font-normal">PROJECT NAME</div>
-          <div className="fs-20 font-normal">
+          <div className="card-label text-sm font-normal">PROJECT NAME</div>
+          <div className="text-xl font-normal">
             {convertToTitleCase(data.jobdata?.job_title)}
           </div>
         </div>
         <div>
-          <div className="card-label fs-sm font-normal">SUMMARY</div>
-          <div className="fs-20 font-normal">{data.milestone?.title}</div>
+          <div className="card-label text-sm font-normal">SUMMARY</div>
+          <div className="text-xl font-normal">{data.milestone?.title}</div>
         </div>
         <div className="flex items-center flex-wrap gap-2">
           <div className="flex-1">
-            <div className="card-label fs-sm font-normal">RECEIVED ON</div>
-            <div className="fs-20 font-normal">
+            <div className="card-label text-sm font-normal">RECEIVED ON</div>
+            <div className="text-xl font-normal">
               {formatLocalDate(data?.date_created, "LL")}
             </div>
           </div>
-          <div className="flex-1 ps-1">
-            <div className="card-label fs-sm font-normal">AMOUNT</div>
-            <div className="fs-20 fw-700">
+          <div className="flex-1 pl-1">
+            <div className="card-label text-sm font-normal">AMOUNT</div>
+            <div className="text-xl font-bold">
               ${numberWithCommas(data?.amount)}
             </div>
           </div>
@@ -76,12 +75,12 @@ const PaymentCard = ({ data }: Props) => {
             href={`/invoice/${data?.charge_trans_id}`}
             className="payment-invoice-download-btn"
           >
-            <Button className="download-btn fs-1rem p-0" variant="link">
+            <button className="download-btn text-base p-0 text-blue-600 hover:text-blue-800 hover:underline bg-transparent border-none">
               Download Invoice
-            </Button>
+            </button>
           </Link>
         </div>
-      </Card.Body>
+      </div>
     </Wrapper>
   );
 };

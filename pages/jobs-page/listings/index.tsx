@@ -90,7 +90,7 @@
 //           }
 //           key={item.job_post_id}
 //           className={classNames(
-//             'pointer flex flex-col flex-md-row justify-between gap-3 no-hover-effect',
+//             'pointer flex flex-col md:flex-row justify-between gap-3 no-hover-effect',
 //             {
 //               'pe-none': isProjectHiddenForFreelancer(item),
 //               'pe-auto': !isProjectHiddenForFreelancer(item),

@@ -258,7 +258,7 @@ const EmailEditModal = ({
             <label className="flex items-center opacity-75">
               New Email<span className="mandatory">&nbsp;*</span>
             </label>
-            <div className="flex flex-md-row flex-col align-item-center position-relative gap-3">
+            <div className="flex md:flex-row flex-col align-item-center position-relative gap-3">
               <Form.Control
                 placeholder="Enter new email"
                 className="form-input full-width"

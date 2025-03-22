@@ -247,7 +247,7 @@ const HoursManagement = ({
             className="flex flex-col milestone-item"
             data-hourly-status={item.hourly_status}
           >
-            <div className="flex flex-md-row flex-col justify-between gap-md-3 gap-4">
+            <div className="flex md:flex-row flex-col justify-between gap-md-3 gap-4">
               <div>
                 <div className="fs-20 font-normal capital-first-ltr">
                   {item.is_final_milestone
@@ -378,7 +378,7 @@ const HoursManagement = ({
                 </div>
               ) : null}
             </div>
-            <div className="flex mt-md-3 flex-md-row flex-col justify-between align-items-md-end gap-3">
+            <div className="flex mt-md-3 md:flex-row flex-col justify-between align-items-md-end gap-3">
               <div>
                 <StyledHtmlText
                   needToBeShorten
@@ -426,7 +426,7 @@ const HoursManagement = ({
               "under_dispute",
               "decline_dispute",
             ].includes(item.hourly_status) ? (
-              <div className="flex flex-md-row flex-col mt-3 gap-3 justify-content-md-end justify-center">
+              <div className="flex md:flex-row flex-col mt-3 gap-3 justify-content-md-end justify-center">
                 <StyledButton
                   variant="outline-dark"
                   padding="1rem 2rem"

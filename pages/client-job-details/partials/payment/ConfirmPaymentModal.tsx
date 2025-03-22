@@ -148,7 +148,7 @@ const ConfirmPaymentModal = ({
             )}
           </>
         )}
-        <div className="flex flex-col flex-md-row justify-center mt-4 gap-2">
+        <div className="flex flex-col md:flex-row justify-center mt-4 gap-2">
           {isReleasePrompt && (
             <StyledButton
               className="fs-16 font-normal"

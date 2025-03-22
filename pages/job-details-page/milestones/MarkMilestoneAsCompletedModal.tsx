@@ -53,7 +53,7 @@ const MarkMilestoneAsCompleted = ({ stateData, toggle, onConfirm }: Props) => {
             notified that you’re ready to have your payment delivered.
           </p>
 
-          <div className="flex flex-col flex-md-row justify-center gap-3">
+          <div className="flex flex-col md:flex-row justify-center gap-3">
             <StyledButton
               className="fs-16 font-normal"
               variant="outline-dark"

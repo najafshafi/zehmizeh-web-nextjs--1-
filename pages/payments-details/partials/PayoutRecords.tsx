@@ -1,14 +1,31 @@
-import NoDataFound from '@/components/ui/NoDataFound';
-import { formatLocalDate, numberWithCommas, pxToRem } from '@/helpers/utils/misc';
-import React from 'react';
-import Table from 'react-bootstrap/Table';
-import styled from 'styled-components';
-import { usePaymentController } from '../PaymentController';
-import Loader from '@/components/Loader';
-import PaginationComponent from '@/components/ui/Pagination';
-import useResponsive from '@/helpers/hooks/useResponsive';
-import PayoutCard from './PayoutCard';
-import classNames from 'classnames';
+import NoDataFound from "@/components/ui/NoDataFound";
+import {
+  formatLocalDate,
+  numberWithCommas,
+  pxToRem,
+} from "@/helpers/utils/misc";
+import React from "react";
+import styled from "styled-components";
+import { usePaymentController } from "../PaymentController";
+import Loader from "@/components/Loader";
+import PaginationComponent from "@/components/ui/Pagination";
+import useResponsive from "@/helpers/hooks/useResponsive";
+import PayoutCard from "./PayoutCard";
+import classNames from "classnames";
+
+// Define payout row type
+type PayoutRow = {
+  payout_id: string | number;
+  payment_amount: string | number;
+  currency: string;
+  bank_detail: {
+    bank_name: string;
+    last_4_digit: string | number;
+  };
+  stripe_status: string;
+  date_created: string;
+  arrival_date: string;
+};
 
 const Wrapper = styled.div`
   margin: 12px;
@@ -47,19 +64,19 @@ const Wrapper = styled.div`
 
 const columns = [
   {
-    label: 'Amount',
+    label: "Amount",
   },
   {
-    label: 'Bank Name',
+    label: "Bank Name",
   },
   {
-    label: 'Status',
+    label: "Status",
   },
   {
-    label: 'Initiated Date',
+    label: "Initiated Date",
   },
   {
-    label: 'Estimated Arrival Date',
+    label: "Estimated Arrival Date",
   },
 ];
 
@@ -85,41 +102,56 @@ function PayoutRecords() {
     <Wrapper>
       {!isMobile
         ? payouts?.payouts?.length > 0 && (
-            <Table responsive>
-              <thead>
-                <tr>
-                  {columns.map((column) => (
-                    <th key={column.label}>{column.label}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {payouts?.payouts.map((row) => (
-                  <tr
-                    key={row.payout_id}
-                    className={classNames('', {
-                      'refund-row': row?.stripe_status === 'pending',
-                    })}
-                  >
-                    <td>
-                      <b>{numberWithCommas(row?.payment_amount, row?.currency)}</b>
-                    </td>
-                    <td>
-                      {row?.bank_detail?.bank_name}
-                      {'****'}
-                      {row?.bank_detail?.last_4_digit}
-                    </td>
-                    <td className="capital-first-ltr">
-                      {row?.stripe_status === 'paid' ? 'Deposited' : row?.stripe_status?.replace('_', ' ')}
-                    </td>
-                    <td>{formatLocalDate(row?.date_created, 'MMM D, YYYY')}</td>
-                    <td>{formatLocalDate(row?.arrival_date, 'MMM D, YYYY')}</td>
+            <div className="overflow-x-auto w-full">
+              <table className="w-full table">
+                <thead>
+                  <tr>
+                    {columns.map((column) => (
+                      <th key={column.label} className="text-left">
+                        {column.label}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                </thead>
+                <tbody>
+                  {payouts?.payouts.map((row: PayoutRow) => (
+                    <tr
+                      key={row.payout_id}
+                      className={classNames("", {
+                        "refund-row": row?.stripe_status === "pending",
+                      })}
+                    >
+                      <td>
+                        <span className="font-bold">
+                          {numberWithCommas(row?.payment_amount, row?.currency)}
+                        </span>
+                      </td>
+                      <td>
+                        {row?.bank_detail?.bank_name}
+                        {"****"}
+                        {row?.bank_detail?.last_4_digit}
+                      </td>
+                      <td className="capital-first-ltr">
+                        {row?.stripe_status === "paid"
+                          ? "Deposited"
+                          : row?.stripe_status?.replace("_", " ")}
+                      </td>
+                      <td>
+                        {formatLocalDate(row?.date_created, "MMM D, YYYY")}
+                      </td>
+                      <td>
+                        {formatLocalDate(row?.arrival_date, "MMM D, YYYY")}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )
-        : payouts?.payouts?.length && payouts?.payouts.map((row) => <PayoutCard key={row.payout_id} data={row} />)}
+        : payouts?.payouts?.length &&
+          payouts?.payouts.map((row: PayoutRow) => (
+            <PayoutCard key={row.payout_id} data={row} />
+          ))}
       {payouts?.totalPages > 0 && (
         <div className="flex items-center justify-center">
           <PaginationComponent

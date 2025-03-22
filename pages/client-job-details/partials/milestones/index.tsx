@@ -393,7 +393,7 @@ const Milestones = ({
             className="flex flex-col milestone-item"
             data-milestone-status={item.status}
           >
-            <div className="flex flex-md-row flex-col justify-between gap-md-3 gap-4">
+            <div className="flex md:flex-row flex-col justify-between gap-md-3 gap-4">
               <div>
                 <div className="fs-20 font-normal capital-first-ltr">
                   {convertToTitleCase(item.title)}
@@ -455,7 +455,7 @@ const Milestones = ({
                 </div>
               </div>
             </div>
-            <div className="flex mt-md-1 flex-md-row flex-col justify-between align-items-md-end gap-3">
+            <div className="flex mt-md-1 md:flex-row flex-col justify-between align-items-md-end gap-3">
               <div>
                 <StyledHtmlText
                   needToBeShorten
