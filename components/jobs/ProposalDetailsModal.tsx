@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import toast from "react-hot-toast";
 import moment from "moment";
@@ -153,7 +154,7 @@ const ProposalDetailsModal = ({
   type = "proposal",
 }: Props) => {
   const { isMobile } = useResponsive();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [showPaymentTerms, setShowPaymentTerms] = useState<boolean>(false);
   const [pendingChatAction, setPendingChatAction] = useState<boolean>(false);
   const [fetching, setFetching] = useState<boolean>(false);
@@ -410,7 +411,7 @@ const ProposalDetailsModal = ({
           setLoading(false);
           refetch(status === "accept" ? false : true);
           if (proposalDetails?._job_post_id)
-            navigate(`/client-job-details/${proposalDetails._job_post_id}`);
+            router.push(`/client-job-details/${proposalDetails._job_post_id}`);
           return res.message;
         },
         error: (err) => {
@@ -499,7 +500,7 @@ const ProposalDetailsModal = ({
         className={isMobile ? "w-100" : null}
         variant="primary"
         onClick={() =>
-          navigate(
+          router.push(
             `/client-job-details/${proposalDetails._job_post_id}/applicants`
           )
         }
@@ -606,7 +607,7 @@ const ProposalDetailsModal = ({
               {!replyOnProjectPageBtn && proposalDetails?.user_id && (
                 <Link
                   className="view-profile-link"
-                  to={`/freelancer/${proposalDetails?.user_id}`}
+                  href={`/freelancer/${proposalDetails?.user_id}`}
                 >
                   <StyledButton
                     padding="1rem 2rem"
@@ -642,7 +643,7 @@ const ProposalDetailsModal = ({
                             { "navigation-link": replyOnProjectPageBtn },
                             "mr-2"
                           )}
-                          to={`/freelancer/${proposalDetails?.user_id}`}
+                          href={`/freelancer/${proposalDetails?.user_id}`}
                         >
                           {proposalDetails?.first_name}{" "}
                           {proposalDetails?.last_name}
@@ -965,7 +966,7 @@ const ProposalDetailsModal = ({
                       variant="primary"
                       disabled={loading}
                       onClick={() => {
-                        return navigate(
+                        return router.push(
                           `/messages-new/invite_${proposalDetails.invite_id}`
                         );
                       }}

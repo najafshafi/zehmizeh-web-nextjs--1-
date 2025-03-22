@@ -162,7 +162,9 @@ const FaqForm = () => {
 
   return (
     <FormWrapper>
-      <h4 className="text-center mb-3">Frequently Asked Questions</h4>
+      <h4 className="text-center mb-3 text-2xl font-semibold">
+        Frequently Asked Questions
+      </h4>
       <div>
         <p>
           Are you confused about something you see on ZehMizeh? Would you like

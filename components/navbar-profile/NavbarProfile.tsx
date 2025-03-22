@@ -24,7 +24,6 @@ interface MenuItem {
 const NavbarProfile = () => {
   const { signout, user } = useAuth();
   const pathname = usePathname() || ""; // Handle null pathname
-  const url = pathname.split("/")[1];
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -34,21 +33,40 @@ const NavbarProfile = () => {
   // const [windowWidth, setWindowWidth] = useState<number | null>(null);
   // const [notificationCount, setNotificationCount] = useState(1);
 
-  const navigationItems: NavigationItem[] = [
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/jobs", label: "My Projects" },
-    { href: "/messages-new", label: "Messages" },
-    { href: "/payments", label: "Transactions" },
-    { href: "/support", label: "Help" },
-  ];
+  // Check if user is a client or freelancer
+  const isClient = user?.user_type === "client";
 
-  const menuItems: MenuItem[] = [
-    { href: "/freelancer/account/Profile", label: "My Profile" },
-    { href: "/freelancer/account/Portfolio", label: "My Portfolio" },
-    { href: "/freelancer/account/Ratings", label: "My Ratings" },
-    { href: "/freelancer/account/Payments", label: "My Payment Details" },
-    { href: "/freelancer/account/Settings", label: "My Account Settings" },
-  ];
+  const navigationItems: NavigationItem[] = isClient
+    ? [
+        { href: "/client/dashboard", label: "Dashboard" },
+        { href: "/client-jobs", label: "My Projects" },
+        { href: "/search?type=freelancers", label: "Find Freelancers" },
+        { href: "/messages-new", label: "Messages" },
+        { href: "/payments", label: "Transactions" },
+        { href: "/support", label: "Help" },
+      ]
+    : [
+        { href: "/dashboard", label: "Dashboard" },
+        { href: "/jobs", label: "My Projects" },
+        { href: "/messages-new", label: "Messages" },
+        { href: "/payments", label: "Transactions" },
+        { href: "/support", label: "Help" },
+      ];
+
+  const menuItems: MenuItem[] = isClient
+    ? [
+        { href: "/freelancer/account/Profile", label: "My Profile" },
+        { href: "/client/account/Ratings", label: "My Ratings" },
+        { href: "/client/account/Payments", label: "My Payment Details" },
+        { href: "/client/account/Settings", label: "My Account Settings" },
+      ]
+    : [
+        { href: "/freelancer/account/Profile", label: "My Profile" },
+        { href: "/freelancer/account/Portfolio", label: "My Portfolio" },
+        { href: "/freelancer/account/Ratings", label: "My Ratings" },
+        { href: "/freelancer/account/Payments", label: "My Payment Details" },
+        { href: "/freelancer/account/Settings", label: "My Account Settings" },
+      ];
 
   const handleResize = useCallback(() => {
     // setWindowWidth(window.innerWidth);
@@ -94,20 +112,41 @@ const NavbarProfile = () => {
     }
   };
 
-  const NavLink = ({ href, label }: NavigationItem) => (
-    <div className="relative group">
-      <Link href={href}>
-        <p
-          className={`${
-            url === href.replace("/", "") ? "font-semibold" : "font-normal"
-          } text-black text-[18px] group-hover:text-black/60 transition-colors duration-200`}
-        >
-          {label}
-        </p>
-      </Link>
-      <span className="block h-[2px] bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center" />
-    </div>
-  );
+  const NavLink = ({ href, label }: NavigationItem) => {
+    // Improved active path detection that handles deeper paths
+    const isActive = () => {
+      if (href.startsWith("/search")) {
+        // Handle search paths specifically (for Find Freelancers)
+        return (
+          pathname.startsWith("/search") &&
+          pathname.includes(href.split("?")[1])
+        );
+      }
+
+      // For client dashboard and other deep paths
+      if (href.includes("/client/") || href.includes("/freelancer/")) {
+        return pathname.startsWith(href);
+      }
+
+      // For top-level paths like /jobs, /client-jobs, etc.
+      return pathname === href || pathname.startsWith(`${href}/`);
+    };
+
+    return (
+      <div className="relative group">
+        <Link href={href}>
+          <p
+            className={`${
+              isActive() ? "font-semibold" : "font-normal"
+            } text-black text-[18px] group-hover:text-black/60 transition-colors duration-200`}
+          >
+            {label}
+          </p>
+        </Link>
+        <span className="block h-[2px] bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center" />
+      </div>
+    );
+  };
 
   // Remove redundant fetchUser effect if handled in signout or auth context
   useEffect(() => {
@@ -132,7 +171,7 @@ const NavbarProfile = () => {
 
           <div className="ml-1 h-5 border border-customGray" />
           <nav
-            className="hidden lg:flex items-center gap-8"
+            className="hidden lg:flex items-center gap-5"
             aria-label="Main navigation"
           >
             {navigationItems.map((item) => (
@@ -159,9 +198,13 @@ const NavbarProfile = () => {
         <div className="hidden lg:flex items-center gap-4 px-4">
           <NotificationDropdown />
           <CustomButton
-            text="Find Projects"
+            text={isClient ? "Post Project" : "Find Projects"}
             className="px-8 py-[15px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
-            onClick={() => router.push("/search?type=jobs&page=1")} // Update with actual route
+            onClick={() =>
+              router.push(
+                isClient ? "/post-new-job" : "/search?type=jobs&page=1"
+              )
+            }
           />
           <div className="relative" ref={dropdownRef}>
             <button
@@ -306,11 +349,13 @@ const NavbarProfile = () => {
           ))}
           <div className="flex justify-center">
             <CustomButton
-              text="Find Projects"
+              text={isClient ? "Post Project" : "Find Projects"}
               className="px-9 py-4 w-fit mx-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
               onClick={() => {
                 setIsMobileMenuOpen(false);
-                router.push("/search?type=jobs&page=1"); // Update with actual route
+                router.push(
+                  isClient ? "/post-new-job" : "/search?type=jobs&page=1"
+                );
               }}
             />
           </div>
