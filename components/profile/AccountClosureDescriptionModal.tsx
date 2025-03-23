@@ -1,30 +1,15 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { Modal, Button, Form, Spinner } from "react-bootstrap";
-import styled from "styled-components";
-import { StyledButton } from "@/components/forms/Buttons";
-import { StyledModal } from "@/components/styled/StyledModal";
+import { VscClose } from "react-icons/vsc";
 import TextEditor from "@/components/forms/TextEditor";
 
-type Props = {
+interface Props {
   show: boolean;
   toggle: () => void;
   onConfirm?: (msg: string) => void;
   loading: boolean;
-};
-
-const ContentWrapper = styled.div`
-  .invite-freelancer__message-box {
-    padding: 1rem 1.25rem;
-    margin-top: 2.5rem;
-  }
-  .issue-textarea {
-    // border: 1px solid #e7e7e7;
-    box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.04);
-    border-radius: 8px;
-    width: 100%;
-    padding: 10px 20px;
-  }
-`;
+}
 
 const AccountClosureDescriptionModal = ({
   show,
@@ -33,10 +18,30 @@ const AccountClosureDescriptionModal = ({
   loading,
 }: Props) => {
   const [message, setMessage] = useState<string>("");
-  const onCloseModal = () => {
-    setMessage("");
-    toggle();
-  };
+
+  useEffect(() => {
+    if (show) {
+      // Store current scroll position
+      const scrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+      document.body.style.top = `-${scrollY}px`;
+    } else {
+      // Restore scroll position
+      const scrollY = document.body.style.top;
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.top = "";
+      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
+    }
+
+    return () => {
+      // Cleanup
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.top = "";
+    };
+  }, [show]);
 
   useEffect(() => {
     if (show) {
@@ -44,62 +49,70 @@ const AccountClosureDescriptionModal = ({
     }
   }, [show]);
 
-  const onDescriptionChange = (data: any) => {
+  const handleClose = () => {
+    setMessage("");
+    toggle();
+  };
+
+  const onDescriptionChange = (data: string) => {
     setMessage(data);
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onConfirm(message);
+    if (onConfirm) {
+      onConfirm(message);
+    }
   };
 
+  if (!show) return null;
+
   return (
-    <StyledModal
-      show={show}
-      size="lg"
-      onHide={onCloseModal}
-      centered
-      maxwidth={765}
-    >
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={onCloseModal}>
-          &times;
-        </Button>
-        <ContentWrapper>
-          <Form onSubmit={handleSubmit}>
-            <div className="content">
-              <div className="fs-20 font-normal">
-                We're sorry to see you go! We can improve with your feedback...
-                please let us know why you're closing your account.
-              </div>
-              <Form.Group className="mt-4">
-                <TextEditor
-                  value={message}
-                  onChange={onDescriptionChange}
-                  placeholder="Write here..."
-                  maxChars={1000}
-                />
-              </Form.Group>
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-hidden">
+      <div
+        className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm"
+        onClick={handleClose}
+      />
+      <div className="relative bg-white rounded-xl px-[1rem] py-[2rem] md:p-12 max-w-[765px] w-full mx-4 my-8">
+        <button
+          className="absolute right-4 top-4 md:top-0 md:-right-8 text-2xl md:text-white text-gray-500 hover:text-gray-700"
+          onClick={handleClose}
+        >
+          <VscClose size={24} />
+        </button>
+
+        <form onSubmit={handleSubmit} className="w-full">
+          <div className="content">
+            <div className="text-[20px] font-normal">
+              We&apos;re sorry to see you go! We can improve with your
+              feedback... please let us know why you&apos;re closing your
+              account.
             </div>
-            <div className="bottom-buttons flex">
-              <StyledButton
-                className="fs-16 font-normal"
-                variant="primary"
-                padding="0.8125rem 2rem"
-                type="submit"
-                disabled={message === "" || loading}
-              >
-                {loading ? (
-                  <Spinner animation="border" />
-                ) : (
-                  "Closed Account Request"
-                )}
-              </StyledButton>
+            <div className="mt-4">
+              <TextEditor
+                value={message}
+                onChange={onDescriptionChange}
+                placeholder="Write here..."
+                maxChars={1000}
+              />
             </div>
-          </Form>
-        </ContentWrapper>
-      </Modal.Body>
-    </StyledModal>
+          </div>
+          <div className="flex justify-center md:justify-end mt-8">
+            <button
+              type="submit"
+              disabled={message === "" || loading}
+              className="w-fit bg-[#F2B420] text-[#212529] px-8 py-[0.9rem] hover:scale-105 duration-300 text-[18px] self-end rounded-full disabled:bg-[#F2A420] flex items-center justify-center"
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-[#212529] border-t-transparent rounded-full animate-spin" />
+              ) : (
+                "Closed Account Request"
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

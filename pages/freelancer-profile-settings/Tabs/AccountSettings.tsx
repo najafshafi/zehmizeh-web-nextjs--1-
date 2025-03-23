@@ -35,6 +35,25 @@ import StateDropdown from "@/components/forms/state-picker/StatePicker";
 import AccountClosureDescriptionModal from "@/components/profile/AccountClosureDescriptionModal";
 import CustomButton from "@/components/custombutton/CustomButton";
 
+interface Location {
+  label: string;
+  state: string;
+  country_id: number;
+  country_code: string;
+  country_name: string;
+  country_short_name: string;
+}
+
+interface NotificationOption {
+  label: string;
+  value: string;
+}
+
+interface StateSelection {
+  label: string;
+  value: string;
+}
+
 const singleSelectProps = {
   closeMenuOnSelect: true,
   isMulti: false,
@@ -50,7 +69,14 @@ const initialState: TFormData = {
   formatted_phonenumber: "",
   notification_email: 0,
   new_message_email_notification: 0,
-  location: null,
+  location: {
+    label: "",
+    state: "",
+    country_id: 0,
+    country_code: "",
+    country_name: "",
+    country_short_name: "",
+  } as Location,
 };
 
 type TFormData = Pick<
@@ -93,26 +119,30 @@ export const AccountSettings = () => {
   const [formData, setFormData] = useState<TFormData>(initialState);
   const [inputFieldLoading, setInputFieldLoading] =
     useState<TInputFieldLoading>("");
-  const [errors, setErrors] = useState<TFormData>(undefined);
+  const [errors, setErrors] = useState<Partial<TFormData>>({});
 
   useEffect(() => {
-    setFormData({
-      first_name: data?.first_name,
-      last_name: data?.last_name,
-      formatted_phonenumber: data?.formatted_phonenumber,
-      is_agency: data?.is_agency,
-      new_message_email_notification: data?.new_message_email_notification,
-      notification_email: data?.notification_email,
-      phone_number: data?.phone_number,
-      u_email_id: data?.u_email_id,
-      location: data?.location,
-    });
+    if (data) {
+      setFormData({
+        first_name: data.first_name || "",
+        last_name: data.last_name || "",
+        formatted_phonenumber: data.formatted_phonenumber || "",
+        is_agency: data.is_agency || 0,
+        new_message_email_notification:
+          data.new_message_email_notification || 0,
+        notification_email: data.notification_email || 0,
+        phone_number: data.phone_number || "",
+        u_email_id: data.u_email_id || "",
+        location: data.location || initialState.location,
+      });
+    }
   }, [data]);
 
-  const notificationEmailOptions = async () =>
-    (await CONSTANTS.NOTIFICATION_EMAIL) as any;
-  const newMessageEmailOptions = async () =>
-    (await CONSTANTS.NEW_MESSAGE_EMAIL_OPTIONS) as any;
+  const notificationEmailOptions = async (): Promise<NotificationOption[]> =>
+    CONSTANTS.NOTIFICATION_EMAIL;
+
+  const newMessageEmailOptions = async (): Promise<NotificationOption[]> =>
+    CONSTANTS.NEW_MESSAGE_EMAIL_OPTIONS;
 
   const handleCancelDeletionRequest = () => {
     const promise = cancelAccountClosure();
@@ -140,7 +170,7 @@ export const AccountSettings = () => {
     setShowClosureDescriptionModal(!showClosureDescriptionModal);
   };
 
-  const onConfirmAccountDeletion = (message) => {
+  const onConfirmAccountDeletion = (message: string) => {
     const body = {
       message: message,
     };
@@ -177,7 +207,7 @@ export const AccountSettings = () => {
     freelancerAccountProfileValidation
       .validate(data)
       .then(() => {
-        setErrors(undefined);
+        setErrors({});
         setInputFieldLoading(loadingFieldName);
         const promise = editUser(data);
         toast.promise(promise, {
@@ -195,8 +225,8 @@ export const AccountSettings = () => {
         });
       })
       .catch((error) => {
-        const errors = getYupErrors({ inner: [error] });
-        setErrors({ ...errors });
+        const validationErrors = getYupErrors({ inner: [error] });
+        setErrors(validationErrors as Partial<TFormData>);
       });
   };
 
@@ -230,6 +260,22 @@ export const AccountSettings = () => {
         )}
       </div>
     );
+  };
+
+  const handleStateChange = (item: StateSelection | null) => {
+    if (item && formData.location) {
+      const newLocation = {
+        ...formData.location,
+        state: item.value,
+      };
+      setFormData((prev) => ({
+        ...prev,
+        location: newLocation,
+      }));
+      handleEditUser("state/region", {
+        location: newLocation,
+      });
+    }
   };
 
   return (
@@ -395,24 +441,12 @@ export const AccountSettings = () => {
                 </div>
                 <StateDropdown
                   countryCode={formData?.location?.country_short_name}
-                  onSelectState={(item) => {
-                    const newLocation = {
-                      ...formData.location,
-                      state: item,
-                    };
-                    setFormData((prev) => ({
-                      ...prev,
-                      location: newLocation,
-                    }));
-                    handleEditUser("state/region", {
-                      location: newLocation,
-                    });
-                  }}
+                  onSelectState={handleStateChange}
                   selectedState={
                     formData?.location?.state
                       ? {
-                          label: formData?.location?.state,
-                          value: formData?.location?.state,
+                          label: formData.location.state,
+                          value: formData.location.state,
                         }
                       : null
                   }
@@ -436,7 +470,7 @@ export const AccountSettings = () => {
               <div className="email-input-wrapper">
                 <input
                   placeholder="Enter your email"
-                  className="w-full px-3 py-4 border rounded email-input"
+                  className="w-full px-3 py-4 border rounded email-input "
                   value={formData?.u_email_id}
                   disabled={true}
                 />
@@ -493,10 +527,7 @@ export const AccountSettings = () => {
             <StyledFormGroup>
               <div className="text-sm font-normal mb-1">
                 Frequency of Project Board Emails{" "}
-                <Tooltip
-                  customTrigger={<InfoIcon />}
-                  className="inline-block"
-                >
+                <Tooltip customTrigger={<InfoIcon />} className="inline-block">
                   Freelancers can receive email updates when new, relevant
                   projects are added to the project board. You can set how often
                   you would like to receive these emails here.
@@ -532,10 +563,7 @@ export const AccountSettings = () => {
             <StyledFormGroup>
               <div className="text-sm font-normal mb-1">
                 Unread Messages Notifications Settings
-                <Tooltip
-                  customTrigger={<InfoIcon />}
-                  className="inline-block"
-                >
+                <Tooltip customTrigger={<InfoIcon />} className="inline-block">
                   Freelancers are notified by email when a new message is
                   received on ZMZ. You can set here how often you would like to
                   receive these emails.
