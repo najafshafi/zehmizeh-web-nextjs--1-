@@ -3,11 +3,13 @@
  */
 
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
 import { VscClose } from "react-icons/vsc";
 import ErrorMessage from "@/components/ui/ErrorMessage";
-import CustomUploader from "@/components/ui/CustomUploader";
+import CustomUploader, {
+  TCustomUploaderFile,
+} from "@/components/ui/CustomUploader";
 import { validateCourse } from "@/helpers/validation/common";
 import { getYupErrors } from "@/helpers/utils/misc";
 import { manageCourse } from "@/helpers/http/freelancer";
@@ -95,10 +97,7 @@ const CourseEditModal = ({
   );
 
   // This is a wrapper function to adapt our interface to the CustomUploader component
-  const handleUploadImage = (uploadData: {
-    file: string;
-    fileName?: string;
-  }) => {
+  const handleUploadImage = (uploadData: TCustomUploaderFile) => {
     handleChange("certificate_link", [
       { fileUrl: uploadData.file, fileName: uploadData.fileName },
     ]);
@@ -163,6 +162,20 @@ const CourseEditModal = ({
       },
     });
   };
+
+  // Memoize the CustomUploader component to prevent recreating styled components on each render
+  const MemoizedCustomUploader = useMemo(() => {
+    return (
+      <CustomUploader
+        handleUploadImage={handleUploadImage}
+        attachments={formState.certificate_link}
+        removeAttachment={removeAttachment}
+        suggestions="File type: PDF, JPG, PNG, JPEG"
+        placeholder="Upload certificate"
+        acceptedFormats="image/*, .pdf"
+      />
+    );
+  }, [formState.certificate_link, removeAttachment]);
 
   if (!show) return null;
 
@@ -239,14 +252,7 @@ const CourseEditModal = ({
 
             {/* Certificate Upload */}
             <div className="form-group">
-              <CustomUploader
-                handleUploadImage={handleUploadImage}
-                attachments={formState.certificate_link}
-                removeAttachment={removeAttachment}
-                suggestions="File type: PDF, JPG, PNG, JPEG"
-                placeholder="Upload certificate"
-                acceptedFormats="image/*, .pdf"
-              />
+              {MemoizedCustomUploader}
               {errors?.certificate_link && (
                 <ErrorMessage message={errors.certificate_link} />
               )}

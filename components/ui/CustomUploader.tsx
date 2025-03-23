@@ -58,6 +58,12 @@ export const Wrapper = styled.div`
   }
 `;
 
+export const UploadCount = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
 export type TCustomUploaderFile = Partial<{
   file: string;
   fileName: string;
@@ -205,12 +211,6 @@ const CustomUploader = ({
       showErr("Error while uploading file.");
     }
   };
-
-  const UploadCount = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  `;
 
   const count = attachments?.length + (totalUploaded || 0);
 

@@ -177,12 +177,13 @@ const DisputeForm = () => {
 
   return (
     <FormWrapper>
-      <h4 className="text-center mb-3 text-2xl font-semibold">Submit Dispute</h4>
+      <h4 className="text-center mb-3 text-2xl font-semibold">
+        Submit Dispute
+      </h4>
       <div className="form-group">
         <FormLabel className="text-base font-normal">
-          Select Project<span className="mandatory">&nbsp;*</span>
+          Select Project<span className="mandatory text-red-500">&nbsp;*</span>
         </FormLabel>
-        
 
         {/* Project dropdown */}
 
@@ -198,7 +199,7 @@ const DisputeForm = () => {
       <div className="form-group">
         <FormLabel className="text-base font-normal">
           Select Milestone/Hours Submission
-          <span className="mandatory">&nbsp;*</span>
+          <span className="mandatory text-red-500">&nbsp;*</span>
         </FormLabel>
 
         {/* Project milestone dropdown */}
@@ -215,10 +216,13 @@ const DisputeForm = () => {
 
       {/* Description CK Editor */}
       <div className="form-group">
-        <FormLabel className="text-base font-normal">
-          Explain the reasons behind your dispute. Include all relevant details.
-          <span className="mandatory">&nbsp;*</span>
-        </FormLabel>
+        <div className="mb-2">
+          <FormLabel className="text-base font-normal ">
+            Explain the reasons behind your dispute. Include all relevant
+            details.
+            <span className="mandatory text-red-500">&nbsp;*</span>
+          </FormLabel>
+        </div>
         <CKEditor
           editor={ClassicEditor}
           data={description}
