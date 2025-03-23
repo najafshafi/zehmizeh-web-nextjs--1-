@@ -6,7 +6,7 @@ import { addEditPortfolio } from "@/helpers/http/portfolio";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import AttachmentPreview from "@/components/ui/AttachmentPreview";
 import FileUploadToAws from "./FileUploadToAws";
-import { components, NoticeProps } from "react-select";
+import { components } from "react-select";
 import AsyncSelect from "react-select/async";
 import { MultiSelectCustomStyle } from "@/pages/freelancer-profile-settings/edit-modals/multiSelectCustomStyle";
 import { getSkills } from "@/helpers/http/common";
@@ -56,21 +56,23 @@ interface PortfolioBody {
 const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
   const [attachments, setAttachments] = useState<AttachmentProps[]>([]);
   const jsonData = portfolio?.project_skills;
-  const parsedSkills = jsonData?.startsWith("[") && JSON.parse(jsonData);
-  const [skills, setSkills] = useState<any[]>(parsedSkills || []);
+  const parsedSkills = jsonData?.startsWith("[") ? JSON.parse(jsonData) : [];
+  const [skills, setSkills] =
+    useState<Array<{ id: string; name: string }>>(parsedSkills);
 
-  const formInitials = {
+  const formInitials: FormData = {
     project_name: portfolio?.project_name ?? "",
     project_year: portfolio?.project_year ?? "",
-    project_skills: skills ?? "",
+    project_skills: skills ?? [],
     project_description: portfolio?.project_description ?? "",
   };
 
   const getDefaultSkillOptions = useMemo(() => {
     if (skills?.length > 0) {
-      return skills?.map((item: any) => {
-        return { label: item.name, value: item.id };
-      });
+      return skills.map((item) => ({
+        label: item.name,
+        value: item.id,
+      }));
     }
     return [];
   }, [skills]);
@@ -78,37 +80,31 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
   const { useForm } = useFormPg;
   const { register, handleSubmit, formState, reset } = useForm<FormData>({
     defaultValues: formInitials,
-    resolver: yupResolver(portfolioValidation) as any,
+    resolver: yupResolver(portfolioValidation),
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: FormData) => {
     if (attachments?.length === 0) {
       toast.error("Please upload at least one attachment.");
       return;
     }
 
     const attachmentUrls = attachments
-      ?.map((attachment: any) => {
-        return attachment.fileUrl;
-      })
-      .filter((url) => !!url);
+      .map((attachment) => attachment.fileUrl)
+      .filter((url): url is string => !!url);
 
-    const body: any = {
-      action: "add_portfolio",
+    const body: PortfolioBody = {
+      action: portfolio ? "edit_portfolio" : "add_portfolio",
       project_name: data.project_name?.replace(/'/g, `''`),
-      project_year: data.project_year,
+      project_year: String(data.project_year),
       project_description: data.project_description?.replace(/'/g, `''`),
-      project_skills: JSON.stringify(skills || []),
+      project_skills: JSON.stringify(skills),
       image_urls: attachmentUrls,
     };
 
-    if (portfolio) {
-      body.action = "edit_portfolio";
+    if (portfolio?.portfolio_id) {
       body.portfolio_id = portfolio.portfolio_id;
     }
-
-    // Converting project year to string
-    body.project_year = String(body.project_year || "");
 
     try {
       const promise = addEditPortfolio(body);
@@ -120,9 +116,9 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
           return res.message;
         },
         error: (err) => {
-          console.error("API Error:", err);
-          if (err && err?.response && err?.response?.data)
-            return err?.response?.data?.message ?? "Unexpected Error Occurred.";
+          if (err?.response?.data?.message) {
+            return err.response.data.message;
+          }
           return "An unexpected error occurred.";
         },
       });
@@ -164,23 +160,17 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
     styles: MultiSelectCustomStyle,
   };
 
-  const skillOptions = (inputValue: string) => {
-    const skills: any = [];
-    return getSkills(inputValue || "")
-      .then((res) => {
-        res.data.forEach(function (item: any) {
-          const obj = {
-            label: item.skill_name,
-            value: item.skill_id,
-          };
-          skills.push(obj);
-        });
-        return skills;
-      })
-      .catch((error) => {
-        console.error("Error fetching skills:", error);
-        return [];
-      });
+  const skillOptions = async (inputValue: string) => {
+    try {
+      const res = await getSkills(inputValue || "");
+      return res.data.map((item: { skill_name: string; skill_id: string }) => ({
+        label: item.skill_name,
+        value: item.skill_id,
+      }));
+    } catch (error) {
+      console.error("Error fetching skills:", error);
+      return [];
+    }
   };
 
   const onSelectSkill = (
@@ -360,7 +350,7 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
 export default AddPortfolioModal;
 
 const NoOptionsMessage = (
-  props: NoticeProps<{ value: string; label: string }>
+  props: components.NoticeProps<{ value: string; label: string }>
 ) => {
   return (
     <components.NoOptionsMessage {...props}>

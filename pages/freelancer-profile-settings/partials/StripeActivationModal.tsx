@@ -68,7 +68,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
             crossing country borders, and delivering precisely according to your
             country&apos;s banking customs.
           </p>
-          <p>
+          <p className="mt-4">
             <b>If you are from Israel, or any non-American country</b>- you can
             still get paid on ZehMizeh! While the normal Stripe account may not
             be available in your country, all ZehMizeh users can get paid
@@ -86,10 +86,10 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
             Before registering for Stripe, you have to decide:
             <b> where would you like your payments to arrive?</b>
           </p>
-          <p>
+          <p className="mt-4">
             You can have your payments sent to a country you&apos;re not living
             in, as long as:
-            <ol className="list-decimal pl-5 mt-2">
+            <ol className="list-decimal ml-8 mt-2">
               <li className="mt-1">
                 It&apos;s an approved ZehMizeh country (listed in the options
                 below)
@@ -97,7 +97,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
               <li className="mt-1">You have a bank account there.</li>
             </ol>
           </p>
-          <p>
+          <p className="mt-4">
             Select below the country <b>of the bank account</b> where you would
             like your payments to be sent. (If that&apos;s the country you live
             in, select that country.){" "}
@@ -116,7 +116,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
             information up to three times. They&apos;ll be asking for basic
             information, like:
           </p>
-          <ul className="list-disc pl-5 mt-2">
+          <ul className="list-disc ml-8 mt-4">
             <li className="mt-1">Name</li>
             <li className="mt-1">Birthdate</li>
             {country?.country_short_name === "US" && (
@@ -130,7 +130,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
             )}
             <li className="mt-1">Bank Account Details</li>
           </ul>
-          <p>
+          <p className="mt-4">
             Most important is your <b>proof of identity document</b>, a
             government-issued document that matches the information you&apos;ve
             entered. This is essential for verification purposes.
@@ -139,7 +139,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
             Your Preferred Banking Country is: {country?.country_name}
           </div>
           <div className="mt-2">Acceptable ID Documents include:</div>
-          <ul className="list-disc pl-5 mt-2">
+          <ul className="list-disc ml-8 mt-4">
             {country?.country_short_name &&
               IDENTITY_DOCS[country.country_short_name]?.map(
                 (item: string, index: number) => (
@@ -158,7 +158,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                here
+                (here)
               </Link>
             )}
             .
@@ -175,7 +175,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
             Stripe requires users to have access to texting to verify their
             identity. There is no way around this in their design.
           </p>
-          <p>
+          <p className="mt-4">
             This is only necessary for registration, so we recommend that users
             without texting temporarily borrow the phone number of a friend with
             texting. Once you have your ID Document in hand, the whole
@@ -218,12 +218,12 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
             />
 
             {/* Step Counter */}
-            <div className="text-right mb-4">
+            <div className="text-right">
               {step}/{modalContent.length}
             </div>
 
             {/* Title */}
-            <h3 className="!text-[2rem] !capitalize !text-black font-bold mb-8 pb-2">
+            <h3 className="!text-[2rem] !normal-case !text-black font-bold !mb-4">
               {modalContent[currIndex]?.title}
             </h3>
 
@@ -238,7 +238,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
               {step === 1 && (
                 <button
                   onClick={() => setStep(step + 1)}
-                  className="rounded-full bg-[#F7B500] px-6 py-2.5 text-base font-medium text-[#1d1e1b] hover:bg-[#E5A800] focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
+                  className="bg-[#f2b420] text-[#212529] px-8 py-[0.9rem] hover:scale-105 duration-300 text-lg rounded-full disabled:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
                 >
                   Next
                 </button>
@@ -246,27 +246,29 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
 
               {/* Step 2 */}
               {step === 2 && (
-                <>
-                  <div className="w-full mb-4">
-                    <p className="mb-2">
+                <div className="flex flex-col gap-6 w-full">
+                  <div className="w-full">
+                    <p className="my-2">
                       Preferred Banking Country
                       <span className="text-red-500">&nbsp;*</span>
                     </p>
-                    <CountryDropdown
-                      placeholder="Enter the country that your payments will be sent to"
-                      selectedCountry={country}
-                      onSelectCountry={(item: Country) => setCountry(item)}
-                    />
+                    <div className="w-full">
+                      <CountryDropdown
+                        placeholder="Enter the country that your payments will be sent to"
+                        selectedCountry={country}
+                        onSelectCountry={(item: Country) => setCountry(item)}
+                      />
+                    </div>
                     {countryErr && !country && (
                       <p className="text-red-600 text-sm mt-1">
                         This field is required
                       </p>
                     )}
                   </div>
-                  <div className="flex justify-end gap-3">
+                  <div className="flex justify-start gap-5">
                     <button
                       onClick={() => setStep(step - 1)}
-                      className="rounded-full border border-gray-300 bg-white px-6 py-2.5 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                      className="rounded-full bg-[#f2b420] px-8 py-[0.9rem] text-lg font-medium text-[#1d1e1b] hover:scale-105 duration-300 focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
                     >
                       Previous
                     </button>
@@ -275,17 +277,17 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
                         setCountryErr(true);
                         if (country) setStep(step + 1);
                       }}
-                      className="rounded-full bg-[#F7B500] px-6 py-2.5 text-base font-medium text-[#1d1e1b] hover:bg-[#E5A800] focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
+                      className="rounded-full bg-[#f2b420] px-8 py-[0.9rem] text-lg font-medium text-[#1d1e1b] hover:scale-105 duration-300 focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
                     >
                       Next
                     </button>
                   </div>
-                </>
+                </div>
               )}
 
               {/* Step 3 */}
               {step === 3 && (
-                <>
+                <div className="flex flex-col gap-4 w-full">
                   <div className="flex items-center mb-4">
                     <Checkbox
                       checked={check}
@@ -296,14 +298,14 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
                     </span>
                   </div>
                   {checkErr && !check && (
-                    <p className="text-red-600 text-sm mb-4">
+                    <p className="text-red-600 text-sm mb-2">
                       Please confirm that the instructions are read.
                     </p>
                   )}
-                  <div className="flex justify-end gap-3">
+                  <div className="flex justify-start gap-5">
                     <button
                       onClick={() => setStep(step - 1)}
-                      className="rounded-full border border-gray-300 bg-white px-6 py-2.5 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                      className="rounded-full bg-[#f2b420] px-8 py-[0.9rem] text-lg font-medium text-[#1d1e1b] hover:scale-105 duration-300 focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
                     >
                       Previous
                     </button>
@@ -312,12 +314,12 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
                         setCheckErr(true);
                         if (check) setStep(step + 1);
                       }}
-                      className="rounded-full bg-[#F7B500] px-6 py-2.5 text-base font-medium text-[#1d1e1b] hover:bg-[#E5A800] focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
+                      className="rounded-full bg-[#f2b420] px-8 py-[0.9rem] text-lg font-medium text-[#1d1e1b] hover:scale-105 duration-300 focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
                     >
                       Next
                     </button>
                   </div>
-                </>
+                </div>
               )}
 
               {/* Step 4 */}
@@ -325,7 +327,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
                 <div className="flex justify-end gap-3">
                   <button
                     onClick={() => setStep(step - 1)}
-                    className="rounded-full border border-gray-300 bg-white px-6 py-2.5 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                    className="rounded-full bg-[#f2b420] px-8 py-[0.9rem] text-lg font-medium text-[#1d1e1b] hover:scale-105 duration-300 focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
                   >
                     Previous
                   </button>
@@ -335,7 +337,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
                         onVerify(country);
                       }
                     }}
-                    className="rounded-full bg-[#F7B500] px-6 py-2.5 text-base font-medium text-[#1d1e1b] hover:bg-[#E5A800] focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
+                    className="rounded-full bg-[#f2b420] px-8 py-[0.9rem] text-lg font-medium text-[#1d1e1b] hover:scale-105 duration-300 focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
                   >
                     Continue to Stripe Registration
                   </button>
