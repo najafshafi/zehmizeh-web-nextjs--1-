@@ -23,62 +23,64 @@ const ClientDashboard = () => {
   const { user } = useAuth();
 
   return (
-    <Wrapper className="m-auto my-7">
-      {/* Title and post a job button */}
-      <div className="flex items-center justify-between flex-wrap gap-2">
-        <PageTitle>{user?.first_name}&apos;s Dashboard</PageTitle>
+    <div className="mx-5 md:mx-0 md:w-[88%]">
+      <Wrapper className="m-auto my-7">
+        {/* Title and post a job button */}
+        <div className="flex items-center justify-between flex-wrap gap-4 ">
+          <PageTitle>{user?.first_name}&apos;s Dashboard</PageTitle>
 
-        {!isAllowedToPostProject ? (
-          <Tooltip
-            customTrigger={
+          {!isAllowedToPostProject ? (
+            <Tooltip
+              customTrigger={
+                <CustomButton
+                  className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+                  text="Post New Project"
+                  onClick={() => {}}
+                />
+              }
+            >
+              <p>
+                In order to post a project, add a credit card or verified bank
+                account to your profile.
+              </p>
+              <Link href="/client/account/payments">
+                <u>Update my profile</u>
+              </Link>
+            </Tooltip>
+          ) : (
+            <Link href="/post-new-job">
               <CustomButton
                 className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
                 text="Post New Project"
                 onClick={() => {}}
               />
-            }
-          >
-            <p>
-              In order to post a project, add a credit card or verified bank
-              account to your profile.
-            </p>
-            <Link href="/client/account/payments">
-              <u>Update my profile</u>
             </Link>
-          </Tooltip>
-        ) : (
-          <Link href="/post-new-job">
-            <CustomButton
-              className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
-              text="Post New Project"
-              onClick={() => {}}
-            />
-          </Link>
-        )}
-      </div>
-
-      {/* Dashboard Stats */}
-
-      {/* Dashboard stats */}
-      <DashboardStats />
-
-      <div className="jobs-and-proposals my-8">
-        {/* Jobs and proposals */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="jobs-proposal-col">
-            <Jobs />
-          </div>
-          <div className="jobs-proposal-col">
-            <Proposals />
-          </div>
+          )}
         </div>
 
-        {/* Freelancers */}
-        <div className="w-full">
-          <Freelancers />
+        {/* Dashboard Stats */}
+
+        {/* Dashboard stats */}
+        <DashboardStats />
+
+        <div className="jobs-and-proposals my-8">
+          {/* Jobs and proposals */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="jobs-proposal-col">
+              <Jobs />
+            </div>
+            <div className="jobs-proposal-col">
+              <Proposals />
+            </div>
+          </div>
+
+          {/* Freelancers */}
+          <div className="w-full">
+            <Freelancers />
+          </div>
         </div>
-      </div>
-    </Wrapper>
+      </Wrapper>
+    </div>
   );
 };
 

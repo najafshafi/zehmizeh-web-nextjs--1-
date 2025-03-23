@@ -40,15 +40,15 @@ const AboutUs = () => {
           <div className="flex flex-col gap-3">
             <p className="text-[20px] font-bold">The World of Freelancing</p>
             <p className="text-[18px] font-normal leading-7">
-              There&apos;s a whole world of professionals who make their own hours,
-              who don&apos;t have a set office, who sell their services to different
-              clients every month.
+              There&apos;s a whole world of professionals who make their own
+              hours, who don&apos;t have a set office, who sell their services
+              to different clients every month.
             </p>
             <p className="text-[18px] font-normal leading-7">
-              They&apos;re called “freelancers” and their numbers are growing all the
-              time. The modern world allows these incredibly talented workers to
-              take their services to whoever wants them, getting paid on a
-              project-by-project basis.
+              They&apos;re called “freelancers” and their numbers are growing
+              all the time. The modern world allows these incredibly talented
+              workers to take their services to whoever wants them, getting paid
+              on a project-by-project basis.
             </p>
             <p className="text-[18px] font-normal leading-7">
               While this style of work can be very rewarding, there is one
@@ -66,18 +66,19 @@ const AboutUs = () => {
               specialists looking for their next gig.
             </p>
             <p className="text-[18px] font-normal leading-7">
-              When you need an expert for your business, you shouldn&apos;t have to
-              ask around and hope your cousin&apos;s recommendation is good. Now, you
-              can find top-rated experts from around the globe, in all manner of
-              industries!
+              When you need an expert for your business, you shouldn&apos;t have
+              to ask around and hope your cousin&apos;s recommendation is good.
+              Now, you can find top-rated experts from around the globe, in all
+              manner of industries!
             </p>
             <p className="text-[18px] font-normal leading-7">
-              And for the Jewish freelancers out there - you shouldn&apos;t have to
-              exhaust yourself looking for clients. You know there are amazing
-              opportunities out there, if only you could find them. How much
-              could your business grow if those projects were delivered right to
-              your laptop? How would your career change if you could just focus,
-              not on promoting yourself, but on doing what you&apos;re great at?
+              And for the Jewish freelancers out there - you shouldn&apos;t have
+              to exhaust yourself looking for clients. You know there are
+              amazing opportunities out there, if only you could find them. How
+              much could your business grow if those projects were delivered
+              right to your laptop? How would your career change if you could
+              just focus, not on promoting yourself, but on doing what
+              you&apos;re great at?
             </p>
           </div>
 
@@ -108,13 +109,17 @@ const AboutUs = () => {
             <p className="text-[20px] font-bold">Our Address:</p>
 
             <p className="text-[20px] font-normal leading-7">600 NY-208 </p>
-            <p className="text-[20px] font-normal leading-7">Monroe NY 10950 USA</p>
+            <p className="text-[20px] font-normal leading-7">
+              Monroe NY 10950 USA
+            </p>
           </div>
 
           <div className="flex flex-col">
             <p className="text-[20px] font-bold">Email:</p>
 
-            <p className="text-[20px] font-normal leading-7 hover:text-[#0a58ca] cursor-pointer" >info@zehmizeh.com</p>
+            <p className="text-[20px] font-normal leading-7 hover:text-[#0a58ca] cursor-pointer">
+              info@zehmizeh.com
+            </p>
           </div>
         </div>
       </div>

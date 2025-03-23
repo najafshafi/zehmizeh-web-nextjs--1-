@@ -1,0 +1,18 @@
+@media screen and (max-width: 1000px) {
+  .home-page-custom-vector {
+    width: 10rem;
+    height: 10rem;
+  }
+
+  .home-page-custom-vector.black-vector {
+    top: -108px !important;
+  }
+
+  .home-page-custom-vector.yellow-vector {
+    bottom: -65px !important;
+    right: 1rem !important;
+  }
+
+  @media screen and (max-width: 1000px) {
+  }
+}

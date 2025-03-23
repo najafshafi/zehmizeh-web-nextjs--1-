@@ -117,11 +117,11 @@ export const formatExpertiseStatus = (expertise: string) => {
 };
 
 export const changeStatusDisplayFormat = (status: string, splitBy = '-') => {
-  const splits = status.split(splitBy);
+  const splits = status?.split(splitBy);
   let finalString = '';
-  for (let i = 0; i < splits.length; i++) {
+  for (let i = 0; i < splits?.length; i++) {
     const str = splits[i];
-    const str2 = str.charAt(0).toUpperCase() + str.slice(1);
+    const str2 = str?.charAt(0).toUpperCase() + str?.slice(1);
     finalString = finalString + str2 + ' ';
   }
 

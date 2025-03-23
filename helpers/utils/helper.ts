@@ -252,7 +252,7 @@ export const getRelevantSkillsBasedOnCategory = (
 };
 
 export const getJobExpirationInDays = (job) => {
-  if (!job.job_expire_time) return;
+  if (!job?.job_expire_time) return;
 
   const currentDate = moment();
   const days = moment(job.job_expire_time)
