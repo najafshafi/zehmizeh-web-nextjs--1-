@@ -33,6 +33,7 @@ import ProposalExistsModal from "@/components/invite-flow-modals/ProposalExistsM
 import { hasClientAddedPaymentDetails } from "@/helpers/utils/helper";
 import JobsDoneIcon from "@/public/icons/jobs-done.svg";
 import { StatusBadge } from "@/components/styled/Badges";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 const TalentComponentWrapper = styled(Link)<{ isloggedin?: string }>`
   background: ${(props) => props.theme.colors.white};
@@ -269,26 +270,22 @@ const TalentCard = ({ data }: { data?: TalentData }) => {
 
     if (user)
       return (
-        <StyledButton
-          padding="0.875rem 2rem"
-          variant="outline-dark"
+        <CustomButton
+          text="Invite"
+          className="py-[0.75rem] w-full min-w-[100px] text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-black hover:bg-black hover:text-white hover:border-none"
           onClick={toggleJobsModal}
-        >
-          Invite
-        </StyledButton>
+        />
       );
 
     return (
       <Tooltip
         customTrigger={
-          <StyledButton
-            padding="0.875rem 2rem"
-            variant="outline-dark"
+          <CustomButton
+            text="Invite"
+            className="py-[0.75rem] w-full min-w-[100px] text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-black hover:bg-black hover:text-white hover:border-none"
             onClick={toggleJobsModal}
-            disabled
-          >
-            Invite
-          </StyledButton>
+            disabled={true}
+          />
         }
         className="inline-block align-middle"
       >
@@ -404,7 +401,7 @@ const TalentCard = ({ data }: { data?: TalentData }) => {
         </div>
 
         {/* Right side buttons */}
-        <div className="flex lg:flex-col justify-between gap-3 items-center">
+        <div className="flex lg:flex-col justify-between lg:items-end gap-3 items-center">
           {bookmarkUI()}
           {InviteButtonUI()}
         </div>

@@ -31,7 +31,7 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { ChangeBudgetDeleteRequest } from "@/components/changeBudget/ChangeBudgetDeleteRequest";
 import { breakpoints } from "@/helpers/hooks/useResponsive";
-import MilestoneStats from "@/pages/client-job-details/partials/MilestoneStats";
+import MilestoneStats from "@/pages/client-job-details-page/partials/MilestoneStats";
 import CustomButton from "@/components/custombutton/CustomButton";
 
 const InProgressClosedJobWrapper = styled.div`

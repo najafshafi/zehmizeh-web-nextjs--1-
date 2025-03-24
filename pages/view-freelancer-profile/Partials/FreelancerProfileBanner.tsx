@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 import styled from "styled-components";
-import { Spinner } from "react-bootstrap";
+import Spinner from "@/components/forms/Spin/Spinner";
 import toast from "react-hot-toast";
 import cns from "classnames";
 import { StyledButton } from "@/components/forms/Buttons";
@@ -31,6 +31,7 @@ import { BsStar } from "react-icons/bs";
 import ProposalExistsModal from "@/components/invite-flow-modals/ProposalExistsModa";
 import { BOOKMARK_TOOLTIPS } from "@/helpers/const/constants";
 import classNames from "classnames";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 const StyledprofileCard = styled.div`
   margin-top: 2rem;
@@ -185,7 +186,7 @@ const FreelancerProfileBanner = ({ data }: any) => {
             onClick={onBookmarkClick}
           >
             {loading ? (
-              <Spinner animation="border" />
+              <Spinner />
             ) : isSaved ? (
               <SavedIcon />
             ) : (
@@ -210,23 +211,20 @@ const FreelancerProfileBanner = ({ data }: any) => {
     return (
       <div className="flex justify-between items-center">
         {user ? (
-          <StyledButton
-            padding="0.75rem 2rem"
-            variant="outline-dark"
+          <CustomButton
+            text=" Invite"
+            className="py-[0.75rem] w-full min-w-[100px] text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-black hover:bg-black hover:text-white hover:border-none"
             onClick={toggleJobsModal}
-          >
-            Invite
-          </StyledButton>
+          />
         ) : (
           <Tooltip
             customTrigger={
-              <StyledButton
-                padding="0.75rem 2rem"
-                variant="outline-dark"
-                disabled
-              >
-                Invite
-              </StyledButton>
+              <CustomButton
+                text=" Invite"
+                className="py-[0.75rem] w-full min-w-[100px] text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-black hover:bg-black hover:text-white hover:border-none"
+                onClick={() => {}}
+                disabled={true}
+              />
             }
           >
             Please login to invite this freelancer.
@@ -342,7 +340,7 @@ const FreelancerProfileBanner = ({ data }: any) => {
       </div>
 
       {/* Boomark and invite button */}
-      <div className="flex flex-col justify-between items-md-end gap-4">
+      <div className="flex flex-col justify-between md:items-end gap-4">
         {bookmarkUI()}
         {inviteButtonUI()}
       </div>
