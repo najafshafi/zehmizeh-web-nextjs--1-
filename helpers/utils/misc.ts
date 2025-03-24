@@ -62,7 +62,7 @@ type ErrorRecord = Record<string, string | ErrorRecordValue>;
 
 export const getYupErrors = (error: YupError): ErrorRecord => {
   const errors = error.inner?.reduce((acc: ErrorRecord, error) => {
-    if (error.path.includes('.')) {
+    if (error.path?.includes('.')) {
       const [first, ...rest] = error.path.split('.');
       const existingFirst = (acc[first] as ErrorRecordValue) || {};
       return {
