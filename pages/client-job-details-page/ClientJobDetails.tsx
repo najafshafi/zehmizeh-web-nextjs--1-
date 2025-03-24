@@ -518,7 +518,7 @@ const ClientJobDetails = () => {
         {!isLoading && !isRefetching && jobdetails && (
           <>
             {/* Tabs */}
-            <div className="tabs-quick-options d-flex align-items-center justify-content-between flex-wrap">
+            <div className="tabs-quick-options flex items-center justify-between flex-wrap">
               {jobdetails?.status !== "draft" ? (
                 <Tabs
                   tabs={tabItems}
