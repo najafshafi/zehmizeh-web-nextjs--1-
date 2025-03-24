@@ -381,6 +381,7 @@ const TalentCard = ({ data }: { data?: TalentData }) => {
                 id={`talent_${data?.user_id}`}
                 className="mt-3 talent__details__description text-lg font-light"
                 needToBeShorten={true}
+                minlines={3}
               />
             )}
             <div className="skills-details flex items-center flex-wrap justify-between">
@@ -466,8 +467,8 @@ const OtherDetails = ({ data }: OtherDetailsProps) => {
           <LocationIcon />
           <div className="flex text-base font-normal mx-1">
             {separateValuesWithComma([
-              data?.location?.state,
-              data?.location?.country_name,
+              data?.location?.state || "",
+              data?.location?.country_name || "",
             ])}
           </div>
         </div>
@@ -494,7 +495,7 @@ const OtherDetails = ({ data }: OtherDetailsProps) => {
       <div className="flex budget items-center">
         <JobsDoneIcon />
         <div className="badget-text flex items-center text-base font-normal">
-          {numberWithCommas(data?.completedJobCount) || 0}&nbsp;
+          {numberWithCommas(data?.completedJobCount || 0) || 0}&nbsp;
           <span>Projects done</span>
         </div>
       </div>

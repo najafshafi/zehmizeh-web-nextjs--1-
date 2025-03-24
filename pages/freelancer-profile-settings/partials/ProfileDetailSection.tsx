@@ -121,7 +121,7 @@ const ProfileDetailSection = ({
           {isrequired && <RequiredTag>Required</RequiredTag>}
           {add ? (
             <div
-              className="button add-btn pointer fs-1rem font-normal"
+              className="button add-btn cursor-pointer fs-1rem font-normal"
               onClick={onEdit}
             >
               Add

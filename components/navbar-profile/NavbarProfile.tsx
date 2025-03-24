@@ -55,7 +55,7 @@ const NavbarProfile = () => {
 
   const menuItems: MenuItem[] = isClient
     ? [
-        { href: "/freelancer/account/Profile", label: "My Profile" },
+        { href: "/client/account/Profile", label: "My Profile" },
         { href: "/client/account/Ratings", label: "My Ratings" },
         { href: "/client/account/Payments", label: "My Payment Details" },
         { href: "/client/account/Settings", label: "My Account Settings" },

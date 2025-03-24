@@ -1,8 +1,7 @@
 import { Image } from "react-bootstrap";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { StyledButton } from "./forms/Buttons";
-import { goBack } from "helpers/utils/goBack";
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -25,7 +24,11 @@ const NotFoundDescription = styled.div`
 `;
 
 function Page404() {
-  const navigate = useNavigate();
+  const router = useRouter();
+
+  const goBack = () => {
+    router.back();
+  };
 
   return (
     <Wrapper className="flex justify-center items-center flex-col">
@@ -40,9 +43,9 @@ function Page404() {
       <Page404Title className="fw-bold">404</Page404Title>
       <NotFoundText className="fw-bold">Page not found!</NotFoundText>
       <NotFoundDescription className="fw-500 fs-1rem text-center">
-        The page you are looking for doesn’t exist or is unavailable.
+        The page you are looking for doesn&apos;t exist or is unavailable.
       </NotFoundDescription>
-      <StyledButton onClick={() => goBack(navigate)}>Go back</StyledButton>
+      <StyledButton onClick={goBack}>Go back</StyledButton>
     </Wrapper>
   );
 }
