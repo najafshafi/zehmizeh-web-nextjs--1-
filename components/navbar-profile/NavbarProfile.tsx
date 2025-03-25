@@ -64,8 +64,14 @@ const NavbarProfile = () => {
         { href: "/freelancer/account/Profile", label: "My Profile" },
         { href: "/freelancer/account/Portfolio", label: "My Portfolio" },
         { href: "/freelancer/account/Ratings", label: "My Ratings" },
-        { href: "/freelancer/account/Payments", label: "My Payment Details" },
-        { href: "/freelancer/account/Settings", label: "My Account Settings" },
+        {
+          href: "/freelancer/account/Payment%20Details",
+          label: "My Payment Details",
+        },
+        {
+          href: "/freelancer/account/Account%20Settings",
+          label: "My Account Settings",
+        },
       ];
 
   const handleResize = useCallback(() => {
