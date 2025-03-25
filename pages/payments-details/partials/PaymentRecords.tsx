@@ -3,10 +3,8 @@ import {
   convertToTitleCase,
   formatLocalDate,
   numberWithCommas,
-  pxToRem,
 } from "@/helpers/utils/misc";
 import React from "react";
-import styled from "styled-components";
 import { usePaymentController } from "../PaymentController";
 import Loader from "@/components/Loader";
 import PaginationComponent from "@/components/ui/Pagination";
@@ -52,7 +50,6 @@ type PaymentCardData = {
 
 // Function to adapt payment row to PaymentCard data format
 const adaptToPaymentCardData = (row: PaymentRow): PaymentCardData => {
-  // If milestone is an array, extract the first milestone's title
   const milestone = Array.isArray(row.milestone)
     ? { title: row.milestone[0]?.title || "" }
     : row.milestone;
@@ -62,41 +59,6 @@ const adaptToPaymentCardData = (row: PaymentRow): PaymentCardData => {
     milestone,
   };
 };
-
-const Wrapper = styled.div`
-  margin: 12px;
-  thead {
-    background: rgba(29, 30, 27, 0.1);
-    th,
-    td {
-      text-transform: uppercase;
-      font-size: ${pxToRem(14)};
-      padding: 12px;
-      font-weight: 400;
-    }
-  }
-  .table > :not(:first-child) {
-    border-top: none;
-  }
-  tbody {
-    th,
-    td {
-      min-height: ${pxToRem(60)};
-      height: ${pxToRem(60)};
-      vertical-align: middle;
-      border-color: #f5f5f5;
-    }
-  }
-  .download-btn {
-    color: ${(props) => props.theme.colors.lightBlue};
-  }
-  .card-label {
-    color: ${(props) => props.theme.colors.gray8};
-  }
-  .refund-row {
-    background: #fff1f1;
-  }
-`;
 
 const columns = [
   {
@@ -115,6 +77,7 @@ const columns = [
     label: "Action",
   },
 ];
+
 function PaymentRecords() {
   const { isMobile } = useResponsive();
   const { payments, isLoadingPayments, updateFilters } = usePaymentController();
@@ -122,12 +85,11 @@ function PaymentRecords() {
     show: false,
     data: null,
   });
+
   const onInvoiceModalClose = () => {
     setInvoiceModal({ show: false, data: null });
   };
-  // const onInvoiceModalShow = (data) => {
-  //   setInvoiceModal({ show: true, data });
-  // };
+
   if (!payments?.payments?.length && !isLoadingPayments) {
     return (
       <div className="py-12">
@@ -135,6 +97,7 @@ function PaymentRecords() {
       </div>
     );
   }
+
   if (isLoadingPayments) {
     return (
       <div>
@@ -142,33 +105,37 @@ function PaymentRecords() {
       </div>
     );
   }
+
   return (
-    <Wrapper>
+    <div className="m-3">
       {!isMobile
         ? payments?.payments?.length > 0 && (
             <div className="overflow-x-auto w-full">
-              <table className="w-full table">
-                <thead>
+              <table className="w-full table border-collapse">
+                <thead className="bg-[rgba(29,30,27,0.1)]">
                   <tr>
                     {columns.map((column) => (
-                      <th key={column.label} className="text-left">
+                      <th
+                        key={column.label}
+                        className="text-left p-3 font-normal text-sm uppercase"
+                      >
                         {column.label}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="[&>tr>td]:min-h-[60px] [&>tr>td]:h-[60px] [&>tr>td]:align-middle [&>tr>td]:border-[#f5f5f5]">
                   {payments?.payments.map((row: PaymentRow) => (
                     <tr
                       key={row.stripe_txn_id}
-                      className={classNames("", {
-                        "refund-row": row.payment_type === "refund",
+                      className={classNames("border-b border-gray-500/20", {
+                        "bg-[#fff1f1]": row.payment_type === "refund",
                       })}
                     >
-                      <td className="align-top capitalize-first-ltr">
+                      <td className="p-3 align-top capitalize-first-ltr">
                         {convertToTitleCase(row.jobdata?.job_title)}
                       </td>
-                      <td className="capitalize-first-ltr align-top">
+                      <td className="p-3 capitalize-first-ltr align-top">
                         {row?.milestone &&
                           Array.isArray(row?.milestone) &&
                           row?.milestone?.map((ml) => (
@@ -180,20 +147,20 @@ function PaymentRecords() {
                             </p>
                           ))}
                       </td>
-                      <td className="align-top">
+                      <td className="p-3 align-top">
                         {formatLocalDate(
                           row?.date_created || "",
                           "MMM D, YYYY"
                         )}
                       </td>
-                      <td className="align-top">
+                      <td className="p-3 align-top">
                         <span className="font-bold">
                           {numberWithCommas(row?.amount, "USD")}
                         </span>
                       </td>
-                      <td className="align-top">
+                      <td className="p-3 align-top">
                         <Link href={`/invoice/${row?.charge_trans_id}`}>
-                          <button className="download-btn text-base p-0 text-blue-600 hover:text-blue-800 hover:underline bg-transparent border-none">
+                          <button className="text-blue-600 hover:text-blue-800 hover:underline bg-transparent border-none text-base p-0">
                             Download Invoice
                           </button>
                         </Link>
@@ -204,7 +171,7 @@ function PaymentRecords() {
               </table>
             </div>
           )
-        : payments?.payments?.length &&
+        : payments?.payments?.length > 0 &&
           payments?.payments.map((row: PaymentRow) => (
             <PaymentCard
               key={row.stripe_txn_id}
@@ -213,7 +180,7 @@ function PaymentRecords() {
           ))}
 
       {payments?.totalPages > 0 && (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center w-full mx-auto py-3">
           <PaginationComponent
             total={payments?.totalPages}
             onPageChange={(page) => updateFilters({ page: page.selected + 1 })}
@@ -226,7 +193,7 @@ function PaymentRecords() {
         onClose={onInvoiceModalClose}
         data={invoiceModal.data}
       />
-    </Wrapper>
+    </div>
   );
 }
 

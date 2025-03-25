@@ -5,15 +5,14 @@
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
-import Spinner from "@/components/forms/Spin/Spinner";
+// import Spinner from "@/components/forms/Spin/Spinner";
 import { useRouter, usePathname } from "next/navigation";
-import { Wrapper } from "./job-details.styled";
 import SingleMessaging from "@/pages/messaging-page/SingleMessaging";
 import Loader from "@/components/Loader";
 import BackButton from "@/components/ui/BackButton";
 import DetailsBanner from "./DetailsBanner";
 import Tabs from "@/components/ui/Tabs";
-import { StyledButton } from "@/components/forms/Buttons";
+// import { StyledButton } from "@/components/forms/Buttons";
 import RequestEndJobModal from "./modals/RequestEndJobModal";
 import GeneralDetails from "./GeneralDetails";
 import ProposalDetails from "./ProposalDetails";
@@ -41,9 +40,9 @@ import { JobClosuremodalProjectBased } from "./JobClosureModalProjectBased";
 import NoDataFound from "@/components/ui/NoDataFound";
 import { ChangeBudgetDeniedModal } from "@/components/changeBudget/ChangeBudgetDeniedModal";
 import { ChangeBudgetRequestModal } from "@/components/changeBudget/ChangeBudgetRequestModal";
-import { goBack } from "@/helpers/utils/goBack";
 import { isProjectHiddenForFreelancer } from "@/helpers/utils/helper";
 import moment from "moment";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 const JobDetails = () => {
   const user = useAuth();
@@ -403,7 +402,7 @@ const JobDetails = () => {
   }
 
   return (
-    <Wrapper className="w-full px-4 lg:px-0">
+    <div className="w-full px-4 lg:px-0 py-12 pb-25 max-w-[970px] mx-auto">
       {/* Back button header */}
       <BackButton
         route={user.user.user_type === "freelancer" ? "/jobs" : "/client-jobs"}
@@ -421,7 +420,7 @@ const JobDetails = () => {
         <>
           {/* Tabs and request to end button */}
           {tabItems.length > 1 && (
-            <div className="actions flex items-center justify-between flex-wrap gap-3">
+            <div className="actions flex items-center justify-between flex-wrap gap-3 mt-8 md:flex md:justify-center md:items-center">
               <div className="flex items-center justify-between w-full flex-wrap gap-3">
                 <div>
                   <Tabs
@@ -461,29 +460,26 @@ const JobDetails = () => {
                   jobdetails?.closure_req_submitted_by
                 ) ? (
                   <div className="flex justify-center items-center">
-                    <StyledButton
-                      style={{ minWidth: "22rem" }}
-                      className={`
-                      ${
-                        isMobile
-                          ? "add-button"
-                          : "submit-hours-button add-button"
-                      }
-                    `}
-                      padding="1rem 2rem"
-                      onClick={() => {
-                        setIsFinalHours(false);
-                        handleAddHours();
-                      }}
+                    <CustomButton
+                      text={"Submit Hours"}
                       disabled={
                         checkingBanks ||
                         jobdetails?.milestone.filter(
                           (x: any) => x.is_final_milestone
                         ).length > 0
                       }
-                    >
-                      Submit Hours {checkingBanks && <Spinner />}
-                    </StyledButton>
+                      className={`px-[2rem] py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5 ${
+                        isMobile
+                          ? "add-button"
+                          : "submit-hours-button add-button"
+                      }`}
+                      onClick={() => {
+                        setIsFinalHours(false);
+                        handleAddHours();
+                      }}
+                      showSpinner={checkingBanks}
+                      spinnerPosition="right"
+                    />
                   </div>
                 ) : null}
                 {activeTab === "m_stone" &&
@@ -495,37 +491,22 @@ const JobDetails = () => {
                       isMobile || isTablet ? "" : "w-full"
                     }`}
                   >
-                    <StyledButton
-                      minWidth="21rem"
-                      className={
-                        isMobile ? "add-button w-full" : "add-button w-30"
-                      }
-                      padding="1rem 2rem"
-                      onClick={toggleEndJobModal}
-                      backgroundcolor="white"
-                      border="true"
+                    <CustomButton
+                      text={" Request to Close Project"}
                       disabled={
                         checkingBanks ||
                         jobdetails?.milestone.filter(
                           (x: any) => x.is_final_milestone
                         ).length > 0
                       }
-                    >
-                      Request to Close Project
-                    </StyledButton>
+                      className={`px-[2rem] py-4 w-full min-w-[21rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5 ${
+                        isMobile || isTablet ? "" : "w-full"
+                      }`}
+                      onClick={toggleEndJobModal}
+                    />
                   </div>
                 ) : null}
               </div>
-
-              {/* <div className="flex justify-end items-center w-100">
-                <StyledButton
-                  variant="outline-dark"
-                  onClick={toggleEndJobModal}
-                  className={isMobile ? 'w-100' : ''}
-                >
-                  Request to Close Project
-                </StyledButton>
-              </div> */}
 
               {jobdetails.proposal?.approved_budget?.type == "fixed" &&
                 jobdetails.status !== "closed" &&
@@ -535,17 +516,14 @@ const JobDetails = () => {
                   jobdetails?.closure_req_submitted_by
                 ) && (
                   <div className="flex justify-center items-center">
-                    <StyledButton
-                      className={
-                        isMobile ? "add-button w-full" : "add-button w-30"
-                      }
-                      padding="1rem 2rem"
+                    <CustomButton
+                      text={"Propose New Milestone"}
+                      showSpinner={checkingBanks}
+                      spinnerPosition="right"
+                      className="px-[2rem] py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5"
                       onClick={handleAddMilestone}
                       disabled={checkingBanks}
-                    >
-                      {/* Add Milestone */}
-                      Propose New Milestone {checkingBanks && <Spinner />}
-                    </StyledButton>
+                    />
                   </div>
                 )}
 
@@ -579,19 +557,17 @@ const JobDetails = () => {
                       )}
                       {jobdetails?.budget?.type === "fixed" && (
                         <div className="w-full text-center">
-                          <StyledButton
-                            className="add-button"
-                            padding="1rem 2rem"
-                            disabled={showJobClosureModal.loading}
+                          <CustomButton
+                            text={" Open the Client&apos;s Closure Request"}
+                            className="px-[2rem] py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5"
                             onClick={() => {
                               setShowJobClosureModal({
                                 show: true,
                                 loading: false,
                               });
                             }}
-                          >
-                            Open the Client&apos;s Closure Request
-                          </StyledButton>
+                            disabled={showJobClosureModal.loading}
+                          />
                         </div>
                       )}
                     </>
@@ -758,7 +734,7 @@ const JobDetails = () => {
           />
         </>
       )}
-    </Wrapper>
+    </div>
   );
 };
 

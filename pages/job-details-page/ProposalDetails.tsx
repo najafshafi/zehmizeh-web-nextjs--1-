@@ -2,78 +2,53 @@
  * This component displays the proposal sent for the job *
  */
 
-import { useCallback, useEffect, useState } from 'react';
-import styled from 'styled-components';
-import StyledHtmlText from '@/components/ui/StyledHtmlText';
-import AttachmentPreview from '@/components/ui/AttachmentPreview';
-import { numberWithCommas } from '@/helpers/utils/misc';
-import EditBlueIcon from '@/public/icons/edit-blue.svg';
-import DeleteIcon from '@/public/icons/trash.svg';
-import { transition } from '@/styles/transitions';
-import moment from 'moment';
-import DeleteProposalModal from './modals/DeleteProposalModal';
-import { getTimeEstimation } from '@/helpers/utils/helper';
-import SubmitProposalModal from '@/components/jobs/SubmitProposalModal';
-import { StyledButton } from '@/components/forms/Buttons';
-import { useRouter } from 'next/navigation';
-import ProposalMessageModal from '@/components/jobs/ProposalMessageModal';
-import { WarningProposalMessageModal } from '@/components/jobs/WarningProposalMessageModal';
-import { useQueryClient } from 'react-query';
-import toast from 'react-hot-toast';
-import { reopenProposal } from '@/helpers/http/proposals';
-import { Spinner } from 'react-bootstrap';
+import { useCallback, useEffect, useState } from "react";
+import styled from "styled-components";
+import StyledHtmlText from "@/components/ui/StyledHtmlText";
+import AttachmentPreview from "@/components/ui/AttachmentPreview";
+import { numberWithCommas } from "@/helpers/utils/misc";
+import EditBlueIcon from "@/public/icons/edit-blue.svg";
+import DeleteIcon from "@/public/icons/trash.svg";
+import { transition } from "@/styles/transitions";
+import moment from "moment";
+import DeleteProposalModal from "./modals/DeleteProposalModal";
+import { getTimeEstimation } from "@/helpers/utils/helper";
+import SubmitProposalModal from "@/components/jobs/SubmitProposalModal";
+import { StyledButton } from "@/components/forms/Buttons";
+import { useRouter } from "next/navigation";
+import ProposalMessageModal from "@/components/jobs/ProposalMessageModal";
+import { WarningProposalMessageModal } from "@/components/jobs/WarningProposalMessageModal";
+import { useQueryClient } from "react-query";
+import toast from "react-hot-toast";
+import { reopenProposal } from "@/helpers/http/proposals";
+import { Spinner } from "react-bootstrap";
 
-const Wrapper = styled.div`
-  gap: 1.25rem;
-  margin-top: 2rem;
-  padding: 2.875rem;
-  position: relative;
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0px 4px 54px rgba(0, 0, 0, 0.04);
-  border-radius: 0.75rem;
-  .description-text {
-    opacity: 0.7;
-    line-height: 160%;
+// Keeping styled-components for buttons since they use transition
+const EditButton = styled.div`
+  background-color: rgba(209, 229, 255, 0.3);
+  border-radius: 0.5rem;
+  height: 44px;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  ${() => transition()};
+  span {
+    color: #0067ff;
   }
-  .proposal-details-item {
-    gap: 0.875rem;
-    .row-item {
-      gap: 10px;
-    }
-  }
-  .attachments {
-    background-color: #f8f8f8;
-    border: 1px solid #dedede;
-    padding: 0.75rem 1.25rem;
-    border-radius: 0.5rem;
-    gap: 10px;
-  }
-  .edit-btn {
-    background-color: rgba(209, 229, 255, 0.3);
-    border-radius: 0.5rem;
-    height: 44px;
-    gap: 0.5rem;
-    padding: 0 1rem;
-    ${() => transition()};
-    span {
-      color: #0067ff;
-    }
-  }
+`;
 
-  .delete-btn {
-    background-color: #fbf5e8;
-    border-radius: 0.5rem;
-    margin-left: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 44px;
-    gap: 0.5rem;
-    padding: 0 1rem;
-    ${() => transition()}
-    span {
-      color: #f72b2b;
-    }
+const DeleteButton = styled.div`
+  background-color: #fbf5e8;
+  border-radius: 0.5rem;
+  margin-left: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  ${() => transition()}
+  span {
+    color: #f72b2b;
   }
 `;
 
@@ -84,11 +59,18 @@ interface ProposalDetailsProps {
   isDeleted: boolean;
 }
 
-const ProposalDetails = ({ data, jobDetails, refetch, isDeleted }: ProposalDetailsProps) => {
+const ProposalDetails = ({
+  data,
+  jobDetails,
+  refetch,
+  isDeleted,
+}: ProposalDetailsProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [showEditProposalModal, setShowEditProposalModal] = useState<boolean>(false);
-  const [showDeleteProposalModal, setShowDeleteProposalModal] = useState<boolean>(false);
+  const [showEditProposalModal, setShowEditProposalModal] =
+    useState<boolean>(false);
+  const [showDeleteProposalModal, setShowDeleteProposalModal] =
+    useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [proMessModal, setProMessModal] = useState(false);
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
@@ -104,10 +86,22 @@ const ProposalDetails = ({ data, jobDetails, refetch, isDeleted }: ProposalDetai
 
   const getMessageInvitePopupCount = useCallback(
     (jobId: string) => {
-      const invites = queryClient.getQueryData(['get-received-invite']) as { data: Array<{ job_post_id: string; message_freelancer_popup_count?: number }> } | undefined;
-      const dashboardJobDetails = invites?.data?.find((invite) => invite?.job_post_id === jobId);
+      const invites = queryClient.getQueryData(["get-received-invite"]) as
+        | {
+            data: Array<{
+              job_post_id: string;
+              message_freelancer_popup_count?: number;
+            }>;
+          }
+        | undefined;
+      const dashboardJobDetails = invites?.data?.find(
+        (invite) => invite?.job_post_id === jobId
+      );
 
-      const clientJobDetails = queryClient.getQueryData(['jobdetails', jobId]) as { data: { message_freelancer_popup_count?: number } } | undefined;
+      const clientJobDetails = queryClient.getQueryData([
+        "jobdetails",
+        jobId,
+      ]) as { data: { message_freelancer_popup_count?: number } } | undefined;
       return (
         dashboardJobDetails?.message_freelancer_popup_count ||
         clientJobDetails?.data?.message_freelancer_popup_count ||
@@ -118,13 +112,14 @@ const ProposalDetails = ({ data, jobDetails, refetch, isDeleted }: ProposalDetai
   );
 
   const handleReOpenProposal = (proposal: { proposal_id?: string }) => {
-    if (!proposal || !proposal?.proposal_id) return toast.error('Invalid request.');
+    if (!proposal || !proposal?.proposal_id)
+      return toast.error("Invalid request.");
 
     const response = reopenProposal({ proposal_id: proposal?.proposal_id });
     setLoading(true);
 
     toast.promise(response, {
-      loading: 'Re-opening proposal...',
+      loading: "Re-opening proposal...",
       success: (data) => {
         setLoading(false);
         refetch();
@@ -142,37 +137,42 @@ const ProposalDetails = ({ data, jobDetails, refetch, isDeleted }: ProposalDetai
     // eslint-disable-next-line react-hooks/exhaustive-deps
   });
 
-  console.log('data: ', data);
+  console.log("data: ", data);
   return (
-    <Wrapper className="flex flex-col">
+    <div className="flex flex-col gap-5 mt-8 p-11 relative bg-white/70 shadow-[0px_4px_54px_rgba(0,0,0,0.04)] rounded-3xl">
       {/* START ----------------------------------------- Description */}
-      <div className="proposal-details-item flex flex-col">
+      <div className="flex flex-col gap-3.5">
         <div className="flex items-center justify-between">
           <div className="text-lg font-bold">
             <span>Proposal</span>
             {/* START ----------------------------------------- Proposal Date */}
             {data?.date_created && (
-              <div className="text-base font-normal">Submitted: {moment(data.date_created).format('MMM DD, YYYY')}</div>
+              <div className="text-base font-normal">
+                Submitted: {moment(data.date_created).format("MMM DD, YYYY")}
+              </div>
             )}
             {/* END ------------------------------------------- Proposal Date */}
           </div>
           {/* Edit icon */}
           {!isDeleted && (
             <div className="flex items-center">
-              {data?.status === 'pending' && data.is_proposal_deleted === 0 && (
+              {data?.status === "pending" && data.is_proposal_deleted === 0 && (
                 <>
-                  <div
-                    className="edit-btn flex justify-center items-center cursor-pointer"
+                  <EditButton
+                    className="flex justify-center items-center cursor-pointer"
                     onClick={toggleEditProposalModal}
                   >
                     <EditBlueIcon stroke="#0067FF" fill="#0067FF" />
                     <span>Edit</span>
-                  </div>
+                  </EditButton>
 
-                  <div className="delete-btn p-2 cursor-pointer flex items-center" onClick={toggleDeleteProposalModal}>
+                  <DeleteButton
+                    className="cursor-pointer flex items-center"
+                    onClick={toggleDeleteProposalModal}
+                  >
                     <DeleteIcon />
                     <span>Delete</span>
-                  </div>
+                  </DeleteButton>
                 </>
               )}
             </div>
@@ -191,32 +191,36 @@ const ProposalDetails = ({ data, jobDetails, refetch, isDeleted }: ProposalDetai
           )}
         </div>
 
-        <div className="description-text text-lg font-normal">
-          <StyledHtmlText id="description" htmlString={data?.description} needToBeShorten={true} />
+        <div className="description-text text-lg font-normal opacity-70 leading-[160%]">
+          <StyledHtmlText
+            id="description"
+            htmlString={data?.description}
+            needToBeShorten={true}
+          />
         </div>
       </div>
       {/* END ------------------------------------------- Description */}
 
       {/* Other details */}
-      <div className="proposal-details-item flex flex-col">
+      <div className="flex flex-col gap-3.5">
         {/* START ----------------------------------------- Price */}
-        <div className="row-item flex items-center">
+        <div className="flex items-center gap-2.5">
           <div className="text-base font-bold">Price:</div>
           <div className="text-base font-light">
-            {numberWithCommas(data?.proposed_budget?.amount, 'USD')}
-            {data?.proposed_budget?.type == 'hourly' ? `/hr` : ``}
+            {numberWithCommas(data?.proposed_budget?.amount, "USD")}
+            {data?.proposed_budget?.type == "hourly" ? `/hr` : ``}
           </div>
         </div>
         {/* END ------------------------------------------- Price */}
 
         {/* START ----------------------------------------- Time estimation */}
         {data?.proposed_budget?.time_estimation && (
-          <div className="row-item flex items-center">
+          <div className="flex items-center gap-2.5">
             <div className="text-base font-bold">Time Estimation: </div>
             <div className="text-base font-light">
               {getTimeEstimation(
                 data?.proposed_budget?.time_estimation,
-                data?.proposed_budget?.type == 'hourly' ? 'hours' : 'weeks'
+                data?.proposed_budget?.type == "hourly" ? "hours" : "weeks"
               )}
             </div>
           </div>
@@ -226,9 +230,15 @@ const ProposalDetails = ({ data, jobDetails, refetch, isDeleted }: ProposalDetai
         {/* START ----------------------------------------- Terms and conditions */}
         {data?.terms_and_conditions && (
           <div className="flex flex-col">
-            <div className="text-base font-bold">Special Terms & Conditions:</div>
-            <div className="description-text text-lg font-light">
-              <StyledHtmlText id="termsAndConditions" htmlString={data.terms_and_conditions} needToBeShorten={true} />
+            <div className="text-base font-bold">
+              Special Terms & Conditions:
+            </div>
+            <div className="text-lg font-light opacity-70 leading-[160%]">
+              <StyledHtmlText
+                id="termsAndConditions"
+                htmlString={data.terms_and_conditions}
+                needToBeShorten={true}
+              />
             </div>
           </div>
         )}
@@ -238,8 +248,12 @@ const ProposalDetails = ({ data, jobDetails, refetch, isDeleted }: ProposalDetai
         {data?.questions && (
           <div className="flex flex-col">
             <div className="text-base font-bold">Questions:</div>
-            <div className="description-text text-lg font-light">
-              <StyledHtmlText id="questions" htmlString={data?.questions} needToBeShorten={true} />
+            <div className="text-lg font-light opacity-70 leading-[160%]">
+              <StyledHtmlText
+                id="questions"
+                htmlString={data?.questions}
+                needToBeShorten={true}
+              />
             </div>
           </div>
         )}
@@ -247,7 +261,7 @@ const ProposalDetails = ({ data, jobDetails, refetch, isDeleted }: ProposalDetai
 
         {/* START ----------------------------------------- Attachments */}
         {data?.attachments && data?.attachments?.length > 0 && (
-          <div className="row-item">
+          <div className="flex flex-col">
             <div className="text-base font-bold">Attachments:</div>
             <div className="flex flex-wrap mt-2">
               {data.attachments.map((attachment: any) => (
@@ -264,25 +278,25 @@ const ProposalDetails = ({ data, jobDetails, refetch, isDeleted }: ProposalDetai
         )}
         {/* END ------------------------------------------- Attachments */}
         {!data?.threadExists &&
-          jobDetails?.invite_status === 'accepted' &&
-          jobDetails?.status === 'prospects' &&
-          jobDetails?.proposal?.status === 'pending' && (
+          jobDetails?.invite_status === "accepted" &&
+          jobDetails?.status === "prospects" &&
+          jobDetails?.proposal?.status === "pending" && (
             <div className="flex justify-end mt-3 gap-3 ">
               <div className="border border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white rounded-full">
                 <StyledButton
                   padding="1rem 2rem"
                   variant="outline-dark"
-                onClick={() => {
-                  if (warningPopupCount < 3) {
-                    setIsWarningModalOpen(true);
-                    return;
-                  } else {
-                    setProMessModal(true);
-                  }
-                }}
-              >
-                Message Client
-              </StyledButton>
+                  onClick={() => {
+                    if (warningPopupCount < 3) {
+                      setIsWarningModalOpen(true);
+                      return;
+                    } else {
+                      setProMessModal(true);
+                    }
+                  }}
+                >
+                  Message Client
+                </StyledButton>
               </div>
             </div>
           )}
@@ -292,7 +306,9 @@ const ProposalDetails = ({ data, jobDetails, refetch, isDeleted }: ProposalDetai
               padding="1rem 2rem"
               variant="primary"
               onClick={() => {
-                return router.push(`/messages-new/proposal_${data.proposal_id}`);
+                return router.push(
+                  `/messages-new/proposal_${data.proposal_id}`
+                );
               }}
             >
               Go To Chat
@@ -326,17 +342,20 @@ const ProposalDetails = ({ data, jobDetails, refetch, isDeleted }: ProposalDetai
         />
       )}
 
-      {proMessModal && data && !data?.threadExists && jobDetails?._client_user_id && (
-        <ProposalMessageModal
-          show
-          setShow={setProMessModal}
-          freelancerName={`${jobDetails?.userdata?.first_name} ${jobDetails?.userdata?.last_name}`}
-          proposal={{ ...data, _client_user_id: jobDetails._client_user_id }}
-          jobId={jobDetails?.job_post_id}
-          messagePopupCount={warningPopupCount}
-        />
-      )}
-    </Wrapper>
+      {proMessModal &&
+        data &&
+        !data?.threadExists &&
+        jobDetails?._client_user_id && (
+          <ProposalMessageModal
+            show
+            setShow={setProMessModal}
+            freelancerName={`${jobDetails?.userdata?.first_name} ${jobDetails?.userdata?.last_name}`}
+            proposal={{ ...data, _client_user_id: jobDetails._client_user_id }}
+            jobId={jobDetails?.job_post_id}
+            messagePopupCount={warningPopupCount}
+          />
+        )}
+    </div>
   );
 };
 

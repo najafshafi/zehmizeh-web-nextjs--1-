@@ -2,40 +2,27 @@
 import { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 
-const Wrapper = styled.div<{ $minlines: number }>`
-  position: relative;
+// CSS for the description class that can't be easily converted to Tailwind
+// due to dynamic property calculation and -webkit specific properties
+const DescriptionStyled = styled.div<{ $minlines: number }>`
+  &.description {
+    word-break: break-word;
+    overflow: hidden;
+    display: -webkit-box;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    max-height: ${(props) => props.$minlines * 1.75}rem;
+    -webkit-line-clamp: ${(props) => props.$minlines};
+    -webkit-box-orient: vertical;
+  }
+
   p {
     margin-bottom: 0px;
     word-break: break-word;
   }
+
   a {
     color: ${(props) => props.theme.colors.yellow};
-  }
-  .view-more-btn {
-    color: #ffa700;
-    display: inline-block;
-    margin-top: 0.75rem;
-    padding: 0.25rem 0;
-    font-weight: 500;
-    cursor: pointer;
-    &:hover {
-      font-weight: 400;
-      color: #ffa700;
-    }
-  }
-  .content-wrapper {
-    position: relative;
-  }
-  .description {
-    word-break: break-word;
-    overflow: hidden;
-    display: -webkit-box;
-    font-size: 1.125rem; /* fallback */
-    line-height: 1.8755rem;
-    max-height: ${(props) => props.$minlines * 3}rem; /* fallback */
-    -webkit-line-clamp: ${(props) =>
-      props.$minlines}; /* number of lines to show */
-    -webkit-box-orient: vertical;
   }
 `;
 
@@ -72,11 +59,11 @@ const StyledHtmlText = ({
 
       // Add the description class back to truncate, then measure truncated height
       element.classList.add("description");
-      const truncHeight = element.scrollHeight;
+      const truncHeight = element.clientHeight;
 
       // If content is truncated (full height > truncated height), show the button
-      if (fullHeight > truncHeight + 5) {
-        // Add small buffer for calculation errors
+      if (fullHeight > truncHeight + 2) {
+        // Reduced buffer to detect smaller truncations
         setShowViewMore(true);
       } else {
         setShowViewMore(false);
@@ -104,22 +91,26 @@ const StyledHtmlText = ({
   };
 
   return (
-    <Wrapper className={className} $minlines={minlines}>
-      <div className="content-wrapper">
-        <div
+    <div className={`relative ${className}`}>
+      <div className="relative">
+        <DescriptionStyled
           ref={contentRef}
           id={id || "htmlString"}
           className={needToBeShorten ? "description" : ""}
+          $minlines={minlines}
           dangerouslySetInnerHTML={{ __html: htmlString || "" }}
         />
       </div>
 
       {showViewMore && (
-        <div className="view-more-btn view-more-dark" onClick={toggleReadMore}>
+        <div
+          className="inline-block mt-3 py-1 text-[#ffa700] font-medium cursor-pointer hover:font-normal view-more-dark"
+          onClick={toggleReadMore}
+        >
           {!viewMore ? "View all" : "View less"}
         </div>
       )}
-    </Wrapper>
+    </div>
   );
 };
 

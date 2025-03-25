@@ -5,7 +5,6 @@
 import { useState } from "react";
 import Spinner from "@/components/forms/Spin/Spinner";
 import moment from "moment";
-import styled from "styled-components";
 import { PengingProposalWrapper, NoPropsalWrapper } from "./job-details.styled";
 import Tooltip from "@/components/ui/Tooltip";
 import { StatusBadge } from "@/components/styled/Badges";
@@ -30,80 +29,57 @@ import ChangeBudgetModal from "../../components/changeBudget/ChangeBudgetModal";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { ChangeBudgetDeleteRequest } from "@/components/changeBudget/ChangeBudgetDeleteRequest";
-import { breakpoints } from "@/helpers/hooks/useResponsive";
 import MilestoneStats from "@/pages/client-job-details-page/partials/MilestoneStats";
 import CustomButton from "@/components/custombutton/CustomButton";
 
-const InProgressClosedJobWrapper = styled.div`
-  box-shadow: 0px 4px 60px rgba(0, 0, 0, 0.05);
-  background: ${(props) => props.theme.colors.white};
-  margin: 1.4rem 0rem 0rem 0rem;
-  border-radius: 12px;
-  border: ${(props) => `1px solid ${props.theme.colors.yellow}`};
-  .header {
-    padding: 2.25rem;
-  }
-  .banner-title {
-    line-height: 2.1rem;
-    word-wrap: break-word;
-  }
-  .job-basic-details {
-    gap: 1.25rem;
-  }
-  .attribute-gray-label {
-    opacity: 0.5;
-  }
-  .line-height-28 {
-    line-height: 1.75rem;
-  }
-  .postedon-location {
-    gap: 2rem;
-  }
-  .posted-by-avatar {
-    margin-right: 1rem;
-  }
-  .budget-and-earnings {
-    border-top: ${(props) => `1px solid ${props.theme.colors.yellow}`};
-    padding: 2.25rem;
-    gap: 2rem;
-  }
-  .divider {
-    width: 1px;
-    height: 58px;
-    background-color: #000;
-  }
-  .light-text {
-    opacity: 0.5;
-  }
-  .budget-change-button {
-    font-size: 14px;
-    border-radius: 4rem;
-    padding: 6px 14px;
-    cursor: pointer;
-    margin-left: 8px;
-    background-color: ${(props) => props.theme.colors.yellow};
-  }
-  .client-name {
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 1rem;
-    align-items: flex-end;
-    width: max-content;
-    max-width: 20rem;
-    @media ${breakpoints.mobile} {
-      width: auto;
-    }
-  }
-`;
+// Types
+interface JobMilestone {
+  status: string;
+  amount: number;
+}
 
-export const BookmarkIcon = styled.div`
-  height: 43px;
-  width: 43px;
-  border-radius: 2rem;
-`;
+interface JobData {
+  job_post_id: string | number;
+  job_title: string;
+  status: string;
+  date_created: string;
+  due_date?: string;
+  job_start_date?: string;
+  job_end_date?: string;
+  preferred_location?: string[];
+  is_bookmarked?: boolean;
+  userdata?: {
+    user_image?: string;
+    first_name?: string;
+    last_name?: string;
+    location?: {
+      country_name: string;
+    };
+  };
+  avg_rating?: number;
+  count_rating?: number;
+  budget?: {
+    type: string;
+  };
+  total_hours?: number;
+  total_earnings?: number;
+  milestone: JobMilestone[];
+  proposal?: {
+    status?: string;
+    approved_budget?: {
+      amount: number;
+      type: string;
+    };
+    budget_change?: {
+      status: string;
+      amount: number;
+      requested_by: string;
+    };
+  };
+}
 
 interface DetailsBannerProps {
-  data: any;
+  data: JobData;
   refetch: () => void;
 }
 
@@ -117,12 +93,14 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
     useState<boolean>(false);
   const [changeBudgetModal, setChangeBudgetModal] = useState(false);
   const [changeBudgetDeleteModal, setChangeBudgetDeleteModal] = useState(false);
+  const [isProposalSubmitted, setIsProposalSubmitted] =
+    useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isSaved, setISaved] = useState<boolean>(data?.is_bookmarked || false);
 
   const toggleProposalModal = () => {
     setShowSubmitProposalModal(!showSubmitProposalModal);
   };
-  const [isProposalSubmitted, setIsProposalSubmitted] =
-    useState<boolean>(false);
 
   const onSubmitProposal = () => {
     setIsProposalSubmitted(true);
@@ -130,32 +108,32 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
     refetch();
     if (id) router.push(`/job-details/${id}/proposal_sent`);
   };
-  const [loading, setLoading] = useState<boolean>(false);
-  const [isSaved, setISaved] = useState<boolean>(data?.is_bookmarked);
 
   const onBookmarkClick = () => {
-    // This will call bookmark / unbookmark job api
-    if (user) {
-      setLoading(true);
-      toggleBookmarkPost(data.job_post_id).then((res) => {
-        if (res.status) {
-          setISaved(!isSaved);
-        }
-        setLoading(false);
-      });
-    }
+    if (!user) return;
+    setLoading(true);
+    toggleBookmarkPost(data.job_post_id).then((res) => {
+      if (res.status) {
+        setISaved(!isSaved);
+      }
+      setLoading(false);
+    });
   };
+
+  const totalMilestoneAmount = data?.milestone
+    ?.filter((milestone) => milestone.status !== "cancelled")
+    .reduce((acc, milestone) => acc + milestone.amount, 0);
 
   return data?.proposal?.status ? (
     ["pending", "declined", "denied"].includes(data?.proposal?.status) ? (
       <PengingProposalWrapper>
-        <div className="banner-title text-2xl font-normal">
+        <div className="text-2xl font-normal">
           {convertToTitleCase(data.job_title)}
         </div>
         <div className="flex flex-col md:flex-row md:items-center gap-3">
           <div className="flex items-center flex-wrap">
-            <span className="light-text text-xl font-normal">Posted:</span>
-            <span className="attribute-value line-height-28 text-xl font-normal">
+            <span className="text-xl font-normal opacity-50">Posted:</span>
+            <span className="text-xl font-normal leading-7">
               {data?.date_created &&
                 moment(data.date_created).format("MMM DD, YYYY")}
             </span>
@@ -163,7 +141,7 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
           <Divider />
           <div className="flex items-center gap-2">
             <span className="text-xl font-normal">Due Date:</span>
-            <span className="budget-amount text-xl font-normal">
+            <span className="text-xl font-normal">
               {data?.due_date
                 ? moment(data?.due_date).format("MMM DD, YYYY")
                 : "-"}
@@ -172,9 +150,9 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
 
           {Array.isArray(data?.preferred_location) &&
             data?.preferred_location?.length > 0 && (
-              <div className="flex items-center width-fit-content">
+              <div className="flex items-center">
                 <LocationIcon /> &nbsp;
-                <span className="attribute-gray-label text-base font-normal">
+                <span className="text-base font-normal opacity-50">
                   {data.preferred_location.join(", ")}
                 </span>
               </div>
@@ -189,11 +167,9 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
             type="small"
           />
           <div className="flex flex-col md:flex-row md:items-center md:gap-3">
-            <span className="text-xl font-normal line-height-28 capitalize">
+            <span className="text-xl font-normal leading-7 capitalize">
               {data.userdata?.first_name} {data.userdata?.last_name}
             </span>
-            {/* <Divider />
-            <span className="attribute-gray-label fs-18 font-normal">Employer</span> */}
           </div>
         </div>
       </PengingProposalWrapper>
@@ -206,18 +182,18 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
             isFreelancer={true}
           />
         )}
-        <InProgressClosedJobWrapper>
-          <div className="header flex flex-col md:flex-row justify-between items-start gap-3">
-            <div className="job-basic-details flex flex-col">
-              <div className="banner-title text-2xl font-normal">
+        <div className="bg-white shadow-[0px_4px_60px_rgba(0,0,0,0.05)] mt-6 rounded-xl border border-[#FFD700]">
+          <div className="p-9 flex flex-col md:flex-row justify-between items-start gap-3">
+            <div className="flex flex-col gap-5">
+              <div className="text-2xl font-normal">
                 {convertToTitleCase(data.job_title)}
               </div>
               <div className="flex flex-col lg:flex-row gap-3">
                 <div className="flex items-center flex-wrap">
-                  <span className="light-text text-xl font-normal mr-2">
+                  <span className="text-xl font-normal opacity-50 mr-2">
                     Started:
                   </span>
-                  <span className="attribute-value line-height-28 text-xl font-normal">
+                  <span className="text-xl font-normal leading-7">
                     {data.job_start_date &&
                       moment(data.job_start_date).format("MMM DD, YYYY")}
                   </span>
@@ -226,10 +202,10 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
                   <div className="flex items-center gap-3">
                     <Divider />
                     <div className="flex items-center gap-2">
-                      <span className="light-text text-xl font-normal">
+                      <span className="text-xl font-normal opacity-50">
                         Due Date:{" "}
                       </span>
-                      <span className="budget-amount text-xl font-normal">
+                      <span className="text-xl font-normal">
                         {data?.due_date
                           ? moment(data?.due_date).format("MMM DD, YYYY")
                           : "-"}
@@ -241,10 +217,10 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
                   <div className="flex items-center gap-3">
                     <Divider />
                     <div className="flex items-center gap-2">
-                      <span className="light-text text-xl font-normal">
+                      <span className="text-xl font-normal opacity-50">
                         Ended:{" "}
                       </span>
-                      <span className="budget-amount text-xl font-normal">
+                      <span className="text-xl font-normal">
                         {data?.job_end_date
                           ? moment(data?.job_end_date).format("MMM DD, YYYY")
                           : "-"}
@@ -254,10 +230,10 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
                 )}
               </div>
               <StatusBadge
-                className="width-fit-content"
+                className="w-fit"
                 color={JOBS_STATUS[data?.status]?.color || "yellow"}
               >
-                {data.status == "active"
+                {data.status === "active"
                   ? "Work In Progress"
                   : changeStatusDisplayFormat(data?.status)}
               </StatusBadge>
@@ -269,19 +245,19 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
                 width="5.25rem"
                 className="mr-0 flex justify-center"
               />
-              <div className="client-name">
-                <div className="text-xl font-normal line-height-28 capitalize">
+              <div className="flex flex-wrap mt-4 items-end w-max max-w-[20rem] md:w-auto">
+                <div className="text-xl font-normal leading-7 capitalize">
                   {data.userdata?.first_name} {data.userdata?.last_name}
-                  <span className="attribute-gray-label text-lg font-normal ps-2">
+                  <span className="text-lg font-normal opacity-50 ps-2">
                     Client
                   </span>
                 </div>
               </div>
             </div>
           </div>
-          <div className="budget-and-earnings md:gap-4 gap-3 flex flex-col md:flex-row md:items-center justify-between">
-            <div className="budget-and-earnings__block gap-2 flex-1">
-              <label className="light-text text-base font-normal">
+          <div className="border-t border-[#FFD700] p-9 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">
+            <div className="flex-1">
+              <label className="text-base font-normal opacity-50">
                 Total Budget
               </label>
               <div className="text-xl font-normal mt-1">
@@ -290,97 +266,71 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
                     data?.proposal?.approved_budget?.amount,
                     "USD"
                   )}${
-                    data?.proposal?.approved_budget?.type == "hourly"
+                    data?.proposal?.approved_budget?.type === "hourly"
                       ? "/hr"
                       : ""
                   }`}
-
-                {/* START ----------------------------------------- Increase project budget request */}
-                {/* project should be in progress */}
-                {/* increase budget request status not pending */}
-                {/* amount should have some value */}
-                {data?.status == "active" &&
+                {data?.status === "active" &&
                   (data?.proposal?.budget_change?.status !== "pending" ||
                     data?.proposal?.budget_change?.requested_by !==
                       "freelancer") && (
-                    <span
-                      className="budget-change-button inline-block"
-                      onClick={() => {
-                        setChangeBudgetModal(true);
-                      }}
+                    <button
+                      className="ml-2 px-3.5 py-1.5 text-sm rounded-full bg-primary transition-colors cursor-pointer"
+                      onClick={() => setChangeBudgetModal(true)}
                     >
                       Change Budget
-                    </span>
+                    </button>
                   )}
-                {/* END ------------------------------------------- Increase project budget request */}
               </div>
             </div>
 
-            {/* START ----------------------------------------- Requested increase budget amount */}
-            {/* 
-          1. project should be in progress
-          2. budget change request status should be pending
-          3. amount should be there in budget change
-          */}
-            {data?.status == "active" &&
+            {data?.status === "active" &&
               data?.proposal?.budget_change?.status === "pending" &&
               data?.proposal?.budget_change?.amount && (
-                <div className="budget-and-earnings__block gap-2 flex-1">
-                  <label className="light-text text-base font-normal">
+                <div className="flex-1">
+                  <label className="text-base font-normal opacity-50">
                     Requested{" "}
-                    {data?.proposal?.approved_budget?.type == "hourly"
+                    {data?.proposal?.approved_budget?.type === "hourly"
                       ? "rate"
                       : "budget"}{" "}
                     <FaEdit
-                      className="pointer text-dark align-text-top"
+                      className="inline-block cursor-pointer text-dark align-text-top"
                       onClick={() => setChangeBudgetModal(true)}
                     />
                     <MdDelete
-                      className="pointer text-dark align-text-top ms-1"
+                      className="inline-block cursor-pointer text-dark align-text-top ml-1"
                       onClick={() => setChangeBudgetDeleteModal(true)}
                     />
                   </label>
-                  <div className="text-xl font-normal mt-1 ms-4">
+                  <div className="text-xl font-normal mt-1 ml-4">
                     {data?.proposal?.budget_change?.amount &&
                       `${numberWithCommas(
                         data?.proposal?.budget_change?.amount,
                         "USD"
                       )}${
-                        data?.proposal?.approved_budget?.type == "hourly"
+                        data?.proposal?.approved_budget?.type === "hourly"
                           ? "/hr"
                           : ""
                       }`}
                   </div>
                 </div>
               )}
-            {/* END ------------------------------------------- Requested increase budget amount */}
 
             <div className="flex-1">
-              <div className="light-text text-base font-normal">
-                {data?.budget?.type == "hourly"
+              <div className="text-base font-normal opacity-50">
+                {data?.budget?.type === "hourly"
                   ? "Total Hours Worked"
                   : "Total in Milestones"}
               </div>
               <div className="mt-1 text-xl font-normal">
-                {data?.budget?.type == "hourly"
+                {data?.budget?.type === "hourly"
                   ? `${numberWithCommas(data?.total_hours)} Hours`
-                  : numberWithCommas(
-                      data?.milestone
-                        ?.filter(
-                          (milestone: any) => milestone.status !== "cancelled"
-                        )
-                        .reduce(
-                          (acc: number, milestone: any) =>
-                            acc + milestone.amount,
-                          0
-                        ),
-                      "USD"
-                    )}
+                  : numberWithCommas(totalMilestoneAmount, "USD")}
               </div>
             </div>
-            <div className="divider hidden md:block" />
-            <div className="budget-and-earnings__block flex-1">
-              <label className="light-text text-base font-normal">
+            <div className="hidden md:block w-px h-[58px] bg-black"></div>
+            <div className="flex-1">
+              <label className="text-base font-normal opacity-50">
                 Sent to Freelancer
               </label>
               <div className="text-xl font-normal mt-1">
@@ -401,25 +351,25 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
 
           <ChangeBudgetDeleteRequest
             show={changeBudgetDeleteModal}
-            setShow={(value) => setChangeBudgetDeleteModal(value)}
+            setShow={setChangeBudgetDeleteModal}
             jobPostId={data.job_post_id}
             refetch={refetch}
           />
-        </InProgressClosedJobWrapper>
+        </div>
       </>
     )
   ) : (
     <NoPropsalWrapper className="header flex flex-col md:flex-row justify-between md:items-start gap-3">
       <div className="content flex flex-col flex-wrap flex-1">
         <div className="flex flex-row justify-between">
-          <span className="banner-title text-2xl font-normal">
+          <span className="text-2xl font-normal">
             {convertToTitleCase(data.job_title)}
           </span>
           <div className="flex">
             <Tooltip
               customTrigger={
-                <BookmarkIcon
-                  className="flex justify-center items-center cursor-pointer"
+                <div
+                  className="h-[43px] w-[43px] rounded-full flex justify-center items-center cursor-pointer"
                   onClick={onBookmarkClick}
                 >
                   {loading ? (
@@ -429,7 +379,7 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
                   ) : (
                     <UnSavedIcon className={user ? "" : "blurred-2px"} />
                   )}
-                </BookmarkIcon>
+                </div>
               }
             >
               {user
@@ -440,9 +390,8 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
             </Tooltip>
             <Tooltip
               customTrigger={
-                <BookmarkIcon
-                  className="flex justify-center items-center cursor-pointer"
-                  style={{ marginLeft: "10px" }}
+                <div
+                  className="h-[43px] w-[43px] rounded-full flex justify-center items-center cursor-pointer ml-2.5"
                   onClick={() => {
                     navigator.clipboard.writeText(window.location.href);
                     if (navigator.share) {
@@ -455,7 +404,7 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
                   }}
                 >
                   <ShareIcon />
-                </BookmarkIcon>
+                </div>
               }
             >
               Share
@@ -463,40 +412,34 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
           </div>
         </div>
         <div className="flex items-center flex-wrap gap-3">
-          <div
-            className={`flex items-center ${
-              !user?.is_account_approved ? "blurred-9px" : ""
-            }`}
-          >
+          <div className={!user?.is_account_approved ? "blurred-9px" : ""}>
             <BlurredImage
               src={data.userdata?.user_image || "/images/default_avatar.png"}
               height="2.625rem"
               width="2.625rem"
-              className="posted-by-avatar"
+              className="mr-4"
               allowToUnblur={false}
             />
-
-            <span className="text-xl font-normal line-height-28 capitalize">
+            <span className="text-xl font-normal leading-7 capitalize">
               {data.userdata?.first_name} {data.userdata?.last_name}
             </span>
           </div>
-
           <Divider />
           <div className="flex items-center flex-wrap gap-3">
-            {data.userdata && (
+            {data.userdata?.location && (
               <div className="flex items-center">
                 <LocationIcon />
-                <div className="attribute-value text-base font-normal attribute-gray-label">
-                  {data.userdata?.location?.country_name}
+                <div className="text-base font-normal opacity-50 ml-2">
+                  {data.userdata.location.country_name}
                 </div>
               </div>
             )}
             <div className="flex items-center">
               <StarIcon />
-              <div className="attribute-value text-base font-normal">
+              <div className="text-base font-normal ml-2">
                 {data.avg_rating?.toFixed(1)}
               </div>
-              <div className="attribute-value text-sm font-light attribute-gray-label">
+              <div className="text-sm font-light opacity-50 ml-1">
                 Ratings ({numberWithCommas(data?.count_rating) || 0})
               </div>
             </div>
@@ -504,19 +447,17 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
         </div>
         <div className="flex flex-col md:flex-row justify-between md:items-center gap-3">
           <div className="flex items-center flex-wrap gap-3">
-            <div className="attribute-gray-label line-height-28 text-xl font-normal">
+            <div className="text-xl font-normal leading-7 opacity-50">
               Posted:
             </div>
-            <div className="attribute-value line-height-28 text-xl font-normal">
+            <div className="text-xl font-normal leading-7">
               {data?.date_created &&
-                moment(data?.date_created).format("MMM DD, YYYY")}
+                moment(data.date_created).format("MMM DD, YYYY")}
             </div>
             <Divider />
             <div className="flex items-center gap-2">
-              <span className="attribute-gray-label text-xl font-normal">
-                Due date:{" "}
-              </span>
-              <span className="budget-amount text-xl font-normal">
+              <span className="text-xl font-normal opacity-50">Due date: </span>
+              <span className="text-xl font-normal">
                 {data?.due_date
                   ? moment(data?.due_date).format("MMM DD, YYYY")
                   : "-"}
@@ -524,73 +465,59 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
             </div>
           </div>
           <div className="flex">
-            {data?.status === "prospects" ? (
-              !isProposalSubmitted ? (
-                <div className="flex-2">
-                  {user?.is_account_approved ? (
-                    user.stp_account_id &&
-                    user?.stp_account_status === "verified" ? (
-                      <CustomButton
-                        disabled={!user?.is_account_approved}
-                        className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
-                        onClick={() => {
-                          setShowSubmitProposalModal(true);
-                        }}
-                        text="Submit Proposal"
-                      />
-                    ) : (
-                      /* Stripe Account is not created or verified  */
-                      <Tooltip
-                        customTrigger={
-                          <CustomButton
-                            disabled={!user?.is_account_approved}
-                            className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] disabled:opacity-50"
-                            onClick={() => {}}
-                            text="Submit Proposal"
-                          />
-                        }
-                        className="inline-block align-middle"
-                      >
-                        Please {!user.stp_account_id ? `create` : `activate`}{" "}
-                        your stripe account to submit proposals
-                      </Tooltip>
-                    )
+            {data?.status === "prospects" && !isProposalSubmitted && (
+              <div className="flex-2">
+                {user?.is_account_approved ? (
+                  user.stp_account_id &&
+                  user?.stp_account_status === "verified" ? (
+                    <CustomButton
+                      className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+                      onClick={() => setShowSubmitProposalModal(true)}
+                      text="Submit Proposal"
+                    />
                   ) : (
-                    /* Blurred button */
                     <Tooltip
                       customTrigger={
                         <CustomButton
-                          disabled={!user?.is_account_approved}
+                          disabled
                           className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] disabled:opacity-50"
-                          onClick={() => {}}
                           text="Submit Proposal"
                         />
                       }
                       className="inline-block align-middle"
                     >
-                      Your account is still under review. You&apos;ll be able to
-                      apply to projects once it&apos;s been approved.
+                      Please {!user.stp_account_id ? "create" : "activate"} your
+                      stripe account to submit proposals
                     </Tooltip>
-                  )}
-                </div>
-              ) : (
-                <div>
-                  <StatusBadge className="width-fit-content" color={"yellow"}>
-                    Pending
-                  </StatusBadge>
-                </div>
-              )
-            ) : null}
+                  )
+                ) : (
+                  <Tooltip
+                    customTrigger={
+                      <CustomButton
+                        disabled
+                        className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] disabled:opacity-50"
+                        text="Submit Proposal"
+                      />
+                    }
+                    className="inline-block align-middle"
+                  >
+                    Your account is still under review. You&apos;ll be able to
+                    apply to projects once it&apos;s been approved.
+                  </Tooltip>
+                )}
+              </div>
+            )}
+            {data?.status === "prospects" && isProposalSubmitted && (
+              <div>
+                <StatusBadge className="w-fit" color="yellow">
+                  Pending
+                </StatusBadge>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/*
-       * If user account is not approved, then the user will not be able to apply
-       * In that case a blurred button with tooltip will be displayed
-       */}
-
-      {/* Submit proposal modal */}
       <SubmitProposalModal
         show={showSubmitProposalModal}
         toggle={toggleProposalModal}

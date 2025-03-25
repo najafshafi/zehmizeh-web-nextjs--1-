@@ -1,4 +1,4 @@
-import { StyledButton } from "@/components/forms/Buttons";
+import CustomButton from "@/components/custombutton/CustomButton";
 import { StyledModal } from "@/components/styled/StyledModal";
 import useResponsive from "@/helpers/hooks/useResponsive";
 import { Modal } from "react-bootstrap";
@@ -49,35 +49,32 @@ export const JobClosuremodalProjectBased = ({
             </li>
           </ul>
           <div className="flex flex-col justify-center items-center gap-md-3 gap-2 mt-md-4 mt-3">
-            <StyledButton
-              className={`fs-16 font-normal ${isMobile ? "w-100" : "w-50"}`}
-              variant="outline-dark"
-              padding="0.8125rem 2rem"
+            <CustomButton
+              text={"Not Yet"}
+              className={`px-[2rem] py-4 w-full transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]
+                ${isMobile ? "w-100" : "w-50"}
+                `}
               onClick={() => onConfirm("not_yet")}
               disabled={loading}
-            >
-              Not Yet
-            </StyledButton>
+            />
 
-            <StyledButton
-              className={`fs-16 font-normal ${isMobile ? "w-100" : "w-50"}`}
-              variant="outline-dark"
-              padding="0.8125rem 2rem"
+            <CustomButton
+              text={"Decline Closure Request"}
+              className={`px-[2rem] py-4 w-full transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]
+                ${isMobile ? "w-100" : "w-50"}
+                `}
               onClick={() => onConfirm("decline_closure")}
               disabled={loading}
-            >
-              Decline Closure Request
-            </StyledButton>
+            />
 
-            <StyledButton
-              className={`fs-16 font-normal ${isMobile ? "w-100" : "w-50"}`}
-              variant="outline-dark"
-              padding="0.8125rem 2rem"
+            <CustomButton
+              text={"Accept & Close"}
+              className={`px-[2rem] py-4 w-full transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]
+                ${isMobile ? "w-100" : "w-50"}
+                `}
               onClick={() => onConfirm("accept")}
               disabled={loading}
-            >
-              Accept & Close
-            </StyledButton>
+            />
           </div>
         </div>
       </Modal.Body>
