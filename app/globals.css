@@ -37,3 +37,12 @@
   --toastify-z-index: 9999;
 }
 
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  height: 0px;
+  width: 0px;
+}
+
+.react-datepicker-wrapper {
+  width: 100% !important;
+}

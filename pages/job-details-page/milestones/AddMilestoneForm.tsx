@@ -1,18 +1,17 @@
+"use client";
+
 /*
  * This is the Add milestone form - Freelancer side *
  */
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import moment from "moment";
 import * as yup from "yup";
 import { useQuery } from "react-query";
-import { Modal, Button, Form, FormLabel } from "react-bootstrap";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { StyledButton } from "@/components/forms/Buttons";
+import { VscClose } from "react-icons/vsc";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import TextEditor from "@/components/forms/TextEditor";
-import CustomDatePicker from "@/components/forms/DatePicker";
 import Tooltip from "@/components/ui/Tooltip";
 import {
   convertToTitleCase,
@@ -22,23 +21,34 @@ import {
 import { manageMilestone } from "@/helpers/http/jobs";
 import { adjustTimezone } from "@/helpers/utils/misc";
 import useResponsive from "@/helpers/hooks/useResponsive";
-import { FormWrapper } from "./milestones.styled";
 import { getPaymentFees } from "@/helpers/http/common";
-import { CSSProperties } from "styled-components";
 import { REGEX } from "@/helpers/const/regex";
 import NewCustomDatePicker from "@/components/forms/NewDatePicker";
-import { useAuth } from "@/helpers/contexts/auth-context";
 
-type Props = {
+interface FormState {
+  title: string;
+  amount: string;
+  description: string;
+  dueDate: string;
+}
+
+interface FormErrors {
+  title?: string;
+  amount?: string;
+  description?: string;
+  dueDate?: string;
+}
+
+interface Props {
   show: boolean;
   toggle: () => void;
   onSubmit: () => void;
   clientUserId: string;
   jobPostId: string;
   remainingBudget: number;
-};
+}
 
-const initialValues = {
+const initialValues: FormState = {
   title: "",
   amount: "",
   description: "",
@@ -51,19 +61,18 @@ const AddMilestoneForm = ({
   onSubmit,
   clientUserId,
   jobPostId,
-  remainingBudget,
 }: Props) => {
   const { isMobile } = useResponsive();
-  const [formState, setFormState] = useState(initialValues);
+  const [formState, setFormState] = useState<FormState>(initialValues);
   const [isMaxLimitReached] = useState(false);
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState<boolean>(false);
-  const auth = useAuth();
 
-  const handleChange = useCallback((field, value) => {
-    setFormState((prevFormState: any) => {
-      return { ...prevFormState, [field]: value };
-    });
+  const handleChange = useCallback((field: keyof FormState, value: string) => {
+    setFormState((prevFormState) => ({
+      ...prevFormState,
+      [field]: value,
+    }));
   }, []);
 
   const { data: paymentData } = useQuery(
@@ -74,6 +83,7 @@ const AddMilestoneForm = ({
       enabled: show,
     }
   );
+
   const zehmizehFees =
     paymentData?.data[0]?.fee_structure?.OTHER?.percentage || 0;
 
@@ -94,9 +104,10 @@ const AddMilestoneForm = ({
     })
     .required();
 
-  const onCreate = (e: any) => {
-    const { title, amount, description, dueDate } = formState;
+  const onCreate = (e: React.FormEvent) => {
     e.preventDefault();
+    const { title, amount, description, dueDate } = formState;
+
     validationSchema
       .isValid({ title, amount, description, dueDate })
       .then((valid) => {
@@ -108,12 +119,12 @@ const AddMilestoneForm = ({
             )
             .catch((err) => {
               const errors = getYupErrors(err);
-              setErrors({ ...errors });
+              setErrors(errors as FormErrors);
             });
         } else {
           setErrors({});
           if (isMaxLimitReached) {
-            toast.error(`Maximum 2000 characters are allowed for description`);
+            toast.error("Maximum 2000 characters are allowed for description");
             return;
           }
           addNewMilestone();
@@ -121,7 +132,6 @@ const AddMilestoneForm = ({
       });
   };
 
-  // Create milestone api call
   const addNewMilestone = () => {
     const { title, amount, description, dueDate } = formState;
 
@@ -154,6 +164,46 @@ const AddMilestoneForm = ({
     });
   };
 
+  useEffect(() => {
+    if (show) {
+      // Store current scroll position and body padding
+      const scrollY = window.scrollY;
+      const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+
+      // Prevent content shift when scrollbar disappears
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+
+      // Fix the body
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+    } else {
+      // Restore scroll position and body padding
+      const scrollY = document.body.style.top;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.paddingRight = "";
+      window.scrollTo(0, parseInt(scrollY || "0") * -1);
+    }
+
+    return () => {
+      // Cleanup in case component unmounts while modal is open
+      const scrollY = document.body.style.top;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.paddingRight = "";
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || "0") * -1);
+      }
+    };
+  }, [show]);
+
   const closeModal = () => {
     setLoading(false);
     setFormState(initialValues);
@@ -165,165 +215,156 @@ const AddMilestoneForm = ({
     const { amount } = formState;
     if (amount) {
       const finalAmount = parseFloat(amount) * ((100 - zehmizehFees) / 100);
-
       if (isNaN(finalAmount)) return "0";
-
       return numberWithCommas(finalAmount, "USD");
     }
   }, [formState, zehmizehFees]);
 
-  const onDescriptionChange = (data: any) => {
+  const onDescriptionChange = (data: string) => {
     handleChange("description", data);
   };
 
-  const tooltipStyle: CSSProperties = {
-    position: "relative",
-    top: "-3px",
-    left: "3px",
-  };
+  if (!show) return null;
 
   return (
-    <StyledModal
-      maxwidth={570}
-      show={show}
-      size="sm"
-      onHide={closeModal}
-      centered
-    >
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={closeModal}>
-          &times;
-        </Button>
-        <FormWrapper onSubmit={onCreate}>
-          <div className="fs-24 font-normal">Propose Milestone</div>
-          <div className="form-group">
-            <FormLabel className="fs-1rem fw-600">
-              Title<span className="mandatory">&nbsp;*</span>
-            </FormLabel>
-            <Form.Control
-              placeholder="Pick a title that indicates what you'll do for this milestone"
-              title="Enter a title that captures what you'll complete in this milestone"
-              value={formState.title}
-              onChange={(e) =>
-                handleChange("title", e.target.value.replace(REGEX.TITLE, ""))
-              }
-              className="form-input"
-              maxLength={70}
-              autoFocus
-            />
-            {errors?.title && <ErrorMessage message={errors?.title} />}
-          </div>
-          <div className="form-group">
-            <FormLabel className="fs-1rem fw-300">
-              <div className="flex items-center">
-                <p className="mb-0 fw-600">
-                  Milestone Fee<span className="mandatory">&nbsp;*</span>
-                </p>
-                {/* <div>
-                  <div style={tooltipStyle}>
-                    <Tooltip>
-                      Write how much you would like to be paid to complete this
-                      part of the project.
-                    </Tooltip>
-                  </div>
-                </div> */}
-                <span className="fw-500 ms-1 fs-sm">(Min $5)</span>
-              </div>
-              <p className="fs-14 mb-0 fw-300">
-                How much would you like to be paid to complete this part of the
-                project?
-              </p>
-            </FormLabel>
-            <Form.Control
-              placeholder="Enter amount"
-              value={formState.amount}
-              onChange={(e) => handleChange("amount", e.target.value)}
-              className="form-input"
-              maxLength={5}
-            />
-            {formState.amount !== "" && (
-              <div className="mt-2 flex items-center">
-                <Tooltip className="me-2">
-                  <div>
-                    <div className="mt-1">
-                      Final takeaway: {calculateFinalAmount}
-                    </div>
-                  </div>
-                </Tooltip>
-                <div className="fs-1rem font-normal mt-1">
-                  ZehMizeh Fee: &nbsp;{zehmizehFees}%
-                </div>
-              </div>
-            )}
-            {errors?.amount && <ErrorMessage message={errors?.amount} />}
-          </div>
+    <div className="fixed inset-0 z-50">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        onClick={closeModal}
+      />
 
-          <div className="form-group">
-            <FormLabel className="fs-1rem fw-600">
-              Milestone Description<span className="mandatory">&nbsp;*</span>
-            </FormLabel>
-            <p className="fs-14 fw-300">
-              Describe the work you'll deliver in this milestone. What will be
-              done when you're finished? What content will you deliver? Is this
-              a draft, a segment, a complete project?
-            </p>
-            <TextEditor
-              value={formState.description}
-              onChange={onDescriptionChange}
-              // placeholder="Describe in detail the work you’ll be delivering in this milestone. What will be done at the end of this process? What content will you deliver to the client? Is this a draft? Is this a segment of the project or the whole thing? Be as specific as you can."
-              placeholder="Write the milestone description here."
-              maxChars={2000}
-            />
-            {errors?.description && (
-              <ErrorMessage message={errors?.description} />
-            )}
-          </div>
-
-          <div className="form-group">
-            <FormLabel className="fs-1rem fw-600">
-              Due Date<span className="mandatory">&nbsp;*</span>
-            </FormLabel>
-            {/* <Form.Control
-              type="date"
-              id="dob"
-              className="appearance-none form-input"
-              min={new Date().toISOString().split('T')[0]}
-              max={moment().add(3, 'years').toISOString().split('T')[0]}
-              onChange={(e) => handleChange('dueDate', e.target.value)}
-            /> */}
-            <NewCustomDatePicker
-              id="due_date"
-              placeholderText="Select due date"
-              onChange={(value) =>
-                handleChange("dueDate", adjustTimezone(value))
-              }
-              selected={formState?.dueDate && new Date(formState?.dueDate)}
-              minDate={new Date()}
-              format="YYYY-MM-DD"
-              maxDate={
-                new Date(moment().add(3, "years").toISOString().split("T")[0])
-              }
-              isClearable={!!formState?.dueDate}
-            />
-            {errors?.dueDate && <ErrorMessage message={errors?.dueDate} />}
-          </div>
-
-          <div className="flex g-2 bottom-buttons">
-            <StyledButton
-              className={
-                isMobile ? "fs-16 font-normal w-100" : "fs-16 font-normal"
-              }
-              padding="0.8125rem 2rem"
-              type="submit"
-              disabled={loading}
+      {/* Modal Container with scroll */}
+      <div className="absolute inset-0 overflow-y-auto hide-scrollbar">
+        <div className="min-h-full flex items-center justify-center p-4">
+          {/* Modal Content */}
+          <div className="relative bg-white rounded-xl w-full max-w-[570px] my-8">
+            <button
+              type="button"
+              className="absolute right-4 top-4 md:top-0 md:-right-8 md:text-white text-gray-500 hover:text-gray-700 transition-colors duration-200 z-10"
+              onClick={closeModal}
+              aria-label="Close modal"
             >
-              {/* Create */}
-              Propose New Milestone
-            </StyledButton>
+              <VscClose size={24} />
+            </button>
+
+            <div className="px-6 py-8 md:p-12">
+              <form onSubmit={onCreate} className="flex flex-col gap-6">
+                <h2 className="text-2xl font-normal">Propose Milestone</h2>
+
+                <div className="space-y-2">
+                  <label className="block text-base font-semibold">
+                    Title<span className="text-red-500">&nbsp;*</span>
+                  </label>
+                  <input
+                    placeholder="Pick a title that indicates what you'll do for this milestone"
+                    title="Enter a title that captures what you'll complete in this milestone"
+                    value={formState.title}
+                    onChange={(e) =>
+                      handleChange(
+                        "title",
+                        e.target.value.replace(REGEX.TITLE, "")
+                      )
+                    }
+                    className="w-full px-5 py-4 border rounded-md focus:outline-none border-gray-400 focus:ring-4 focus:ring-[#0d6efd40] transition-all"
+                    maxLength={70}
+                    autoFocus
+                  />
+                  {errors?.title && <ErrorMessage message={errors.title} />}
+                </div>
+
+                <div className="space-y-2">
+                  <div>
+                    <label className="block text-base font-semibold">
+                      Milestone Fee<span className="text-red-500">&nbsp;*</span>
+                      <span className="ml-1 text-sm font-medium">(Min $5)</span>
+                    </label>
+                    <p className="text-sm text-gray-600">
+                      How much would you like to be paid to complete this part
+                      of the project?
+                    </p>
+                  </div>
+                  <input
+                    placeholder="Enter amount"
+                    value={formState.amount}
+                    onChange={(e) => handleChange("amount", e.target.value)}
+                    className="w-full px-5 py-4 border rounded-md focus:outline-none border-gray-400 focus:ring-4 focus:ring-[#0d6efd40] transition-all"
+                    maxLength={5}
+                  />
+                  {formState.amount !== "" && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <Tooltip>
+                        <div>Final takeaway: {calculateFinalAmount}</div>
+                      </Tooltip>
+                      <div>ZehMizeh Fee: {zehmizehFees}%</div>
+                    </div>
+                  )}
+                  {errors?.amount && <ErrorMessage message={errors.amount} />}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-base font-semibold">
+                    Milestone Description
+                    <span className="text-red-500">&nbsp;*</span>
+                  </label>
+                  <p className="text-sm text-gray-600">
+                    Describe the work you&apos;ll deliver in this milestone.
+                    What will be done when you&apos;re finished? What content
+                    will you deliver? Is this a draft, a segment, a complete
+                    project?
+                  </p>
+                  <TextEditor
+                    value={formState.description}
+                    onChange={onDescriptionChange}
+                    placeholder="Write the milestone description here."
+                    maxChars={2000}
+                  />
+                  {errors?.description && (
+                    <ErrorMessage message={errors.description} />
+                  )}
+                </div>
+
+                <div className="w-full space-y-2">
+                  <label className="block text-base font-semibold">
+                    Due Date<span className="text-red-500">&nbsp;*</span>
+                  </label>
+                  <NewCustomDatePicker
+                    id="due_date"
+                    placeholderText="Select due date"
+                    onChange={(value: Date | null) =>
+                      handleChange(
+                        "dueDate",
+                        value ? adjustTimezone(value).toString() : ""
+                      )
+                    }
+                    selected={
+                      formState?.dueDate ? new Date(formState.dueDate) : null
+                    }
+                    minDate={new Date()}
+                    format="YYYY-MM-DD"
+                    maxDate={new Date(moment().add(3, "years").toISOString())}
+                    isClearable={!!formState?.dueDate}
+                  />
+                  {errors?.dueDate && <ErrorMessage message={errors.dueDate} />}
+                </div>
+
+                <div
+                  className={`${isMobile ? "w-full" : "w-fit"} flex self-end`}
+                >
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="bg-[#f2b420] text-[#212529] px-9 py-[1.15rem] hover:scale-105 duration-300 text-lg rounded-full disabled:opacity-70 "
+                  >
+                    Propose New Milestone
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </FormWrapper>
-      </Modal.Body>
-    </StyledModal>
+        </div>
+      </div>
+    </div>
   );
 };
 

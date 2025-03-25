@@ -1,26 +1,8 @@
-import { Modal, Button } from "react-bootstrap";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { StyledButton } from "@/components/forms/Buttons";
-import styled from "styled-components";
-import { breakpoints } from "@/helpers/hooks/useResponsive";
+"use client";
 
-const Wrapper = styled(StyledModal)`
-  .heading {
-    font-size: 1.5rem;
-    @media ${breakpoints.mobile} {
-      font-size: 1.25rem;
-    }
-  }
-  .content {
-    padding: 1rem;
-    font-size: 1.25rem;
-    @media ${breakpoints.mobile} {
-      font-size: 1.125rem;
-    }
-  }
-`;
+import { VscClose } from "react-icons/vsc";
 
-type Props = {
+interface Props {
   cancelStateData: {
     show: boolean;
     loading?: boolean;
@@ -28,71 +10,77 @@ type Props = {
   };
   toggle: () => void;
   onConfirm: () => void;
-};
+}
 
 const CancelMileStoneModal = ({
   cancelStateData,
   toggle,
   onConfirm,
 }: Props) => {
+  if (!cancelStateData.show) return null;
+
   return (
-    <Wrapper
-      maxwidth={678}
-      show={cancelStateData.show}
-      size="sm"
-      onHide={toggle}
-      centered
-    >
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={toggle}>
-          &times;
-        </Button>
-        <div className="flex flex-col gap-md-3 gap-0">
-          <div className="heading font-normal text-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div
+        className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm"
+        onClick={toggle}
+      />
+      <div className="relative bg-white rounded-xl p-6 md:p-8 max-w-[678px] w-full mx-4">
+        <button
+          type="button"
+          className="absolute right-4 top-4 md:top-2 md:right-2 text-gray-500 hover:text-gray-700 transition-colors duration-200"
+          onClick={toggle}
+          aria-label="Close modal"
+        >
+          <VscClose size={24} />
+        </button>
+
+        <div className="flex flex-col gap-4 md:gap-6">
+          <h2 className="text-xl md:text-2xl font-normal text-center">
             Are you sure you want to cancel
             {cancelStateData.milestoneStatus === "pending" ? (
               <span>&nbsp;this milestone proposal?</span>
             ) : (
               <span>?</span>
             )}
-          </div>
-          {cancelStateData.milestoneStatus !== "pending" ? (
-            <div className="content font-normal text-center">
+          </h2>
+
+          {cancelStateData.milestoneStatus !== "pending" && (
+            <div className="text-base md:text-lg font-normal text-center">
               If you cancel this milestone, the money that has been deposited to
               pay you for its completion will be sent back to the client. There
               is no way to undo this and the client will not be obligated to pay
               for the incomplete work of this milestone.
-              <div className="mt-md-3 mt-2">
-                (To be paid for the work you've done in this milestone so far:
-                have the client accept a new milestone to cover previous work
-                before canceling this milestone.)
+              <div className="mt-4 md:mt-6">
+                (To be paid for the work you&apos;ve done in this milestone so
+                far: have the client accept a new milestone to cover previous
+                work before canceling this milestone.)
               </div>
             </div>
-          ) : null}
+          )}
+
           <div className="flex flex-col md:flex-row justify-center gap-3">
-            <StyledButton
-              className="fs-16 font-normal"
-              variant="outline-dark"
-              padding="0.8125rem 2rem"
+            <button
+              type="button"
+              className="px-8 py-3 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full hover:bg-gray-100 transition-colors duration-200"
               onClick={toggle}
             >
               Not Now
-            </StyledButton>
-            <StyledButton
-              className="fs-16 font-normal"
-              variant="primary"
-              padding="0.8125rem 2rem"
+            </button>
+            <button
+              type="button"
+              className="px-8 py-3 text-base font-normal bg-[#F2B420] text-[#212529] rounded-full hover:bg-[#daa31d] transition-colors duration-200 disabled:opacity-50"
               onClick={onConfirm}
               disabled={cancelStateData.loading}
             >
               {cancelStateData.milestoneStatus === "pending"
                 ? "Yes - Cancel"
                 : "Yes - Cancel and Send Back Deposit"}
-            </StyledButton>
+            </button>
           </div>
         </div>
-      </Modal.Body>
-    </Wrapper>
+      </div>
+    </div>
   );
 };
 
