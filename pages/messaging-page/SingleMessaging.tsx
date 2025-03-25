@@ -11,7 +11,7 @@ import {
 } from "@/store/redux/slices/chatSlice";
 import axios, { CancelTokenSource } from "axios";
 import * as I from "@/store/redux/slices/chat.interface";
-import { Spinner } from "react-bootstrap";
+import Spinner from "@/components/forms/Spin/Spinner";
 import { talkJsFetchSingleConversation } from "@/helpers/http/common";
 import TalkJS from "@/pages/talk-js";
 
@@ -105,7 +105,7 @@ function SingleMessaging({ id }: { id: string }) {
             }}
           >
             <div className="flex items-center justify-center gap-4">
-              <Spinner animation="border" />
+              <Spinner />
               <p className="mb-0">loading messages...</p>
             </div>
           </div>

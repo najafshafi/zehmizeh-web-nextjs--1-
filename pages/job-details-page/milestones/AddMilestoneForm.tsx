@@ -9,10 +9,10 @@ import * as yup from "yup";
 import { useQuery } from "react-query";
 import { Modal, Button, Form, FormLabel } from "react-bootstrap";
 import { StyledModal } from "@/components/styled/StyledModal";
-import { StyledButton } from "@/components/forms/Buttons";
+// import { StyledButton } from "@/components/forms/Buttons";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import TextEditor from "@/components/forms/TextEditor";
-import CustomDatePicker from "@/components/forms/DatePicker";
+// import CustomDatePicker from "@/components/forms/DatePicker";
 import Tooltip from "@/components/ui/Tooltip";
 import {
   convertToTitleCase,
@@ -28,6 +28,7 @@ import { CSSProperties } from "styled-components";
 import { REGEX } from "@/helpers/const/regex";
 import NewCustomDatePicker from "@/components/forms/NewDatePicker";
 import { useAuth } from "@/helpers/contexts/auth-context";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 type Props = {
   show: boolean;
@@ -309,7 +310,7 @@ const AddMilestoneForm = ({
           </div>
 
           <div className="flex g-2 bottom-buttons">
-            <StyledButton
+            {/* <StyledButton
               className={
                 isMobile ? "fs-16 font-normal w-100" : "fs-16 font-normal"
               }
@@ -317,9 +318,15 @@ const AddMilestoneForm = ({
               type="submit"
               disabled={loading}
             >
-              {/* Create */}
+              
               Propose New Milestone
-            </StyledButton>
+            </StyledButton> */}
+            <CustomButton
+              text={"Propose New Milestone"}
+              className="px-[2rem] py-[0.8125rem] w-full max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5"
+              onClick={() => {}}
+              disabled={loading}
+            />
           </div>
         </FormWrapper>
       </Modal.Body>

@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-import { transition } from '@/styles/transitions';
+import styled from "styled-components";
+import { transition } from "@/styles/transitions";
 
-export const ListingItem = styled.a`
+export const ListingItem = styled.div`
   position: relative;
   background: ${(props) => props.theme.colors.white};
   padding: 2rem;

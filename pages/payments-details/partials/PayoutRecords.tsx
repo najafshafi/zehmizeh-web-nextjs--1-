@@ -1,17 +1,12 @@
 import NoDataFound from "@/components/ui/NoDataFound";
-import {
-  formatLocalDate,
-  numberWithCommas,
-  pxToRem,
-} from "@/helpers/utils/misc";
+import { formatLocalDate, numberWithCommas } from "@/helpers/utils/misc";
 import React from "react";
-import styled from "styled-components";
-import { usePaymentController } from "../PaymentController";
 import Loader from "@/components/Loader";
 import PaginationComponent from "@/components/ui/Pagination";
 import useResponsive from "@/helpers/hooks/useResponsive";
 import PayoutCard from "./PayoutCard";
 import classNames from "classnames";
+import { usePaymentController } from "../PaymentController";
 
 // Define payout row type
 type PayoutRow = {
@@ -26,41 +21,6 @@ type PayoutRow = {
   date_created: string;
   arrival_date: string;
 };
-
-const Wrapper = styled.div`
-  margin: 12px;
-  thead {
-    background: rgba(29, 30, 27, 0.1);
-    th,
-    td {
-      text-transform: uppercase;
-      font-size: ${pxToRem(14)};
-      padding: 12px;
-      font-weight: 400;
-    }
-  }
-  .table > :not(:first-child) {
-    border-top: none;
-  }
-  tbody {
-    th,
-    td {
-      min-height: ${pxToRem(60)};
-      height: ${pxToRem(60)};
-      vertical-align: middle;
-      border-color: #f5f5f5;
-    }
-  }
-  .download-btn {
-    color: ${(props) => props.theme.colors.lightBlue};
-  }
-  .card-label {
-    color: ${(props) => props.theme.colors.gray8};
-  }
-  .refund-row {
-    background: #fff1f1;
-  }
-`;
 
 const columns = [
   {
@@ -99,47 +59,53 @@ function PayoutRecords() {
     );
   }
   return (
-    <Wrapper>
+    <div className="m-3">
       {!isMobile
         ? payouts?.payouts?.length > 0 && (
             <div className="overflow-x-auto w-full">
               <table className="w-full table">
-                <thead>
+                <thead className="bg-[rgba(29,30,27,0.1)]">
                   <tr>
                     {columns.map((column) => (
-                      <th key={column.label} className="text-left">
+                      <th
+                        key={column.label}
+                        className="text-left p-3 font-normal text-sm uppercase"
+                      >
                         {column.label}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="[&>tr>td]:min-h-[60px] [&>tr>td]:h-[60px] [&>tr>td]:align-middle [&>tr>td]:border-[#f5f5f5]">
                   {payouts?.payouts.map((row: PayoutRow) => (
                     <tr
                       key={row.payout_id}
-                      className={classNames("", {
-                        "refund-row": row?.stripe_status === "pending",
-                      })}
+                      className={classNames(
+                        "border-b border-gray-500/20 text-base",
+                        {
+                          "bg-[#fff1f1]": row?.stripe_status === "pending",
+                        }
+                      )}
                     >
-                      <td>
+                      <td className="px-3">
                         <span className="font-bold">
                           {numberWithCommas(row?.payment_amount, row?.currency)}
                         </span>
                       </td>
-                      <td>
+                      <td className="px-3">
                         {row?.bank_detail?.bank_name}
                         {"****"}
                         {row?.bank_detail?.last_4_digit}
                       </td>
-                      <td className="capital-first-ltr">
+                      <td className="capital-first-ltr px-3">
                         {row?.stripe_status === "paid"
                           ? "Deposited"
                           : row?.stripe_status?.replace("_", " ")}
                       </td>
-                      <td>
+                      <td className="px-3">
                         {formatLocalDate(row?.date_created, "MMM D, YYYY")}
                       </td>
-                      <td>
+                      <td className="px-3">
                         {formatLocalDate(row?.arrival_date, "MMM D, YYYY")}
                       </td>
                     </tr>
@@ -148,20 +114,20 @@ function PayoutRecords() {
               </table>
             </div>
           )
-        : payouts?.payouts?.length &&
+        : payouts?.payouts?.length > 0 &&
           payouts?.payouts.map((row: PayoutRow) => (
             <PayoutCard key={row.payout_id} data={row} />
           ))}
       {payouts?.totalPages > 0 && (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center w-full mx-auto py-3">
           <PaginationComponent
             total={payouts?.totalPages}
-            onPageChange={(page) => updateFilters({ page: page.selected + 1 })}
+            onPageChange={(page) => updateFilters({ page: page.selected + 2 })}
             currentPage={payouts?.currentPage}
           />
         </div>
       )}
-    </Wrapper>
+    </div>
   );
 }
 

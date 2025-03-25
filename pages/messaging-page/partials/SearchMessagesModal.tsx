@@ -16,6 +16,7 @@ import messageService from "@/helpers/http/message";
 import { getUtcDate } from "@/helpers/utils/misc";
 import { MessageProps } from "../messaging.types";
 import { useAuth } from "@/helpers/contexts/auth-context";
+import Image from "next/image";
 
 const StyledWrapper = styled(StyledModal)`
   word-break: break-word;
@@ -174,7 +175,8 @@ const SearchMessagesModal = ({
         {!isFetching && searchTerm === "" && searchResults?.length === 0 && (
           <div className="flex justify-center mt-4">
             <span className="text-center text-lg opacity-50 mx-5">
-              Search for messages within message thread of "{jobTitle}" project.
+              Search for messages within message thread of &quot;{jobTitle}
+              &quot; project.
             </span>
           </div>
         )}
@@ -183,24 +185,30 @@ const SearchMessagesModal = ({
           <div className="search-results">
             {searchResults?.map((msg: MessageProps) => (
               <div
-                className="msg-item p-3 pointer flex gap-2"
+                className="msg-item p-3 cursor-pointer flex gap-2"
                 key={msg.chat_id}
                 onClick={onSelect(msg)}
               >
                 {isRemote(msg) ? (
-                  <img src={msg.user_image} className="user-img" />
+                  <Image
+                    src={msg.user_image}
+                    className="user-img"
+                    width={30}
+                    height={30}
+                    alt={`${msg.first_name} ${msg.last_name}`}
+                  />
                 ) : null}
                 <div>
                   {/* <div className="msg fs-18 font-normal mb-1">
                     {highlightSearch(msg.message_text)}
                   </div> */}
                   <MessageText msg={msg} searchTerm={searchTerm} />
-                  <span className="msg-by fs-sm font-normal opacity-50 capitalize">
+                  <span className="msg-by text-sm font-normal opacity-50 capitalize">
                     {isRemote(msg)
                       ? `${msg.first_name} ${msg.last_name}`
                       : "You"}
                   </span>
-                  <span className="msg-date fs-sm font-normal opacity-50 flex-2">
+                  <span className="msg-date text-sm font-normal opacity-50 flex-2">
                     {" "}
                     on{" "}
                     {getUtcDate(
@@ -257,7 +265,7 @@ const MessageText = ({
   return (
     <div
       id={`search_msg_item_${msg.chat_id}`}
-      className="msg fs-18 font-normal mb-1"
+      className="msg text-lg font-normal mb-1"
     />
   );
 };

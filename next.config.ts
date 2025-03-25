@@ -14,25 +14,29 @@
 
 // export default nextConfig;
 
-
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'zehmizeh-app-data.s3.amazonaws.com',
-        port: '',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "zehmizeh-app-data.s3.amazonaws.com",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "zehmizeh-stage-data.s3.amazonaws.com",
+        port: "",
+        pathname: "/**",
       },
     ],
   },
   async redirects() {
     return [
       {
-        source: '/',
-        destination: '/home',
+        source: "/",
+        destination: "/home",
         permanent: true,
       },
     ];

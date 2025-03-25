@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import moment from "moment";
-import styled from "@/styled-components";
-import { pxToRem } from "@/helpers/utils/misc";
 import Conversation from "./Conversation";
 import CreateMessage from "./CreateMessage";
 import { getUserName } from "../controllers/useUsers";
@@ -11,7 +9,7 @@ import CrossIcon from "@/public/icons/cross-black.svg";
 import { MessageProps } from "../messaging.types";
 import BackArrow from "@/public/icons/back-arrow.svg";
 import MessageIcon from "@/public/icons/MessageIcon.svg";
-import useResponsive, { breakpoints } from "@/helpers/hooks/useResponsive";
+import useResponsive from "@/helpers/hooks/useResponsive";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -21,7 +19,6 @@ import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/redux/store";
 import { resetActiveChat } from "@/store/redux/slices/chatSlice";
 import { useDispatch } from "react-redux";
-import { StyledButton } from "@/components/forms/Buttons";
 import { TimezoneUI } from "./TimezoneUI";
 import { ChatHeaderButton, ChatPanelWrapper } from "../messaging.styled";
 
@@ -692,9 +689,11 @@ const SearchMessages = ({
     <div className="search-messages">
       <Search />
       <input
-        placeholder={"Search messages"}
+        placeholder="Search messages"
         value={value}
+        onChange={(e) => onClick()}
         onMouseDown={onClick}
+        readOnly
       />
       {value !== "" && <CrossIcon className="pointer" onClick={onClear} />}
     </div>
