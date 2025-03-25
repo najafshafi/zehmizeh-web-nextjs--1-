@@ -1,5 +1,5 @@
-import { Container } from 'react-bootstrap';
-import styled from 'styled-components';
+import { Container } from "react-bootstrap";
+import styled from "styled-components";
 
 export const Wrapper = styled(Container)`
   padding: 3rem 0rem 6.25rem 0rem;

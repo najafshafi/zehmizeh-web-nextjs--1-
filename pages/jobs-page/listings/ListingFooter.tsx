@@ -18,7 +18,7 @@ const ListingFooter = ({ item }: any) => {
   return item?.status !== "active" && item?.status !== "closed" ? (
     /* If Job type is PROPSPECTS (applied job) */
 
-    <div className="listing__item-other-details flex items-center flex-wrap">
+    <div className="listing__item-other-details flex items-center flex-wrap ">
       <div className="flex budget items-center gap-2">
         <DollarCircleIcon />
         <div className="budget-value fs-1rem font-normal">
@@ -49,7 +49,7 @@ const ListingFooter = ({ item }: any) => {
   ) : (
     /* If Job type is CLOSED or ACTIVE */
 
-    <div className="in-progress-closed flex flex-col lg:flex-row lg:items-center gap-3">
+    <div className="in-progress-closed flex flex-col lg:flex-row lg:items-center gap-3 ">
       {/* Hired person details */}
       <div className="client-details flex items-center gap-2">
         <BlurredImage

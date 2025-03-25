@@ -1,6 +1,6 @@
-import styled from 'styled-components';
-import { Dropdown, Form } from 'react-bootstrap';
-import { breakpoints } from '@/helpers/hooks/useResponsive';
+import styled from "styled-components";
+import { Dropdown, Form } from "react-bootstrap";
+import { breakpoints } from "@/helpers/hooks/useResponsive";
 
 export const MilestonesWrapper = styled.div`
   margin: 2.5rem auto auto;
@@ -94,6 +94,7 @@ export const UserDropdown = styled(Dropdown)`
     }
   }
 `;
+
 export const UserDropdownToggle = styled.div``;
 
 export const FormWrapper = styled(Form)`

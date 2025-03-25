@@ -9,9 +9,11 @@ import toast from "react-hot-toast";
 import moment from "moment";
 import * as yup from "yup";
 import { useQuery } from "react-query";
+
 import { VscClose } from "react-icons/vsc";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import TextEditor from "@/components/forms/TextEditor";
+
 import Tooltip from "@/components/ui/Tooltip";
 import {
   convertToTitleCase,
@@ -24,6 +26,9 @@ import useResponsive from "@/helpers/hooks/useResponsive";
 import { getPaymentFees } from "@/helpers/http/common";
 import { REGEX } from "@/helpers/const/regex";
 import NewCustomDatePicker from "@/components/forms/NewDatePicker";
+
+import { useAuth } from "@/helpers/contexts/auth-context";
+
 
 interface FormState {
   title: string;
@@ -348,6 +353,7 @@ const AddMilestoneForm = ({
                   {errors?.dueDate && <ErrorMessage message={errors.dueDate} />}
                 </div>
 
+
                 <div
                   className={`${isMobile ? "w-full" : "w-fit"} flex self-end`}
                 >
@@ -361,6 +367,7 @@ const AddMilestoneForm = ({
                 </div>
               </form>
             </div>
+
           </div>
         </div>
       </div>
