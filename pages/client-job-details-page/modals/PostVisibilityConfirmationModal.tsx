@@ -1,18 +1,17 @@
-import classNames from "classnames";
-import { StyledButton } from "@/components/forms/Buttons";
-import { StyledModal } from "@/components/styled/StyledModal";
-import useResponsive from "@/helpers/hooks/useResponsive";
-import React, { useEffect, useMemo, useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+"use client";
 
-type Props = {
+import React, { useEffect, useMemo, useState } from "react";
+import { VscClose } from "react-icons/vsc";
+import useResponsive from "@/helpers/hooks/useResponsive";
+
+interface Props {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   isHidden: boolean;
-  handleConfirm: (isDoNotShowWarningChecked) => void;
+  handleConfirm: (isDoNotShowWarningChecked: boolean) => void;
   handleReject: () => void;
   isLoading: boolean;
-};
+}
 
 export const PostVisibilityConfirmationModal = ({
   show,
@@ -23,9 +22,20 @@ export const PostVisibilityConfirmationModal = ({
   isLoading,
 }: Props) => {
   const { isMobile } = useResponsive();
-
   const [isDoNotShowWarningChecked, setIsDoNotShowWarningChecked] =
     useState(false);
+
+  useEffect(() => {
+    if (show) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [show]);
 
   useEffect(() => {
     setIsDoNotShowWarningChecked(false);
@@ -35,7 +45,7 @@ export const PostVisibilityConfirmationModal = ({
     if (isHidden) {
       return {
         title: "Are you sure you want to hide this post?",
-        text: "If you switch this post to the “Hidden” status, only freelancers who <b>(1)</b> you invite, <b>(2)</b> have already invited, or <b>(3)</b> who have already sent in proposals will be able to see the details. No one else will be able to submit proposals.",
+        text: `If you switch this post to the &quot;Hidden&quot; status, only freelancers who <b>(1)</b> you invite, <b>(2)</b> have already invited, or <b>(3)</b> who have already sent in proposals will be able to see the details. No one else will be able to submit proposals.`,
         buttons: [
           {
             variant: "secondary",
@@ -52,7 +62,7 @@ export const PostVisibilityConfirmationModal = ({
     }
     return {
       title: "Are you sure you want to make this post public?",
-      text: 'If you switch this post to “public," any freelancer on ZehMizeh can access it on the project board.',
+      text: `If you switch this post to &quot;public,&quot; any freelancer on ZehMizeh can access it on the project board.`,
       buttons: [
         {
           variant: "secondary",
@@ -66,66 +76,72 @@ export const PostVisibilityConfirmationModal = ({
         },
       ],
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isHidden, isDoNotShowWarningChecked]);
+  }, [isHidden, isDoNotShowWarningChecked, handleConfirm, handleReject]);
+
+  if (!show) return null;
 
   return (
-    <StyledModal
-      show={show}
-      size="sm"
-      centered
-      onHide={() => !isLoading && setShow(false)}
-    >
-      <Modal.Body>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div
+        className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm"
+        onClick={() => !isLoading && setShow(false)}
+      />
+      <div className="relative bg-white rounded-xl px-6 py-8 md:p-12 max-w-[500px] w-full mx-4">
         {!isLoading && (
-          <Button
-            variant="transparent"
-            className="close"
+          <button
+            type="button"
+            className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 transition-colors duration-200"
             onClick={() => setShow(false)}
+            aria-label="Close modal"
           >
-            &times;
-          </Button>
+            <VscClose size={24} />
+          </button>
         )}
+
         <div className="flex flex-col items-center">
-          <div className="fs-24 font-normal text-center mb-3">
+          <h2 className="text-2xl font-normal text-center mb-3">
             {content.title}
-          </div>
+          </h2>
           <div
-            className="mb-4 fs-18 text-center px-3"
+            className="mb-4 text-lg text-center px-3"
             dangerouslySetInnerHTML={{ __html: content.text }}
           />
+
           <div
-            className={classNames("flex justify-center gap-4", {
-              "flex-row": !isMobile,
-              "flex-col w-100": isMobile,
-            })}
+            className={`flex ${
+              isMobile ? "flex-col w-full" : "flex-row"
+            } justify-center gap-4`}
           >
-            {content.buttons.map((button) => {
-              return (
-                <StyledButton
-                  key={button.text}
-                  className="fs-16 font-normal"
-                  variant={button.variant}
-                  padding="0.8125rem 2rem"
-                  onClick={button.onClick}
-                  disabled={isLoading}
-                >
-                  {button.text}
-                </StyledButton>
-              );
-            })}
+            {content.buttons.map((button) => (
+              <button
+                key={button.text}
+                className={`px-8 py-3 rounded-full text-base font-normal transition-all duration-200 hover:scale-105 disabled:opacity-50 ${
+                  button.variant === "primary"
+                    ? "bg-[#F2B420] text-[#212529]"
+                    : "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                }`}
+                onClick={button.onClick}
+                disabled={isLoading}
+              >
+                {button.text}
+              </button>
+            ))}
           </div>
-          <Form.Check
-            type="checkbox"
-            className="d-inline-flex items-center g-1 me-2 mt-4 user-select-none"
-            id={`post-visibility-warning`}
-            label="Do not show this warning in the future"
-            disabled={isLoading}
-            checked={isDoNotShowWarningChecked}
-            onChange={() => setIsDoNotShowWarningChecked((prev) => !prev)}
-          />
+
+          <label className="flex items-center gap-2 mt-4 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              className="w-4 h-4 rounded border-gray-300 text-[#F2B420] focus:ring-[#F2B420]"
+              checked={isDoNotShowWarningChecked}
+              onChange={() => setIsDoNotShowWarningChecked((prev) => !prev)}
+              disabled={isLoading}
+            />
+            <span className="text-gray-700">
+              Do not show this warning in the future
+            </span>
+          </label>
         </div>
-      </Modal.Body>
-    </StyledModal>
+      </div>
+    </div>
   );
 };

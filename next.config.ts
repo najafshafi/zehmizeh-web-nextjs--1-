@@ -6,7 +6,7 @@
 //       {
 //         source: '/',
 //         destination: '/home',
-//         permanent: true, // Use `false` for a temporary redirect
+//         permanent: true, // Use false for a temporary redirect
 //       },
 //     ];
 //   },

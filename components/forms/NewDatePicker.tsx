@@ -38,7 +38,7 @@ const NewCustomDatePicker = (props) => {
     "December",
   ];
   return (
-    <div>
+    <div className="w-full">
       <DatePicker
         renderCustomHeader={({
           date,
@@ -49,13 +49,7 @@ const NewCustomDatePicker = (props) => {
           prevMonthButtonDisabled,
           nextMonthButtonDisabled,
         }) => (
-          <div
-            style={{
-              margin: 10,
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
+          <div className="w-full m-[10px] flex justify-center">
             <button
               onClick={(e) => {
                 e.preventDefault();
