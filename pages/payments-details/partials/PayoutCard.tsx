@@ -1,10 +1,4 @@
-import styled from "styled-components";
-import { Card } from "react-bootstrap";
-import {
-  formatLocalDate,
-  numberWithCommas,
-  pxToRem,
-} from "@/helpers/utils/misc";
+import { formatLocalDate, numberWithCommas } from "@/helpers/utils/misc";
 import classNames from "classnames";
 
 type Props = {
@@ -21,27 +15,17 @@ type Props = {
   };
 };
 
-const Wrapper = styled(Card)`
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.04);
-  border-radius: 0.75rem;
-  .payment-invoice-download-btn {
-    background-color: rgba(239, 243, 255, 1);
-    padding: 0.75rem 1.5rem;
-    border-radius: ${pxToRem(50)};
-  }
-  :first-child {
-    margin-top: 1.5rem;
-  }
-`;
-
 const PayoutCard = ({ data }: Props) => {
   return (
-    <Wrapper
-      className={classNames("payment-card mb-4", {
-        "refund-row": data.stripe_status === "pending",
-      })}
+    <div
+      className={classNames(
+        "payment-card mb-4 shadow-[0px_4px_24px_rgba(0,0,0,0.04)] rounded-[0.75rem] mt-6 first:mt-6 border overflow-hidden",
+        {
+          "refund-row": data.stripe_status === "pending",
+        }
+      )}
     >
-      <Card.Body className="flex flex-col gap-3">
+      <div className="p-4 flex flex-col gap-3">
         <div>
           <div className="card-label fs-sm font-normal">AMOUNT</div>
           <div className="fs-20 font-normal">
@@ -78,8 +62,8 @@ const PayoutCard = ({ data }: Props) => {
             </div>
           </div>
         </div>
-      </Card.Body>
-    </Wrapper>
+      </div>
+    </div>
   );
 };
 
