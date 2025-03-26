@@ -1,17 +1,17 @@
-import { StyledButton } from "@/components/forms/Buttons";
-import { StyledModal } from "@/components/styled/StyledModal";
+"use client";
+
 import { budgetChangeSeenDeniedModal } from "@/helpers/http/proposals";
 import { TapiResponse } from "@/helpers/types/apiRequestResponse";
 import { TJobDetails } from "@/helpers/types/job.type";
-import { useState } from "react";
-import { Modal } from "react-bootstrap";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { VscClose } from "react-icons/vsc";
 
-type Props = {
+interface Props {
   jobDetails: TJobDetails;
   refetch: () => void;
   userType: "client" | "freelancer";
-};
+}
 
 export const ChangeBudgetDeniedModal = ({
   jobDetails,
@@ -34,6 +34,33 @@ export const ChangeBudgetDeniedModal = ({
     jobDetails?.proposal?.budget_change?.requested_by === userType;
 
   const [isLoading, setIsLoading] = useState(false);
+
+  // Add scroll lock effect
+  useEffect(() => {
+    if (shouldShowModal) {
+      // Store the current scroll position and body padding
+      const scrollY = window.scrollY;
+      const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+      const bodyPadding =
+        parseInt(window.getComputedStyle(document.body).paddingRight) || 0;
+
+      // Prevent body scroll
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = "100%";
+      document.body.style.paddingRight = `${bodyPadding + scrollbarWidth}px`;
+
+      return () => {
+        // Restore body scroll
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.width = "";
+        document.body.style.paddingRight = "";
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [shouldShowModal]);
 
   // budget seen flag change and refetch jobdetails
   const apiCalls = async () => {
@@ -66,23 +93,36 @@ export const ChangeBudgetDeniedModal = ({
       ? `Your freelancer has declined your ${jobTypeText} decrease request.`
       : `Your client has declined your ${jobTypeText} increase request.`;
 
+  if (!shouldShowModal) return null;
+
   return (
-    <StyledModal show={shouldShowModal} size="lg" centered>
-      <Modal.Body>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
+
+      <div className="relative w-full max-w-[800px] mx-4 bg-white rounded-xl py-8 px-4 md:p-12">
+        <button
+          type="button"
+          className="absolute right-4 top-4 md:top-0 md:-right-8 md:text-white text-gray-500 hover:text-gray-700 transition-colors"
+          onClick={handleOkay}
+          aria-label="Close modal"
+        >
+          <VscClose size={24} />
+        </button>
+
         <div className="text-center">
-          <div className="fs-32 font-normal">{textContent}</div>
-          <div className="mt-4">
-            <StyledButton
-              variant="primary"
-              type="submit"
-              onClick={handleOkay}
-              disabled={isLoading}
-            >
-              Okay
-            </StyledButton>
-          </div>
+          <h2 className="text-2xl md:text-3xl font-normal mb-6">
+            {textContent}
+          </h2>
+          <button
+            type="button"
+            onClick={handleOkay}
+            disabled={isLoading}
+            className="px-8 py-3 text-base font-medium bg-[#F2B420] text-[#212529] rounded-full hover:scale-105 transition-transform duration-200 disabled:opacity-50 disabled:hover:scale-100"
+          >
+            Okay
+          </button>
         </div>
-      </Modal.Body>
-    </StyledModal>
+      </div>
+    </div>
   );
 };
