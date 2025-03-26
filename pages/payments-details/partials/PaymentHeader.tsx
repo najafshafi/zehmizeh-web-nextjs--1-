@@ -1,22 +1,23 @@
-import useResponsive from '@/helpers/hooks/useResponsive';
-import { pxToRem } from '@/helpers/utils/misc';
-import styled from 'styled-components';
-import Tabs from '@/components/ui/Tabs';
-import { usePaymentController } from '../PaymentController';
-import ProjectFilter from './ProjectFilter';
-import { useAuth } from '@/helpers/contexts/auth-context';
-import { useState } from 'react';
-import CustomSelect from '@/components/forms/custom-select';
-import classNames from 'classnames';
+import useResponsive from "@/helpers/hooks/useResponsive";
+import { pxToRem } from "@/helpers/utils/misc";
+import styled from "styled-components";
+import Tabs from "@/components/ui/Tabs";
+import { usePaymentController } from "../PaymentController";
+import ProjectFilter from "./ProjectFilter";
+import { useAuth } from "@/helpers/contexts/auth-context";
+import { useState } from "react";
+import CustomSelect from "@/components/forms/custom-select";
+import classNames from "classnames";
 
-const Wrapper = styled.div<{ user_type?: 'client' | 'freelancer' }>`
+const Wrapper = styled.div<{ user_type?: "client" | "freelancer" }>`
   display: flex;
-  justify-content: ${(props) => (props.user_type === 'client' ? 'flex-end' : 'space-between')};
+  justify-content: ${(props) =>
+    props.user_type === "client" ? "flex-end" : "space-between"};
   align-items: center;
   margin: 0 20px;
   flex-wrap: wrap;
   padding-top: 1rem;
-  @media  (max-width: 767px) {
+  @media (max-width: 767px) {
     flex-direction: column;
     padding-top: 1rem;
     margin-bottom: 1rem;
@@ -62,19 +63,19 @@ const Wrapper = styled.div<{ user_type?: 'client' | 'freelancer' }>`
 `;
 
 const RECORDS_PER_PAGE = [
-  { value: 10, label: '10 ' },
-  { value: 25, label: '25' },
-  { value: 50, label: '50' },
-  { value: 100, label: '100' },
+  { value: 10, label: "10" },
+  { value: 25, label: "25" },
+  { value: 50, label: "50" },
+  { value: 100, label: "100" },
 ];
 
 const TIME_OPTIONS = [
-  { value: 'alltime', label: 'All-Time' },
-  { value: 'today', label: 'Today' },
-  { value: 'thisweek', label: 'This Week' },
-  { value: 'thismonth', label: 'This Month' },
-  { value: 'thisyear', label: 'This Year' },
-  { value: 'last3years', label: 'Last 3 Year' },
+  { value: "alltime", label: "All-Time" },
+  { value: "today", label: "Today" },
+  { value: "thisweek", label: "This Week" },
+  { value: "thismonth", label: "This Month" },
+  { value: "thisyear", label: "This Year" },
+  { value: "last3years", label: "Last 3 Year" },
 ];
 
 type Props = {
@@ -85,9 +86,12 @@ function PaymentHeader({ onTabUpdate }: Props) {
   const { isTablet, isMobile } = useResponsive();
   const { filters, updateFilters } = usePaymentController();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<string>('Transactions');
+  const [activeTab, setActiveTab] = useState<string>("Transactions");
 
-  const updateRowsPerPage = (option: { value: string | number; label: string }) => {
+  const updateRowsPerPage = (option: {
+    value: string | number;
+    label: string;
+  }) => {
     // Page will also be initialized to 1
     if (option.value) updateFilters({ page: 1, limit: option.value });
   };
@@ -100,34 +104,46 @@ function PaymentHeader({ onTabUpdate }: Props) {
   return (
     <Wrapper className="gap-3">
       <div
-        className={classNames('w-full flex justify-between', {
-          'flex-row': !isTablet || !isMobile,
-          'flex-col gap-4': isTablet || isMobile,
+        className={classNames("w-full flex justify-between  ", {
+          "flex-row": !isTablet || !isMobile,
+          "flex-col gap-4": isTablet || isMobile,
         })}
       >
         <div className="flex justify-center flex-col">
           {/* AMIT - TotalEarnings was removed after this commit: c5d987ad343cb6ffb3f1b84bd091e38812f9b03a */}
           <div className="payment-header__filters">
-            {user?.user_type === 'client' ? (
+            {user?.user_type === "client" ? (
               <div className="flex flex-row justify-center items-center">
                 <label className="refund-symbol"></label>
                 <label className="refund-label">Refund</label>
               </div>
             ) : null}
-            <CustomSelect
-              options={RECORDS_PER_PAGE}
-              onChange={updateRowsPerPage}
-              title={RECORDS_PER_PAGE.find(({ value }) => filters?.limit === value)?.label || 'Rows'}
-              selected={RECORDS_PER_PAGE.findIndex(({ value }) => filters?.limit === value)}
-              defaultValue={RECORDS_PER_PAGE[0]}
-            />
-            {activeTab === 'Transactions' ? (
+            <div>
+              <CustomSelect
+                options={RECORDS_PER_PAGE}
+                onChange={updateRowsPerPage}
+                title={
+                  RECORDS_PER_PAGE.find(({ value }) => filters?.limit === value)
+                    ?.label || "Rows"
+                }
+                selected={RECORDS_PER_PAGE.findIndex(
+                  ({ value }) => filters?.limit === value
+                )}
+                defaultValue={RECORDS_PER_PAGE[0]}
+              />
+            </div>
+            {activeTab === "Transactions" ? (
               <>
                 <CustomSelect
                   onChange={({ value: filter }) => updateFilters({ filter })}
                   options={TIME_OPTIONS}
-                  title={TIME_OPTIONS.find(({ value }) => filters?.filter === value)?.label || 'Date Range'}
-                  selected={TIME_OPTIONS.findIndex(({ value }) => filters?.filter === value)}
+                  title={
+                    TIME_OPTIONS.find(({ value }) => filters?.filter === value)
+                      ?.label || "Date Range"
+                  }
+                  selected={TIME_OPTIONS.findIndex(
+                    ({ value }) => filters?.filter === value
+                  )}
                   defaultValue={TIME_OPTIONS[0]}
                 />
                 <ProjectFilter
@@ -143,19 +159,19 @@ function PaymentHeader({ onTabUpdate }: Props) {
           </div>
         </div>
         <div>
-          {user?.user_type !== 'client' && (
+          {user?.user_type !== "client" && (
             <div className="flex items-center justify-between flex-wrap gap-3">
               <Tabs
                 tabs={[
                   {
-                    label: 'Transactions',
+                    label: "Transactions",
                     id: 0,
-                    key: 'Transactions',
+                    key: "Transactions",
                   },
                   {
-                    label: 'Payouts',
+                    label: "Payouts",
                     id: 1,
-                    key: 'Payouts',
+                    key: "Payouts",
                   },
                 ]}
                 activeTab={activeTab}

@@ -62,7 +62,7 @@ const StyledHtmlText = ({
       const truncHeight = element.clientHeight;
 
       // If content is truncated (full height > truncated height), show the button
-      if (fullHeight > truncHeight + 2) {
+      if (fullHeight > truncHeight + 4) {
         // Reduced buffer to detect smaller truncations
         setShowViewMore(true);
       } else {

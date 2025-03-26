@@ -1,7 +1,6 @@
 "use client";
 import PageTitle from "@/components/styled/PageTitle";
 import Spinner from "@/components/forms/Spin/Spinner";
-import styled from "styled-components";
 import Tooltip from "@/components/ui/Tooltip";
 import Info from "@/public/icons/info-circle-gray.svg";
 import PaymentHeader from "./partials/PaymentHeader";
@@ -13,43 +12,6 @@ import {
 } from "./PaymentController";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import { useEffect, useState } from "react";
-
-const PaymentContainer = styled.div`
-  background: ${(props) => props.theme.colors.white};
-  margin: 2rem auto;
-  max-width: 1170px;
-  box-shadow: 0px 4px 54px rgba(0, 0, 0, 0.04);
-  border-radius: 1rem;
-`;
-
-const TitleStatsContainer = styled.div`
-  margin: 2rem auto;
-  max-width: 1170px;
-  border-radius: 1rem;
-`;
-
-const StatBlock = styled.div`
-  height: 7.75rem;
-  border-radius: 0.75rem;
-  box-shadow: 0px 4px 74px rgba(0, 0, 0, 0.08);
-  background: ${(props) => props.theme.colors.white};
-  padding: 1.5rem;
-  .stat-label {
-    opacity: 0.6;
-    line-height: 21.6px;
-  }
-  .stat-value {
-    line-height: 38.4px;
-    letter-spacing: 0.03em;
-  }
-  @media (max-width: 767px) {
-    margin-bottom: 2rem;
-    padding: 1rem;
-    .stat-value {
-      font-size: 1.25rem;
-    }
-  }
-`;
 
 type TtabKeys = "Transactions" | "Payouts";
 
@@ -82,7 +44,7 @@ function Payments() {
   }, []);
 
   // convert currency with their currency symbol
-  const numberWithCommas = (value) => {
+  const numberWithCommas = (value: number) => {
     return Number(value || 0).toLocaleString("en-US", {
       style: "currency",
       currency: stripeBalance?.currency || "USD",
@@ -90,27 +52,29 @@ function Payments() {
   };
 
   return (
-    <div className="lg:min-w-[1170px]  mb-12 max-w-[1170px]  mt-[10px] mx-auto">
+    <div className="lg:min-w-[1170px] mb-12 max-w-[1170px] mt-[10px] mx-auto">
       {user?.user_type === "client" ? (
         <>
           <PageTitle className="mt-12 text-center capitalize">
-            {user?.first_name}’s Transactions
+            {user?.first_name}&apos;s Transactions
           </PageTitle>
           <div className="mt-4 p-4 bg-white rounded-lg shadow">
-            <PaymentHeader onTabUpdate={onTabUpdate} />
+            <PaymentHeader
+              onTabUpdate={onTabUpdate as (activeTab: string) => void}
+            />
             <PaymentRecords />
           </div>
         </>
       ) : (
         <>
-          <TitleStatsContainer>
-            <PageTitle className="mt-8 text-left capitalize ">
-              {user?.first_name}’s Transactions
+          <div className="mx-auto mt-8 max-w-[1170px] rounded-2xl">
+            <PageTitle className="mt-8 text-left capitalize">
+              {user?.first_name}&apos;s Transactions
             </PageTitle>
             <div className="mt-4 grid grid-cols-2 gap-6">
-              <StatBlock className="flex flex-col justify-between rounded-lg shadow-md p-4 bg-white">
+              <div className="flex flex-col justify-between rounded-xl shadow-md bg-white p-6 h-[7.75rem]">
                 <div className="flex items-center justify-start">
-                  <div className="stat-label text-lg font-normal">
+                  <div className="text-lg font-normal opacity-60 leading-[21.6px]">
                     Future Payouts
                   </div>
                   <Tooltip
@@ -121,13 +85,13 @@ function Payments() {
                     }
                   >
                     This is the money that your clients have been already
-                    charged and it’s received on your Stripe account. It will be
-                    initiated for transfer to your bank account within 2-3
-                    working days.
+                    charged and it&apos;s received on your Stripe account. It
+                    will be initiated for transfer to your bank account within
+                    2-3 working days.
                   </Tooltip>
                 </div>
                 {!isLoading ? (
-                  <div className="stat-value text-[32px] font-bold">
+                  <div className="text-[32px] font-bold leading-[38.4px] tracking-[0.03em]">
                     {numberWithCommas(stripeBalance?.futurePayouts)}
                   </div>
                 ) : (
@@ -135,10 +99,10 @@ function Payments() {
                     <Spinner />
                   </div>
                 )}
-              </StatBlock>
-              <StatBlock className="flex flex-col justify-between rounded-lg shadow-md p-4 bg-white">
+              </div>
+              <div className="flex flex-col justify-between rounded-xl shadow-md bg-white p-6 h-[7.75rem]">
                 <div className="flex items-center justify-start">
-                  <div className="stat-label text-lg font-normal">
+                  <div className="text-lg font-normal opacity-60 leading-[21.6px]">
                     Payment in Transit
                   </div>
                   <Tooltip
@@ -154,7 +118,7 @@ function Payments() {
                   </Tooltip>
                 </div>
                 {!isLoading ? (
-                  <div className="stat-value text-[32px] font-bold">
+                  <div className="text-[32px] font-bold leading-[38.4px] tracking-[0.03em]">
                     {numberWithCommas(stripeBalance?.inTransitPayment)}
                   </div>
                 ) : (
@@ -162,17 +126,19 @@ function Payments() {
                     <Spinner />
                   </div>
                 )}
-              </StatBlock>
+              </div>
             </div>
-          </TitleStatsContainer>
-          <PaymentContainer>
-            <PaymentHeader onTabUpdate={onTabUpdate} />
+          </div>
+          <div className="mx-auto my-8 max-w-[1170px] bg-white rounded-2xl shadow-[0px_4px_54px_rgba(0,0,0,0.04)]">
+            <PaymentHeader
+              onTabUpdate={onTabUpdate as (activeTab: string) => void}
+            />
             {filters?.activeTab === "Transactions" ? (
               <PaymentRecords />
             ) : (
               <PayoutRecords />
             )}
-          </PaymentContainer>
+          </div>
         </>
       )}
     </div>

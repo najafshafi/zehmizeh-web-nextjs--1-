@@ -1,6 +1,12 @@
-import React, { useCallback } from 'react';
-import { Clock, DollarSign, AlertCircle, LucideIcon, Receipt, PlayCircle } from 'lucide-react';
-import styled from 'styled-components';
+import React, { useCallback } from "react";
+import {
+  Clock,
+  DollarSign,
+  AlertCircle,
+  Receipt,
+  PlayCircle,
+} from "lucide-react";
+import styled from "styled-components";
 
 const StatsWrapper = styled.div<{ visibleCards: number }>`
   display: grid;
@@ -9,7 +15,10 @@ const StatsWrapper = styled.div<{ visibleCards: number }>`
   margin-top: 1rem;
 
   @media (max-width: 1024px) {
-    grid-template-columns: repeat(${(props) => Math.min(props.visibleCards, 2)}, 1fr);
+    grid-template-columns: repeat(
+      ${(props) => Math.min(props.visibleCards, 2)},
+      1fr
+    );
   }
 
   @media (max-width: 480px) {
@@ -17,46 +26,50 @@ const StatsWrapper = styled.div<{ visibleCards: number }>`
   }
 `;
 
-const MilestoneStats: React.FC<MilestoneStatsProps> = ({ milestones, isHourly = false, isFreelancer = false }) => {
+const MilestoneStats: React.FC<MilestoneStatsProps> = ({
+  milestones,
+  isHourly = false,
+  isFreelancer = false,
+}) => {
   const stats = milestones.reduce(
     (acc, milestone) => {
       if (isHourly) {
         switch (milestone.hourly_status) {
-          case 'pending':
+          case "pending":
             acc.waitingPayment++;
             break;
-          case 'paid':
+          case "paid":
             acc.completed++;
             break;
-          case 'waiting_for_release':
+          case "waiting_for_release":
             acc.waitingPayment++;
             break;
-          case 'request_revision':
+          case "request_revision":
             acc.needsRevision++;
             break;
         }
       } else {
         switch (milestone.status) {
-          case 'pending':
+          case "pending":
             acc.pendingAcceptance++;
             break;
-          case 'paid':
+          case "paid":
             // Only count as work in progress, not awaiting payment
             acc.workInProgress++;
             break;
-          case 'completed_by_freelancer':
+          case "completed_by_freelancer":
             // This should be in awaiting payment since work is completed
             acc.waitingPayment++;
             break;
-          case 'waiting_for_release':
+          case "waiting_for_release":
             acc.waitingPayment++;
             break;
-          case 'request_revision':
+          case "request_revision":
             acc.needsRevision++;
             // Request revision should only count as work in progress
             acc.workInProgress++;
             break;
-          case 'released':
+          case "released":
             acc.completed++;
             break;
         }
@@ -74,58 +87,68 @@ const MilestoneStats: React.FC<MilestoneStatsProps> = ({ milestones, isHourly = 
 
   const handleCardClick = useCallback(
     (status: string) => {
-      const statusAttribute = isHourly ? 'data-hourly-status' : 'data-milestone-status';
+      const statusAttribute = isHourly
+        ? "data-hourly-status"
+        : "data-milestone-status";
 
-      const allMilestones = document.querySelectorAll('.milestone-item');
+      const allMilestones = document.querySelectorAll(".milestone-item");
       allMilestones.forEach((milestone: HTMLElement) => {
-        milestone.style.backgroundColor = '';
-        milestone.style.transition = '';
+        milestone.style.backgroundColor = "";
+        milestone.style.transition = "";
       });
 
       let targetMilestones;
       if (isHourly) {
-        if (status === 'released') {
-          targetMilestones = document.querySelectorAll(`[${statusAttribute}="paid"]`);
-        } else if (status === 'waiting_for_release') {
+        if (status === "released") {
+          targetMilestones = document.querySelectorAll(
+            `[${statusAttribute}="paid"]`
+          );
+        } else if (status === "waiting_for_release") {
           targetMilestones = document.querySelectorAll(
             `[${statusAttribute}="pending"], [${statusAttribute}="waiting_for_release"]`
           );
         } else {
-          targetMilestones = document.querySelectorAll(`[${statusAttribute}="${status}"]`);
+          targetMilestones = document.querySelectorAll(
+            `[${statusAttribute}="${status}"]`
+          );
         }
       } else {
-        if (status === 'waiting_for_release') {
+        if (status === "waiting_for_release") {
           // Only include completed_by_freelancer and waiting_for_release in awaiting payment
           targetMilestones = document.querySelectorAll(
             `[${statusAttribute}="waiting_for_release"], [${statusAttribute}="completed_by_freelancer"]`
           );
-        } else if (status === 'work_in_progress') {
+        } else if (status === "work_in_progress") {
           // Work in progress includes paid and request_revision
           targetMilestones = document.querySelectorAll(
             `[${statusAttribute}="paid"], [${statusAttribute}="request_revision"]`
           );
-        } else if (status === 'released') {
-          targetMilestones = document.querySelectorAll(`[${statusAttribute}="released"]`);
+        } else if (status === "released") {
+          targetMilestones = document.querySelectorAll(
+            `[${statusAttribute}="released"]`
+          );
         } else {
-          targetMilestones = document.querySelectorAll(`[${statusAttribute}="${status}"]`);
+          targetMilestones = document.querySelectorAll(
+            `[${statusAttribute}="${status}"]`
+          );
         }
       }
 
       if (targetMilestones.length > 0) {
         targetMilestones.forEach((milestone: HTMLElement) => {
-          milestone.style.transition = 'background-color 0.3s ease';
-          milestone.style.backgroundColor = '#f7dfa1';
+          milestone.style.transition = "background-color 0.3s ease";
+          milestone.style.backgroundColor = "#f7dfa1";
         });
 
         const firstMilestone = targetMilestones[0] as HTMLElement;
         firstMilestone.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
+          behavior: "smooth",
+          block: "center",
         });
 
         setTimeout(() => {
           targetMilestones.forEach((milestone: HTMLElement) => {
-            milestone.style.backgroundColor = '';
+            milestone.style.backgroundColor = "";
           });
         }, 3000);
       }
@@ -153,7 +176,10 @@ const MilestoneStats: React.FC<MilestoneStatsProps> = ({ milestones, isHourly = 
       {!isHourly && (
         <>
           {stats.needsRevision > 0 && (
-            <StatCard $backgroundColor="#f7b731" onClick={() => handleCardClick('request_revision')}>
+            <StatCard
+              $backgroundColor="#f7b731"
+              onClick={() => handleCardClick("request_revision")}
+            >
               <div className="content">
                 <div className="icon-wrapper">
                   <AlertCircle size={18} color="white" />
@@ -167,7 +193,10 @@ const MilestoneStats: React.FC<MilestoneStatsProps> = ({ milestones, isHourly = 
           )}
 
           {stats.pendingAcceptance > 0 && (
-            <StatCard $backgroundColor="#4361ee" onClick={() => handleCardClick('pending')}>
+            <StatCard
+              $backgroundColor="#4361ee"
+              onClick={() => handleCardClick("pending")}
+            >
               <div className="content">
                 <div className="icon-wrapper">
                   <Clock size={18} color="white" />
@@ -181,7 +210,10 @@ const MilestoneStats: React.FC<MilestoneStatsProps> = ({ milestones, isHourly = 
           )}
 
           {stats.workInProgress > 0 && (
-            <StatCard $backgroundColor="#3498db" onClick={() => handleCardClick('work_in_progress')}>
+            <StatCard
+              $backgroundColor="#3498db"
+              onClick={() => handleCardClick("work_in_progress")}
+            >
               <div className="content">
                 <div className="icon-wrapper">
                   <PlayCircle size={18} color="white" />
@@ -197,7 +229,10 @@ const MilestoneStats: React.FC<MilestoneStatsProps> = ({ milestones, isHourly = 
       )}
 
       {stats.waitingPayment > 0 && (
-        <StatCard $backgroundColor="#dc1a1a" onClick={() => handleCardClick('waiting_for_release')}>
+        <StatCard
+          $backgroundColor="#dc1a1a"
+          onClick={() => handleCardClick("waiting_for_release")}
+        >
           <div className="content">
             <div className="icon-wrapper">
               <DollarSign size={18} color="white" />
@@ -211,7 +246,10 @@ const MilestoneStats: React.FC<MilestoneStatsProps> = ({ milestones, isHourly = 
       )}
 
       {stats.completed > 0 && (
-        <StatCard $backgroundColor="#2db874" onClick={() => handleCardClick('released')}>
+        <StatCard
+          $backgroundColor="#2db874"
+          onClick={() => handleCardClick("released")}
+        >
           <div className="content">
             <div className="icon-wrapper">
               <Receipt size={18} color="white" />

@@ -18,7 +18,9 @@ const SearchMessages = ({
         value={value}
         onMouseDown={onClick}
       />
-      {value !== "" && <CrossIcon className="pointer" onClick={onClear} />}
+      {value !== "" && (
+        <CrossIcon className="cursor-pointer" onClick={onClear} />
+      )}
     </div>
   );
 };

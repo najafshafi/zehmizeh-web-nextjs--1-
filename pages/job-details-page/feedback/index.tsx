@@ -40,7 +40,7 @@ const Feedback = ({
       {feedbackData && feedbackData?.client && feedbackData?.freelancer && (
         <div className="">
           <div className="client-feedback">
-            <div className="fs-20 fw-700">Received</div>
+            <div className="text-xl font-bold">Received</div>
             <div className="review-content flex flex-wrap items-start">
               <div className="client-details flex items-center">
                 <BlurredImage
@@ -51,10 +51,10 @@ const Feedback = ({
                   width="5.25rem"
                 />
                 <div>
-                  <div className="fs-18 font-normal capitalize">
+                  <div className="text-base font-normal capitalize">
                     {clientDetails?.first_name} {clientDetails?.last_name}
                   </div>
-                  <div className="client-location fs-18 font-normal light-text">
+                  <div className="client-location text-base font-normal text-gray-500">
                     {separateValuesWithComma([
                       clientDetails?.location?.state,
                       clientDetails?.location?.country_name,
@@ -62,14 +62,14 @@ const Feedback = ({
                   </div>
                 </div>
               </div>
-              <div className="divider d-none d-lg-block" />
+              <div className="divider hidden lg:block" />
               <div className="flex-1">
                 <ReviewContent review={feedbackData?.client} />
               </div>
             </div>
           </div>
           <div className="freelancer-feedback">
-            <div className="fs-20 fw-700">Given</div>
+            <div className="text-xl font-bold">Given</div>
             <div className="review-content">
               <ReviewContent review={feedbackData?.freelancer} />
             </div>

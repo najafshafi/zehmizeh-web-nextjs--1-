@@ -2,7 +2,7 @@
 "use client"; // Mark as client component since it handles state and navigation
 
 import ChevronUp from "@/public/icons/chevronUp.svg";
-
+import ChevronDown from "@/public/icons/chevronDown.svg";
 interface PaginationProps {
   total: number;
   currentPage: number;
@@ -132,7 +132,7 @@ export default function PaginationComponent({
             className="next btn flex justify-center items-center border-none shadow-none"
             disabled={currentPage === totalPages}
           >
-            <ChevronUp />
+            <ChevronDown />
           </button>
         </div>
       </div>

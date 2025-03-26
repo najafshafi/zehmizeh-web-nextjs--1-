@@ -552,7 +552,7 @@ function ChatPanel({
               <div>
                 <ChatHeaderButton
                   variantType={"primary"}
-                  variantColor={"job"}
+                  $variantColor={"job"}
                   className="m--chatpanel-back-to-job-proposal-invite"
                   onClick={backToProposalInviteJobButton.onClick}
                 >
@@ -563,7 +563,7 @@ function ChatPanel({
           )
         )}
       </header>
-      <div className="d-block d-lg-none">
+      <div className="hidden">
         <SearchMessages
           value={searchTerm}
           onClick={toggleSearchModal}
@@ -695,7 +695,9 @@ const SearchMessages = ({
         onMouseDown={onClick}
         readOnly
       />
-      {value !== "" && <CrossIcon className="pointer" onClick={onClear} />}
+      {value !== "" && (
+        <CrossIcon className="cursor-pointer" onClick={onClear} />
+      )}
     </div>
   );
 };

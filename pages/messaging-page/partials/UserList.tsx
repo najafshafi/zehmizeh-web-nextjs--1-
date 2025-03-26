@@ -321,7 +321,7 @@ const UserListItem = ({
       onClick={onSelectChat}
       title={`Project: ${convertToTitleCase(data.job_title)}`}
     >
-      <div className="userlistitem__avatar chat-user-list">
+      <div className="userlistitem__avatar chat-user-list text-xs">
         <BlurredImage
           state={
             [showImg, setShowImg] as [

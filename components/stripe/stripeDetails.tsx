@@ -467,22 +467,24 @@ const StripeDetails = (props: Prop) => {
         </div>
         <div className="mt-4">
           <table className="no-border">
-            <tr>
-              <td className="pb-3">Full Name</td>
-              <td className="pl-5 pb-3">
-                {first_name && last_name ? (
-                  <>
-                    {first_name} {last_name}
-                  </>
-                ) : (
-                  "-"
-                )}
-              </td>
-            </tr>
-            <tr>
-              <td>Email</td>
-              <td className="pl-5">{stripe?.email ?? "-"}</td>
-            </tr>
+            <tbody>
+              <tr>
+                <td className="pb-3">Full Name</td>
+                <td className="pl-5 pb-3">
+                  {first_name && last_name ? (
+                    <>
+                      {first_name} {last_name}
+                    </>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>Email</td>
+                <td className="pl-5">{stripe?.email ?? "-"}</td>
+              </tr>
+            </tbody>
           </table>
         </div>
 

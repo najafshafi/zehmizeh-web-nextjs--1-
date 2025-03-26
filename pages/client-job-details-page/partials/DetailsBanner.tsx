@@ -95,13 +95,13 @@ const JobDetailsBanner = ({
         </header>
         <div>
           <StatusBadge
-            className="width-fit-content"
+            className="w-fit"
             color={JOBS_STATUS[data?.status]?.color}
           >
             {jobStatus}
           </StatusBadge>
           {data.status === "prospects" && expirationDays && (
-            <StatusBadge className="width-fit-content ms-3" color={"pink"}>
+            <StatusBadge className="w-fit ms-3" color={"pink"}>
               {expirationDays}
             </StatusBadge>
           )}
@@ -218,7 +218,7 @@ const JobDetailsBanner = ({
               )}
             </div>
             <StatusBadge
-              className="width-fit-content"
+              className="w-fit"
               color={
                 JOBS_STATUS[data?.status]?.color
                   ? JOBS_STATUS[data?.status]?.color

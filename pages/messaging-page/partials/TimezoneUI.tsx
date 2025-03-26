@@ -26,7 +26,7 @@ export const TimezoneUI = ({ isFromSingleMessaging, remoteUser }: Props) => {
         <ChatHeaderButton
           className="flex items-center gap-1"
           variantType="secondary"
-          variantColor={selectedConversation.custom.type}
+          $variantColor={selectedConversation.custom.type}
         >
           <Clock
             stroke={chatTypeSolidColor(selectedConversation.custom.type)}

@@ -11,6 +11,7 @@ import { RootState } from "@/store/redux/store";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import { MessageBubbleWrapper } from "../messaging.styled";
 import Link from "next/link";
+import Image from "next/image";
 
 function MessageBubble({
   author: authorType,
@@ -55,7 +56,7 @@ function MessageBubble({
     >
       {data.type === "FILE" ? (
         <div
-          className={cns("message__content d-mflex g-1", {
+          className={cns("message__content flex gap-1", {
             "justify-end": authorType === "self",
           })}
         >
@@ -67,7 +68,7 @@ function MessageBubble({
         </div>
       ) : (
         <div
-          className={cns("message__content d-mflex g-1", {
+          className={cns("message__content flex gap-1", {
             "justify-end": authorType === "self",
           })}
         >
@@ -113,10 +114,16 @@ function FileMsg({
     return (
       <div className="position-relative">
         <Link href={path} target="_blank" rel="noreferrer">
-          <img src={path} alt="file" className="file-msg-img" />
+          <Image
+            src={path}
+            alt="file"
+            className="file-msg-img"
+            width={100}
+            height={100}
+          />
         </Link>
         {allowDeleting && (
-          <div className="delete-btn pointer" onClick={handleDelete}>
+          <div className="delete-btn cursor-pointer" onClick={handleDelete}>
             <DeleteIcon />
           </div>
         )}
@@ -127,7 +134,7 @@ function FileMsg({
     <div className="position-relative">
       <AttachmentPreview uploadedFile={path} removable={false} />
       {allowDeleting && (
-        <div className="delete-btn pointer" onClick={handleDelete}>
+        <div className="delete-btn cursor-pointer" onClick={handleDelete}>
           <DeleteIcon />
         </div>
       )}

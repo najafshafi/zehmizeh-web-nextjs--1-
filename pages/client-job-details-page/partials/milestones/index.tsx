@@ -3,7 +3,6 @@ import moment from "moment";
 import toast from "react-hot-toast";
 import { MilestonesWrapper, MileStoneListItem } from "./milestones.styled";
 import { StatusBadge } from "@/components/styled/Badges";
-import { StyledButton } from "@/components/forms/Buttons";
 import AttachmentPreview from "@/components/ui/AttachmentPreview";
 import DeclineReasonPrompt from "../DeclineReasonPrompt";
 import PaymentModal from "../payment/PaymentModal";
@@ -25,6 +24,7 @@ import styled from "styled-components";
 import { TcomponentConnectorRef } from "@/pages/client-job-details-page/ClientJobDetails";
 import { getValueByPercentage } from "@/helpers/utils/helper";
 import { AcceptAndPaynowModal } from "../payment/AcceptAndPaynowModal";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 // Payment status configurations with color and label mappings
 const PAYMENT_STATUS = {
@@ -321,14 +321,12 @@ const Milestones = ({
 
   const deliverPaymentBtn = (item) => (
     <>
-      <StyledButton
-        padding="1rem 2rem"
+      <CustomButton
+        text={"Deliver Payment"}
+        className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-[#167347] text-[18px]"
         disabled={item?.milestone_id == selectedMilestoneId}
         onClick={onRelease(item)}
-        variant="success"
-      >
-        Deliver Payment
-      </StyledButton>
+      />
     </>
   );
 
@@ -506,34 +504,55 @@ const Milestones = ({
                 <div className="bottom-buttons flex items-center gap-4">
                   {!moreThanOnePendingMilestone && (
                     <>
-                      <StyledButton
+                      {/* <StyledButton
                         variant="success"
                         padding="1rem 2rem"
                         disabled={item?.milestone_id == selectedMilestoneId}
                         onClick={askForPayNowConfirmation(item)}
                       >
                         Accept & Pay Now
-                      </StyledButton>
-                      <StyledButton
+                      </StyledButton> */}
+
+                      <CustomButton
+                        text={"Accept & Pay Nows"}
+                        className="px-[2rem] py-[1rem] transition-transform duration-200 hover:scale-105 font-normal  rounded-full bg-[#167347] text-white text-[18px]"
+                        disabled={item?.milestone_id == selectedMilestoneId}
+                        onClick={askForPayNowConfirmation(item)}
+                      />
+                      {/* <StyledButton
                         padding="1rem 2rem"
                         disabled={item?.milestone_id == selectedMilestoneId}
                         onClick={askForConfirmation(item)}
                       >
                         Accept & Deposit
-                      </StyledButton>
+                      </StyledButton> */}
+                      <CustomButton
+                        text={"Accept & Deposit"}
+                        className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal  rounded-full bg-primary text-[18px]"
+                        disabled={item?.milestone_id == selectedMilestoneId}
+                        onClick={askForConfirmation(item)}
+                      />
                     </>
                   )}
                   {moreThanOnePendingMilestone &&
                     componentConnectorRef.current?.openMilestoneListModal && (
-                      <StyledButton
-                        padding="1rem 2rem"
+                      // <StyledButton
+                      //   padding="1rem 2rem"
+                      //   disabled={item?.milestone_id == selectedMilestoneId}
+                      //   onClick={() => {
+                      //     componentConnectorRef.current.openMilestoneListModal();
+                      //   }}
+                      // >
+                      //   Accept Milestone
+                      // </StyledButton>
+                      <CustomButton
+                        text={"Accept Milestone"}
+                        className="px-[2rem] py-[1rem] w-full max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
                         disabled={item?.milestone_id == selectedMilestoneId}
                         onClick={() => {
                           componentConnectorRef.current.openMilestoneListModal();
                         }}
-                      >
-                        Accept Milestone
-                      </StyledButton>
+                      />
                     )}
                 </div>
               </div>
@@ -569,27 +588,46 @@ const Milestones = ({
                 <div className="bottom-buttons flex items-center gap-3 flex-wrap">
                   {item.status === "request_revision" ? (
                     /* Revisions requested */
-                    <StyledButton
-                      padding="1rem 2rem"
-                      variant="outline-success"
-                      disabled={true}
-                    >
+                    // <StyledButton
+                    //   padding="1rem 2rem"
+                    //   variant="outline-success"
+                    //   disabled={true}
+                    // >
+                    //   <CheckMark stroke="green" />
+                    //   Revisions request sent
+                    // </StyledButton>
+                    <div>
                       <CheckMark stroke="green" />
-                      Revisions request sent
-                    </StyledButton>
+                      <CustomButton
+                        text={"Revisions request sent"}
+                        className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+                        disabled={true}
+                        onClick={() => {}}
+                      />
+                    </div>
                   ) : (
                     /* Request Revisions */
-                    <StyledButton
-                      padding="1rem 2rem"
-                      variant="outline-dark"
+                    // <StyledButton
+                    //   padding="1rem 2rem"
+                    //   variant="outline-dark"
+                    //   disabled={
+                    //     item?.milestone_id === selectedMilestoneId &&
+                    //     requestingRivisions
+                    //   }
+                    //   onClick={requestRevisions(item?.milestone_id)}
+                    // >
+                    //   Request Revisions
+                    // </StyledButton>
+
+                    <CustomButton
+                      text={"Request Revisions"}
+                      className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
                       disabled={
                         item?.milestone_id === selectedMilestoneId &&
                         requestingRivisions
                       }
                       onClick={requestRevisions(item?.milestone_id)}
-                    >
-                      Request Revisions
-                    </StyledButton>
+                    />
                   )}
                   {deliverPaymentBtn(item)}
                 </div>

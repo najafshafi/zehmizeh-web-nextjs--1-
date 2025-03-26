@@ -7,7 +7,7 @@ import { numberWithCommas } from "@/helpers/utils/misc";
 import { CONSTANTS } from "@/helpers/const/constants";
 import { useQueryData } from "@/helpers/hooks/useQueryData";
 import { queryKeys } from "@/helpers/const/queryKeys";
-import { useParams } from "react-router-dom";
+import { useParams } from "next/navigation";
 import { TJobDetails } from "@/helpers/types/job.type";
 import classNames from "classnames";
 
@@ -28,7 +28,8 @@ const ConfirmPaymentModal = ({
   isReleasePrompt,
   buttonText,
 }: Props) => {
-  const { id } = useParams<{ id: string }>();
+  const params = useParams<{ id: string }>();
+  const id = (params?.id as string) || "";
   const { data } = useQueryData<TJobDetails>(queryKeys.jobDetails(id));
   const { amount, jobType } = usePayments();
   const clientAcceptedMilestoneAmount = data?.milestone.reduce((sum, item) => {
@@ -39,7 +40,7 @@ const ConfirmPaymentModal = ({
   }, 0);
   const remainingBudget = data?.proposal?.approved_budget?.amount
     ? data.proposal.approved_budget.amount - clientAcceptedMilestoneAmount
-    : data?.budget
+    : data?.budget?.amount
     ? data.budget.amount - clientAcceptedMilestoneAmount
     : 0;
 
@@ -58,7 +59,7 @@ const ConfirmPaymentModal = ({
               {CONSTANTS.payment.areYouSureAboutThisTransaction}
             </div>
             <div className="fs-20 font-normal text-center mb-3">
-              Clicking “Pay” on this submission means{" "}
+              Clicking &quot;Pay&quot; on this submission means{" "}
               {numberWithCommas(amount, "USD")} (plus ZMZ fee){" "}
               <span className="d-inline-block">
                 <Tooltip className="ms-1">
@@ -73,9 +74,9 @@ const ConfirmPaymentModal = ({
               to the freelancer and there is no way to undo this.
             </div>
             <div className="fs-20 font-normal text-center">
-              Be certain that you've checked everything about the work you're
-              paying for - that all the elements or features are working
-              correctly and that there are no missing parts.
+              Be certain that you&apos;ve checked everything about the work
+              you&apos;re paying for - that all the elements or features are
+              working correctly and that there are no missing parts.
             </div>
           </>
         )}
@@ -94,7 +95,7 @@ const ConfirmPaymentModal = ({
                 <div className="fs-20 font-normal">
                   This will deliver the milestone deposit (
                   {numberWithCommas(amount, "USD")}) directly to the
-                  freelancer's bank account and{" "}
+                  freelancer&apos;s bank account and{" "}
                   <b>there is no way to undo this.</b>
                 </div>
                 <p className="fs-20 font-normal mt-2">
@@ -105,8 +106,8 @@ const ConfirmPaymentModal = ({
                   </b>
                 </p>
                 <p className="fs-20 font-normal mt-2">
-                  Be certain that you've checked everything about the work
-                  you're paying for - that all the elements or features are
+                  Be certain that you&apos;ve checked everything about the work
+                  you&apos;re paying for - that all the elements or features are
                   working correctly and that there are no missing parts.
                 </p>
               </>
@@ -141,7 +142,7 @@ const ConfirmPaymentModal = ({
                 {isOverBudget && (
                   <p>
                     Accepting this milestone will automatically increase the
-                    project's budget.
+                    project&apos;s budget.
                   </p>
                 )}
               </div>

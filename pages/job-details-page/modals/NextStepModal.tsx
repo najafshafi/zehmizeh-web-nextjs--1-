@@ -1,6 +1,6 @@
 import { Modal, Button } from "react-bootstrap";
-import { StyledModal } from "components/styled/StyledModal";
-import { StyledButton } from "components/forms/Buttons";
+import { StyledModal } from "@/components/styled/StyledModal";
+import { StyledButton } from "@/components/forms/Buttons";
 
 type Props = {
   show: boolean;
