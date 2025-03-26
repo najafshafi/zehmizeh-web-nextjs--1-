@@ -28,7 +28,7 @@ const ChatSection = () => {
             Username{"  "}Job Title
           </h5>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <div className="hidden lg:block">
             <SearchMessages
               value={"searchTerm"}

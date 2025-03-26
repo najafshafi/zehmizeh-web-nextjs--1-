@@ -105,8 +105,8 @@ function SingleMessaging({ id }: { id: string }) {
             }}
           >
             <div className="flex items-center justify-center gap-4">
-              <Spinner />
-              <p className="mb-0">loading messages...</p>
+              <Spinner className="w-5 h-5 text-black" />
+              <p className="mb-0 text-lg">loading messages...</p>
             </div>
           </div>
         ) : (
