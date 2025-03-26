@@ -1,35 +1,30 @@
-import { StyledButton } from "@/components/forms/Buttons";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { queryKeys } from "@/helpers/const/queryKeys";
+"use client";
+
 import { useRefetch } from "@/helpers/hooks/useQueryData";
 import { budgetChangeAcceptOrDenied } from "@/helpers/http/proposals";
 import { TapiResponse } from "@/helpers/types/apiRequestResponse";
 import { TJobDetails } from "@/helpers/types/job.type";
+import { queryKeys } from "@/helpers/const/queryKeys";
 import { useMemo, useState } from "react";
-import { Modal } from "react-bootstrap";
 import toast from "react-hot-toast";
-import styled from "styled-components";
+import { VscClose } from "react-icons/vsc";
 
-const Wrapper = styled.div`
-  .title {
-    font-size: 26px;
-    font-weight: 400;
-    text-align: center;
-  }
-  .content {
-    margin-top: 1.5rem;
-    font-size: 1.1rem;
-    text-align: center;
-    p {
-      margin-bottom: 0px;
-    }
-  }
-`;
-
-type Props = {
+interface Props {
   jobDetails: TJobDetails;
   userType: "client" | "freelancer";
-};
+}
+
+interface ButtonConfig {
+  text: string;
+  variant: "primary" | "secondary";
+  onClick: () => void;
+}
+
+interface TextContent {
+  buttons: ButtonConfig[];
+  header: string;
+  contentText: string;
+}
 
 export const ChangeBudgetRequestModal = ({ jobDetails, userType }: Props) => {
   const jobTypeText =
@@ -38,13 +33,8 @@ export const ChangeBudgetRequestModal = ({ jobDetails, userType }: Props) => {
       : "hourly rate";
 
   const { refetch } = useRefetch(queryKeys.jobDetails(jobDetails.job_post_id));
-
   const [loading, setLoading] = useState<boolean>(false);
 
-  /*
-  1. budget change status is pending
-  2. if client requested budget change then currect user should be freelancer and vice versa
-  */
   const shouldShowModal = useMemo(() => {
     let isCorrectUser = false;
     if (jobDetails?.proposal?.budget_change?.requested_by === "client")
@@ -61,7 +51,6 @@ export const ChangeBudgetRequestModal = ({ jobDetails, userType }: Props) => {
     userType,
   ]);
 
-  // api call
   const apiCall = async (isAccepted: boolean) => {
     const res = await budgetChangeAcceptOrDenied({
       job_post_id: jobDetails.job_post_id,
@@ -87,11 +76,10 @@ export const ChangeBudgetRequestModal = ({ jobDetails, userType }: Props) => {
     });
   };
 
-  const textContent = useMemo(() => {
-    let buttons: { text: string; variant: string; onClick: () => void }[],
-      note: string,
-      header: string,
-      contentText: string;
+  const textContent = useMemo((): TextContent => {
+    let buttons: ButtonConfig[] = [];
+    let header = "";
+    let contentText = "";
 
     if (userType === "client") {
       header = `Your Freelancer is Requesting a ${jobTypeText} Increase`;
@@ -129,8 +117,7 @@ export const ChangeBudgetRequestModal = ({ jobDetails, userType }: Props) => {
         },
       ];
     }
-    return { buttons, note, header, contentText };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return { buttons, header, contentText };
   }, [
     jobDetails?.proposal?.approved_budget?.amount,
     jobDetails?.proposal?.budget_change?.amount,
@@ -138,29 +125,52 @@ export const ChangeBudgetRequestModal = ({ jobDetails, userType }: Props) => {
     userType,
   ]);
 
+  if (!shouldShowModal) return null;
+
   return (
-    <StyledModal show={shouldShowModal} size="lg" centered>
-      <Modal.Body>
-        <Wrapper>
-          <div className="title">{textContent.header}</div>
-          <div className="content">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div
+        className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm"
+        onClick={() => handleSubmit(false)}
+      />
+      <div className="relative bg-white rounded-xl w-full max-w-[600px] mx-4 p-6 md:p-8">
+        <button
+          type="button"
+          className="absolute right-4 top-4 md:top-0 md:-right-8 md:text-white text-gray-500 hover:text-gray-700 transition-colors duration-200"
+          onClick={() => handleSubmit(false)}
+          aria-label="Close modal"
+        >
+          <VscClose size={24} />
+        </button>
+
+        <div className="flex flex-col items-center">
+          <h2 className="text-2xl md:text-3xl font-normal text-center mb-6">
+            {textContent.header}
+          </h2>
+
+          <div className="text-base md:text-lg text-center mb-8">
             <p dangerouslySetInnerHTML={{ __html: textContent.contentText }} />
           </div>
-          <div className="mt-4 flex items-center justify-center gap-4">
+
+          <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
             {textContent.buttons.map(({ onClick, text, variant }) => (
-              <StyledButton
+              <button
                 key={text}
-                variant={variant}
-                type="submit"
+                type="button"
                 disabled={loading}
-                onClick={() => onClick()}
+                onClick={onClick}
+                className={`px-8 py-3 text-base font-normal rounded-full transition-all duration-200 disabled:opacity-50 ${
+                  variant === "primary"
+                    ? "bg-[#F2B420] text-[#212529] hover:scale-105"
+                    : "border-2 border-gray-800 text-gray-800 hover:bg-gray-100"
+                }`}
               >
                 {text}
-              </StyledButton>
+              </button>
             ))}
           </div>
-        </Wrapper>
-      </Modal.Body>
-    </StyledModal>
+        </div>
+      </div>
+    </div>
   );
 };
