@@ -1,4 +1,4 @@
-import { StyledButton } from "@/components/forms/Buttons";
+import CustomButton from "@/components/custombutton/CustomButton";
 import Checkbox from "@/components/forms/CheckBox";
 import { StyledModal } from "@/components/styled/StyledModal";
 import { CONSTANTS } from "@/helpers/const/constants";
@@ -115,20 +115,22 @@ export const MilestoneListModal = ({
           })}
           <div className="flex items-center justify-end gap-4 mt-4">
             {jobdetails?.jobType !== "hourly" && (
-              <StyledButton
-                variant="success"
+              <CustomButton
+                text={"Accept & Pay Now"}
+                className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-[#167347] text-white text-[18px]"
                 disabled={selectedMilestones.length === 0}
                 onClick={askForConfirmation("PAY_NOW")}
-              >
-                Accept & Pay Now
-              </StyledButton>
+              />
             )}
-            <StyledButton
+
+            <CustomButton
+              text={
+                jobdetails?.jobType === "hourly" ? "Pay" : "Accept & Deposit"
+              }
+              className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
               disabled={selectedMilestones.length === 0}
               onClick={askForConfirmation()}
-            >
-              {jobdetails?.jobType === "hourly" ? "Pay" : "Accept & Deposit"}
-            </StyledButton>
+            />
           </div>
         </div>
       </Modal.Body>

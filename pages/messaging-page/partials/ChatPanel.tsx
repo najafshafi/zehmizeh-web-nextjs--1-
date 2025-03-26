@@ -695,7 +695,9 @@ const SearchMessages = ({
         onMouseDown={onClick}
         readOnly
       />
-      {value !== "" && <CrossIcon className="pointer" onClick={onClear} />}
+      {value !== "" && (
+        <CrossIcon className="cursor-pointer" onClick={onClear} />
+      )}
     </div>
   );
 };

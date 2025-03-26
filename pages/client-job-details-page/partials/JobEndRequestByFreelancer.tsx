@@ -1,9 +1,9 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Modal } from "react-bootstrap";
-import { StyledButton } from "@/components/forms/Buttons";
 import { StyledModal } from "@/components/styled/StyledModal";
 import { cancelClosureRequest } from "@/helpers/http/jobs";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 type Props = {
   show: boolean;
@@ -69,15 +69,23 @@ const JobEndRequestByFreelancer = ({
               request and discuss next steps with your freelancer.
             </li>
           </ul>
-          <StyledButton
+
+          {/* <StyledButton
             className="fs-16 font-normal mt-4 w-100"
             variant="outline-dark"
             padding="1.125rem 2.25rem"
             onClick={onConfirm("closed")}
           >
             Close project and mark “Complete”
-          </StyledButton>
-          <StyledButton
+          </StyledButton> */}
+
+          <CustomButton
+            text={"Close project and mark “Complete”}"}
+            className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[16px]"
+            onClick={onConfirm("closed")}
+          />
+
+          {/* <StyledButton
             className="fs-16 font-normal mt-3 w-100"
             variant="outline-dark"
             padding="1.125rem 2.25rem"
@@ -85,8 +93,16 @@ const JobEndRequestByFreelancer = ({
             disabled={loading}
           >
             Close project and mark “Incomplete”
-          </StyledButton>
-          <StyledButton
+          </StyledButton> */}
+
+          <CustomButton
+            text={"Close project and mark “Incomplete”"}
+            className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[16px]"
+            onClick={onConfirm("in-complete")}
+            disabled={loading}
+          />
+
+          {/* <StyledButton
             className="fs-16 font-normal mt-3 w-100"
             variant="outline-dark"
             padding="1.125rem 2.25rem"
@@ -94,7 +110,14 @@ const JobEndRequestByFreelancer = ({
             disabled={loading}
           >
             Decline closure request and discuss
-          </StyledButton>
+          </StyledButton> */}
+
+          <CustomButton
+            text={"Decline closure request and discuss"}
+            className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[16px]"
+            disabled={loading}
+            onClick={onCancelClosureRequest}
+          />
         </div>
       </Modal.Body>
     </StyledModal>

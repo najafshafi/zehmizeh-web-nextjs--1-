@@ -8,7 +8,7 @@ import { usePayments } from "@/pages/client-job-details-page/controllers/usePaym
 import { useQueryData } from "@/helpers/hooks/useQueryData";
 import { TJobDetails } from "@/helpers/types/job.type";
 import { queryKeys } from "@/helpers/const/queryKeys";
-import { useParams } from "react-router-dom";
+import { useParams } from "next/navigation";
 import classNames from "classnames";
 import { StyledButton } from "@/components/forms/Buttons";
 
@@ -23,7 +23,8 @@ export const AcceptAndPaynowModal = ({
   toggle,
   handlePayment,
 }: Props) => {
-  const { id } = useParams<{ id: string }>();
+  const params = useParams<{ id: string }>();
+  const id = (params?.id as string) || "";
   const { amount } = usePayments();
   const { data } = useQueryData<TJobDetails>(queryKeys.jobDetails(id));
 
@@ -36,7 +37,7 @@ export const AcceptAndPaynowModal = ({
 
   const remainingBudget = data?.proposal?.approved_budget?.amount
     ? data.proposal.approved_budget.amount - clientAcceptedMilestoneAmount
-    : data?.budget
+    : data?.budget?.amount
     ? data.budget.amount - clientAcceptedMilestoneAmount
     : 0;
 
@@ -75,26 +76,26 @@ export const AcceptAndPaynowModal = ({
               </Tooltip>
             </span>{" "}
             will be charged to your account and it will be sent directly to
-            freelancer's account. Because <b>there is no way to undo this</b>,
-            we recommend using 'Send Payment' only{" "}
-            <b>after the freelancer has submitted work.</b>
+            freelancer&apos;s account. Because{" "}
+            <b>there is no way to undo this</b>, we recommend using &apos;Send
+            Payment&apos; only <b>after the freelancer has submitted work.</b>
             <br />
             <p className="mt-4">
-              Be certain that you've checked everything about the work you're
-              paying for - that all the elements or features are working
-              correctly and that there are no missing parts.
+              Be certain that you&apos;ve checked everything about the work
+              you&apos;re paying for - that all the elements or features are
+              working correctly and that there are no missing parts.
             </p>
           </p>
           {isOverBudget && (
             <p>
-              Accepting this milestone will automatically increase the project's
-              budget.
+              Accepting this milestone will automatically increase the
+              project&apos;s budget.
             </p>
           )}
         </div>
         <div className="flex flex-row gap-4 mt-4">
           <StyledButton variant="secondary" onClick={toggle}>
-            I'll Review the Work First
+            I&apos;ll Review the Work First
           </StyledButton>
           <StyledButton onClick={handlePayment}>Send Payment</StyledButton>
         </div>

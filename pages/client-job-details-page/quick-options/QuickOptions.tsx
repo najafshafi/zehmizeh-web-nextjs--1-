@@ -28,6 +28,7 @@ import { isNotAllowedToSubmitReview } from "@/helpers/utils/helper";
 import ProposalExistsModal from "@/components/invite-flow-modals/ProposalExistsModa";
 import { TcomponentConnectorRef } from "../ClientJobDetails";
 import { AcceptAndPaynowModal } from "../partials/payment/AcceptAndPaynowModal";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 const QuickOptionWrapper = styled.div`
   gap: 12px;
@@ -650,11 +651,36 @@ const QuickOptions = ({
         jobData?.closureReqBy !== "CLIENT" ? (
           <>
             {jobData && isFinalHourSubmitted(jobData) === false && (
-              <StyledButton
-                padding="1rem 2rem"
-                className={isMobile ? "mt-4 w-100" : ""}
-                disabled={!isAnyPaymentPending()}
-                // variant="outline-dark"
+              // <StyledButton
+              //   padding="1rem 2rem"
+              //   className={isMobile ? "mt-4 w-100" : ""}
+              //   disabled={!isAnyPaymentPending()}
+              //   // variant="outline-dark"
+              // onClick={() => {
+              //   if (!isAnyPaymentPending()) {
+              //     toast.error(
+              //       jobData?.jobType === "hourly"
+              //         ? "The freelancer hasn't submitted any hours yet!"
+              //         : "No milestones to pay!"
+              //     );
+              //     return;
+              //   }
+              //   setIsOpenMilestoneListModal(true);
+              // }}
+              // >
+              // {jobData?.jobType === "hourly"
+              //   ? "Pay for Hours"
+              //   : "Accept Milestones"}
+              // </StyledButton>
+
+              <CustomButton
+                text={
+                  jobData?.jobType === "hourly"
+                    ? "Pay for Hours"
+                    : "Accept Milestones"
+                }
+                className={`px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] 
+                              ${isMobile ? "mt-4 w-100" : ""}`}
                 onClick={() => {
                   if (!isAnyPaymentPending()) {
                     toast.error(
@@ -666,16 +692,13 @@ const QuickOptions = ({
                   }
                   setIsOpenMilestoneListModal(true);
                 }}
-              >
-                {jobData?.jobType === "hourly"
-                  ? "Pay for Hours"
-                  : "Accept Milestones"}
-              </StyledButton>
+                disabled={!isAnyPaymentPending()}
+              />
             )}
 
             {!jobData?.isClosureRequest ? (
               <>
-                <StyledButton
+                {/* <StyledButton
                   padding="1rem 2rem"
                   className={isMobile ? "mt-4 w-100" : ""}
                   variant="outline-dark"
@@ -693,7 +716,25 @@ const QuickOptions = ({
                   }
                 >
                   Close Project
-                </StyledButton>
+                </StyledButton> */}
+
+                <CustomButton
+                  text={"Close Project"}
+                  className={`px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[18px] hover:bg-black hover:text-white border border-black
+                              ${isMobile ? "mt-4 w-100" : ""}`}
+                  onClick={
+                    checkAnyOpenMilestone(
+                      jobData?.jobType === "hourly"
+                        ? toggleFreelancerClosureRequest
+                        : disputeMilestone === "under_dispute"
+                        ? openEndJobErrorModal
+                        : openEndJobModal
+                    )
+                    // jobData?.jobType === 'hourly'
+                    //   ? toggleFreelancerClosureRequest
+                    //   : toggleEndJobStatusModal
+                  }
+                />
               </>
             ) : null}
 

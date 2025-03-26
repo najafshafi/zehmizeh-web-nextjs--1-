@@ -4,7 +4,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { Spinner } from "react-bootstrap";
+import Spinner from "@/components/forms/Spin/Spinner";
 import toast from "react-hot-toast";
 import classNames from "classnames";
 import Loader from "@/components/Loader";
@@ -45,6 +45,7 @@ import { editUser } from "@/helpers/http/auth";
 import useClientProfile from "@/controllers/useClientProfile";
 import { USER_PROFILE_SETTINGS_KEY } from "@/helpers/const/constants";
 import { StatusBadge } from "@/components/styled/Badges";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 export type TcomponentConnectorRef = React.MutableRefObject<{
   openMilestoneListModal: () => void;
@@ -479,9 +480,7 @@ const ClientJobDetails = () => {
         {/* Back button header */}
         <div className="flex justify-between items-center">
           <BackButton onBack={onBack}>
-            {isRefetching ? (
-              <Spinner animation="border" size="sm" className="ms-1" />
-            ) : null}
+            {isRefetching ? <Spinner className="w-4 h-4" /> : null}
           </BackButton>
           {/* START ----------------------------------------- Post visibility switch */}
           {jobdetails?.status === "prospects" &&
@@ -571,16 +570,14 @@ const ClientJobDetails = () => {
 
                 {/* Moving Draft/Prospects options out of QuickOptions to show independent of desktop/mobile */}
                 {jobdetails?.status === "draft" && (
-                  <div className="d-flex align-items-center justify-content-between">
-                    <StyledButton
-                      className="align-left"
-                      padding="1rem 2rem"
+                  <div className="flex items-center justify-between">
+                    <CustomButton
+                      text={"Continue Posting"}
+                      className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
                       onClick={onEdit}
-                    >
-                      Continue Posting
-                    </StyledButton>
+                    />
                     <div
-                      className="round-button d-flex justify-content-center align-items-center pointer"
+                      className="round-button flex justify-center items-center cursor-pointer"
                       onClick={!loading && toggleDeleteJobModal}
                     >
                       <TrashIcon />
@@ -589,16 +586,16 @@ const ClientJobDetails = () => {
                 )}
 
                 {jobdetails?.status === "prospects" && (
-                  <div className="proposal-actions d-flex align-items-center flex-wrap gap-3 justify-content-center w-100">
+                  <div className="proposal-actions flex items-center flex-wrap gap-3 justify-center w-full">
                     <div
-                      className="edit-btn d-flex justify-content-center align-items-center pointer"
+                      className="edit-btn flex justify-center items-center cursor-pointer"
                       onClick={!loading && onEdit}
                     >
                       <EditIcon stroke="#0067FF" fill="#0067FF" />
                       <span>Edit</span>
                     </div>
                     <div
-                      className="delete-btn p-2 pointer d-flex align-items-center"
+                      className="delete-btn p-2 cursor-pointer flex items-center"
                       onClick={!loading && toggleDeleteJobModal}
                     >
                       <TrashIcon />
@@ -637,7 +634,7 @@ const ClientJobDetails = () => {
               />
             )}
 
-            {activeTab == "messages" && <SingleMessaging id={id} />}
+            {activeTab == "messages" && id && <SingleMessaging id={id} />}
 
             {activeTab == "feedback" && jobdetails?.is_completed === 0 && (
               <NoDataFound
@@ -677,22 +674,19 @@ const ClientJobDetails = () => {
                       <JobCloseMessageWrapper>
                         <h3>Freelancer requested to close the project</h3>
                         <div className="mt-4 btn-wrappers">
-                          <StyledButton
-                            padding="1rem 2rem"
-                            className={isMobile ? "mt-4 w-100" : ""}
+                          <CustomButton
+                            text={"Accept - I'll Close"}
+                            className={`px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] 
+                              ${isMobile ? "mt-4 w-100" : ""}`}
                             onClick={handleCloseJob}
-                            // variant="outline-dark"
-                          >
-                            Accept - I'll Close
-                          </StyledButton>
-                          <StyledButton
+                          />
+
+                          <CustomButton
+                            text={"Decline - I Want to Continue"}
+                            className={`px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] 
+                              ${isMobile ? "mt-4 w-100" : ""}`}
                             onClick={onCancelClosureRequest}
-                            padding="1rem 2rem"
-                            className={isMobile ? "mt-4 w-100" : ""}
-                            variant="outline-dark"
-                          >
-                            Decline - I Want to Continue
-                          </StyledButton>
+                          />
                         </div>
                       </JobCloseMessageWrapper>
                     ) : null}

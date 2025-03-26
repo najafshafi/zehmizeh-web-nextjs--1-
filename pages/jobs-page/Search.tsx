@@ -3,8 +3,8 @@
  */
 import { useState } from "react";
 import styled from "styled-components";
-import { ReactComponent as SearchIcon } from "assets/icons/search.svg";
-import { ReactComponent as CrossIcon } from "assets/icons/cross-black.svg";
+import SearchIcon from "@/public/icons/search.svg";
+import CrossIcon from "@/public/icons/cross-black.svg";
 
 interface Props {
   searchTerm: string;

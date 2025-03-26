@@ -114,7 +114,7 @@ export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
     return <Loader height={250} />;
 
   return (
-    <div className="mb-5">
+    <div className="mb-5 ">
       {allowEdit && (
         <div className="flex items-center justify-center mb-5">
           <CustomButton
@@ -132,7 +132,7 @@ export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
         portfolios?.map((port: any) => (
           <MainPortfolioWrapper key={`port-id-${port.portfolio_id}`}>
             <div className="flex items-center mb-2">
-              <h3 className="line-break  project-name font-bold capitalize mb-1 text-[28px]">
+              <h3 className="line-break project-name font-bold capitalize mb-1 text-[28px] break-words whitespace-pre-wrap overflow-hidden">
                 {port.project_name}{" "}
                 {port?.project_year && `(${port?.project_year})`}
               </h3>
@@ -214,8 +214,10 @@ export const Portfolio = ({ allowEdit = true, freelancerId }: any) => {
 
             {port?.project_description && (
               <div className="mb-4">
-                <p className="font-bold mb-2">Project Description</p>
-                <p className="line-break">{port?.project_description}</p>
+                <p className="font-bold mb-2 ">Project Description</p>
+                <p className="line-break break-words whitespace-pre-wrap overflow-hidden">
+                  {port?.project_description}
+                </p>
               </div>
             )}
 

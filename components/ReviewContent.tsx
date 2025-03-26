@@ -21,7 +21,7 @@ const ReviewContent = ({ review }: any) => {
             {review?.rate.toFixed(1)}
           </div>
         </div>
-        <div className="ratings-given-on text-base font-light text-gray-500">
+        <div className="ratings-given-on text-base font-light">
           {moment(review?.date_created).format("MMM DD, YYYY")}
         </div>
       </div>

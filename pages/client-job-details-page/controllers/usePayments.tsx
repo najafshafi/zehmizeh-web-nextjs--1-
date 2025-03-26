@@ -6,7 +6,7 @@ import { manageMilestoneNew } from "@/helpers/http/jobs";
 const PaymentDetailsContxt = React.createContext<any>(null);
 
 // todo: Mudit- To sometimes randomly poayment calculationsm, doesn't show up as per yogesh, right now not able to reproduce this
-const PaymentProvider = ({ children }: any) => {
+const PaymentProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState<string>("OTHER");
   const [amount, setAmount] = useState("");
