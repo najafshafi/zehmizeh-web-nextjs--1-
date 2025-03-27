@@ -1,8 +1,8 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { StyledButton } from "@/components/forms/Buttons";
 import SelectJobModal from "@/components/invite-flow-modals/SelectJobModal";
 import InviteFreelancerMessageModal from "@/components/invite-flow-modals/InviteFreelancerMessageModal";
 import InviteFreelancer from "./InviteFreelancer";
@@ -19,7 +19,6 @@ import {
   manageMilestoneNew,
 } from "@/helpers/http/jobs";
 import useResponsive from "@/helpers/hooks/useResponsive";
-import { transition } from "@/styles/transitions";
 import PaymentModal from "../partials/payment/PaymentModal";
 import { usePayments } from "../controllers/usePayments";
 import { MilestoneListModal } from "../partials/milestones/milestoneListModal";
@@ -29,17 +28,6 @@ import ProposalExistsModal from "@/components/invite-flow-modals/ProposalExistsM
 import { TcomponentConnectorRef } from "../ClientJobDetails";
 import { AcceptAndPaynowModal } from "../partials/payment/AcceptAndPaynowModal";
 import CustomButton from "@/components/custombutton/CustomButton";
-
-const QuickOptionWrapper = styled.div`
-  gap: 12px;
-  .round-button {
-    height: 3.25rem;
-    width: 3.25rem;
-    border-radius: 3.75rem;
-    background: ${(props) => props.theme.colors.white};
-    ${() => transition()};
-  }
-`;
 
 // Define interfaces for strongly typed objects
 interface FreelancerData {
@@ -57,7 +45,7 @@ interface MilestoneItem {
   amount?: number;
 }
 
-type Props = {
+interface Props {
   jobData: {
     status: string;
     jobPostId: string;
@@ -81,7 +69,7 @@ type Props = {
   onEndJobModal: (status: string) => void;
   payAllBtn?: boolean;
   componentConnectorRef?: TcomponentConnectorRef;
-};
+}
 
 const QuickOptions = ({
   jobData,
@@ -96,8 +84,7 @@ const QuickOptions = ({
   const [sendingInvite, setSendingInvite] = useState<boolean>(false);
   const [showJobsModal, setShowJobsModal] = useState<boolean>(false);
   const [proposalExistModal, setProposalExistModal] = useState<boolean>(false);
-  const [showInviteMessageModal, setShowInviteMessageModal] =
-    useState<boolean>(false);
+  const [showInviteMessageModal, setShowInviteMessageModal] = useState<boolean>(false);
   const [selectedJobId, setSelectedJobId] = useState<string>("");
   const [endJobStatusModal, setEndJobStatusModal] = useState<{
     show: boolean;
@@ -634,16 +621,17 @@ const QuickOptions = ({
           askForConfirmation={askForConfirmation}
         />
       )}
-      <QuickOptionWrapper className="flex items-center flex-wrap justify-center">
+      <div className="flex items-center flex-wrap justify-center gap-3">
         {jobData?.status === "closed" && (
-          <StyledButton
-            padding="1rem 2rem"
-            className={isMobile ? "mt-4 w-100" : ""}
-            variant="outline-dark"
+          <button
+            type="button"
+            className={`px-8 py-4 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full hover:bg-gray-100 transition-colors duration-200 ${
+              isMobile ? "mt-4 w-full" : ""
+            }`}
             onClick={toggleJobsModal}
           >
             Invite to another project
-          </StyledButton>
+          </button>
         )}
 
         {jobData?.activeTab === "m_stone" &&
@@ -651,36 +639,15 @@ const QuickOptions = ({
         jobData?.closureReqBy !== "CLIENT" ? (
           <>
             {jobData && isFinalHourSubmitted(jobData) === false && (
-              // <StyledButton
-              //   padding="1rem 2rem"
-              //   className={isMobile ? "mt-4 w-100" : ""}
-              //   disabled={!isAnyPaymentPending()}
-              //   // variant="outline-dark"
-              // onClick={() => {
-              //   if (!isAnyPaymentPending()) {
-              //     toast.error(
-              //       jobData?.jobType === "hourly"
-              //         ? "The freelancer hasn't submitted any hours yet!"
-              //         : "No milestones to pay!"
-              //     );
-              //     return;
-              //   }
-              //   setIsOpenMilestoneListModal(true);
-              // }}
-              // >
-              // {jobData?.jobType === "hourly"
-              //   ? "Pay for Hours"
-              //   : "Accept Milestones"}
-              // </StyledButton>
-
               <CustomButton
                 text={
                   jobData?.jobType === "hourly"
                     ? "Pay for Hours"
                     : "Accept Milestones"
                 }
-                className={`px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] 
-                              ${isMobile ? "mt-4 w-100" : ""}`}
+                className={`px-8 py-4 text-base font-normal bg-[#F2B420] text-[#212529] rounded-full transition-transform duration-200 hover:scale-105 ${
+                  isMobile ? "mt-4 w-full" : ""
+                }`}
                 onClick={() => {
                   if (!isAnyPaymentPending()) {
                     toast.error(
@@ -697,45 +664,21 @@ const QuickOptions = ({
             )}
 
             {!jobData?.isClosureRequest ? (
-              <>
-                {/* <StyledButton
-                  padding="1rem 2rem"
-                  className={isMobile ? "mt-4 w-100" : ""}
-                  variant="outline-dark"
-                  onClick={
-                    checkAnyOpenMilestone(
-                      jobData?.jobType === "hourly"
-                        ? toggleFreelancerClosureRequest
-                        : disputeMilestone === "under_dispute"
-                        ? openEndJobErrorModal
-                        : openEndJobModal
-                    )
-                    // jobData?.jobType === 'hourly'
-                    //   ? toggleFreelancerClosureRequest
-                    //   : toggleEndJobStatusModal
-                  }
-                >
-                  Close Project
-                </StyledButton> */}
-
-                <CustomButton
-                  text={"Close Project"}
-                  className={`px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[18px] hover:bg-black hover:text-white border border-black
-                              ${isMobile ? "mt-4 w-100" : ""}`}
-                  onClick={
-                    checkAnyOpenMilestone(
-                      jobData?.jobType === "hourly"
-                        ? toggleFreelancerClosureRequest
-                        : disputeMilestone === "under_dispute"
-                        ? openEndJobErrorModal
-                        : openEndJobModal
-                    )
-                    // jobData?.jobType === 'hourly'
-                    //   ? toggleFreelancerClosureRequest
-                    //   : toggleEndJobStatusModal
-                  }
-                />
-              </>
+              <CustomButton
+                text="Close Project"
+                className={`px-8 py-4 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full transition-transform duration-200 hover:scale-105 hover:bg-black hover:text-white ${
+                  isMobile ? "mt-4 w-full" : ""
+                }`}
+                onClick={
+                  checkAnyOpenMilestone(
+                    jobData?.jobType === "hourly"
+                      ? toggleFreelancerClosureRequest
+                      : disputeMilestone === "under_dispute"
+                      ? openEndJobErrorModal
+                      : openEndJobModal
+                  )
+                }
+              />
             ) : null}
 
             {jobData?.activeTab === "m_stone" &&
@@ -745,20 +688,19 @@ const QuickOptions = ({
                 {jobData?.jobType === "hourly" &&
                 jobData?.isFinalMilestonePosted &&
                 jobData?.enableEndJobButton ? (
-                  <StyledButton
-                    padding="1rem 2rem"
-                    className="mt-4 w-100"
-                    variant="outline-dark"
+                  <button
+                    type="button"
+                    className="mt-4 w-full px-8 py-4 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full hover:bg-gray-100 transition-colors duration-200"
                     onClick={checkAnyOpenMilestone(openEndJobModal)}
                   >
                     Close Project
-                  </StyledButton>
+                  </button>
                 ) : null}
               </>
             ) : null}
           </>
         ) : null}
-      </QuickOptionWrapper>
+      </div>
 
       <SelectJobModal
         show={showJobsModal}
@@ -877,4 +819,5 @@ const QuickOptions = ({
     </>
   );
 };
+
 export default QuickOptions;
