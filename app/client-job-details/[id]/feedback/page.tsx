@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 
 // Dynamically import the ClientJobDetails component with no SSR
 const ClientJobDetails = dynamic(
-  () => import("@/app/components/ClientJobDetails"),
+  () => import("@/pages/client-job-details-page/ClientJobDetails"),
   { ssr: false }
 );
 

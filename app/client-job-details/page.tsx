@@ -11,5 +11,9 @@ export default function ClientJobDetailsPage() {
     router.push("/dashboard");
   }, [router]);
 
-  return <div>Redirecting...</div>;
+  return (
+    <div className="client-job-details-layout pt-[90px] bg-secondary flex flex-col items-center">
+      Redirecting...
+    </div>
+  );
 }

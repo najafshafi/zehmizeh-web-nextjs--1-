@@ -117,7 +117,7 @@ export const MilestoneListModal = ({
             {jobdetails?.jobType !== "hourly" && (
               <CustomButton
                 text={"Accept & Pay Now"}
-                className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-[#167347] text-white text-[18px]"
+                className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal  rounded-full bg-[#167347] text-white text-[18px]"
                 disabled={selectedMilestones.length === 0}
                 onClick={askForConfirmation("PAY_NOW")}
               />

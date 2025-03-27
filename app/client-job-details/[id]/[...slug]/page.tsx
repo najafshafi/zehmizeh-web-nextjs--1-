@@ -38,7 +38,11 @@ export default function ClientJobDetailsCatchAll() {
 
   if (!validSlug) {
     // Redirect or show error message
-    return <div>Invalid route</div>;
+    return (
+      <div className="client-job-details-layout pt-[90px] bg-secondary flex flex-col items-center">
+        Invalid route
+      </div>
+    );
   }
 
   return <ClientJobDetails initialTab={tabKey} jobId={id} />;

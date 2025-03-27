@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { talkJSAccessTokenApi } from '@/helpers/http/common';
-import { isStagingEnv } from '@/helpers/utils/helper';
-import { ChatAuthState } from '@/helpers/types/chat.type';
+import { useState, useEffect } from "react";
+import { talkJSAccessTokenApi } from "@/helpers/http/common";
+import { isStagingEnv } from "@/helpers/utils/helper";
+import { ChatAuthState } from "@/helpers/types/chat.type";
 
 export const useChatAuth = (userId: string) => {
   const [chatAuth, setChatAuth] = useState<ChatAuthState>({
     loading: false,
-    token: '',
+    token: "",
   });
 
   const talkjsAccessTokenHandler = async () => {
@@ -21,7 +21,7 @@ export const useChatAuth = (userId: string) => {
       }
     } catch (error) {
       setChatAuth((prev) => ({ ...prev, loading: false }));
-      throw new Error(error.message);
+      throw new Error(error as string);
     }
   };
 
