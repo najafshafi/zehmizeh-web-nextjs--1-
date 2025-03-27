@@ -192,6 +192,7 @@ export const MilestoneListModal = ({
               )}
 
               <CustomButton
+
                 text={
                   jobdetails?.jobType === "hourly" ? "Pay" : "Accept & Deposit"
                 }

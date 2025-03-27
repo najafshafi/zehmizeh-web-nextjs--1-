@@ -340,7 +340,9 @@ const Milestones = ({
     <MilestonesWrapper>
       {milestone?.length == 0 && (
         <div>
-          <h4 className="text-center">How To Do Project-Based Projects</h4>
+          <h4 className="text-center text-2xl font-bold">
+            How To Do Project-Based Projects
+          </h4>
           {/* START ----------------------------------------- Video for doing project based projects */}
           <div className="my-4">
             <VideoComponent videosrc={CLIENT_HOW_TO_PROJECT_BASED_PROJECTS} />
@@ -391,12 +393,12 @@ const Milestones = ({
             className="flex flex-col milestone-item"
             data-milestone-status={item.status}
           >
-            <div className="flex md:flex-row flex-col justify-between gap-md-3 gap-4">
+            <div className="flex md:flex-row flex-col justify-between md:gap-3 gap-4">
               <div>
-                <div className="fs-20 font-normal capital-first-ltr">
+                <div className="text-2xl font-normal capital-first-ltr">
                   {convertToTitleCase(item.title)}
                 </div>
-                <div className="fs-32 font-normal line-height-100-perc mt-3">
+                <div className="text-4xl font-normal line-height-100-perc mt-3">
                   {numberWithCommas(item.amount, "USD")}
                 </div>
 
@@ -410,7 +412,7 @@ const Milestones = ({
                 {/* END ------------------------------------------- Showing price client has to pay including fees */}
               </div>
               <div className="status">
-                <div className="flex flex-col align-items-md-end">
+                <div className="flex flex-col md:items-end">
                   <>
                     <StatusBadge
                       color={PAYMENT_STATUS[item?.status]?.color || "green"}
@@ -429,7 +431,7 @@ const Milestones = ({
                     </StatusBadge>
                   </>
                   {!!item?.date_created && (
-                    <div className="fs-18 font-normal mt-3">
+                    <div className="text-lg font-normal mt-3">
                       Submitted on
                       {item?.date_created
                         ? " " +
@@ -438,7 +440,7 @@ const Milestones = ({
                     </div>
                   )}
                   {!!item.cancelled_date && (
-                    <div className="fs-18 font-normal">
+                    <div className="text-lg font-normal">
                       Closed on{" "}
                       {item.cancelled_date
                         ? moment(item.cancelled_date).format("MMM DD, YYYY")
@@ -446,14 +448,14 @@ const Milestones = ({
                     </div>
                   )}
                   {item?.status !== "pending" && (
-                    <div className="fs-18 font-normal">
+                    <div className="text-lg font-normal">
                       {getDateLabel(item.status)} {getDate(item)}
                     </div>
                   )}
                 </div>
               </div>
             </div>
-            <div className="flex mt-md-1 md:flex-row flex-col justify-between align-items-md-end gap-3">
+            <div className="flex mt-md-1 md:flex-row flex-col justify-between md:items-end gap-3">
               <div>
                 <StyledHtmlText
                   needToBeShorten
@@ -495,7 +497,7 @@ const Milestones = ({
               <div>
                 {/* Hint text to dont start working until milestone is approved */}
                 {!!item?.failure_message && (
-                  <MilestoneHintText className="mb-0 mt-1 fs-20">
+                  <MilestoneHintText className="mb-0 mt-1 text-2xl">
                     <b>Payment Failed:</b> Your last payment failed because{" "}
                     {item?.failure_message}
                   </MilestoneHintText>
@@ -547,7 +549,7 @@ const Milestones = ({
                       // </StyledButton>
                       <CustomButton
                         text={"Accept Milestone"}
-                        className="px-[2rem] py-[1rem] w-full max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+                        className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
                         disabled={item?.milestone_id == selectedMilestoneId}
                         onClick={() => {
                           componentConnectorRef.current.openMilestoneListModal();
@@ -559,14 +561,14 @@ const Milestones = ({
             )}
 
             {item.status === "completed_by_freelancer" && (
-              <div className="mlstn-completed-notice flex items-center gap-3 mt-4 rounded-lg p-md-3 p-2">
+              <div className="mlstn-completed-notice flex items-center gap-3 mt-4 rounded-lg md:p-3 p-2">
                 <span>
                   <Info />
                 </span>
-                <span className="ms-2 fs-16 font-normal">
+                <span className="ml-2 text-lg font-normal">
                   The freelancer has submitted all the work and marked this
-                  milestone as 'Complete.' Please review the work and deliver
-                  the payment.
+                  milestone as &apos;Complete.&apos; Please review the work and
+                  deliver the payment.
                 </span>
               </div>
             )}

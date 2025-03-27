@@ -1,7 +1,7 @@
-import { Button } from 'react-bootstrap';
-import styled from 'styled-components';
-import { convertToTitleCase } from '@/helpers/utils/misc';
-import SearchBox from '@/components/ui/SearchBox';
+import { Button } from "react-bootstrap";
+import styled from "styled-components";
+import { convertToTitleCase } from "@/helpers/utils/misc";
+import SearchBox from "@/components/ui/SearchBox";
 
 export const Wrapper = styled.div`
   .overlay {
@@ -52,7 +52,11 @@ const LoadMoreButton = ({
   disabled: boolean;
 }) => {
   return (
-    <Button disabled={disabled} onClick={onClick}>
+    <Button
+      disabled={disabled}
+      onClick={onClick}
+      className="bg-primary text-black px-4 py-2 rounded-md"
+    >
       Load More
     </Button>
   );
@@ -82,7 +86,7 @@ const JobAutoCompleteSearch = ({
   searchSubmitted: boolean;
 }) => {
   const onClear = () => {
-    onSearchValueChange('');
+    onSearchValueChange("");
   };
   return (
     <Wrapper>
@@ -97,7 +101,7 @@ const JobAutoCompleteSearch = ({
         enableBorder={false}
         height={72}
       />
-      {searchValue !== '' && !searchSubmitted && jobs && jobs.length > 0 && (
+      {searchValue !== "" && !searchSubmitted && jobs && jobs.length > 0 && (
         <SearchResults className="overlay">
           {filteredJobs.map((opt, index) => (
             <>

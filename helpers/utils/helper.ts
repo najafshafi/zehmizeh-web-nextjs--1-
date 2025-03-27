@@ -171,9 +171,21 @@ export const stripeIntercomStatusHandler = (
 
 export const isStagingEnv = () => {
   if (typeof window !== "undefined") {
-    return ["beta.zehmizeh.com", "localhost"].includes(
-      window?.location?.hostname
-    );
+    const hostname = window?.location?.hostname;
+    const backendApi = process.env.NEXT_PUBLIC_BACKEND_API;
+
+    // If backend API is apidev.zehmizeh.com, use staging environment
+    if (backendApi === "https://apidev.zehmizeh.com") {
+      return true;
+    }
+
+    // If backend API is api.zehmizeh.com, use production environment
+    if (backendApi === "https://api.zehmizeh.com") {
+      return false;
+    }
+
+    // For local development, check hostname
+    return ["beta.zehmizeh.com", "localhost"].includes(hostname);
   }
   return process.env.NODE_ENV !== "production";
 };
@@ -185,12 +197,24 @@ export const pusherApiKey = () =>
     : process.env.NEXT_PUBLIC_PUSHER_API_KEY_PROD ||
       process.env.REACT_APP_PUSHER_API_KEY_PROD;
 
-export const talkjsApiKey = () =>
-  isStagingEnv()
+export const talkjsApiKey = () => {
+  const isStaging = isStagingEnv();
+  const key = isStaging
     ? process.env.NEXT_PUBLIC_TALKJS_APP_ID ||
       process.env.REACT_APP_TALKJS_APP_ID
     : process.env.NEXT_PUBLIC_TALKJS_APP_ID_PROD ||
       process.env.REACT_APP_TALKJS_APP_ID_PROD;
+
+  console.log("TalkJS Environment:", isStaging ? "Staging" : "Production");
+  console.log("TalkJS API Key:", key);
+  console.log("Backend API:", process.env.NEXT_PUBLIC_BACKEND_API);
+  console.log(
+    "Hostname:",
+    typeof window !== "undefined" ? window.location.hostname : "server-side"
+  );
+
+  return key;
+};
 
 export const talkjsSecretKey = () =>
   isStagingEnv()
