@@ -53,7 +53,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "ZehMizeh | The Jewish Freelancing Platform",
-  description: "",
+  description:
+    "ZehMizeh is the Jewish freelancing platform, connecting businesses with skilled freelancers. Find remote talent for your projects today!",
 };
 
 export default function RootLayout({
