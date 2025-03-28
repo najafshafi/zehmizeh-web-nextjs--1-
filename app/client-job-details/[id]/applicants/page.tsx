@@ -1,17 +1,15 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import dynamic from "next/dynamic";
-
-// Dynamically import the ClientJobDetails component with no SSR
-const ClientJobDetails = dynamic(
-  () => import("@/pages/client-job-details-page/ClientJobDetails"),
-  { ssr: false }
-);
+import ClientJobDetails from "@/pages/client-job-details-page/ClientJobDetails";
 
 export default function ApplicantsPage() {
   const params = useParams();
   const id = params?.id as string;
 
-  return <ClientJobDetails initialTab="applicants" jobId={id} />;
+  return (
+    <div className=" pt-[110px] bg-secondary flex flex-col items-center">
+      <ClientJobDetails initialTab="applicants" jobId={id} />
+    </div>
+  );
 }

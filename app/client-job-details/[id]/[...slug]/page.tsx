@@ -2,13 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
-
-// Dynamically import the ClientJobDetails component with no SSR
-const ClientJobDetails = dynamic(
-  () => import("@/pages/client-job-details-page/ClientJobDetails"),
-  { ssr: false }
-);
+import ClientJobDetails from "@/pages/client-job-details-page/ClientJobDetails";
 
 export default function ClientJobDetailsCatchAll() {
   const params = useParams();
@@ -45,5 +39,9 @@ export default function ClientJobDetailsCatchAll() {
     );
   }
 
-  return <ClientJobDetails initialTab={tabKey} jobId={id} />;
+  return (
+    <div className="pt-[110px] bg-secondary flex flex-col items-center">
+      <ClientJobDetails initialTab={tabKey} jobId={id} />
+    </div>
+  );
 }
