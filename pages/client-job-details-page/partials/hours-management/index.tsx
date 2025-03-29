@@ -6,7 +6,6 @@ import {
   MileStoneListItem,
 } from "./hours-management.styled";
 import { StatusBadge } from "@/components/styled/Badges";
-import { StyledButton } from "@/components/forms/Buttons";
 import NoDataFound from "@/components/ui/NoDataFound";
 import StyledHtmlText from "@/components/ui/StyledHtmlText";
 import AttachmentPreview from "@/components/ui/AttachmentPreview";
@@ -25,6 +24,7 @@ import { paymentProcessingStatusHandler } from "@/helpers/validation/common";
 import styled from "styled-components";
 import { TcomponentConnectorRef } from "@/pages/client-job-details-page/ClientJobDetails";
 import { getValueByPercentage } from "@/helpers/utils/helper";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 const PAYMENT_STATUS = {
   released: {
@@ -247,7 +247,7 @@ const HoursManagement = ({
             className="flex flex-col milestone-item"
             data-hourly-status={item.hourly_status}
           >
-            <div className="flex md:flex-row flex-col justify-between gap-md-3 gap-4">
+            <div className="flex md:flex-row flex-col justify-between md:gap-3 gap-4">
               <div>
                 <div className="fs-20 font-normal capital-first-ltr">
                   {item.is_final_milestone
@@ -277,7 +277,7 @@ const HoursManagement = ({
                 {/* END ----------------------------------------- Showing price client has to pay including fees */}
               </div>
               {item.hourly_status !== "pending" ? (
-                <div className="flex flex-col align-items-md-end">
+                <div className="flex flex-col md:items-end">
                   {[
                     "paid",
                     "under_dispute",
@@ -348,10 +348,9 @@ const HoursManagement = ({
               ) : // Desktop view only
               !item.is_final_milestone ? (
                 <div>
-                  <StyledButton
-                    padding="1rem 2.5rem"
-                    className="d-none d-md-block"
-                    disabled={item?.hourly_id == selectedMilestoneId}
+                  <CustomButton
+                    text="Pay"
+                    className="hidden md:block px-[2rem] py-[1rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-base "
                     onClick={() => {
                       // If there are more than 1 hourly payment that need to be accepted
                       // then opening list modal to show all hourly payment
@@ -372,9 +371,7 @@ const HoursManagement = ({
                       // if there's only one payment then opening confirmation modal
                       askForConfirmation(item)();
                     }}
-                  >
-                    Pay
-                  </StyledButton>
+                  />
                 </div>
               ) : null}
             </div>
@@ -407,15 +404,12 @@ const HoursManagement = ({
                 ) : null}
               </div>
               {item.hourly_status == "pending" && !item.is_final_milestone ? (
-                // Mobile view only
-                <StyledButton
-                  padding="1rem 2rem"
-                  className="d-block d-md-none"
+                <CustomButton
+                  text="Pay"
+                  className={`md:hidden block px-[2rem] py-[1rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-base`}
                   disabled={item?.hourly_id == selectedMilestoneId}
                   onClick={askForConfirmation(item)}
-                >
-                  Pay
-                </StyledButton>
+                />
               ) : null}
             </div>
 
@@ -427,23 +421,21 @@ const HoursManagement = ({
               "decline_dispute",
             ].includes(item.hourly_status) ? (
               <div className="flex md:flex-row flex-col mt-3 gap-3 justify-content-md-end justify-center">
-                <StyledButton
-                  variant="outline-dark"
-                  padding="1rem 2rem"
+                <CustomButton
+                  text="Decline - I Want to Continue Project"
+                  className=" px-[2rem] py-[1rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white hover:border-none"
                   disabled={item?.hourly_id == selectedMilestoneId}
                   onClick={onDecline(item.hourly_id)}
-                >
-                  Decline - I Want to Continue Project
-                </StyledButton>
-                <StyledButton
-                  style={{
-                    opacity:
-                      isFinalHourPayable &&
-                      !payAndCloseProjectCheckHandler(item, selectedMilestoneId)
-                        ? 1
-                        : 0.5,
-                  }}
-                  padding="1rem 2rem"
+                />
+
+                <CustomButton
+                  text="Pay & Close Project"
+                  className={` px-[2rem] py-[1rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-base ${
+                    isFinalHourPayable &&
+                    !payAndCloseProjectCheckHandler(item, selectedMilestoneId)
+                      ? "opacity-100"
+                      : "opacity-50"
+                  }`}
                   disabled={payAndCloseProjectCheckHandler(
                     item,
                     selectedMilestoneId
@@ -453,9 +445,7 @@ const HoursManagement = ({
                       ? askForConfirmation(item)()
                       : togglePendingHrSubModal()
                   }
-                >
-                  Pay & Close Project
-                </StyledButton>
+                />
               </div>
             ) : null}
           </MileStoneListItem>

@@ -27,7 +27,7 @@ const EndJobErrorModal = ({ show, toggle, goToMilestones, error }: Props) => {
         <Button variant="transparent" className="close" onClick={toggle}>
           &times;
         </Button>
-        <Content className="flex flex-col justify-center items-center">
+        <Content className="flex flex-col justify-center items-center ">
           <ErrorIcon />
           <div className="description fs-20 font-normal text-center">
             {error ||

@@ -84,7 +84,8 @@ const QuickOptions = ({
   const [sendingInvite, setSendingInvite] = useState<boolean>(false);
   const [showJobsModal, setShowJobsModal] = useState<boolean>(false);
   const [proposalExistModal, setProposalExistModal] = useState<boolean>(false);
-  const [showInviteMessageModal, setShowInviteMessageModal] = useState<boolean>(false);
+  const [showInviteMessageModal, setShowInviteMessageModal] =
+    useState<boolean>(false);
   const [selectedJobId, setSelectedJobId] = useState<string>("");
   const [endJobStatusModal, setEndJobStatusModal] = useState<{
     show: boolean;
@@ -625,7 +626,7 @@ const QuickOptions = ({
         {jobData?.status === "closed" && (
           <button
             type="button"
-            className={`px-8 py-4 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full hover:bg-gray-100 transition-colors duration-200 ${
+            className={`px-8 py-4 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full hover:bg-black hover:text-white hover:scale-105 transition-transform duration-200 ${
               isMobile ? "mt-4 w-full" : ""
             }`}
             onClick={toggleJobsModal}
@@ -669,15 +670,13 @@ const QuickOptions = ({
                 className={`px-8 py-4 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full transition-transform duration-200 hover:scale-105 hover:bg-black hover:text-white ${
                   isMobile ? "mt-4 w-full" : ""
                 }`}
-                onClick={
-                  checkAnyOpenMilestone(
-                    jobData?.jobType === "hourly"
-                      ? toggleFreelancerClosureRequest
-                      : disputeMilestone === "under_dispute"
-                      ? openEndJobErrorModal
-                      : openEndJobModal
-                  )
-                }
+                onClick={checkAnyOpenMilestone(
+                  jobData?.jobType === "hourly"
+                    ? toggleFreelancerClosureRequest
+                    : disputeMilestone === "under_dispute"
+                    ? openEndJobErrorModal
+                    : openEndJobModal
+                )}
               />
             ) : null}
 

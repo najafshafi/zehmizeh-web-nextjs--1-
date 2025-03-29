@@ -118,7 +118,9 @@ const StatusAndDateSection = ({ item, onInvite }: Props) => {
         <CustomButton
           text={"Invite to another project"}
           className={`px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[18px] hover:bg-black hover:text-white border border-black`}
-          onClick={handleInvite}
+          onClick={() => {
+            handleInvite;
+          }}
         />
       )}
     </div>

@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import { IconType } from "react-icons/lib";
@@ -15,7 +16,11 @@ type Props = {
   setActiveStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export const Stepper: React.FC<Props> = ({ steps, activeStep, setActiveStep }) => {
+export const Stepper: React.FC<Props> = ({
+  steps,
+  activeStep,
+  setActiveStep,
+}) => {
   const isSmallMobile = useMediaQuery({ minWidth: 450 });
   const [width, setWidth] = useState(0);
 
@@ -25,9 +30,7 @@ export const Stepper: React.FC<Props> = ({ steps, activeStep, setActiveStep }) =
 
   return (
     <div className="relative w-full flex justify-between mb-12">
-      <div
-        className="absolute left-0 top-[16px] z-10 w-full h-[4px] transition-all duration-[400ms] bg-[#ECECEC]"
-      />
+      <div className="absolute left-0 top-[16px] z-10 w-full h-[4px] transition-all duration-[400ms] bg-[#ECECEC]" />
       <div
         className="absolute left-0 top-[16px] z-10 h-[4px] transition-all duration-[400ms] bg-[#F2B420]"
         style={{ width: `${width}%` }}

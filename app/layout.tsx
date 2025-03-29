@@ -32,13 +32,10 @@
 //   );
 // }
 
-// app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ClientProvider from "../components/ClientProvider/ClientProvider";
-// import NavbarConditional from "@/components/navbar-profile/NavbarConditional";
-// import FooterConditional from "@/components/footer/FooterConditional";
 import { Providers } from "@/store/provider";
 
 const geistSans = Geist({
@@ -68,13 +65,52 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <ClientProvider>
-            {/* <NavbarConditional /> */}
-            {children}
-            {/* <FooterConditional /> */}
-          </ClientProvider>
+          <ClientProvider>{children}</ClientProvider>
         </Providers>
       </body>
     </html>
   );
 }
+
+// import type { Metadata } from "next";
+// import { Geist, Geist_Mono } from "next/font/google";
+// import "./globals.css";
+// import ClientProvider from "../components/ClientProvider/ClientProvider";
+
+// import { Providers } from "@/store/provider";
+
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+//   display: "swap",
+// });
+
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+//   display: "swap",
+// });
+
+// export const metadata: Metadata = {
+//   title: "ZehMizeh | The Jewish Freelancing Platform",
+//   description:
+//     "ZehMizeh is the Jewish freelancing platform, connecting businesses with skilled freelancers. Find remote talent for your projects today!",
+// };
+
+// export default function RootLayout({
+//   children,
+// }: {
+//   children: React.ReactNode;
+// }) {
+//   return (
+//     <html lang="en">
+//       <body
+//         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+//       >
+//         <Providers>
+//           <ClientProvider>{children}</ClientProvider>
+//         </Providers>
+//       </body>
+//     </html>
+//   );
+// }
