@@ -1,12 +1,9 @@
-import { useState, useEffect } from "react";
-import { Modal, Button, Form, Spinner } from "react-bootstrap";
-import styled from "styled-components";
-import { StyledButton } from "@/components/forms/Buttons";
-import { StyledModal } from "@/components/styled/StyledModal";
-import TextEditor from "@/components/forms/TextEditor";
-import toast from "react-hot-toast";
+"use client";
 
-type Props = {
+import { useState, useEffect } from "react";
+import TextEditor from "@/components/forms/TextEditor";
+
+interface Props {
   show: boolean;
   toggle: () => void;
   onInvite?: (msg: string) => void;
@@ -14,14 +11,7 @@ type Props = {
   loading: boolean;
   inviteMessage?: string;
   isEditFlag?: boolean;
-};
-
-const ContentWrapper = styled.div`
-  .invite-freelancer__message-box {
-    padding: 1rem 1.25rem;
-    margin-top: 2.5rem;
-  }
-`;
+}
 
 const InviteFreelancerMessageModal = ({
   show,
@@ -33,10 +23,22 @@ const InviteFreelancerMessageModal = ({
   isEditFlag,
 }: Props) => {
   const [message, setMessage] = useState<string>("");
-  const onCloseModal = () => {
-    setMessage("");
-    toggle();
-  };
+
+  // Handle body scroll lock when modal is open
+  useEffect(() => {
+    if (show) {
+      const scrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = "100%";
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      window.scrollTo(0, parseInt(scrollY || "0", 10));
+    }
+  }, [show]);
 
   useEffect(() => {
     if (show) {
@@ -44,98 +46,177 @@ const InviteFreelancerMessageModal = ({
     }
   }, [show]);
 
-  const onDescriptionChange = (data: any) => {
+  const onDescriptionChange = (data: string) => {
     setMessage(data);
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onInvite(message);
-    setMessage("");
+    if (onInvite) {
+      onInvite(message);
+      setMessage("");
+    }
   };
 
+  const onCloseModal = () => {
+    setMessage("");
+    toggle();
+  };
+
+  if (!show) return null;
+
   return (
-    <StyledModal
-      show={show}
-      size="lg"
-      onHide={onCloseModal}
-      centered
-      maxwidth={765}
-    >
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={onCloseModal}>
-          &times;
-        </Button>
-        <ContentWrapper>
-          <Form onSubmit={handleSubmit}>
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        onClick={onCloseModal}
+      />
+
+      {/* Modal */}
+      <div className="flex min-h-full items-center justify-center p-4">
+        <div className="relative w-full max-w-[765px] transform rounded-lg bg-white px-4 py-8 md:p-12 shadow-xl transition-all">
+          {/* Close button */}
+          <button
+            onClick={onCloseModal}
+            className="absolute right-4 top-4 md:top-0 md:-right-8 md:text-white text-gray-400 hover:text-gray-500 focus:outline-none"
+          >
+            <span className="sr-only">Close</span>
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+
+          {/* Content */}
+          <form onSubmit={handleSubmit} className="mt-0">
             <div className="content">
-              <h3 className="fs-36 fw-700">
+              <h3 className="text-[28px] font-semibold">
                 {freelancerName
                   ? "Write Your Personal Invitation"
                   : "Message Freelancers"}
               </h3>
               {freelancerName ? (
-                <div className="fs-20 fw-400">
-                  Share a message{" with"}
-                  <span className="fw-700 text-capitalize">
+                <div className="mt-4 text-xl">
+                  Share a message with{" "}
+                  <span className="font-bold capitalize">
                     {freelancerName && ` ${freelancerName}. `}
-                  </span>{" "}
+                  </span>
                   (Optional)
                 </div>
               ) : (
-                <div className="fs-20 fw-400">
-                  Share a message with the freelancers you're inviting
+                <div className="mt-4 text-xl">
+                  Share a message with the freelancers you&apos;re inviting
                   (Optional)
                 </div>
               )}
               {!isEditFlag && (
-                <Form.Group className="mt-4">
+                <div className="mt-4">
                   <TextEditor
                     value={message}
                     onChange={onDescriptionChange}
                     placeholder="Write here..."
                     maxChars={1000}
                   />
-                </Form.Group>
+                </div>
               )}
-              {isEditFlag === true && (
-                <Form.Group className="mt-4">
+              {isEditFlag && (
+                <div className="mt-4">
                   <TextEditor
-                    value={inviteMessage}
+                    value={inviteMessage || ""}
                     onChange={onDescriptionChange}
                     maxChars={1000}
                   />
-                </Form.Group>
+                </div>
               )}
             </div>
-            <div className="bottom-buttons flex">
+
+            {/* Bottom buttons */}
+            <div className="mt-6 flex justify-end">
               {!isEditFlag && (
-                <StyledButton
-                  className="fs-16 fw-400"
-                  variant="primary"
-                  padding="0.8125rem 2rem"
+                <button
                   type="submit"
                   disabled={loading}
+                  className="rounded-full bg-[#F2B420] px-8 py-[0.9rem] text-lg font-normal text-[#212529] transition-transform hover:scale-105 disabled:opacity-50"
                 >
-                  {loading ? <Spinner animation="border" /> : "Send Invitation"}
-                </StyledButton>
+                  {loading ? (
+                    <div className="flex items-center justify-center">
+                      <svg
+                        className="h-5 w-5 animate-spin"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      <span className="ml-2">Sending...</span>
+                    </div>
+                  ) : (
+                    "Send Invitation"
+                  )}
+                </button>
               )}
-              {isEditFlag === true && (
-                <StyledButton
-                  className="fs-16 fw-400"
-                  variant="primary"
-                  padding="0.8125rem 2rem"
+              {isEditFlag && (
+                <button
                   type="submit"
                   disabled={loading}
+                  className="rounded-full bg-[#F2B420] px-8 py-[0.9rem] text-lg font-normal text-[#212529] transition-transform hover:scale-105 disabled:opacity-50"
                 >
-                  {loading ? <Spinner animation="border" /> : "Edit Invitation"}
-                </StyledButton>
+                  {loading ? (
+                    <div className="flex items-center justify-center">
+                      <svg
+                        className="h-5 w-5 animate-spin"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      <span className="ml-2">Editing...</span>
+                    </div>
+                  ) : (
+                    "Edit Invitation"
+                  )}
+                </button>
               )}
             </div>
-          </Form>
-        </ContentWrapper>
-      </Modal.Body>
-    </StyledModal>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 };
 

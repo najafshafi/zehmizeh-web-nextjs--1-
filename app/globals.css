@@ -43,6 +43,15 @@
   width: 0px;
 }
 
+.modal-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.modal-scrollbar::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 10px;
+}
+
 .react-datepicker-wrapper {
   width: 100% !important;
 }

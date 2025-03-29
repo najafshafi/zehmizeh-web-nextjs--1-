@@ -35,7 +35,7 @@ interface FreelancerData {
   last_name: string;
 }
 
-interface MilestoneItem {
+interface Milestone {
   hourly_id?: string;
   milestone_id?: string;
   is_final_milestone: number;
@@ -43,27 +43,31 @@ interface MilestoneItem {
   status?: string;
   total_amount?: number;
   amount?: number;
+  title?: string;
+  description?: string;
+}
+
+interface JobData {
+  status: string;
+  jobPostId: string;
+  jobType: string;
+  freelancerUserId: string;
+  freelancerData: FreelancerData;
+  isClosureRequest: number;
+  closureReqBy: string;
+  isFinalMilestonePosted: boolean;
+  openEndJobStatusModal: boolean;
+  enableEndJobButton: boolean;
+  milestones: Milestone[];
+  endJobStatus?: string;
+  activeTab?: string;
+  is_client_feedback?: boolean;
+  job_reason?: string;
+  is_completed?: 0 | 1;
 }
 
 interface Props {
-  jobData: {
-    status: string;
-    jobPostId: string;
-    jobType: string;
-    freelancerUserId: string;
-    freelancerData: FreelancerData;
-    isClosureRequest: number;
-    closureReqBy: string;
-    isFinalMilestonePosted: boolean;
-    openEndJobStatusModal: boolean;
-    enableEndJobButton: boolean;
-    milestones: MilestoneItem[];
-    endJobStatus?: string;
-    activeTab?: string;
-    is_client_feedback?: boolean;
-    job_reason?: string;
-    is_completed?: 0 | 1;
-  };
+  jobData: JobData;
   refetch: (tab?: string) => () => void;
   goToMilestonesTab: () => void;
   onEndJobModal: (status: string) => void;
@@ -71,13 +75,13 @@ interface Props {
   componentConnectorRef?: TcomponentConnectorRef;
 }
 
-const QuickOptions = ({
+const QuickOptions: React.FC<Props> = ({
   jobData,
   refetch,
   goToMilestonesTab,
   onEndJobModal,
   componentConnectorRef,
-}: Props) => {
+}) => {
   const router = useRouter();
   const { isMobile } = useResponsive();
   const [loading, setLoading] = useState<boolean>(false);
@@ -120,12 +124,10 @@ const QuickOptions = ({
   } = usePayments();
   const [showPaymentModal, setShowPaymentModal] = useState<boolean>(false);
   const [paymentProcessing, setPaymentProcessing] = useState<boolean>(false);
-  const [unPaidMilestones, setUnpaidMilestones] = useState<MilestoneItem[]>([]);
+  const [unPaidMilestones, setUnpaidMilestones] = useState<Milestone[]>([]);
   const [isOpenMilestoneListModal, setIsOpenMilestoneListModal] =
     useState(false);
-  const [selectedMilestones, setSelectedMilestones] = useState<MilestoneItem[]>(
-    []
-  );
+  const [selectedMilestones, setSelectedMilestones] = useState<Milestone[]>([]);
   const [showConfirmationModal, setShowConfirmationModal] =
     useState<boolean>(false);
   const [showPayNowModal, setShowPayNowModal] = useState<boolean>(false);
