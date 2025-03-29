@@ -31,6 +31,7 @@ const EndJobErrorModal = ({ show, toggle, goToMilestones, error }: Props) => {
   if (!show) return null;
 
   return (
+
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
       <div
@@ -53,6 +54,7 @@ const EndJobErrorModal = ({ show, toggle, goToMilestones, error }: Props) => {
               viewBox="0 0 24 24"
               strokeWidth="1.5"
               stroke="currentColor"
+
             >
               <path
                 strokeLinecap="round"

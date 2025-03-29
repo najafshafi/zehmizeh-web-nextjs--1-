@@ -1,3 +1,4 @@
+"use client";
 import { getCategoriesApi, getSkillsApi } from "@/helpers/http/common";
 import { TJobDetails } from "@/helpers/types/job.type";
 import { useEffect, useState } from "react";

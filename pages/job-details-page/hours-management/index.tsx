@@ -132,7 +132,7 @@ const HoursManagement = ({
             data-hourly-status={item.hourly_status}
           >
             <div>
-              <div className="flex justify-between gap-3">
+              <div className="flex justify-between gap-3 ">
                 <div
                   className={classNames(
                     "heading fs-20 font-normal capital-first-ltr",

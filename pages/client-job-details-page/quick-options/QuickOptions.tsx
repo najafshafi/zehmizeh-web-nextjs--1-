@@ -628,7 +628,7 @@ const QuickOptions: React.FC<Props> = ({
         {jobData?.status === "closed" && (
           <button
             type="button"
-            className={`px-8 py-4 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full hover:bg-gray-100 transition-colors duration-200 ${
+            className={`px-8 py-4 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full hover:bg-black hover:text-white hover:scale-105 transition-transform duration-200 ${
               isMobile ? "mt-4 w-full" : ""
             }`}
             onClick={toggleJobsModal}
