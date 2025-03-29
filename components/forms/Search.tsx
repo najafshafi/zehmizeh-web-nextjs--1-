@@ -19,7 +19,7 @@ const Search = ({
 }: SearchProps) => {
   return (
     <div
-      className={`max-w-[574px] h-[50px] flex items-center px-3 border border-gray-300 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg hover:border-black ${containerClassName}`}
+      className={`max-w-[800px] h-[50px] flex items-center px-3 border border-gray-300 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg hover:border-black ${containerClassName}`}
     >
       {searchIcon || <SearchIcon />}
       <input
@@ -27,7 +27,7 @@ const Search = ({
         placeholder={placeholder}
         value={value || ""}
         onChange={onChange}
-        className="flex-1 h-10 border-none text-base font-normal focus:ring-0 outline-none"
+        className="flex-1 pl-3 h-10 border-none text-base font-normal focus:ring-0 outline-none"
       />
       {fetching && (
         <div className="ml-2">
