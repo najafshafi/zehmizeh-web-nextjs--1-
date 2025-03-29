@@ -22,7 +22,7 @@ import Info from "@/public/icons/info-octashape.svg";
 import { VideoComponent } from "@/components/video";
 import styled from "styled-components";
 import { TcomponentConnectorRef } from "@/pages/client-job-details-page/ClientJobDetails";
-import { getValueByPercentage } from "@/helpers/utils/helper";
+// import { getValueByPercentage } from "@/helpers/utils/helper";
 import { AcceptAndPaynowModal } from "../payment/AcceptAndPaynowModal";
 import CustomButton from "@/components/custombutton/CustomButton";
 

@@ -25,7 +25,6 @@ import { useQuery } from "react-query";
 import AboutUsEditModal from "@/pages/freelancer-profile-settings/edit-modals/AboutUsEditModal";
 import NewPaymentInfoModal from "./partials/NewPaymentInfoModal";
 import Tooltip from "@/components/ui/Tooltip";
-import { goBack } from "@/helpers/utils/goBack";
 import ClientProfileTabs from "./ClientProfileTabs";
 import { StyledFormGroup } from "./partials/edit-info/info-edit.styled";
 import { myTheme } from "@/styles/theme";
@@ -253,7 +252,11 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
   useEffect(() => {
     if (!isMounted) return;
 
-    if (!["settings", "profile", "ratings", "payments"].includes(clientId)) {
+    if (
+      !["settings", "profile", "ratings", "payments"].includes(
+        clientId.toLowerCase()
+      )
+    ) {
       router.back();
     }
   }, [clientId, router, isMounted]);
@@ -378,7 +381,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
     <C.ClientProfileWrapper>
       <ClientProfileTabs currentTab={clientId} />
       <C.ClientContent>
-        <C.Wrapper className="content-hfill mt-2">
+        <C.Wrapper className="content-hfill mt-2 ">
           <BackButton onBack={onBack}>
             {isRefetching ? <Spinner className="ml-1 w-4 h-4" /> : null}
           </BackButton>
@@ -403,11 +406,12 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                           <div className="flex items-center gap-1">
                             {"About Me"}
                             <Tooltip>
-                              The "About Me" section is the primary place to
-                              introduce yourself to freelancers. You can share
-                              whatever you like - your work history, your style,
-                              your special preferences... whatever you think
-                              would be helpful for freelancers to know!
+                              The &quot;About Me&quot; section is the primary
+                              place to introduce yourself to freelancers. You
+                              can share whatever you like - your work history,
+                              your style, your special preferences... whatever
+                              you think would be helpful for freelancers to
+                              know!
                             </Tooltip>
                           </div>
                         }

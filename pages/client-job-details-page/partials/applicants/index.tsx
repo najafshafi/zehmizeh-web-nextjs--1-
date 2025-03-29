@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Loader from "@/components/Loader";
-import { StyledButton } from "@/components/forms/Buttons";
 import ProposalDetailsModal from "@/components/jobs/ProposalDetailsModal";
 import { StatusBadge } from "@/components/styled/Badges";
 import BlurredImage from "@/components/ui/BlurredImage";
@@ -353,14 +352,14 @@ const Applicants = ({ jobPostId, refetch, jobStatus, jobTitle }: Prop) => {
                     </div>
                     <div className="flex gap-3 mt-4 flex-wrap md:flex-nowrap">
                       <CustomButton
-                        text={"View Proposal"}
-                        className="px-8 py-[15px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-base"
+                        text="View Proposal"
+                        className="px-[1.5rem] py-[1rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-base"
                         onClick={() => onViewProposalDetails(item?.proposal_id)}
                       />
 
                       <CustomButton
                         text="Message Freelancer"
-                        className="px-6 py-[15px] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white hover:border-none"
+                        className="px-[1.5rem] py-[1rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white hover:border-none"
                         onClick={() => handleTalkJSConversation(item)}
                         disabled={threadLoading}
                       />

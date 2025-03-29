@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Loader from "@/components/Loader";
-import { StyledButton } from "@/components/forms/Buttons";
 import ProposalDetailsModal from "@/components/jobs/ProposalDetailsModal";
 import { StatusBadge } from "@/components/styled/Badges";
 import BlurredImage from "@/components/ui/BlurredImage";
@@ -27,6 +26,7 @@ import {
 } from "@/helpers/http/common";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import ChatModal from "@/components/talkjs/chat-modal";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 const RECORDS_PER_PAGE = 10;
 
@@ -295,24 +295,18 @@ export const Invitees = ({
               </div>
               <div className="flex gap-2 items-center">
                 {jobStatus === "prospects" && (
-                  <StyledButton
-                    padding="1rem 1.5rem"
-                    fontSize="1rem"
-                    variant="primary"
+                  <CustomButton
+                    text={"View Invite"}
+                    className="px-[1.5rem] py-[1rem] text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full transition-transform duration-200 hover:scale-105 hover:bg-black hover:text-white"
                     onClick={() => onViewInviteesDetails(item?.invite_id)}
-                  >
-                    View Invite
-                  </StyledButton>
+                  />
                 )}
 
-                <StyledButton
-                  padding="1rem 1.5rem"
-                  fontSize="1rem"
-                  variant="outline-dark"
+                <CustomButton
+                  text={"Message Freelancer"}
+                  className="px-[1.5rem] py-[1rem] text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full transition-transform duration-200 hover:scale-105 hover:bg-black hover:text-white"
                   onClick={() => handleTalkJSConversation(item)}
-                >
-                  Message Freelancer
-                </StyledButton>
+                />
               </div>
             </div>
           </InviteesListItem>

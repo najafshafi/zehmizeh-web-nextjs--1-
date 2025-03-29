@@ -1,10 +1,7 @@
 import { useState } from "react";
-import styled from "styled-components";
 import toast from "react-hot-toast";
-import { StyledButton } from "@/components/forms/Buttons";
 import { StatusBadge } from "@/components/styled/Badges";
 import NoDataFound from "@/components/ui/NoDataFound";
-// import Tooltip from 'components/ui/Tooltip';
 import AddBankAccount from "./AddBankAccount";
 import VerifyBankAccount from "./VerifyBankAccount";
 import { deleteBankAccount } from "@/helpers/http/client";
@@ -13,44 +10,21 @@ import TrashIcon from "@/public/icons/trash.svg";
 import { formatingAccountNumber } from "@/helpers/utils/helper";
 import { formatRoutingNumber } from "@/helpers/utils/helper";
 import moment from "moment";
-// import { ReactComponent as InfoIcon } from 'assets/icons/info-gray-32.svg';
+import CustomButton from "@/components/custombutton/CustomButton";
 
-const Wrapper = styled.div`
-  box-shadow: 0px 4px 60px rgba(0, 0, 0, 0.05);
-  background: ${(props) => props.theme.colors.white};
-  border-radius: 12px;
-  padding: 2rem;
-  min-height: 570px;
-  @media (max-width: 768px) {
-    padding: 1rem;
-    min-height: auto;
-  }
-  .listings {
-    max-height: 400px;
-    overflow-y: auto;
-  }
-  .payment-item {
-    border: 1px solid ${(props) => props.theme.colors.gray6};
-    border-radius: 10px;
-    padding: 1.25rem;
-  }
-  .acc-info--label {
-    color: ${(props) => props.theme.colors.gray8};
-  }
-`;
-
-const StyledBankItem = styled.div`
-  border: 1px solid ${(props) => props.theme.colors.gray6};
-  border-radius: 0.875rem;
-  .bank-table {
-    border-collapse: separate;
-    border-spacing: 0 0.5rem;
-    table-layout: fixed;
-  }
-`;
+type BankAccount = {
+  user_bank_id: string;
+  status: string;
+  account_holder_name: string;
+  account_holder_type: string;
+  last_4_digit: string;
+  routing_number?: string;
+  stripe_bank_account_id: string;
+  date_created: string;
+};
 
 type Props = {
-  paymentData: any;
+  paymentData: BankAccount[];
   refetch: () => void;
   onNewAdded: () => void;
   userCountry: string;
@@ -126,27 +100,27 @@ const BankAccounts = ({
   };
 
   return (
-    <Wrapper className="m-auto">
+    <div className="mx-auto bg-white rounded-xl shadow-[0px_4px_60px_rgba(0,0,0,0.05)] p-8 min-h-[570px]  md:min-h-auto">
       {/* Heading */}
-      <div className="title fs-24 fw-400">Bank Account Details</div>
+      <div className="text-2xl font-normal">Bank Account Details</div>
       {!showAddCardForm && paymentData?.length === 0 && (
         <NoDataFound className="py-5" />
       )}
       {/* Saved cards */}
-      <div className="listings reduce-pad">
+      <div className="max-h-[400px] overflow-y-auto reduce-pad">
         {paymentData?.length > 0 &&
-          paymentData?.map((item: any) => (
-            <StyledBankItem
+          paymentData?.map((item: BankAccount) => (
+            <div
               key={item?.user_bank_id}
-              className="d-flex justify-content-between mt-3 gap-2 p-4"
+              className="flex justify-between mt-3 gap-2 p-4 border border-[#E6E6E6] rounded-[0.875rem]"
             >
               <div className="flex-1">
                 {/* Default or not badge */}
 
-                <div className="d-flex align-items-center">
+                <div className="flex items-center">
                   <StatusBadge
                     color={item?.status === "verified" ? "green" : "yellow"}
-                    className="me-2"
+                    className="mr-2"
                   >
                     {item?.status === "pending"
                       ? "Verification Pending"
@@ -154,7 +128,7 @@ const BankAccounts = ({
                   </StatusBadge>
                 </div>
                 {item?.status === "pending" && (
-                  <div className="mt-2 fs-1rem acc-info--label">
+                  <div className="mt-2 text-base text-[#545454]">
                     You will receive two small amounts in your account within
                     1-2 business days, (by{" "}
                     {moment(item.date_created).format("dddd, MMMM d")}). Enter
@@ -162,93 +136,74 @@ const BankAccounts = ({
                   </div>
                 )}
                 {/* Account details */}
-                <table className="mt-1 bank-table">
-                  <tr className="fs-1rem fw-400">
-                    <td>
-                      <span className="acc-info--label">
-                        Name on Account: &nbsp;
-                      </span>
-                    </td>
-                    <td className="text-capitalize">
-                      {item?.account_holder_name}
-                    </td>
-                  </tr>
-                  <tr className="fs-1rem fw-400">
-                    <td>
-                      <span className="acc-info--label">
-                        Account Type: &nbsp;
-                      </span>
-                    </td>
-                    <td className="text-capitalize">
-                      {item?.account_holder_type === "individual"
-                        ? "Individual"
-                        : "Business"}
-                    </td>
-                  </tr>
-                  <tr className="fs-1rem fw-400">
-                    <td>
-                      <span className="acc-info--label">
-                        Account Number: &nbsp;
-                      </span>
-                    </td>
-                    <td>{formatingAccountNumber(item?.last_4_digit)}</td>
-                  </tr>
-                  {item?.routing_number && (
-                    <tr className="fs-1rem fw-400">
+                <table className="mt-1 border-separate border-spacing-y-2 table-fixed">
+                  <tbody>
+                    <tr className="text-base font-normal">
                       <td>
-                        <span className="acc-info--label">
-                          Routing Number: &nbsp;
+                        <span className="text-[#545454]">
+                          Name on Account: &nbsp;
                         </span>
                       </td>
-                      <td>{formatRoutingNumber(item?.routing_number)}</td>
+                      <td className="capitalize">
+                        {item?.account_holder_name}
+                      </td>
                     </tr>
-                  )}
+                    <tr className="text-base font-normal">
+                      <td>
+                        <span className="text-[#545454]">
+                          Account Type: &nbsp;
+                        </span>
+                      </td>
+                      <td className="capitalize">
+                        {item?.account_holder_type === "individual"
+                          ? "Individual"
+                          : "Business"}
+                      </td>
+                    </tr>
+                    <tr className="text-base font-normal">
+                      <td>
+                        <span className="text-[#545454]">
+                          Account Number: &nbsp;
+                        </span>
+                      </td>
+                      <td>{formatingAccountNumber(item?.last_4_digit)}</td>
+                    </tr>
+                    {item?.routing_number && (
+                      <tr className="text-base font-normal">
+                        <td>
+                          <span className="text-[#545454]">
+                            Routing Number: &nbsp;
+                          </span>
+                        </td>
+                        <td>{formatRoutingNumber(item?.routing_number)}</td>
+                      </tr>
+                    )}
+                  </tbody>
                 </table>
                 {item?.status == "pending" && (
-                  <StyledButton
-                    className="mt-3"
+                  <CustomButton
+                    text="Verify"
+                    className="px-[2rem] py-[1rem] transition-transform duration-200 hover:scale-105 font-normal rounded-full bg-primary text-[18px]"
                     onClick={openVerifyAccountModal(
                       item?.stripe_bank_account_id
                     )}
-                  >
-                    Verify
-                  </StyledButton>
+                  />
                 )}
               </div>
               <div
                 onClick={onDelete(item?.user_bank_id)}
-                className={`pointer ${
-                  item?.user_bank_id == selectedId ? "opacity-4" : ""
+                className={`cursor-pointer ${
+                  item?.user_bank_id == selectedId ? "opacity-40" : ""
                 }`}
               >
                 <TrashIcon />
               </div>
-            </StyledBankItem>
+            </div>
           ))}
       </div>
 
-      {/*!showAddCardForm && (
-        <StyledButton
-          className="w-100 mt-3"
-          variant="outline-dark"
-          onClick={toggleAddCardForm}
-        >
-          Add Account
-        </StyledButton>
-      )*/}
-      {/* Add card button */}
       {!showAddCardForm && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "1rem",
-            background: "#f8f8f8",
-            padding: "1rem",
-            color: "#333",
-            textAlign: "center",
-          }}
-        >
+        <div className="flex justify-center mt-4 bg-[#f8f8f8] p-4 text-[#333] text-center">
           Please note that our bank account payment processing system is
           currently undergoing maintenance. During this time, we kindly request
           that you use your credit card for any payments.
@@ -272,7 +227,7 @@ const BankAccounts = ({
           onBankAccountAdded={onBankAccountAdded}
         />
       )}
-    </Wrapper>
+    </div>
   );
 };
 

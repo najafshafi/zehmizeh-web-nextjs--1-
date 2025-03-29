@@ -1,8 +1,10 @@
-import { Container } from 'react-bootstrap';
-import styled from 'styled-components';
+import { Container } from "react-bootstrap";
+import styled from "styled-components";
 
 export const Wrapper = styled(Container)`
   max-width: 1170px;
+  margin: 0px 25px;
+  padding: 0px 20px;
   .reset-password {
     color: ${(props) => props.theme.colors.lightBlue};
     transition: all 0.2s ease-in-out;

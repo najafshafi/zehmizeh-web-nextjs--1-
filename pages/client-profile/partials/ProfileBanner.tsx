@@ -115,8 +115,8 @@ const ProfileBanner = ({
 
   return (
     <StyledBanner className="p-2">
-      <div className="p-4 flex flex-col md:flex-row gap-3">
-        <div className="md:w-10/12">
+      <div className="p-4 flex flex-col md:flex-row  justify-between gap-3 ">
+        <div className="md:w-10/12 ">
           <div className="flex flex-col md:flex-row gap-3">
             <div className="md:w-3/12 flex justify-center items-center">
               <div
@@ -161,7 +161,7 @@ const ProfileBanner = ({
           </div>
         </div>
 
-        <div className="flex md:justify-end  h-fit">
+        <div className="flex md:justify-end  h-fit ">
           <div
             className="edit-btn flex items-center gap-2 cursor-pointer"
             onClick={toggleEditModal}
