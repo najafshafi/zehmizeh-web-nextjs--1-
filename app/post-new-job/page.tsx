@@ -1,16 +1,12 @@
-"use client";
+import NewJob from "./NewJob";
+import React from "react";
 
-import PostJob from "./PostJob";
-import { PostJobContextProvider } from "./context";
-
-export default function Page({
-  params,
-}: {
-  params: { id?: string; type?: string };
-}) {
+const page = () => {
   return (
-    <PostJobContextProvider params={params}>
-      <PostJob params={params} />
-    </PostJobContextProvider>
+    <div className="pt-[90px] bg-secondary h-[150vh]">
+      <NewJob params={{}} />
+    </div>
   );
-}
+};
+
+export default page;

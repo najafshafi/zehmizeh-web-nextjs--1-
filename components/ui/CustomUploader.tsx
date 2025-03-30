@@ -218,7 +218,7 @@ const CustomUploader = ({
   return (
     <Wrapper>
       <label
-        className={`file-uploader w-full text-base font-light pointer flex ${
+        className={`file-uploader w-full text-base font-light cursor-pointer flex ${
           uploading ? "uploading" : ""
         }`}
         htmlFor="file-upload"
