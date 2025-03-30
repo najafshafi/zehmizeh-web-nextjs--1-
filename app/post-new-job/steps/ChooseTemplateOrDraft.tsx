@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import Search from "@/components/forms/Search";
 import Loader from "@/components/Loader";
 import { StatusBadge } from "@/components/styled/Badges";
@@ -11,64 +10,51 @@ import { convertToTitleCase, showFormattedBudget } from "@/helpers/utils/misc";
 import { FooterButtons } from "../partials/FooterButtons";
 import { usePostJobContext } from "../context";
 
-export const PostForm = styled.div`
-  .heading {
-    margin-top: 1.25rem;
-  }
-  .search {
-    margin-top: 1.5rem;
-  }
-  .templates-list {
-    max-height: 400px;
-    overflow-y: auto;
-  }
-  .template {
-    position: relative;
-    padding: 1.5rem;
-    margin-top: 1.25rem;
-    border: 1px solid #dddddd;
-    border-radius: 0.875rem;
-    .title {
-      line-height: 140%;
-    }
-    .description {
-      opacity: 0.7;
-      margin-top: 4px;
-      line-height: 160%;
-    }
-    .skills {
-      margin-top: 0.875rem;
-    }
-    .budget-row {
-      margin-top: 1.25rem;
-      letter-spacing: -0.01em;
-    }
-    .incomplete-badge {
-      background: #ff1662;
-      padding: 5px 12px;
-      color: #fff;
-      border-radius: 0.5rem;
-      position: absolute;
-      bottom: 1.5rem;
-      right: 1.5rem;
-    }
-  }
-  .active {
-    border: ${(props) => `2px solid ${props.theme.colors.blue}`};
-  }
-  .no-data {
-    min-height: 200px;
-  }
-`;
+interface HourlyBudget {
+  type: "hourly";
+  isProposal: boolean;
+  amount?: number;
+  max_amount?: number;
+  min_amount?: number;
+}
+
+interface FixedBudget {
+  type: "fixed";
+  isProposal: boolean;
+  amount?: number;
+  max_amount?: number;
+  min_amount?: number;
+}
+
+type PostItem = {
+  post_template_id?: string;
+  job_post_id?: string;
+  job_title: string;
+  job_description: string;
+  skills?: Array<{
+    id: string;
+    skill_name?: string;
+    category_name?: string;
+    name?: string;
+  }>;
+  budget: HourlyBudget | FixedBudget;
+  expected_delivery_date?: string;
+  incomplete?: boolean;
+};
+
+type BudgetAndDateProps = {
+  budget: HourlyBudget | FixedBudget;
+  expectedDate?: string;
+};
 
 export const ChooseTemplateOrDraft = () => {
   const { selectedOption, selectedPost, setSelectedPost } = usePostJobContext();
 
-  const [postData, setPostData] = React.useState<any>([]);
+  const [postData, setPostData] = React.useState<PostItem[]>([]);
   const [searchTerm, setSearchTerm] = React.useState("");
   const debouncedSearchQuery = useDebounce(searchTerm, 500);
   const [loading, setLoading] = React.useState<boolean>(true);
-  const postsRef = React.useRef();
+  const postsRef = React.useRef<PostItem[]>([]);
   const COLORS = ["orange", "green", "blue"];
 
   /* START ----------------------------------------- Get Templates and draft posts */
@@ -85,8 +71,22 @@ export const ChooseTemplateOrDraft = () => {
   const getPosts = () => {
     getMyJobs("draft").then((res) => {
       if (res.status) {
-        setPostData(res.data);
-        postsRef.current = res.data;
+        // Ensure each item has the required isProposal property
+        const formattedData = res.data.map(
+          (
+            item: Omit<PostItem, "budget"> & {
+              budget: Partial<HourlyBudget | FixedBudget>;
+            }
+          ) => ({
+            ...item,
+            budget: {
+              ...item.budget,
+              isProposal: item.budget.isProposal ?? false,
+            },
+          })
+        );
+        setPostData(formattedData);
+        postsRef.current = formattedData;
       } else {
         setPostData([]);
       }
@@ -99,7 +99,21 @@ export const ChooseTemplateOrDraft = () => {
       setLoading(true);
       getPostTemplates(debouncedSearchQuery || "").then((res) => {
         if (res.status) {
-          setPostData(res.data);
+          // Ensure each item has the required isProposal property
+          const formattedData = res.data.map(
+            (
+              item: Omit<PostItem, "budget"> & {
+                budget: Partial<HourlyBudget | FixedBudget>;
+              }
+            ) => ({
+              ...item,
+              budget: {
+                ...item.budget,
+                isProposal: item.budget.isProposal ?? false,
+              },
+            })
+          );
+          setPostData(formattedData);
         } else {
           setPostData([]);
         }
@@ -115,16 +129,16 @@ export const ChooseTemplateOrDraft = () => {
     }
   }, [debouncedSearchQuery, getTemplates]);
 
-  const handleSelectPost = (item) => () => {
+  const handleSelectPost = (item: PostItem) => () => {
     setSelectedPost(item);
   };
 
   return (
-    <PostForm>
-      <h1 className="text-center">
+    <div className="mt-5">
+      <h1 className="text-3xl font-bold text-center">
         {selectedOption == "template" ? "Choose a Template" : "Choose a Draft"}
       </h1>
-      <div className="search">
+      <div className="mt-6">
         <Search
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -133,15 +147,15 @@ export const ChooseTemplateOrDraft = () => {
       {loading ? (
         <Loader />
       ) : (
-        <div className="templates-list d-flex-column text-start">
+        <div className="flex flex-col text-start max-h-[400px] overflow-y-auto">
           {postData.length > 0 ? (
             postData.map((item) => (
               <div
-                className={
+                className={`relative p-6 mt-5 border rounded-[0.875rem] cursor-pointer ${
                   selectedPost == item
-                    ? "template pointer active"
-                    : "template pointer"
-                }
+                    ? "border-2 border-black"
+                    : "border-[#dddddd]"
+                }`}
                 key={
                   selectedOption == "template"
                     ? item.post_template_id
@@ -149,10 +163,10 @@ export const ChooseTemplateOrDraft = () => {
                 }
                 onClick={handleSelectPost(item)}
               >
-                <div className="title fs-24 fw-400 capital-first-ltr">
+                <div className="text-2xl font-normal leading-[140%] first-letter:capitalize">
                   {convertToTitleCase(item.job_title)}
                 </div>
-                <div className="description fs-1rem fw-300">
+                <div className="mt-1 text-base font-light leading-[160%] opacity-70">
                   <StyledHtmlText
                     htmlString={item.job_description}
                     needToBeShorten={true}
@@ -165,7 +179,7 @@ export const ChooseTemplateOrDraft = () => {
                 </div>
 
                 {item?.skills && (
-                  <div className="skills d-flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 mt-3.5">
                     {item?.skills?.map((skill, index) => (
                       <StatusBadge
                         key={skill.id}
@@ -183,7 +197,9 @@ export const ChooseTemplateOrDraft = () => {
                   expectedDate={item?.expected_delivery_date}
                 />
                 {item.incomplete && (
-                  <div className="incomplete-badge">Incomplete</div>
+                  <div className="absolute bottom-6 right-6 bg-[#ff1662] text-white py-[5px] px-3 rounded-lg">
+                    Incomplete
+                  </div>
                 )}
               </div>
             ))
@@ -193,14 +209,14 @@ export const ChooseTemplateOrDraft = () => {
         </div>
       )}
       <FooterButtons />
-    </PostForm>
+    </div>
   );
 };
 
-const BudgetAndDate = ({ budget, expectedDate }: any) => {
+const BudgetAndDate = ({ budget, expectedDate }: BudgetAndDateProps) => {
   if (budget.type == "fixed") {
     return (
-      <div className="budget-row fs-20 fw-400">
+      <div className="mt-5 text-xl font-normal tracking-[-0.01em]">
         {budget?.amount == 1 ? (
           <>Open to proposals</>
         ) : (
@@ -211,7 +227,7 @@ const BudgetAndDate = ({ budget, expectedDate }: any) => {
     );
   } else if (budget.type == "hourly") {
     return (
-      <div className="budget-row fs-20 fw-400">
+      <div className="mt-5 text-xl font-normal tracking-[-0.01em]">
         {budget?.min_amount == 1 && budget?.max_amount == 1 ? (
           <>Open to proposals </>
         ) : (

@@ -41,7 +41,7 @@ export default function PostJob({
   };
 
   const ChooseOption = (
-    <div className=" text-center">
+    <div className="text-center">
       <p className="md:text-4xl text-3xl font-bold">
         What would you like to do?
       </p>
@@ -90,7 +90,7 @@ export default function PostJob({
 
   const HeaderUI = () => {
     const heading = (
-      <h1>
+      <h1 className="text-3xl font-bold mb-4">
         {Object.values(POST_JOB_STEPS).find((x) => x.number === step)?.label ||
           ""}
       </h1>
@@ -156,7 +156,8 @@ export default function PostJob({
           Cancel Project Post
         </button>
       </BackButtons>
-      <Card $small={false} className="text-center bg-white">
+
+      <Card $small={false} className="text-center ">
         {step > 0 && (
           <Stepper
             activeStep={step}

@@ -1,13 +1,10 @@
 "use client";
 
-import { Form } from "react-bootstrap";
-import { FormLabel, FormLabelSubText, PostForm } from "../postJob.styled";
-import { usePostJobContext } from "../context";
+import { useEffect, useRef, useState } from "react";
 import { REGEX } from "@/helpers/const/regex";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { useEffect, useRef, useState } from "react";
 import { CONSTANTS } from "@/helpers/const/constants";
 import {
   getFileNameAndFileUrlFromAttachmentUrl,
@@ -21,6 +18,37 @@ import CustomUploader, {
 import classNames from "classnames";
 import useResponsive from "@/helpers/hooks/useResponsive";
 import { useWebSpellChecker } from "@/helpers/hooks/useWebSpellChecker";
+import { usePostJobContext } from "../context";
+
+// Writer type for CKEditor
+interface Writer {
+  setStyle: (name: string, value: string, element: unknown) => void;
+}
+
+// Editor type for CKEditor
+interface Editor {
+  ui: {
+    view: {
+      editable: {
+        element: {
+          style: {
+            borderColor: string;
+          };
+        };
+      };
+    };
+  };
+  editing: {
+    view: {
+      change: (callback: (writer: Writer) => void) => void;
+      document: {
+        getRoot: () => unknown;
+      };
+    };
+  };
+  getData: () => string;
+  setData: (data: string) => void;
+}
 
 export const ProjectDescription = () => {
   useWebSpellChecker();
@@ -28,7 +56,7 @@ export const ProjectDescription = () => {
   const { isIpadProOnlyMaxWidth } = useResponsive();
   const { formData, setFormData, errors, setIsImageUploading } =
     usePostJobContext();
-  const ckeditorRef = useRef(null);
+  const ckeditorRef = useRef<{ editor: Editor } | null>(null);
 
   /* START ----------------------------------------- React states */
   const [characters, setCharacters] = useState(0);
@@ -65,8 +93,8 @@ export const ProjectDescription = () => {
   };
 
   /** @function This will set the editor height to 150px */
-  const onReady = (editor) => {
-    editor.editing.view.change((writer) => {
+  const onReady = (editor: Editor) => {
+    editor.editing.view.change((writer: Writer) => {
       writer.setStyle(
         "height",
         "150px",
@@ -82,14 +110,14 @@ export const ProjectDescription = () => {
 
   const handleUploadImage = (files: TCustomUploaderFile[]) => {
     const attachmentsUrls = [
-      ...formData.attachments,
+      ...(formData.attachments || []),
       ...files.map(({ file, fileName }) => `${file}#docname=${fileName}`),
     ];
     setFormData({ attachments: attachmentsUrls });
   };
 
   const removeAttachment = (index: number) => {
-    const attachmentsUrls = [...formData.attachments];
+    const attachmentsUrls = [...(formData.attachments || [])];
     attachmentsUrls.splice(index, 1);
     setFormData({ attachments: attachmentsUrls });
   };
@@ -100,7 +128,7 @@ export const ProjectDescription = () => {
       <ul className="mt-2">
         {CONSTANTS.JOB_TITLE_EXAMPLES.map((jobTitleExample) => (
           <li key={jobTitleExample}>
-            <FormLabelSubText>{jobTitleExample}</FormLabelSubText>
+            <span className="text-sm text-gray-600">{jobTitleExample}</span>
           </li>
         ))}
       </ul>
@@ -114,17 +142,17 @@ export const ProjectDescription = () => {
         "mt-3": isIpadProOnlyMaxWidth,
       })}
     >
-      <span className="fs-16 fw-bold">
+      <span className="text-base font-bold">
         For an effective project post, answer these questions:
       </span>
 
       <div className="mt-2">
         {CONSTANTS.JOB_DESCRIPTION_QUESTION_ANSWER.map(
           ({ answer, question }) => (
-            <FormLabelSubText key={question}>
+            <div key={question} className="text-sm text-gray-600">
               <b>{question}</b>
               <p>{answer}</p>
-            </FormLabelSubText>
+            </div>
           )
         )}
       </div>
@@ -132,16 +160,17 @@ export const ProjectDescription = () => {
   );
 
   return (
-    <PostForm>
-      <div className="d-flex-column">
+    <div className="flex flex-col space-y-6">
+      <div className="flex flex-col w-full">
         {/* START ----------------------------------------- Project title */}
-        <div className="form-group">
+        <div className="mb-6">
           {/* Showing on side for desktop */}
           {!isIpadProOnlyMaxWidth && ProjectTitleTips}
-          <FormLabel>
-            Project Title<span className="mandatory">&nbsp;*</span>
-          </FormLabel>
-          <FormLabelSubText>
+
+          <label className="block text-base font-bold mb-1 text-left">
+            Project Title<span className="text-red-500">&nbsp;*</span>
+          </label>
+          <p className="text-sm text-gray-600 text-left">
             Choose a clear, precise title.{" "}
             <SeeMore
               $fontSize="0.9rem"
@@ -153,10 +182,10 @@ export const ProjectDescription = () => {
             </SeeMore>
             {/* Show below subtext for mobile screens */}
             {isIpadProOnlyMaxWidth && ProjectTitleTips}
-          </FormLabelSubText>
-          <Form.Control
+          </p>
+          <input
             id={CONSTANTS.WEB_SPELL_CHECKER_DOM_ID}
-            className="mt-2"
+            className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Project Title"
             value={formData.job_title}
             maxLength={CONSTANTS.POST_JOB_TITLE_MAX_CHARACTERS}
@@ -167,8 +196,8 @@ export const ProjectDescription = () => {
             }}
           />
           <p
-            className={classNames("mb-0 mt-2 text-end", {
-              "text-danger":
+            className={classNames("mt-2 text-right text-sm", {
+              "text-red-500":
                 (formData?.job_title?.length || 0) >
                 CONSTANTS.POST_JOB_TITLE_MAX_CHARACTERS,
             })}
@@ -181,13 +210,13 @@ export const ProjectDescription = () => {
         {/* END ------------------------------------------- Project title */}
 
         {/* START ----------------------------------------- Project description */}
-        <div className="form-group">
+        <div className="mb-6">
           {/* Showing on side for desktop */}
           {!isIpadProOnlyMaxWidth && ProjectDescriptionTips}
-          <FormLabel className="mb-2">
-            Project Description<span className="mandatory">&nbsp;*</span>
-          </FormLabel>
-          <FormLabelSubText className="mb-2">
+          <label className="block text-base font-bold mb-2 text-left">
+            Project Description<span className="text-red-500">&nbsp;*</span>
+          </label>
+          <span className="block text-sm text-gray-600 mb-2 text-left">
             This is the MOST important part of the post! The more details you
             provide here, the more likely you are to get precise price quotes
             and find the right freelancer for your project.{" "}
@@ -201,7 +230,7 @@ export const ProjectDescription = () => {
             >
               {seeMore === "DESCRIPTION" ? "Hide" : "See"} tips.
             </SeeMore>
-          </FormLabelSubText>
+          </span>
           {/* Show below subtext for mobile screens */}
           {isIpadProOnlyMaxWidth && ProjectDescriptionTips}
           <div className="mt-2">
@@ -214,7 +243,7 @@ export const ProjectDescription = () => {
                 placeholder: CONSTANTS.ckEditorPlaceholder,
               }}
               onReady={onReady}
-              onChange={(event, editor) => {
+              onChange={(_event: unknown, editor: Editor) => {
                 const data = editor.getData();
                 setFormData({ job_description: data });
                 const plainText = getPlainText(data);
@@ -222,15 +251,15 @@ export const ProjectDescription = () => {
               }}
             />
           </div>
-          <div className="mt-2 d-flex justify-content-between">
+          <div className="mt-2 flex justify-between">
             <span>
               {errors?.job_description && (
                 <ErrorMessage message={errors.job_description} />
               )}
             </span>
             <p
-              className={classNames("mb-0", {
-                "text-danger":
+              className={classNames("text-sm", {
+                "text-red-500":
                   characters > CONSTANTS.POST_JOB_DESCRIPTION_MAX_CHARACTERS,
               })}
             >
@@ -242,21 +271,27 @@ export const ProjectDescription = () => {
         {/* END ------------------------------------------- Project description */}
 
         {/* START ----------------------------------------- Attachments */}
-        <div className="form-group">
-          <FormLabel className="mb-2">Related Files (Optional)</FormLabel>
-          <FormLabelSubText className="mb-2">
+        <div className="mb-6">
+          <label className="block text-base font-bold mb-2 text-left">
+            Related Files (Optional)
+          </label>
+          <span className="block text-sm text-gray-600 mb-2 text-left">
             If you can make the project easier to understand by attaching files,
-            and you’re comfortable sharing those files with all of our
+            and you&apos;re comfortable sharing those files with all of our
             freelancers, you can attach them here.
-          </FormLabelSubText>
+          </span>
           <div className="mt-2">
             <CustomUploader
               multiple
               handleMultipleUploadImage={handleUploadImage}
-              attachments={formData.attachments.map((url) =>
+              attachments={(formData.attachments || []).map((url) =>
                 getFileNameAndFileUrlFromAttachmentUrl(url)
               )}
-              removeAttachment={removeAttachment}
+              removeAttachment={(index) => {
+                if (typeof index === "number") {
+                  removeAttachment(index);
+                }
+              }}
               limit={CONSTANTS.ATTACHMENTS_LIMIT}
               acceptedFormats={[
                 ...CONSTANTS.DEFAULT_ATTACHMENT_SUPPORTED_TYPES,
@@ -274,6 +309,6 @@ export const ProjectDescription = () => {
         {/* END ------------------------------------------- Attachments */}
       </div>
       <FooterButtons />
-    </PostForm>
+    </div>
   );
 };

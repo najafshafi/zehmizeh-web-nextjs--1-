@@ -147,7 +147,7 @@ export const Invitees = ({
             To invite freelancers, visit the{" "}
             <Link
               href="/search?type=freelancers&page=1"
-              className="text-decoration-underline"
+              className="text-decoration-underline text-black underline hover:text-blue-600"
             >
               Find Freelancers
             </Link>{" "}
@@ -297,14 +297,14 @@ export const Invitees = ({
                 {jobStatus === "prospects" && (
                   <CustomButton
                     text={"View Invite"}
-                    className="px-[1.5rem] py-[1rem] text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full transition-transform duration-200 hover:scale-105 hover:bg-black hover:text-white"
+                    className="px-[1.5rem] py-[1rem] text-base font-normal border-2 border-primary text-black rounded-full transition-transform duration-200 hover:scale-105 bg-primary"
                     onClick={() => onViewInviteesDetails(item?.invite_id)}
                   />
                 )}
 
                 <CustomButton
                   text={"Message Freelancer"}
-                  className="px-[1.5rem] py-[1rem] text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full transition-transform duration-200 hover:scale-105 hover:bg-black hover:text-white"
+                  className="px-[1.5rem] py-[1rem] text-base font-normal border-2 border-gray-800 text-black rounded-full transition-transform duration-200 hover:scale-105 hover:bg-black hover:text-white"
                   onClick={() => handleTalkJSConversation(item)}
                 />
               </div>

@@ -1,5 +1,4 @@
 "use client";
-import { StyledButton } from "@/components/forms/Buttons";
 import useResponsive from "@/helpers/hooks/useResponsive";
 import { usePostJobContext } from "../context";
 import toast from "react-hot-toast";
@@ -15,6 +14,7 @@ import { getYupErrors } from "@/helpers/utils/misc";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { PostVisibilityModal } from "../modals/PostVisibilityModal";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 interface FooterButtonsProps {
   params?: { id?: string; type?: string };
@@ -220,24 +220,25 @@ export const FooterButtons = ({ params }: FooterButtonsProps = {}) => {
       selectedOption === "template"
     ) {
       return (
-        <StyledButton
-          padding="1.125rem 2.25rem"
-          variant="outline-dark"
+        <CustomButton
+          text="Create New Template"
+          className={`px-[2.25rem] py-[1.125rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white hover:border-none ${
+            isMobile ? "w-full" : ""
+          }`}
           disabled={isLoading}
           onClick={() => {
             router.push("/template/create");
           }}
-          className={isMobile ? "w-full" : ""}
-        >
-          Create New Template
-        </StyledButton>
+        />
       );
     }
     if (step > POST_JOB_STEPS.CHOOSE_TEMPLATE_OR_DRAFT.number) {
       return (
-        <StyledButton
-          padding="1.125rem 2.25rem"
-          variant="outline-dark"
+        <CustomButton
+          text={"Save as Draft"}
+          className={`px-[2.25rem] py-[1.125rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white hover:border-none ${
+            isMobile ? "w-full" : ""
+          }`}
           disabled={isLoading}
           onClick={() => {
             if (!validation()) return;
@@ -251,10 +252,7 @@ export const FooterButtons = ({ params }: FooterButtonsProps = {}) => {
             setErrors({});
             handleSaveAsDraft();
           }}
-          className={isMobile ? "w-full" : ""}
-        >
-          Save as Draft
-        </StyledButton>
+        />
       );
     }
     return <></>;
@@ -266,25 +264,26 @@ export const FooterButtons = ({ params }: FooterButtonsProps = {}) => {
       style={{ marginTop: "3rem" }}
     >
       {step >= POST_JOB_STEPS.CHOOSE_TEMPLATE_OR_DRAFT.number && (
-        <StyledButton
-          padding="1.125rem 2.25rem"
-          variant="outline-dark"
+        <CustomButton
+          text={"Previous"}
+          className={`px-[2.25rem] py-[1.125rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white hover:border-none ${
+            isMobile ? "w-full" : ""
+          }`}
           disabled={isLoading}
           onClick={onPrevious}
-          className={isMobile ? "w-full" : ""}
-        >
-          Previous
-        </StyledButton>
+        />
       )}
       {MiddleButtonUI()}
-      <StyledButton
-        padding="1.125rem 2.25rem"
+
+      <CustomButton
+        text={nextButtonText}
+        className={`px-[2.25rem] py-[1.125rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-primary bg-primary ${
+          isMobile ? "w-full" : ""
+        }`}
         disabled={isLoading}
         onClick={() => onNext()}
-        className={isMobile ? "w-full" : ""}
-      >
-        {nextButtonText}
-      </StyledButton>
+      />
+
       <PostVisibilityModal
         isLoading={isLoading}
         show={isPostVisibilityModalOpen}

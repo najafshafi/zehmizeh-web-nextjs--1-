@@ -5,14 +5,15 @@
 
 import styled from "styled-components";
 import StarIcon from "@/public/icons/star-yellow.svg";
-import BlurredImage from "@/components/ui/BlurredImage";
+// import BlurredImage from "@/components/ui/BlurredImage";
 import { convertToTitleCase } from "@/helpers/utils/misc";
 import { useQueryData } from "@/helpers/hooks/useQueryData";
 import { usePathname } from "next/navigation";
 import { queryKeys } from "@/helpers/const/queryKeys";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 import { useState } from "react";
-import { StyledButton } from "@/components/forms/Buttons";
+// import { StyledButton } from "@/components/forms/Buttons";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 const ReviewsWrapper = styled.div`
   padding: 3.25rem;
@@ -60,7 +61,11 @@ const JobItemWrapper = styled.div`
 
 /* Main component of the file */
 
-export const JobRatings = () => {
+interface JobRatingsProps {
+  handleAuthenticatedAction?: (action: string) => boolean;
+}
+
+export const JobRatings = ({ handleAuthenticatedAction }: JobRatingsProps) => {
   const pathname = usePathname();
   // Extract freelancerId from the pathname
   const freelancerId = pathname ? pathname.split("/").pop() || "" : "";
@@ -78,25 +83,36 @@ export const JobRatings = () => {
           {freelancerData?.completedJobDetail?.length === 0 && "(None Yet)"}
         </div>
 
-        {/* List of completed jobs by thr freelancer */}
+        {/* List of completed jobs by the freelancer */}
         {freelancerData?.completedJobDetail &&
           freelancerData.completedJobDetail.length > 0 && (
-            <Jobs jobsData={freelancerData.completedJobDetail} />
+            <Jobs
+              jobsData={freelancerData.completedJobDetail}
+              handleAuthenticatedAction={handleAuthenticatedAction}
+            />
           )}
       </div>
     </ReviewsWrapper>
   );
 };
 
-const Jobs = ({
-  jobsData,
-}: {
+interface JobsProps {
   jobsData: IFreelancerDetails["completedJobDetail"];
-}) => {
+  handleAuthenticatedAction?: (action: string) => boolean;
+}
+
+const Jobs = ({ jobsData, handleAuthenticatedAction }: JobsProps) => {
   const initialCount = 2;
   const [count, setCount] = useState(initialCount);
 
   const toggleCount = () => {
+    // Check authentication before allowing interaction
+    if (
+      handleAuthenticatedAction &&
+      !handleAuthenticatedAction("view_more_ratings")
+    ) {
+      return;
+    }
     setCount(count === initialCount ? jobsData?.length || 0 : initialCount);
   };
 
@@ -131,9 +147,15 @@ const Jobs = ({
       ))}
       {jobsData && jobsData.length > initialCount && (
         <div className="flex align-center justify-center mt-5">
-          <StyledButton variant="outline-dark" onClick={toggleCount}>
+          {/* <StyledButton variant="outline-dark" onClick={toggleCount}>
             See {count !== initialCount ? "Less" : "More"}
-          </StyledButton>
+          </StyledButton> */}
+
+          <CustomButton
+            text={count !== initialCount ? " See Less" : " See More"}
+            onClick={toggleCount}
+            className="px-[2rem] py-[1rem] text-base  text-black rounded-full border-2 border-black hover:bg-black hover:text-white"
+          />
         </div>
       )}
     </>

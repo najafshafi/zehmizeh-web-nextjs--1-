@@ -107,8 +107,24 @@ interface FreelancerDetailsData {
   [key: string]: any; // Allow other properties
 }
 
-const FreelancerOtherDetails = ({ data }: { data: FreelancerDetailsData }) => {
+interface FreelancerOtherDetailsProps {
+  data: FreelancerDetailsData;
+  handleAuthenticatedAction?: (action: string) => boolean;
+}
+
+const FreelancerOtherDetails = ({
+  data,
+  handleAuthenticatedAction,
+}: FreelancerOtherDetailsProps) => {
   const openCertificate = (link: string | undefined) => {
+    // Check if user is authenticated before performing this action
+    if (
+      handleAuthenticatedAction &&
+      !handleAuthenticatedAction("view_certificate")
+    ) {
+      return;
+    }
+
     // This function will open the certificate link
     if (link) {
       window.open(link, "blank");

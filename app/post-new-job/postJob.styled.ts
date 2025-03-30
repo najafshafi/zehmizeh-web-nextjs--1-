@@ -16,7 +16,7 @@ export const MainLayout = styled.div`
 `;
 
 export const Card = styled.div<{ $small: boolean }>`
-  
+  background-color: white;
   border-radius: 17px;
   padding: 4.3125rem 4rem;
   .stepper {

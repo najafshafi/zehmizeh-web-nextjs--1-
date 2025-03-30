@@ -1,14 +1,8 @@
-import CustomDatePicker from "@/components/forms/DatePicker";
-import {
-  FormLabel,
-  FormLabelSubText,
-  OptionButtonWithSvg,
-  PostForm,
-} from "../postJob.styled";
+"use client";
+
 import { usePostJobContext } from "../context";
 import moment from "moment";
 import { PROJECT_TIME_SCOPE_OPTIONS } from "@/helpers/const/projectTimeScopeOptions";
-import { OptionButton } from "@/components/forms/OptionButton";
 import { CONSTANTS } from "@/helpers/const/constants";
 import { FooterButtons } from "../partials/FooterButtons";
 import ErrorMessage from "@/components/ui/ErrorMessage";
@@ -22,64 +16,77 @@ export const ProjectTiming = () => {
   const isDateSelectable = (date: Date) => date >= new Date();
 
   return (
-    <PostForm>
+    <div className="flex flex-col space-y-6">
       {/* START ----------------------------------------- Delivery time */}
-      <div className="form-group">
-        <FormLabel>Delivery Time (Optional)</FormLabel>
-        <FormLabelSubText>
+      <div className="mb-6">
+        <label className="block text-base font-bold mb-1 text-left">
+          Delivery Time (Optional)
+        </label>
+        <span className="block text-sm text-gray-600 mb-2 text-left">
           After hiring, how much time would the freelancer have to complete the
           project?
-        </FormLabelSubText>
-        <div className="d-flex align-items-center gap-2 flex-wrap mt-3">
+        </span>
+        <div className="flex items-center gap-2 flex-wrap mt-3">
           {CONSTANTS.DELIVERY_DATE_OPTIONS.map((item) => (
-            <OptionButton
-              selected={formData?.expected_delivery_date == item}
+            <button
+              className={`py-4 px-4 rounded-xl border  transition-all duration-200 ${
+                formData?.expected_delivery_date === item
+                  ? "text-black border  border-black"
+                  : ""
+              }`}
               key={item}
               onClick={() => setFormData({ expected_delivery_date: item })}
-              margin="0"
-              padding="1rem 1rem"
             >
               {item}
-            </OptionButton>
+            </button>
           ))}
         </div>
       </div>
       {/* END ------------------------------------------- Delivery time */}
 
       {/* START ----------------------------------------- Expected hours */}
-      <div className="form-group">
-        <FormLabel>Expected Hours Required (Optional)</FormLabel>
-        <FormLabelSubText>
-          If you don't know how long your project should take, or if you expect
-          it to continue for many weeks or months, select "Ongoing Project."
-        </FormLabelSubText>
-        <div className="d-flex">
+      <div className="mb-6">
+        <label className="block text-base font-bold mb-1 text-left">
+          Expected Hours Required (Optional)
+        </label>
+        <span className="block text-sm text-gray-600 mb-2 text-left">
+          If you don&apos;t know how long your project should take, or if you
+          expect it to continue for many weeks or months, select &quot;Ongoing
+          Project.&quot;
+        </span>
+        <div className="flex flex-row gap-2 mt-3">
           {PROJECT_TIME_SCOPE_OPTIONS.map((item) => (
-            <OptionButtonWithSvg
-              selected={formData?.time_scope == item.key}
+            <button
+              className={`flex items-start w-full max-w-[200px] p-1 rounded-md border transition-all duration-200 ${
+                formData?.time_scope === item.key ? "border-black" : ""
+              }`}
               key={item.key}
               onClick={() => setFormData({ time_scope: item.key })}
             >
-              {item.icon}
-              <div>
-                <div className="fs-1rem fw-400">{item.label}</div>
-                <div className="description fw-400 text-start">
-                  {item.description}
+              <div className="flex flex-col md:flex-row md:items-start justify-center items-center">
+                <div className="ml-1 mt-2">{item.icon}</div>
+                <div className="flex flex-col justify-start items-start ml-2">
+                  <div className="text-base font-normal">{item.label}</div>
+                  <div className="text-sm font-normal text-left text-gray-600">
+                    {item.description}
+                  </div>
                 </div>
               </div>
-            </OptionButtonWithSvg>
+            </button>
           ))}
         </div>
       </div>
       {/* END ------------------------------------------- Expected hours */}
 
       {/* START ----------------------------------------- Due date */}
-      <div className="form-group">
-        <FormLabel className="mb-2">Due Date (Optional)</FormLabel>
+      <div className="mb-6">
+        <label className="block text-base font-bold mb-2 text-left">
+          Due Date (Optional)
+        </label>
         <NewCustomDatePicker
           id="due_date"
           placeholderText="Due Date"
-          onChange={(value) =>
+          onChange={(value: Date | null) =>
             setFormData({ due_date: value ? moment(value).toISOString() : "" })
           }
           selected={formData?.due_date && new Date(formData?.due_date)}
@@ -97,6 +104,6 @@ export const ProjectTiming = () => {
       </div>
       {/* END ------------------------------------------- Due date */}
       <FooterButtons />
-    </PostForm>
+    </div>
   );
 };
