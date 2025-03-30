@@ -13,11 +13,25 @@ import { clearAuth } from "@/store/redux/slices/authSlice";
 const NavbarLogin = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  // const pathname = usePathname();
   const { user: reduxUser } = useSelector((state: RootState) => state.auth);
   const { user: contextUser, signout } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [forceRender, setForceRender] = useState(false);
   const hasLoggedOut = useRef(false);
+
+  // Check if current path is a freelancer profile page
+  // const isFreelancerProfileRoute = pathname
+  //   ? pathname.includes('/freelancer/')
+  //   : false;
+
+  // // Log the pathname and route matching for debugging
+  // useEffect(() => {
+  //   if (pathname) {
+  //     console.log("NavbarLogin pathname:", pathname);
+  //     console.log("NavbarLogin isFreelancerProfileRoute:", isFreelancerProfileRoute);
+  //   }
+  // }, [pathname, isFreelancerProfileRoute]);
 
   // Combined auth check from both sources
   const isAuthenticated = Boolean(reduxUser || contextUser);
@@ -30,26 +44,26 @@ const NavbarLogin = () => {
     try {
       // Clear Redux state first (synchronous)
       dispatch(clearAuth());
-      
+
       // Then clear context auth (async)
       signout();
-      
+
       // Clear any auth data from localStorage
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+
       // Force immediate re-render of NavbarLogin to show logout state
-      setForceRender(prev => !prev);
-      
+      setForceRender((prev) => !prev);
+
       // Add a small delay to ensure auth state is cleared before navigation
       setTimeout(() => {
         // Force navigation to home page (using replace to prevent back navigation to profile)
-        router.replace('/home');
+        router.replace("/home");
       }, 50);
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
       // Ensure navigation happens even if there's an error
-      router.replace('/home');
+      router.replace("/home");
     } finally {
       // Reset the logout flag after a delay
       setTimeout(() => {
@@ -62,7 +76,7 @@ const NavbarLogin = () => {
   useEffect(() => {
     // @ts-expect-error - Adding to window for global access
     window.handleGlobalLogout = handleGlobalLogout;
-    
+
     return () => {
       // @ts-expect-error - Cleanup on unmount
       delete window.handleGlobalLogout;
@@ -74,7 +88,7 @@ const NavbarLogin = () => {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 100); // Reduced from 200ms for faster response
-    
+
     return () => clearTimeout(timer);
   }, [reduxUser, contextUser, forceRender]);
 

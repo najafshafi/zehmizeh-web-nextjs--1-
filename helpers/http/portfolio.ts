@@ -1,12 +1,12 @@
-import { IPortFolio } from '@/helpers/types/portfolio.type';
-import { apiClient } from './index';
+import { IPortFolio } from "@/helpers/types/portfolio.type";
+import { apiClient } from "./index";
 
-const API_MANAGE_PORTFOLIO_URL = '/portfolio/manage-portfolio';
+const API_MANAGE_PORTFOLIO_URL = "/portfolio/manage-portfolio";
 
 export const getPortfolio = () => {
   return apiClient
     .post(API_MANAGE_PORTFOLIO_URL, {
-      action: 'get_portfolio',
+      action: "get_portfolio",
     })
     .then((r) => r.data);
 };
@@ -16,7 +16,7 @@ export const getFreelancerPortfolio: (
 ) => Promise<{ data: IPortFolio[] }> = (freelancerId) => {
   return apiClient
     .post(API_MANAGE_PORTFOLIO_URL, {
-      action: 'get_freelancer_portfolio',
+      action: "get_freelancer_portfolio",
       freelancer_user_id: freelancerId,
     })
     .then((r) => r.data);
@@ -25,7 +25,7 @@ export const getFreelancerPortfolio: (
 export const getPortfolioDetails = (portfolio_id: number) => {
   return apiClient
     .post(API_MANAGE_PORTFOLIO_URL, {
-      action: 'get_portfolio_detail',
+      action: "get_portfolio_detail",
       portfolio_id,
     })
     .then((r) => r.data);

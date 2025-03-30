@@ -1,4 +1,4 @@
-import { QueryKey, UseQueryResult, useQueryClient } from 'react-query';
+import { QueryKey, UseQueryResult, useQueryClient } from "react-query";
 
 // Get data from react query cache storage
 export const useQueryData = <T>(key: QueryKey): UseQueryResult<T> => {

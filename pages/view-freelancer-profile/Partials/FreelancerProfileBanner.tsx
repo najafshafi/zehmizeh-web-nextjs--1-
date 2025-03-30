@@ -6,8 +6,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import Spinner from "@/components/forms/Spin/Spinner";
 import toast from "react-hot-toast";
-import cns from "classnames";
-import { StyledButton } from "@/components/forms/Buttons";
+
 import { StatusBadge } from "@/components/styled/Badges";
 import SelectJobModal from "@/components/invite-flow-modals/SelectJobModal";
 import InviteFreelancerMessageModal from "@/components/invite-flow-modals/InviteFreelancerMessageModal";
@@ -32,6 +31,8 @@ import ProposalExistsModal from "@/components/invite-flow-modals/ProposalExistsM
 import { BOOKMARK_TOOLTIPS } from "@/helpers/const/constants";
 import classNames from "classnames";
 import CustomButton from "@/components/custombutton/CustomButton";
+import { useRouter } from "next/navigation";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 
 const StyledprofileCard = styled.div`
   margin-top: 2rem;
@@ -81,8 +82,17 @@ export const BookmarkIcon = styled.div`
   border-radius: 2rem;
 `;
 
-const FreelancerProfileBanner = ({ data }: any) => {
+interface FreelancerProfileBannerProps {
+  data: IFreelancerDetails;
+  handleAuthenticatedAction?: (action: string) => boolean;
+}
+
+const FreelancerProfileBanner = ({
+  data,
+  handleAuthenticatedAction,
+}: FreelancerProfileBannerProps) => {
   const { user } = useAuth();
+  const router = useRouter();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [sendingInvite, setSendingInvite] = useState<boolean>(false);
@@ -94,9 +104,17 @@ const FreelancerProfileBanner = ({ data }: any) => {
   const [selectedJobId, setSelectedJobId] = useState<string>("");
 
   const isFreelancerLookingAtOtherFreelancers =
-    user?.user_type === "freelancer";
+    user?.user_type === "freelancer" && user?.user_id !== data?.user_id;
 
   const onBookmarkClick = () => {
+    // Check if user is authenticated before performing this action
+    if (
+      handleAuthenticatedAction &&
+      !handleAuthenticatedAction("bookmark_freelancer")
+    ) {
+      return;
+    }
+
     // This will call bookmark / unbookmark freelancer api
     if (user) {
       setLoading(true);
@@ -120,11 +138,27 @@ const FreelancerProfileBanner = ({ data }: any) => {
 
   /* Toggles select job modal, so that client can select job and invite this freelancer */
   const toggleJobsModal = () => {
+    // Check if user is authenticated before performing this action
+    if (
+      handleAuthenticatedAction &&
+      !handleAuthenticatedAction("invite_freelancer")
+    ) {
+      return;
+    }
+
     setShowJobsModal(!showJobsModal);
   };
 
   /* Toggles the message modal, that allows the client to type a message and send with invite */
   const toggleInviteMessageModal = () => {
+    // Check if user is authenticated before performing this action
+    if (
+      handleAuthenticatedAction &&
+      !handleAuthenticatedAction("send_message")
+    ) {
+      return;
+    }
+
     setShowInviteMessageModal(!showInviteMessageModal);
   };
 
@@ -138,8 +172,21 @@ const FreelancerProfileBanner = ({ data }: any) => {
 
   const onInvite = (msg: string) => {
     // Invite api call
+    // Check if user is authenticated before performing this action
+    if (
+      handleAuthenticatedAction &&
+      !handleAuthenticatedAction("send_invite")
+    ) {
+      return;
+    }
 
-    const body: any = {
+    interface InviteRequest {
+      job_post_id: string;
+      freelancer_user_id: string[];
+      message?: string;
+    }
+
+    const body: InviteRequest = {
       job_post_id: selectedJobId,
       freelancer_user_id: [data?.user_id],
     };
@@ -208,11 +255,17 @@ const FreelancerProfileBanner = ({ data }: any) => {
     // Because freelancer can't invite freelancer 😃
     if (isFreelancerLookingAtOtherFreelancers) return <></>;
 
+    // For non-authenticated users, direct them to login with current URL as return destination
+    const redirectToLogin = () => {
+      const currentUrl = window.location.pathname;
+      router.push(`/login?from=${encodeURIComponent(currentUrl)}`);
+    };
+
     return (
       <div className="flex justify-between items-center">
         {user ? (
           <CustomButton
-            text=" Invite"
+            text="Invite"
             className="py-[0.75rem] w-full min-w-[100px] text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-black hover:bg-black hover:text-white hover:border-none"
             onClick={toggleJobsModal}
           />
@@ -220,10 +273,9 @@ const FreelancerProfileBanner = ({ data }: any) => {
           <Tooltip
             customTrigger={
               <CustomButton
-                text=" Invite"
+                text="Invite"
                 className="py-[0.75rem] w-full min-w-[100px] text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-black hover:bg-black hover:text-white hover:border-none"
-                onClick={() => {}}
-                disabled={true}
+                onClick={redirectToLogin}
               />
             }
           >
@@ -243,24 +295,22 @@ const FreelancerProfileBanner = ({ data }: any) => {
           src={data?.user_image || "/images/default_avatar.png"}
           height="7.25rem"
           width="7.25rem"
-          allowToUnblur={!!user}
+          allowToUnblur={true}
         />
 
         <div className="talent__details ">
           {/* Name and designation */}
           <div>
-            <div
-              className={cns(
-                "talent-details--content flex align-center flex-wrap gap-3",
-                {
-                  blur: !user || isFreelancerLookingAtOtherFreelancers,
-                }
-              )}
-            >
+            <div className="talent-details--content flex align-center flex-wrap gap-3">
               <div className="profile-name fs-28 fw-400 capitalize">
-                {!user || isFreelancerLookingAtOtherFreelancers
-                  ? "John Doe"
-                  : `${data.first_name} ${data.last_name}`}
+                {user?.user_id === data?.user_id
+                  ? `${data?.first_name || ""} ${data?.last_name || ""} `
+                  : `${data?.first_name || "Freelancer"} ${
+                      data?.last_name || ""
+                    }`}
+                {user?.user_id === data?.user_id && (
+                  <span className="ml-2 text-base text-gray-500">(You)</span>
+                )}
               </div>
               {data?.is_agency ? (
                 <StatusBadge color="blue">Agency</StatusBadge>

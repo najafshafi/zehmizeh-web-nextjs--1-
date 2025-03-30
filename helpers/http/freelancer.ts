@@ -1,9 +1,9 @@
-import { IFreelancerDetails } from 'helpers/types/freelancer.type';
-import { apiClient } from './index';
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+import { apiClient } from "./index";
 
-export const getFreelancerDetails: (freelancerId: string) => Promise<{ data: IFreelancerDetails }> = (
+export const getFreelancerDetails: (
   freelancerId: string
-) => {
+) => Promise<{ data: IFreelancerDetails }> = (freelancerId: string) => {
   return apiClient.get(`/user/get-details/${freelancerId}`).then((res) => {
     return res.data;
   });
@@ -52,25 +52,31 @@ export const getMyAllJobs = (formData: {
 };
 
 export const manageEducation = (formData: any) => {
-  return apiClient.post('/user/manage-education', formData).then((r) => r.data);
+  return apiClient.post("/user/manage-education", formData).then((r) => r.data);
 };
 
 export const manageCourse = (formData: any) => {
-  return apiClient.post('/user/manage-course', formData).then((r) => r.data);
+  return apiClient.post("/user/manage-course", formData).then((r) => r.data);
 };
 
 export const getStripeAccountStatus = () => {
-  return apiClient.get('/payment/account-status').then((r) => r.data);
+  return apiClient.get("/payment/account-status").then((r) => r.data);
 };
 
-export const getStripeVerificationLink = (preferred_country_short_name?: string) => {
-  return apiClient.post('/payment/get-verify-link', { preferred_country_short_name }).then((r) => r.data);
+export const getStripeVerificationLink = (
+  preferred_country_short_name?: string
+) => {
+  return apiClient
+    .post("/payment/get-verify-link", { preferred_country_short_name })
+    .then((r) => r.data);
 };
 
 export const managePayment = (formData: any) => {
-  return apiClient.post('/payment/manage-bank-account', formData).then((r) => r.data);
+  return apiClient
+    .post("/payment/manage-bank-account", formData)
+    .then((r) => r.data);
 };
 
 export const resetStripeHandler = () => {
-  return apiClient.post('/payment/reset-stripe').then((r) => r.data);
+  return apiClient.post("/payment/reset-stripe").then((r) => r.data);
 };

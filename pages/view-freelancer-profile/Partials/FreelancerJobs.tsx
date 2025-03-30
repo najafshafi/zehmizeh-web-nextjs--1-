@@ -19,22 +19,35 @@ const Wrapper = styled.div`
   }
 `;
 
+interface FreelancerJobsProps {
+  jobs: any[]; //TODO: Here I am putting any, later on I will create a jobs.types.ts file and create one job item modal there and use it here
+  freelancerName: string;
+  handleAuthenticatedAction?: (action: string) => boolean;
+}
+
 const FreelancerJobs = ({
   jobs,
   freelancerName,
-}: {
-  jobs: any; //TODO: Here I am putting any, later on I will create a jobs.types.ts file and create one job item modal there and use it here
-  freelancerName: string;
-}) => {
+  handleAuthenticatedAction,
+}: FreelancerJobsProps) => {
   return (
     <Wrapper className="mt-4">
       <div className="fs-18 fw-400 label">
-        My active projects with{' '}
+        My active projects with{" "}
         <span className="text-capitalize">{freelancerName}</span>
       </div>
       <div className="jobs-list">
         {jobs?.map((item: any) => (
-          <div key={item?.job_post_id} className="fs-24 fw-400 mt-2">
+          <div
+            key={item?.job_post_id}
+            className="fs-24 fw-400 mt-2 cursor-pointer hover:opacity-80"
+            onClick={() => {
+              // Check authentication if user tries to click on a job
+              if (handleAuthenticatedAction) {
+                handleAuthenticatedAction("view_job_details");
+              }
+            }}
+          >
             {convertToTitleCase(item?.job_title)}
           </div>
         ))}
