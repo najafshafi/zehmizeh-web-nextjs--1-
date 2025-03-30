@@ -8,15 +8,15 @@ import {
 } from "lucide-react";
 import styled from "styled-components";
 
-const StatsWrapper = styled.div<{ visibleCards: number }>`
+const StatsWrapper = styled.div<{ $visibleCards: number }>`
   display: grid;
-  grid-template-columns: repeat(${(props) => props.visibleCards}, 1fr);
+  grid-template-columns: repeat(${(props) => props.$visibleCards}, 1fr);
   gap: 1rem;
   margin-top: 1rem;
 
   @media (max-width: 1024px) {
     grid-template-columns: repeat(
-      ${(props) => Math.min(props.visibleCards, 2)},
+      ${(props) => Math.min(props.$visibleCards, 2)},
       1fr
     );
   }
@@ -169,10 +169,10 @@ const MilestoneStats: React.FC<MilestoneStatsProps> = ({
     return count;
   };
 
-  const visibleCards = getVisibleCardsCount();
+  const $visibleCards = getVisibleCardsCount();
 
   return (
-    <StatsWrapper visibleCards={visibleCards}>
+    <StatsWrapper $visibleCards={$visibleCards}>
       {!isHourly && (
         <>
           {stats.needsRevision > 0 && (
