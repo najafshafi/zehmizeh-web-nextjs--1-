@@ -28,9 +28,9 @@ interface Message {
   attachments?: FileAttachment[];
 }
 
-interface ChatData {
-  messages: Message[];
-}
+// interface ChatData {
+//   messages: Message[];
+// }
 
 interface ExportChatProps {
   conversationId: string;

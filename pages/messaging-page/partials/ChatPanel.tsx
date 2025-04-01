@@ -111,10 +111,10 @@ function ChatPanel({
         <span style={{ color: "blue" }}>
           <b>NOTE: This freelancer has NOT been hired!</b>
           <br />
-          'Proposal' chats are only meant to help you pick a freelancer -{" "}
+          &quot;Proposal&quot; chats are only meant to help you pick a freelancer -{" "}
           <b>not to work on projects.</b>
           <br />
-          To hire this freelancer, click the 'Accept Proposal' button on their
+          To hire this freelancer, click the &quot;Accept Proposal&quot; button on their
           proposal{" "}
           <Link
             style={{ textDecoration: "underline" }}
@@ -268,7 +268,8 @@ function ChatPanel({
               <span>
                 The client accepted your proposal on{" "}
                 {formatDate(activeChat.proposal_modified_date)}! This
-                conversation has since been moved to the "Projects" tab.{" "}
+                conversation has since been moved to the &quot;Projects&quot;
+                tab.{" "}
                 <Link
                   style={{ textDecoration: "underline" }}
                   className="link"
@@ -284,9 +285,9 @@ function ChatPanel({
           ) {
             return (
               <span>
-                When you accepted this freelancer's project proposal on{" "}
+                When you accepted this freelancer&apos;s project proposal on{" "}
                 {formatDate(activeChat.proposal_modified_date)}, this
-                conversation was moved to the "Projects" tab {""}
+                conversation was moved to the &quot;Projects&quot; tab {""}
                 <Link
                   style={{ textDecoration: "underline" }}
                   className="link"
@@ -378,7 +379,7 @@ function ChatPanel({
               <span>
                 When you submitted a proposal to this project{" "}
                 {formatDate(activeChat.invite_modified_date)}, this conversation
-                was moved to the "Proposals" tab{" "}
+                was moved to the &quot;Proposals&quot; tab{" "}
                 <Link
                   style={{ textDecoration: "underline" }}
                   className="link"
@@ -400,7 +401,7 @@ function ChatPanel({
               <span>
                 The freelancer submitted a proposal to this project on{" "}
                 {formatDate(activeChat.invite_modified_date)}, so this
-                conversation was moved to the "Proposals" tab.{" "}
+                conversation was moved to the &quot;Proposals&quot; tab.{" "}
                 <Link
                   style={{ textDecoration: "underline" }}
                   className="link"
@@ -449,7 +450,7 @@ function ChatPanel({
     ) {
       return (
         <span>
-          Two weeks have passed since this project was completed. The project's
+          Two weeks have passed since this project was completed. The project&apos;s
           message window is now closed.
         </span>
       );

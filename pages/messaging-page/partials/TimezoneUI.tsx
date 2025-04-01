@@ -35,7 +35,7 @@ export const TimezoneUI = ({ isFromSingleMessaging, remoteUser }: Props) => {
           />
           <span>
             {remoteUser.user_type === "freelancer" ? "Freelancer" : "Client"}
-            's timezone: {moment().tz(remoteUser?.timezone).format("hh:mm A")}
+            &apos;s timezone: {moment().tz(remoteUser?.timezone).format("hh:mm A")}
           </span>
         </ChatHeaderButton>
       )}

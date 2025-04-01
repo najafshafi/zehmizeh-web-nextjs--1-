@@ -53,12 +53,12 @@ export const PostVisibilityModal = ({
           <h4>Who should see the project?</h4>
           <span className="fs-18">
             <p className="mb-2">
-              If you'd like to post so all ZMZ freelancers can see it, click{" "}
-              <b>"Post Publicly."</b>
+              If you&apos;d like to post so all ZMZ freelancers can see it,
+              click <b>&quot;Post Publicly.&quot;</b>
             </p>
             <p>
-              If you'd like only freelancers you invite to have access, click{" "}
-              <b>"Post Hidden."</b>
+              If you&apos;d like only freelancers you invite to have access,
+              click <b>&quot;Post Hidden.&quot;</b>
             </p>
           </span>
           <div className="buttons">

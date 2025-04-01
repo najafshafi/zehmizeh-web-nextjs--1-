@@ -124,8 +124,8 @@ const CustomUploader = ({
   }, [uploading]);
   /* END ------------------------------------------- If image is uploading then user can't leave */
 
-  const isFileValid = (file) => {
-    if (!file) return;
+  const isFileValid = (file: File): boolean => {
+    if (!file) return false;
     const fileSize = file?.size / 1024 / 1024;
     const extension = file?.type?.replace(/(.*)\//g, "");
 
@@ -165,6 +165,8 @@ const CustomUploader = ({
   };
 
   const onChangeMultipleFile = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+
     let isValid = true;
     let i = 0;
     const files = Array.from(e.target.files);
@@ -174,7 +176,9 @@ const CustomUploader = ({
       i++;
     }
     if (!isValid) return;
-    if ((limit && attachments.length + files.length > limit) || count >= limit)
+
+    const maxLimit = limit || Infinity;
+    if (attachments.length + files.length > maxLimit || count >= maxLimit)
       return toast.error("Maximum Attachment Limit Reached");
 
     try {
@@ -184,17 +188,24 @@ const CustomUploader = ({
       const uploadedFiles = await Promise.all(
         files.map((file) => uploadFile(file))
       );
-      handleMultipleUploadImage(uploadedFiles);
+
+      if (handleMultipleUploadImage) {
+        handleMultipleUploadImage(uploadedFiles);
+      }
       setUploading(false);
-    } catch (error) {
+    } catch {
       setUploading(false);
       showErr("Error while uploading file.");
     }
   };
 
   const onChangeSingleFile = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+
     if (!isFileValid(e.target.files[0])) return;
-    if ((limit && attachments.length + 1 > limit) || count >= limit)
+
+    const maxLimit = limit || Infinity;
+    if (attachments.length + 1 > maxLimit || count >= maxLimit)
       return toast.error("Maximum Attachment Limit Reached");
 
     /* This will make error empty when proper format file is uploaded */
@@ -205,9 +216,11 @@ const CustomUploader = ({
       const file = e.target.files[0];
       const uploadedFile = await uploadFile(file);
 
-      handleUploadImage(uploadedFile);
+      if (handleUploadImage) {
+        handleUploadImage(uploadedFile);
+      }
       setUploading(false);
-    } catch (error) {
+    } catch {
       setUploading(false);
       showErr("Error while uploading file.");
     }

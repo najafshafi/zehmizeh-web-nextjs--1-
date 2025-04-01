@@ -1,6 +1,6 @@
 import { Session, Chatbox } from '@talkjs/react';
 import * as T from './style';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { isStagingEnv } from '@/helpers/utils/helper';
 import { ChatSessionProps } from '@/helpers/types/chat.type';
 import { LoadingChat } from './LoadingChat';

@@ -45,7 +45,7 @@ export function messageDisabled({
             <span>
               The client accepted your proposal on{" "}
               {formatDate(activeChat.proposal_date_modified)}! This conversation
-              has since been moved to the "Projects" tab.{" "}
+              has since been moved to the &quot;Projects&quot; tab.{" "}
               <Link
                 style={{ textDecoration: "underline" }}
                 className="link"
@@ -61,9 +61,9 @@ export function messageDisabled({
         ) {
           return (
             <span>
-              When you accepted this freelancer's project proposal on{" "}
+              When you accepted this freelancer&apos;s project proposal on{" "}
               {formatDate(activeChat.proposal_date_modified)}, this conversation
-              was moved to the "Projects" tab {""}
+              was moved to the &quot;Projects&quot; tab {""}
               <Link
                 style={{ textDecoration: "underline" }}
                 className="link"
@@ -156,7 +156,7 @@ export function messageDisabled({
             <span>
               When you submitted a proposal to this project{" "}
               {formatDate(activeChat.invite_date_modified)}, this conversation
-              was moved to the "Proposals" tab{" "}
+              was moved to the &quot;Proposals&quot; tab{" "}
               <Link
                 style={{ textDecoration: "underline" }}
                 className="link"
@@ -175,7 +175,7 @@ export function messageDisabled({
             <span>
               The freelancer submitted a proposal to this project on{" "}
               {formatDate(activeChat.invite_date_modified)}, so this
-              conversation was moved to the "Proposals" tab.{" "}
+              conversation was moved to the &quot;Proposals&quot; tab.{" "}
               <Link
                 style={{ textDecoration: "underline" }}
                 className="link"

@@ -1,9 +1,19 @@
-import * as React from 'react';
-import 'rc-tooltip/assets/bootstrap.css';
-import Slider from 'rc-slider';
-import type { SliderProps } from 'rc-slider';
-import raf from 'rc-util/lib/raf';
-import Tooltip from 'rc-tooltip';
+import * as React from "react";
+import "rc-tooltip/assets/bootstrap.css";
+import Slider from "rc-slider";
+import type { SliderProps } from "rc-slider";
+import raf from "rc-util/lib/raf";
+import Tooltip from "rc-tooltip";
+
+// Import TooltipRef type
+import type { TooltipRef } from "rc-tooltip/lib/Tooltip";
+
+// Define TipProps interface
+interface TipProps {
+  parentId?: string;
+  // Use a more specific type for additional props
+  [key: string]: string | number | boolean | undefined;
+}
 
 const HandleTooltip = (props: {
   value: number;
@@ -21,7 +31,7 @@ const HandleTooltip = (props: {
     ...restProps
   } = props;
 
-  const tooltipRef = React.useRef<any>();
+  const tooltipRef = React.useRef<TooltipRef>(null);
   const rafRef = React.useRef<number | null>(null);
 
   function cancelKeepAlign() {
@@ -30,7 +40,7 @@ const HandleTooltip = (props: {
 
   function keepAlign() {
     rafRef.current = raf(() => {
-      tooltipRef.current?.forcePopupAlign();
+      tooltipRef.current?.forceAlign();
     });
   }
 
@@ -48,14 +58,15 @@ const HandleTooltip = (props: {
     <Tooltip
       placement="top"
       overlay={tipFormatter(value)}
-      overlayInnerStyle={{ minHeight: 'auto' }}
+      overlayInnerStyle={{ minHeight: "auto" }}
       ref={tooltipRef}
       visible={visible}
       {...restProps}
       getTooltipContainer={() => {
-        return parentId
+        const element = parentId
           ? document.getElementById(parentId)
-          : document.getElementsByTagName('body')[0];
+          : document.getElementsByTagName("body")[0];
+        return element || document.body;
       }}
     >
       {children}
@@ -63,9 +74,9 @@ const HandleTooltip = (props: {
   );
 };
 
-export const handleRender: SliderProps['handleRender'] = (node, props) => {
+export const handleRender: SliderProps["handleRender"] = (node, props) => {
   return (
-    <HandleTooltip value={props.value} visible={props.dragging} {...props}>
+    <HandleTooltip value={props.value} visible={props.dragging}>
       {node}
     </HandleTooltip>
   );
@@ -77,9 +88,9 @@ const TooltipSlider = ({
   ...props
 }: SliderProps & {
   tipFormatter?: (value: number) => React.ReactNode;
-  tipProps: any;
+  tipProps: TipProps;
 }) => {
-  const tipHandleRender: SliderProps['handleRender'] = (node, handleProps) => {
+  const tipHandleRender: SliderProps["handleRender"] = (node, handleProps) => {
     return tipProps?.parentId ? (
       <div id={tipProps.parentId}>
         <HandleTooltip

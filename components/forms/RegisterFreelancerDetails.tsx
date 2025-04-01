@@ -5,9 +5,9 @@ import { IoEyeOutline } from "react-icons/io5";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css"; // Import default styles
 import CustomButton from "../custombutton/CustomButton";
-import PhoneInputWrapper from "../styled/PhoneInputWrapper";
-import PhoneNumberInput from "./phone-number-input";
-import ErrorMessage from "../ui/ErrorMessage";
+// import PhoneInputWrapper from "../styled/PhoneInputWrapper";
+// import PhoneNumberInput from "./phone-number-input";
+// import ErrorMessage from "../ui/ErrorMessage";
 // import { IFreelancerDetails } from "@/helpers/types/freelancer.type"
 
 interface RegisterFreelancerDetailsProps {

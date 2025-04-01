@@ -99,7 +99,7 @@ const BankAccountsList = ({ onPay, processingPayment }: Props) => {
     </p>
   );
 
-  /*return (
+  return (
     <Wrapper>
       <div className="fs-20 font-normal mt-3">Select Account</div>
       {isLoading && <Loader />}
@@ -109,33 +109,47 @@ const BankAccountsList = ({ onPay, processingPayment }: Props) => {
           data?.data?.map((item) => (
             <StyledBankItem
               key={item?.user_bank_id}
-              className={`p-3 mt-3 pointer ${selectedAccountId == item?.stripe_bank_account_id ? 'selected' : ''}`}
+              className={`p-3 mt-3 pointer ${
+                selectedAccountId == item?.stripe_bank_account_id
+                  ? "selected"
+                  : ""
+              }`}
               onClick={onSelect(item?.stripe_bank_account_id)}
             >
               <div>
                 <table className="bank-table">
                   <tr className="fs-1rem font-normal">
                     <td>
-                      <span className="acc-info--label">Name on Account: &nbsp;</span>
+                      <span className="acc-info--label">
+                        Name on Account: &nbsp;
+                      </span>
                     </td>
                     <td className="capitalize">{item?.account_holder_name}</td>
                   </tr>
                   <tr className="fs-1rem font-normal">
                     <td>
-                      <span className="acc-info--label">Account Type: &nbsp;</span>
+                      <span className="acc-info--label">
+                        Account Type: &nbsp;
+                      </span>
                     </td>
-                    <td className="capital-first-ltr">{item?.account_holder_type}</td>
+                    <td className="capital-first-ltr">
+                      {item?.account_holder_type}
+                    </td>
                   </tr>
                   <tr className="fs-1rem font-normal">
                     <td>
-                      <span className="acc-info--label">Account Number: &nbsp;</span>
+                      <span className="acc-info--label">
+                        Account Number: &nbsp;
+                      </span>
                     </td>
                     <td>{formatingAccountNumber(item?.last_4_digit)}</td>
                   </tr>
                   {item?.routing_number && (
                     <tr className="fs-1rem font-normal">
                       <td>
-                        <span className="acc-info--label">Routing Number: &nbsp;</span>
+                        <span className="acc-info--label">
+                          Routing Number: &nbsp;
+                        </span>
                       </td>
                       <td>{formatRoutingNumber(item?.routing_number)}</td>
                     </tr>
@@ -148,14 +162,20 @@ const BankAccountsList = ({ onPay, processingPayment }: Props) => {
 
       <PaymentSummary />
 
-      <p className="mt-4 mb-0">Note: Payments via bank can take 4-5 business days to process</p>
+      <p className="mt-4 mb-0">
+        Note: Payments via bank can take 4-5 business days to process
+      </p>
       <div className="flex justify-center">
-        <StyledButton disabled={processingPayment} onClick={onContinuePay} className="mt-3 w-100">
-          {jobType === 'hourly' ? 'Pay' : 'Deposit Milestone Payment'}
+        <StyledButton
+          disabled={processingPayment}
+          onClick={onContinuePay}
+          className="mt-3 w-100"
+        >
+          {jobType === "hourly" ? "Pay" : "Deposit Milestone Payment"}
         </StyledButton>
       </div>
     </Wrapper>
-  );*/
+  );
 };
 
 export default BankAccountsList;

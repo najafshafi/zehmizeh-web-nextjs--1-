@@ -176,8 +176,7 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
   const onSelectSkill = (
     selected:
       | MultiValue<{ value: string; label: string }>
-      | SingleValue<{ value: string; label: string }>,
-    actionMeta: ActionMeta<{ value: string; label: string }>
+      | SingleValue<{ value: string; label: string }>
   ) => {
     if (Array.isArray(selected)) {
       const data = selected.map((item) => ({

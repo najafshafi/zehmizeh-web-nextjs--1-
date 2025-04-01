@@ -6,10 +6,10 @@ import { useForm } from "react-hook-form";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import * as yup from "yup";
 import useResponsive from "@/helpers/hooks/useResponsive";
-import messageService from "@/helpers/http/message";
+// import messageService from "@/helpers/http/message";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { postAJob } from "@/helpers/http/post-job";
+// import { postAJob } from "@/helpers/http/post-job";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/redux/store";
 import { AddMessagePayload } from "@/store/redux/slices/chat.interface";
@@ -35,7 +35,7 @@ const ProposalMessageModal = ({
   freelancerName,
   proposal,
   jobId,
-  messagePopupCount,
+  //messagePopupCount,
 }: Props) => {
   const navigate = useNavigate();
   const closeModal = () => setShow(false);

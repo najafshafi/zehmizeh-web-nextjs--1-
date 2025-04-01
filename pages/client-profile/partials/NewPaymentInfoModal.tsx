@@ -36,13 +36,13 @@ const NewPaymentInfoModal = ({ onClose, show }: Props) => {
 
           <div className="content">
             <h3 className="fs-36 fw-700 text-center mb-4">
-              You're Ready to Go!
+              You&apos;re Ready to Go!
             </h3>
             <ul>
               <li className="mt-3" style={{ listStyle: "none" }}>
-                Now that you've added payment details, you're ready to post
-                projects. Click the yellow "Post Project" button in the
-                top-right to make a new post!
+                Now that you&apos;ve added payment details, you&apos;re ready
+                to post projects. Click the yellow &quot;Post Project&quot;
+                button in the top-right to make a new post!
               </li>
               <li className="mt-3" style={{ listStyle: "none" }}>
                 For more information on how to use ZMZ, see our&nbsp;

@@ -30,16 +30,9 @@ import MilestoneStats from "./MilestoneStats";
 interface DetailsBannerProps {
   data: TJobDetails;
   refetch: () => void;
-  isHidden?: boolean;
-  onChangeVisibility?: (value: "PUBLIC" | "HIDDEN") => void;
 }
 
-const JobDetailsBanner = ({
-  data,
-  refetch,
-  isHidden,
-  onChangeVisibility,
-}: DetailsBannerProps) => {
+const JobDetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
   const [changeBudgetModal, setChangeBudgetModal] = useState<boolean>(false);
   const [changeBudgetDeleteModal, setChangeBudgetDeleteModal] = useState(false);
   const [editDueDateModal, setEditDueDateModal] = useState<boolean>(false);

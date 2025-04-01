@@ -43,7 +43,7 @@ const ChatSection = () => {
                 {/* {getRemoteUser(activeChat)?.user_type === 'freelancer'
                   ? 'Freelancer'
                   : 'Client'} */}
-                Freelancer 's timezone:{" "}
+                Freelancer&apos;s timezone:{" "}
                 {/* {moment()
                   .tz(getRemoteUser(activeChat).timezone)
                   .format('hh:mm A')} */}

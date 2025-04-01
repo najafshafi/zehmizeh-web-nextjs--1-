@@ -1,5 +1,6 @@
-import { pxToRem } from 'helpers/utils/misc';
-import styled from 'styled-components';
+import { pxToRem } from "@/helpers/utils/misc";
+import styled from "styled-components";
+import React from "react";
 
 const Wrapper = styled.div<{
   align: string;
@@ -24,18 +25,26 @@ const Wrapper = styled.div<{
     /* margin-top: 0.5rem; */
   }
   ${(props) =>
-    props.align === 'center' ? 'margin: 0 auto; text-align:center;' : ''}
+    props.align === "center" ? "margin: 0 auto; text-align:center;" : ""}
 `;
+
+interface SectionHeadingProps {
+  top?: React.ReactNode;
+  heading?: React.ReactNode;
+  description?: React.ReactNode;
+  className?: string;
+  align: string;
+}
 
 function SectionHeading({
   top,
   heading,
   description,
   className,
-  ...rest
-}: any) {
+  align = "left",
+}: SectionHeadingProps) {
   return (
-    <Wrapper className={className} {...rest}>
+    <Wrapper align={align} className={className}>
       {!!top && <div className="section-top">{top}</div>}
       {!!heading && <h2 className="section-heading">{heading}</h2>}
       {!!description && (

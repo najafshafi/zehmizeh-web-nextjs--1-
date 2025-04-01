@@ -39,10 +39,10 @@ YupPassword(yup);
 const passwordError =
   "Every password must include at least: 1 uppercase letter, 1 lowercase letter, 1 number, 1 symbol, and at least 8 characters";
 
-interface FormData {
-  password: string;
-  confirm: string;
-}
+// interface FormData {
+//   password: string;
+//   confirm: string;
+// }
 
 export default function ResetPassword() {
   useStartPageFromTop();

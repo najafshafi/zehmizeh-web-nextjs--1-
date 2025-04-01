@@ -1,7 +1,7 @@
 import { StyledModal } from "@/components/styled/StyledModal";
 import { Session, Chatbox, Inbox } from "@talkjs/react";
 import ChatLoading from "@/public/icons/waiting.svg";
-import TalkJS from "@/pages/talk-js";
+// import TalkJS from "@/pages/talk-js";
 import * as T from "@/pages/talk-js/style";
 import React, { useEffect, useMemo, useState } from "react";
 import { Modal } from "react-bootstrap";

@@ -3,6 +3,8 @@ import styled from "styled-components";
 import Logo from "@/public/icons/logo.svg";
 import "./style.css";
 import { useState } from "react";
+import Image from "next/image";
+import { CSSProperties } from "react";
 
 interface ShowProp {
   show: boolean;
@@ -50,7 +52,7 @@ const Video = styled.video<ShowProp>`
 `}
 `;
 
-const videoTagStyle: any = {
+const videoTagStyle: CSSProperties = {
   position: "absolute",
   top: 0,
   left: 0,
@@ -64,7 +66,7 @@ type Props = {
   videosrc: string;
 };
 
-const logoStyle: any = {
+const logoStyle: CSSProperties = {
   margin: "auto",
   width: "8rem",
   height: "8rem",
@@ -94,7 +96,7 @@ const BottomBorder = styled.div`
   z-index: 10;
 `;
 
-const closeButtonStyle: any = {
+const closeButtonStyle: CSSProperties = {
   position: "absolute",
   top: "-26px",
   right: "-26px",
@@ -143,9 +145,12 @@ export const VideoComponent = ({ videosrc }: Props) => {
 
       <ViewImageBox show={show}>
         <Logo style={logoStyle} />
-        <img
+        <Image
           src="/images/home-play-icon.svg"
           className="play-icon pointer"
+          alt="play-icon"
+          width={100}
+          height={100}
           onClick={() => {
             setShow(true);
           }}

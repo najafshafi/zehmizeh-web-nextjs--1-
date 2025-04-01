@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   useRouter,
-  useParams,
   usePathname,
   useSearchParams,
 } from "next/navigation";

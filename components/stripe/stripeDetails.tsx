@@ -221,7 +221,7 @@ const StripeDetails = (props: Prop) => {
               To finish verification - please add a Personal Identity Document.
             </b>
             <p className="mb-2">
-              To add: click 'Go to Stripe' below, then click 'Edit' by your
+              To add: click &quot;Go to Stripe&quot; below, then click &quot;Edit&quot; by your
               personal details.
             </p>
           </div>
@@ -230,8 +230,8 @@ const StripeDetails = (props: Prop) => {
         finalMessage = (
           <div>
             <p className="mb-0">
-              To continue your registration with Stripe, click "Go to Stripe"
-              and add this info:
+              To continue your registration with Stripe, click &quot;Go to
+              Stripe&quot; and add this info:
             </p>
             <ul className="pl-3 mt-1">{missingDetails(finalRequirementArr)}</ul>
           </div>

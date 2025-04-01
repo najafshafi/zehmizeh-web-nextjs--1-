@@ -2,30 +2,30 @@ import { Container } from "react-bootstrap";
 import useResponsive from "@/helpers/hooks/useResponsive";
 import {
   MessageContainer,
-  MessageHeader,
-  TabsContainer,
+  // MessageHeader,
+  // TabsContainer,
 } from "./messaging.styled";
 import ChatPanel from "./partials/ChatPanel";
 import UserList from "./partials/UserList";
-import Tabs from "@/components/ui/Tabs";
+// import Tabs from "@/components/ui/Tabs";
 // import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import {
   onTabChange,
   fetchChatList,
   chatTabTitleHandler,
-  updateMesssageTab,
+  // updateMesssageTab,
   onParamKeyHandler,
-  selectChatHandler,
-  resetActiveChat,
+  // selectChatHandler,
+  // resetActiveChat,
 } from "@/store/redux/slices/chatSlice";
 import { AppDispatch, RootState } from "@/store/redux/store";
 import { useSelector } from "react-redux";
-import { ChatList } from "@/store/redux/slices/chat.interface";
+// import { ChatList } from "@/store/redux/slices/chat.interface";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import axios, { CancelTokenSource } from "axios";
-import queryString from "query-string";
+// import queryString from "query-string";
 // Next.js imports
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -33,7 +33,7 @@ function Messaging() {
   const { isDesktop } = useResponsive();
   const { user } = useAuth();
   // Next.js router
-  const router = useRouter();
+  // const router = useRouter();
   const searchParams = useSearchParams();
 
   // Get query params using Next.js
@@ -99,9 +99,9 @@ function Messaging() {
   };
 
   // Navigation function using Next.js router
-  const navigateToMessages = () => {
-    router.push("/messages");
-  };
+  // const navigateToMessages = () => {
+  //   router.push("/messages");
+  // };
 
   return (
     <Container className="mb-5 mt-4 h-full flex-1 xl:w-[1300px] ">
