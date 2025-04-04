@@ -223,7 +223,15 @@ const SubmitProposalModal = ({
               setStep(1);
             }
             /* END ------------------------------------------- Finding if error is in first page */
-            setErrors({ ...errors });
+
+            // Convert errors to FormErrors type by ensuring all values are strings or undefined
+            const formErrors: FormErrors = {};
+            Object.keys(errors).forEach((key) => {
+              const value = errors[key];
+              formErrors[key] = typeof value === "string" ? value : undefined;
+            });
+
+            setErrors(formErrors);
           });
       } else {
         setErrors({});
@@ -716,7 +724,11 @@ const SubmitProposalModal = ({
             placeholder="Attach file"
             handleMultipleUploadImage={handleUploadImage}
             attachments={formState.attachments}
-            removeAttachment={(index) => removeAttachment(index)}
+            removeAttachment={(index: number | undefined) => {
+              if (typeof index === "number") {
+                removeAttachment(index);
+              }
+            }}
             multiple
             limit={CONSTANTS.ATTACHMENTS_LIMIT}
             acceptedFormats={[

@@ -63,7 +63,7 @@ const SearchTypeDropdown = () => {
         </div>
       </Dropdown.Toggle>
       <Dropdown.Menu align="end">
-        {searchTypes.map((item: any) => (
+        {searchTypes.map((item: { key: string; label: string }) => (
           <Dropdown.Item
             key={item.key}
             className={`fs-20 ${searchType == item?.key ? "fw-700" : "fw-400"}`}

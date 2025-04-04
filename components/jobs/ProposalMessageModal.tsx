@@ -20,11 +20,18 @@ interface FormProp {
   message: string;
 }
 
+interface ProposalData {
+  _client_user_id?: string;
+  user_id?: string;
+  invite_id?: string;
+  proposal_id?: string;
+}
+
 type Props = {
   show: boolean;
   setShow: (value: boolean) => void;
   freelancerName: string;
-  proposal: any;
+  proposal: ProposalData;
   jobId: string;
   messagePopupCount: number;
 };
@@ -35,8 +42,8 @@ const ProposalMessageModal = ({
   freelancerName,
   proposal,
   jobId,
-  //messagePopupCount,
-}: Props) => {
+}: //messagePopupCount,
+Props) => {
   const navigate = useNavigate();
   const closeModal = () => setShow(false);
   const dispatch: AppDispatch = useDispatch();
@@ -59,16 +66,16 @@ const ProposalMessageModal = ({
       message_text,
       to_user_id:
         user.user_type === "freelancer"
-          ? proposal?._client_user_id
-          : proposal?.user_id,
+          ? proposal?._client_user_id || ""
+          : proposal?.user_id || "",
       type: "TEXT",
       tab: "invities",
       custom_chat_id: new Date().getTime(),
     };
     if (proposal.invite_id) {
-      payload.invite_id = proposal.invite_id;
-    } else {
-      payload.proposal_id = proposal?.proposal_id;
+      payload.invite_id = Number(proposal.invite_id);
+    } else if (proposal.proposal_id) {
+      payload.proposal_id = Number(proposal.proposal_id);
     }
 
     toast.loading("sending...");
@@ -78,10 +85,11 @@ const ProposalMessageModal = ({
       if (proposal?.invite_id) {
         navigate(`/messages-new/invite_${proposal?.invite_id}`);
         return "Message sent successfully.";
-      } else {
+      } else if (proposal?.proposal_id) {
         navigate(`/messages-new/proposal_${proposal?.proposal_id}`);
         return "Message sent successfully.";
       }
+      return "Message sent successfully.";
     });
 
     // const promise = messageService.sendMessage(payload);
@@ -145,7 +153,7 @@ const ProposalMessageModal = ({
             <div className="flex justify-center mt-4">
               <StyledButton
                 style={{ padding: "1rem 4rem" }}
-                className={isMobile ? "w-100" : null}
+                className={isMobile ? "w-100" : undefined}
                 type="submit"
               >
                 Send

@@ -1,5 +1,5 @@
 // src/helpers/types/chat.type.ts
-import { chatType, ChatUser, ChatPayload, Custom } from 'redux/slices/talkjs.interface';
+import { chatType, ChatUser, ChatPayload, Custom } from '@/store/redux/slices/talkjs.interface';
 
 export interface ChatAuthState {
   loading: boolean;

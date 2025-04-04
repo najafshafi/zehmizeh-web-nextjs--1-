@@ -13,7 +13,7 @@ import { getSkills } from "@/helpers/http/common";
 import { CONSTANTS } from "@/helpers/const/constants";
 import { portfolioValidation } from "@/helpers/validation/portfolioValidation";
 import { VscClose } from "react-icons/vsc";
-import { MultiValue, SingleValue, ActionMeta } from "react-select";
+import { MultiValue, SingleValue } from "react-select";
 
 interface AttachmentProps {
   fileUrl?: string;
@@ -80,10 +80,10 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
   const { useForm } = useFormPg;
   const { register, handleSubmit, formState, reset } = useForm<FormData>({
     defaultValues: formInitials,
-    resolver: yupResolver(portfolioValidation),
+    resolver: yupResolver(portfolioValidation as any),
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit: useFormPg.SubmitHandler<FormData> = async (data) => {
     if (attachments?.length === 0) {
       toast.error("Please upload at least one attachment.");
       return;
@@ -348,9 +348,7 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
 
 export default AddPortfolioModal;
 
-const NoOptionsMessage = (
-  props: components.NoticeProps<{ value: string; label: string }>
-) => {
+const NoOptionsMessage = (props: any) => {
   return (
     <components.NoOptionsMessage {...props}>
       <div>

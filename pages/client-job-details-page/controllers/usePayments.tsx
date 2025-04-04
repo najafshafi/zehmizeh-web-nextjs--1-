@@ -52,7 +52,7 @@ const PaymentProvider = ({ children }: { children: React.ReactNode }) => {
   const totalPayableAmount = useMemo(() => {
     let totalPayable = 0;
     if (amount) {
-      totalPayable = parseFloat(amount) + zehMizehCharge;
+      totalPayable = parseFloat(amount) + (zehMizehCharge || 0);
     }
     return totalPayable;
   }, [amount, zehMizehCharge]);

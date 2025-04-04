@@ -55,7 +55,8 @@ import "react-datepicker/dist/react-datepicker.css";
 
 type DatePickerProps = React.ComponentProps<typeof DatePicker>;
 
-interface CustomDatePickerProps extends Omit<DatePickerProps, "customInput"> {
+interface CustomDatePickerProps
+  extends Omit<DatePickerProps, "customInput" | "onChange"> {
   selected?: Date | null;
   onChange: (
     date: Date[] | null,
@@ -91,7 +92,12 @@ const CustomInput: React.FC<CustomInputProps> = ({
   </div>
 );
 
-const CustomDatePicker: React.FC<CustomDatePickerProps> = (props) => {
+const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
+  selected,
+  onChange,
+  placeholderText,
+  ...restProps
+}) => {
   function range(start: number, stop: number, step: number = 1): number[] {
     const a = [start];
     let b = start;
@@ -120,6 +126,9 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = (props) => {
   return (
     <div>
       <DatePicker
+        selected={selected}
+        onChange={onChange}
+        placeholderText={placeholderText}
         renderCustomHeader={({
           date,
           changeYear,
@@ -179,7 +188,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = (props) => {
           </div>
         )}
         customInput={React.createElement(CustomInput)}
-        {...props}
+        {...(restProps as any)}
       />
     </div>
   );

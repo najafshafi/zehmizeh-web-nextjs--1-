@@ -21,7 +21,7 @@ interface User {
   [key: string]: any;
 }
 
-const isBrowser = typeof window !== 'undefined';
+const isBrowser = typeof window !== "undefined";
 
 export const saveAuthStorage = ({
   token,
@@ -31,18 +31,25 @@ export const saveAuthStorage = ({
   user: User;
 }) => {
   if (isBrowser) {
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
   }
 };
 
 export const getToken = () => {
   if (!isBrowser) return null;
-  return localStorage.getItem('token');
+  return localStorage.getItem("token");
 };
 
 export const getStorageUser = () => {
   if (!isBrowser) return null;
-  const usr = localStorage.getItem('user');
+  const usr = localStorage.getItem("user");
   return usr ? JSON.parse(usr) : null;
+};
+
+export const clearAuthStorage = () => {
+  if (isBrowser) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  }
 };

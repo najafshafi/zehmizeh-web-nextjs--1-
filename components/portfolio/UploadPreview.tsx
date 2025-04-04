@@ -1,7 +1,11 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const UploadPreview = ({ url }: any) => {
+interface UploadPreviewProps {
+  url: string;
+}
+
+const UploadPreview = ({ url }: UploadPreviewProps) => {
   const [extenstion, setExtension] = useState("");
 
   useEffect(() => {

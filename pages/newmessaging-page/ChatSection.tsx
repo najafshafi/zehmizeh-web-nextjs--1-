@@ -1,4 +1,4 @@
-import SearchMessagesModal from "@/pages/messaging-page/partials/SearchMessagesModal";
+// import SearchMessagesModal from "@/pages/messaging-page/partials/SearchMessagesModal";
 import * as M from "./styled";
 import useResponsive from "@/helpers/hooks/useResponsive";
 import BackArrow from "@/public/icons/back-arrow.svg";

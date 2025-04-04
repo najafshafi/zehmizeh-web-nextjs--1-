@@ -3,10 +3,8 @@ import { TabTitle, TabWrapper } from "@/styles/TabStyle";
 import { VIEW_FREELANCER_PROFILE_TABS } from "@/helpers/const/tabs";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
 
 const Tabs = () => {
-  const pathname = usePathname();
   const [activeTab, setActiveTab] = useState(
     VIEW_FREELANCER_PROFILE_TABS.PROFILE
   );

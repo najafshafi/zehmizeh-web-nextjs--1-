@@ -50,15 +50,16 @@ const CustomSelect = ({
 
   const [elemId] = useState(makeid(10));
 
-  const onClickOption = (option) => {
+  const onClickOption = (option: Option) => {
     setSelectedOption(option);
     onChange(option);
     setShow(false);
   };
 
   useEffect(() => {
-    const handleDocumentClick = (event) => {
-      if (!event.target.closest(`.${elemId}`)) {
+    const handleDocumentClick = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest(`.${elemId}`)) {
         setShow(false);
       }
     };
@@ -88,7 +89,7 @@ const CustomSelect = ({
           {defaultValue && defaultValue.value !== selectedOption.value && (
             <Cross
               className="cross-icon"
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 onClickOption(defaultValue);
               }}

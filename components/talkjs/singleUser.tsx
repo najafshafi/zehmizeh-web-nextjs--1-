@@ -1,5 +1,5 @@
 import BlurredImage from "@/components/ui/BlurredImage";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { SingleUserChatAction, UnreadCount } from "./style";
 import cns from "classnames";
 import { convertToTitleCase } from "@/helpers/utils/misc";
@@ -8,47 +8,53 @@ import { useAuth } from "@/helpers/contexts/auth-context";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/redux/store";
 import { isClosedorDeclined } from "@/helpers/utils/helper";
+import { ChatUser, chatType } from "@/store/redux/slices/talkjs.interface";
 
 interface Prop {
   conversation: ChatUser;
   onSelectChat: (conversation: ChatUser) => void;
 }
 
+// Define a minimal interface for what we actually need from the talkJsChat state
+interface MinimalTalkJsState {
+  selectedConversation?: { id?: string } | null;
+}
+
 const SingleUser = ({ conversation, onSelectChat }: Prop) => {
   const { user } = useAuth();
   const user_type = user?.user_type ?? "";
-  const [showImg, setShowImg] = useState<boolean>(false);
 
-  const { selectedConversation } = useSelector(
-    (state: RootState) => state.talkJsChat
-  );
+  // Use a safer approach with unknown cast first
+  const talkJsState = useSelector(
+    (state: RootState) =>
+      (state as unknown as { talkJsChat?: MinimalTalkJsState }).talkJsChat
+  ) || { selectedConversation: null };
 
-  const selectedConversationId = selectedConversation?.id ?? "";
+  const selectedConversationId = talkJsState.selectedConversation?.id ?? "";
 
   const userImage = useMemo(() => {
     let url = "/images/default_avatar.png";
 
     if (user_type === "client" && "freelancerUserImg" in conversation.custom)
-      url = conversation?.custom?.freelancerUserImg;
+      url = conversation?.custom?.freelancerUserImg || url;
 
     if (user_type === "freelancer" && "clientUserImg" in conversation.custom)
-      url = conversation?.custom?.clientUserImg;
+      url = conversation?.custom?.clientUserImg || url;
 
     return url;
-  }, [conversation]);
+  }, [conversation, user_type]);
 
   return (
     <ChatSingleUser
-      chatType={conversation.custom.type}
+      chatType={conversation.custom.type as chatType}
       className={cns("flex items-center", {
         active: conversation.id === selectedConversationId,
       })}
       onClick={() => onSelectChat(conversation)}
-      title={`${convertToTitleCase(conversation?.custom?.projectName)}`}
+      title={`${convertToTitleCase(conversation?.custom?.projectName || "")}`}
     >
       <div className="userlistitem__avatar chat-user-list text-xs">
         <BlurredImage
-          state={[showImg, setShowImg]}
           src={userImage}
           height="48px"
           width="48px"
@@ -71,7 +77,7 @@ const SingleUser = ({ conversation, onSelectChat }: Prop) => {
             ]
           }
         </div>
-        <SingleUserChatAction chatType={conversation.custom.type}>
+        <SingleUserChatAction chatType={conversation.custom.type as chatType}>
           <div className="userlistitem--info-msg capital-first-ltr">
             <span>{conversation.custom.projectName}</span>
             {isClosedorDeclined(conversation) && (
@@ -83,7 +89,7 @@ const SingleUser = ({ conversation, onSelectChat }: Prop) => {
         </SingleUserChatAction>
       </div>
       {conversation.unreadMessageCount > 0 && (
-        <UnreadCount chatType={conversation.custom.type}>
+        <UnreadCount chatType={conversation.custom.type as chatType}>
           {conversation.unreadMessageCount}
         </UnreadCount>
       )}

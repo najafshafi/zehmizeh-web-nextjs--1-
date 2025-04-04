@@ -46,7 +46,7 @@ function Messaging() {
   const cancelTokenRef = useRef<CancelTokenSource | null>(null);
 
   const { activeChat, loading, chatList } = useSelector(
-    (state: RootState) => state.chat
+    (state: RootState) => (state as any).chat
   );
 
   useEffect(() => {

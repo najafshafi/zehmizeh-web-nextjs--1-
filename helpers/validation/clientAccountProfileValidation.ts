@@ -1,48 +1,73 @@
-import { CONSTANTS } from '@/helpers/const/constants';
-import { IClientDetails } from '@/helpers/types/client.type';
-import { isPossiblePhoneNumber } from 'react-phone-number-input';
-import { object, string } from 'yup';
+import { CONSTANTS } from "@/helpers/const/constants";
+import { IClientDetails } from "@/helpers/types/client.type";
+import { isPossiblePhoneNumber } from "react-phone-number-input";
+import { object, string, StringSchema, ObjectSchema, AnyObject } from "yup";
 
 export const clientAccountProfileValidation = object({
-  first_name: string().when({
-    is: (exist) => exist !== undefined,
-    then: string()
-      .required('Please enter first name')
-      .min(2, 'First name must have more than one letter.'),
-    otherwise: string(),
+  first_name: string().test({
+    name: "first_name",
+    test: function (value: string | undefined) {
+      if (value === undefined) return true;
+      if (!value)
+        return this.createError({ message: "Please enter first name" });
+      if (value.length < 2)
+        return this.createError({
+          message: "First name must have more than one letter.",
+        });
+      return true;
+    },
   }),
-  last_name: string().when({
-    is: (exist) => exist !== undefined,
-    then: string()
-      .required('Please enter last name')
-      .min(2, 'Last name must have more than one letter.'),
-    otherwise: string(),
+  last_name: string().test({
+    name: "last_name",
+    test: function (value: string | undefined) {
+      if (value === undefined) return true;
+      if (!value)
+        return this.createError({ message: "Please enter last name" });
+      if (value.length < 2)
+        return this.createError({
+          message: "Last name must have more than one letter.",
+        });
+      return true;
+    },
   }),
-  formatted_phonenumber: string().when({
-    is: (exist) => exist !== undefined,
-    then: string().test(
-      'phoneValidation',
-      'Please enter a valid phone number',
-      (phone) => isPossiblePhoneNumber(phone || '')
-    ),
-    otherwise: string(),
+  formatted_phonenumber: string().test({
+    name: "phoneValidation",
+    test: function (value: string | undefined) {
+      if (value === undefined) return true;
+      return (
+        isPossiblePhoneNumber(value || "") ||
+        this.createError({ message: "Please enter a valid phone number" })
+      );
+    },
   }),
-  location: object().when({
-    is: (exist) => exist !== undefined,
-    then: object({
-      country_name: string().required('Please select your country'),
-      country_short_name: string(),
-      state: string().when('country_short_name', {
-        is: (
-          country_short_name: IClientDetails['location']['country_short_name']
-        ) =>
-          !CONSTANTS.COUNTRIES_SHORT_NAME_WITHOUT_STATE.includes(
-            country_short_name
-          ),
-        then: string().required('Please select your state/region'),
-        otherwise: string().optional(),
-      }),
-    }),
-    otherwise: object(),
+  location: object().test({
+    name: "location",
+    test: function (value: any) {
+      if (value === undefined) return true;
+
+      // Check country_name
+      if (!value?.country_name) {
+        return this.createError({
+          message: "Please select your country",
+          path: "location.country_name",
+        });
+      }
+
+      // Check state if required based on country
+      const countryShortName = value?.country_short_name;
+      const needsState =
+        !CONSTANTS.COUNTRIES_SHORT_NAME_WITHOUT_STATE.includes(
+          countryShortName
+        );
+
+      if (needsState && !value?.state) {
+        return this.createError({
+          message: "Please select your state/region",
+          path: "location.state",
+        });
+      }
+
+      return true;
+    },
   }),
 });

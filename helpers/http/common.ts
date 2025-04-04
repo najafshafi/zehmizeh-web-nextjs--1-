@@ -46,7 +46,7 @@ export const getStates = (countryCode: string) => {
     .then((r) => r.data);
 };
 
-export const getUserGroups = (action) => {
+export const getUserGroups = (action: string) => {
   return apiClient.post(`/user/manage-group`, { action }).then((r) => r.data);
 };
 
@@ -72,7 +72,7 @@ export const talkJsFetchMyConversation = (signal: AbortSignal) => {
     .then((r) => r.data);
 };
 
-export const talkJsCreateNewThread = (data) => {
+export const talkJsCreateNewThread = (data: Record<string, any>) => {
   return apiClient.post("/talk-js/new-thread", data).then((r) => r.data);
 };
 
@@ -94,8 +94,18 @@ export const checkCardExpiration = async () => {
       action: "check_expiration_card",
     });
     return r.data;
-  } catch (error) {
-    return error.response.data;
+  } catch (error: unknown) {
+    if (
+      error &&
+      typeof error === "object" &&
+      "response" in error &&
+      error.response &&
+      typeof error.response === "object" &&
+      "data" in error.response
+    ) {
+      return error.response.data;
+    }
+    throw error; // Re-throw if it doesn't match the expected structure
   }
 };
 

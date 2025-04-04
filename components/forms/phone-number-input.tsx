@@ -1,34 +1,40 @@
-import 'react-phone-number-input/style.css';
-import PhoneInput, { formatPhoneNumber } from 'react-phone-number-input';
-import { useEffect, useState } from 'react';
-import { fetchCountriesCode } from '@/helpers/validation/common';
+import "react-phone-number-input/style.css";
+import PhoneInput, { formatPhoneNumber } from "react-phone-number-input";
+import { useEffect, useState, useCallback } from "react";
+import { fetchCountriesCode } from "@/helpers/validation/common";
+
+// Define a type alias for country codes
+type CountryCode = string;
 
 interface Props {
   onChange: (phone: string, formattedValue: string) => void;
   initialValue?: string;
 }
+
 const PhoneNumberInput = ({ onChange = () => {}, initialValue }: Props) => {
-  const [phone, setPhone] = useState<any>();
-  const [countries, setCountries] = useState([]);
+  const [phone, setPhone] = useState<string | undefined>();
+  const [countries, setCountries] = useState<CountryCode[]>([]);
 
   const getCountriesHandler = async () => {
     const resp = await fetchCountriesCode();
     if (!Array.isArray(resp)) return;
-    setCountries(() => resp.map((res) => res.toLocaleUpperCase()));
+    // Type assertion to CountryCode since we know these are valid country codes
+    setCountries(resp.map((res) => res.toLocaleUpperCase() as CountryCode));
   };
 
   useEffect(() => {
     getCountriesHandler();
   }, []);
 
-  const phoneNumHandler = () => {
+  const phoneNumHandler = useCallback(() => {
+    if (!phone) return;
     const formattedValue = formatPhoneNumber(phone);
     onChange(formattedValue, phone);
-  };
+  }, [phone, onChange]);
 
   useEffect(() => {
-    if (phone) phoneNumHandler();
-  }, [phone]);
+    phoneNumHandler();
+  }, [phoneNumHandler]);
 
   useEffect(() => {
     if (initialValue) setPhone(initialValue);
@@ -42,7 +48,9 @@ const PhoneNumberInput = ({ onChange = () => {}, initialValue }: Props) => {
           value={phone}
           initialValueFormat="national"
           onChange={setPhone}
+          // @ts-expect-error - The PhoneInput component types are expecting CountryCode, but our strings are valid
           countries={countries}
+          // @ts-expect-error - Same reason as above
           defaultCountry={countries[0]}
           international
           countryCallingCodeEditable={false}

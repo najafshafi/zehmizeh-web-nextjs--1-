@@ -6,13 +6,13 @@ import useResponsive from "@/helpers/hooks/useResponsive";
 import ChatSection from "./ChatSection";
 import { useEffect } from "react";
 // Next.js imports
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const NewMessaging = () => {
   const { isDesktop } = useResponsive();
   const activeChat = null;
   // Next.js router
-  const router = useRouter();
+  // const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -26,9 +26,9 @@ const NewMessaging = () => {
   }, [searchParams]);
 
   // Example of a navigation function using Next.js
-  const handleNavigation = (path: string) => {
-    router.push(path);
-  };
+  // const handleNavigation = (path: string) => {
+  //   router.push(path);
+  // };
 
   return (
     <Container className="mb-5 content-hfill">

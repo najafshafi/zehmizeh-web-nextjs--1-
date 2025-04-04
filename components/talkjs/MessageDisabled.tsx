@@ -2,6 +2,7 @@ import { ChatUser } from "@/store/redux/slices/talkjs.interface";
 import Link from "next/link";
 import { formatDate } from "@/helpers/utils/formatter";
 import moment from "moment";
+import React from "react";
 
 interface MessageDisabledProps {
   selectedConversation: ChatUser | null;
@@ -11,7 +12,7 @@ interface MessageDisabledProps {
 export function messageDisabled({
   selectedConversation,
   userType,
-}: MessageDisabledProps): JSX.Element | null {
+}: MessageDisabledProps): React.ReactNode {
   if (!selectedConversation) return null;
   const activeChat = selectedConversation.custom.payload;
   const conversationType = selectedConversation.custom.type;
@@ -44,8 +45,11 @@ export function messageDisabled({
           return (
             <span>
               The client accepted your proposal on{" "}
-              {formatDate(activeChat.proposal_date_modified)}! This conversation
-              has since been moved to the &quot;Projects&quot; tab.{" "}
+              {activeChat.proposal_date_modified
+                ? formatDate(activeChat.proposal_date_modified)
+                : ""}
+              ! This conversation has since been moved to the
+              &quot;Projects&quot; tab.{" "}
               <Link
                 style={{ textDecoration: "underline" }}
                 className="link"
@@ -62,8 +66,10 @@ export function messageDisabled({
           return (
             <span>
               When you accepted this freelancer&apos;s project proposal on{" "}
-              {formatDate(activeChat.proposal_date_modified)}, this conversation
-              was moved to the &quot;Projects&quot; tab {""}
+              {activeChat.proposal_date_modified
+                ? formatDate(activeChat.proposal_date_modified)
+                : ""}
+              , this conversation was moved to the &quot;Projects&quot; tab {""}
               <Link
                 style={{ textDecoration: "underline" }}
                 className="link"
@@ -155,8 +161,10 @@ export function messageDisabled({
           return (
             <span>
               When you submitted a proposal to this project{" "}
-              {formatDate(activeChat.invite_date_modified)}, this conversation
-              was moved to the &quot;Proposals&quot; tab{" "}
+              {activeChat.invite_date_modified
+                ? formatDate(activeChat.invite_date_modified)
+                : ""}
+              , this conversation was moved to the &quot;Proposals&quot; tab{" "}
               <Link
                 style={{ textDecoration: "underline" }}
                 className="link"
@@ -174,8 +182,10 @@ export function messageDisabled({
           return (
             <span>
               The freelancer submitted a proposal to this project on{" "}
-              {formatDate(activeChat.invite_date_modified)}, so this
-              conversation was moved to the &quot;Proposals&quot; tab.{" "}
+              {activeChat.invite_date_modified
+                ? formatDate(activeChat.invite_date_modified)
+                : ""}
+              , so this conversation was moved to the &quot;Proposals&quot; tab.{" "}
               <Link
                 style={{ textDecoration: "underline" }}
                 className="link"
@@ -193,14 +203,18 @@ export function messageDisabled({
           return (
             <span>
               The client has canceled your invitation -{" "}
-              {formatDate(activeChat.invite_date_modified)}
+              {activeChat.invite_date_modified
+                ? formatDate(activeChat.invite_date_modified)
+                : ""}
             </span>
           );
         } else {
           return (
             <span>
               You have canceled the invitation. -{" "}
-              {formatDate(activeChat.invite_date_modified)}
+              {activeChat.invite_date_modified
+                ? formatDate(activeChat.invite_date_modified)
+                : ""}
             </span>
           );
         }
@@ -231,5 +245,5 @@ export function messageDisabled({
     );
   }
 
-  return undefined;
+  return null;
 }

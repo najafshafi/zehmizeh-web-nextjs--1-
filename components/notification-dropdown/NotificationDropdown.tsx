@@ -13,7 +13,7 @@ interface NotificationItem {
   title: string;
   notification_id: string;
   link: string;
-  is_seen: number;
+  is_seen: number; // 0 for unread, 1 for read
 }
 
 export const NotificationDropdown = ({
@@ -26,14 +26,14 @@ export const NotificationDropdown = ({
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const { user } = useAuth();
 
-  const unreadCount = notifications.filter((notf) => !notf.is_seen).length;
+  const unreadCount = notifications.filter((notf) => notf.is_seen === 0).length;
 
   const notificationHandler = (notifications: NotificationItem[]) => {
     const unReadNotification = notifications.filter(
-      (notf: NotificationItem) => !notf.is_seen
+      (notf: NotificationItem) => notf.is_seen === 0
     );
     const readNotification = notifications.filter(
-      (notf: NotificationItem) => !!notf.is_seen
+      (notf: NotificationItem) => notf.is_seen === 1
     );
     return [...unReadNotification, ...readNotification];
   };
@@ -89,9 +89,15 @@ export const NotificationDropdown = ({
 
     updatedData = notificationHandler(updatedData);
     setNotifications(updatedData);
-    link = link && link.replace(/^.*\/\/[^/]+/, "");
-    readNotification({ notification_id });
-    if (link && link !== "/support") router.push(link);
+
+    // Safe handling of link
+    if (link) {
+      const cleanLink = link.replace(/^.*\/\/[^/]+/, "");
+      readNotification({ notification_id });
+      if (cleanLink !== "/support") router.push(cleanLink);
+    } else {
+      readNotification({ notification_id });
+    }
   };
 
   const handleClearAll = async () => {
@@ -102,7 +108,9 @@ export const NotificationDropdown = ({
 
     setNotifications(notificationHandler(updatedData));
 
-    const unreadNotifications = notifications.filter((notf) => !notf.is_seen);
+    const unreadNotifications = notifications.filter(
+      (notf) => notf.is_seen === 0
+    );
     await Promise.all(
       unreadNotifications.map((notification) =>
         readNotification({ notification_id: notification.notification_id })
@@ -137,7 +145,7 @@ export const NotificationDropdown = ({
                 return (
                   <p
                     key={`not-title-${notification_id}`}
-                    className={`not-title ${!is_seen && "bold"}`}
+                    className={`not-title ${is_seen === 0 && "bold"}`}
                     onClick={() => seenNotification(notification_id, link)}
                   >
                     {title}

@@ -8,7 +8,7 @@ import { IClientDetails } from "@/helpers/types/client.type";
 import moment from "moment";
 import { ChatUser } from "@/store/redux/slices/talkjs.interface";
 
-export const camelCaseToNormalCase = (word) => {
+export const camelCaseToNormalCase = (word: string): string => {
   const result = word && word.replace(/([A-Z])/g, "$1");
   const finalResult =
     result && result.charAt(0).toUpperCase() + result.slice(1);
@@ -16,7 +16,7 @@ export const camelCaseToNormalCase = (word) => {
 };
 
 export const stripeRequirementsHandler = (requirements: any = {}) => {
-  let finalRequirementArr = [];
+  let finalRequirementArr: string[] = [];
   const keyArr = Object.keys(requirements);
 
   keyArr.forEach((keyElem) => {
@@ -38,7 +38,7 @@ export const stripeRequirementsHandler = (requirements: any = {}) => {
   return finalRequirementArr;
 };
 
-export const isUserStripeVerified = (stripe) => {
+export const isUserStripeVerified = (stripe: any) => {
   let finalRequirementArr = stripeRequirementsHandler(
     stripe?.individual?.requirements
   );
@@ -65,7 +65,7 @@ export const isUserStripeVerified = (stripe) => {
   return finalRequirementArr;
 };
 
-export const showAddBankButton = (data) => {
+export const showAddBankButton = (data: any) => {
   let flag = false;
   const stripe = data?.stripe;
 
@@ -81,12 +81,12 @@ export const showAddBankButton = (data) => {
 };
 
 // If milestone/hourly rate paid then client and freelancer can add review
-export const isNotAllowedToSubmitReview = (jobDetails) => {
+export const isNotAllowedToSubmitReview = (jobDetails: any) => {
   return (
     jobDetails?.milestone?.length === 0 ||
     !(
       jobDetails?.milestone?.findIndex(
-        (milestone) =>
+        (milestone: any) =>
           milestone?.hourly_status === "paid" ||
           milestone?.status === "released"
       ) >= 0
@@ -108,13 +108,17 @@ export const getTimeEstimation = (
   // default values for number and duration
   if (!number) return "";
 
-  if (!duration)
-    duration = CONSTANTS.ESTIMATION_VALUES.find(
+  if (!duration) {
+    const foundEstimation = CONSTANTS.ESTIMATION_VALUES.find(
       (est) => est.id === defaultValue
-    ).id;
-  return `${number} ${
-    CONSTANTS.ESTIMATION_VALUES.find((est) => est.id === duration)?.label || ""
-  }`;
+    );
+    duration = foundEstimation ? foundEstimation.id : defaultValue;
+  }
+
+  const foundLabel = CONSTANTS.ESTIMATION_VALUES.find(
+    (est) => est.id === duration
+  );
+  return `${number} ${foundLabel?.label || ""}`;
 };
 
 const STRIPE_ACCOUNT_STATUS = {
@@ -246,20 +250,28 @@ export const getSkills = (skills: TJobDetails["skills"]) => {
   return skills?.filter((skill) => !!skill?.skill_id) || [];
 };
 
+interface CategoryWithSkills {
+  category_id?: number;
+  category_name?: string;
+  skills: TJobDetails["skills"];
+  [key: string]: any;
+}
+
 export const getRelevantSkillsBasedOnCategory = (
   skills: TJobDetails["skills"]
 ) => {
   const categories = getCategories(skills);
   const allSkills = getSkills(skills);
 
-  return categories.reduce((acc, category) => {
-    const skills = [];
+  return categories.reduce<CategoryWithSkills[]>((acc, category) => {
+    const categorySkills = [];
     const removeIndexes = [];
 
     /* START ----------------------------------------- Collecting index of skills to remove because category is removed */
     for (let i = 0; i < allSkills.length; i++) {
-      if (allSkills?.[i]?.categories?.includes(category.category_id)) {
-        skills.push(allSkills[i]);
+      const categoryId = category.category_id;
+      if (categoryId && allSkills?.[i]?.categories?.includes(categoryId)) {
+        categorySkills.push(allSkills[i]);
         removeIndexes.push(i);
       }
     }
@@ -270,12 +282,12 @@ export const getRelevantSkillsBasedOnCategory = (
       allSkills.splice(removeIndexes[j], 1);
     }
     /* END ------------------------------------------- Removing skills using indexes collected above */
-    acc.push({ ...category, skills });
+    acc.push({ ...category, skills: categorySkills });
     return acc;
   }, []);
 };
 
-export const getJobExpirationInDays = (job) => {
+export const getJobExpirationInDays = (job: any) => {
   if (!job?.job_expire_time) return;
 
   const currentDate = moment();
@@ -299,14 +311,14 @@ export const isProjectHiddenForFreelancer = (data: TJobDetails) => {
 };
 
 /* START -----------------------------------------bank account hidden until the last four digits */
-export const formatingAccountNumber = (lastFourDigits) => {
+export const formatingAccountNumber = (lastFourDigits: string) => {
   if (!lastFourDigits) return "";
   return "********" + lastFourDigits;
 };
 /* END -------------------------------------------  */
 
 /* START -----------------------------------------routing hidden until the last four digits */
-export const formatRoutingNumber = (routingNumber) => {
+export const formatRoutingNumber = (routingNumber: string | number) => {
   if (!routingNumber) return "";
   // Ensure the routing number is a string
   const routingNumberStr = routingNumber.toString();
@@ -343,8 +355,9 @@ export const isClosedorDeclined = (conversation: ChatUser) => {
   if (conversation?.custom && !conversation?.custom?.payload) return "";
 
   const payload = conversation.custom.payload;
-  if (payload?.proposal_status || payload?.invite_status)
-    if (["deleted", "active", "closed"].includes(payload?.job_status)) {
+  if (payload?.proposal_status || payload?.invite_status) {
+    const jobStatus = payload?.job_status;
+    if (jobStatus && ["deleted", "active", "closed"].includes(jobStatus)) {
       return "Closed";
     } else if (payload?.proposal_status === "denied") {
       return "Declined";
@@ -353,5 +366,6 @@ export const isClosedorDeclined = (conversation: ChatUser) => {
     } else if (payload?.invite_status === "accepted") {
       return "Accepted";
     }
+  }
   return "";
 };

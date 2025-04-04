@@ -484,7 +484,7 @@ const Milestones = ({
                         ? "Milestone Never Accepted"
                         : item?.status === "payment_processing"
                         ? paymentProcessingStatusHandler(
-                            item?.payment_method || ""
+                            item?.payment_method as "ACH" | "OTHER" | undefined
                           )
                         : PAYMENT_STATUS[item?.status]?.label || ""}
                     </StatusBadge>

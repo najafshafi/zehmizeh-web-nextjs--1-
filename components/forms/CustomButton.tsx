@@ -8,7 +8,7 @@ interface CustomButtonProps {
   className?: string;
   disabled?: boolean;
   children: React.ReactNode;
-  [key: string]: any; // Allow additional props to be passed through
+  [key: string]: unknown; // Allow additional props to be passed through
 }
 
 export const CustomButton: React.FC<CustomButtonProps> = ({
@@ -22,7 +22,7 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
   ...rest
 }) => {
   // Base Tailwind classes matching StyledButton's default styles
-  let twClasses = [
+  const twClasses = [
     'inline-block',
     'text-center',
     'whitespace-nowrap',
@@ -32,9 +32,8 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
     'py-2',               // Vertical padding for consistency
     'text-lg',            // Matches font-size: 1.125rem
   ];
-
   // Styles object to merge background and user-provided styles
-  let buttonStyle: React.CSSProperties = { ...style };
+  const buttonStyle: React.CSSProperties = { ...style };
 
   // Handle background prop with inline styles (highest specificity)
   if (background) {

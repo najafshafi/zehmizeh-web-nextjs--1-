@@ -89,9 +89,8 @@ export const ProjectTiming = () => {
           onChange={(value: Date | null) =>
             setFormData({ due_date: value ? moment(value).toISOString() : "" })
           }
-          selected={formData?.due_date && new Date(formData?.due_date)}
+          selected={formData?.due_date ? new Date(formData?.due_date) : null}
           minDate={new Date()}
-          format="YYYY-MM-DD"
           maxDate={
             new Date(moment().add(3, "years").toISOString().split("T")[0])
           }

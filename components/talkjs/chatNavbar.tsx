@@ -7,10 +7,36 @@ import { useAuth } from "@/helpers/contexts/auth-context";
 import moment from "moment";
 import { ChatHeaderButton } from "@/pages/messaging-page/messaging.styled";
 import { chatTypeSolidColor } from "@/helpers/http/common";
-import { RemoteUserProp } from "@/store/redux/slices/talkjs.interface";
+import {
+  RemoteUserProp,
+  chatType,
+} from "@/store/redux/slices/talkjs.interface";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa6";
 import ExportChat from "./ExportChat";
+
+// Define interface for the conversation object to avoid using 'any'
+interface TalkJsConversation {
+  id: string;
+  custom: {
+    type: chatType;
+    jobPostId?: string;
+    projectName?: string;
+    clientId?: string;
+    clientName?: string;
+    clientTimezone?: string;
+    freelancerId?: string;
+    freelancerName?: string;
+    freelancerTimezone?: string;
+    payload?: {
+      job_status?: string;
+      job_end_date?: string;
+      [key: string]: unknown;
+    };
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+}
 
 interface Prop {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,13 +45,22 @@ interface Prop {
 }
 
 const ChatNavbar = ({ setOpen, singleConversation }: Prop) => {
+  // Use type assertion with more specific types
   const { selectedConversation, activeTab } = useSelector(
-    (state: RootState) => state.talkJsChat
+    (state: RootState) =>
+      (
+        state as unknown as {
+          talkJsChat: {
+            selectedConversation: TalkJsConversation;
+            activeTab: string;
+          };
+        }
+      ).talkJsChat
   );
 
   const { user } = useAuth();
 
-  const remoteUser: RemoteUserProp = useMemo(() => {
+  const remoteUser = useMemo<RemoteUserProp>(() => {
     try {
       const keys = [
         "clientName",
@@ -38,7 +73,13 @@ const ChatNavbar = ({ setOpen, singleConversation }: Prop) => {
       const data = selectedConversation?.custom ?? {};
       const results = keys.filter((key) => key in data);
 
-      if (keys.length !== results.length) return "Missing custom values";
+      if (keys.length !== results.length) {
+        return {
+          userType: "unknown",
+          username: "Missing custom values",
+        };
+      }
+
       const {
         clientId,
         clientName,
@@ -75,12 +116,18 @@ const ChatNavbar = ({ setOpen, singleConversation }: Prop) => {
       }
 
       return userData;
-    } catch (error) {
-      return error.message;
+    } catch (error: unknown) {
+      return {
+        userType: "unknown",
+        username:
+          typeof error === "object" && error !== null && "message" in error
+            ? (error as { message: string }).message
+            : "Unknown error",
+      };
     }
   }, [selectedConversation, user]);
 
-  const hintForMessageLimitInProposal: JSX.Element = useMemo(() => {
+  const hintForMessageLimitInProposal = useMemo(() => {
     if (!activeTab) return <></>;
     if (activeTab === "proposals") {
       const jobPostId = selectedConversation.custom.jobPostId;
@@ -103,9 +150,9 @@ const ChatNavbar = ({ setOpen, singleConversation }: Prop) => {
         </span>
       );
     }
-  }, [activeTab]);
+  }, [activeTab, selectedConversation.custom.jobPostId, user.user_type]);
 
-  const hintForMessageLimitInInvite: JSX.Element = useMemo(() => {
+  const hintForMessageLimitInInvite = useMemo(() => {
     if (!activeTab || activeTab !== "invities") return <></>;
     if (user?.user_type === "freelancer") {
       return (
@@ -139,7 +186,7 @@ const ChatNavbar = ({ setOpen, singleConversation }: Prop) => {
         </span>
       );
     }
-  }, [selectedConversation, user?.user_type]);
+  }, [activeTab, selectedConversation.custom.jobPostId, user?.user_type]);
 
   const projectExpirationMessageHandler = useMemo(() => {
     let flag = false;
@@ -152,10 +199,11 @@ const ChatNavbar = ({ setOpen, singleConversation }: Prop) => {
           : moment();
         const daysOfJobClosed = todaysDate.diff(jobClosedDate, "days");
 
-        flag =
+        flag = Boolean(
           payload?.job_status === "closed" &&
-          payload?.job_end_date &&
-          daysOfJobClosed < 14;
+            payload?.job_end_date &&
+            daysOfJobClosed < 14
+        );
       }
     }
     return flag;
@@ -171,7 +219,7 @@ const ChatNavbar = ({ setOpen, singleConversation }: Prop) => {
     <>
       <div className="px-3 pt-0">
         {/* changes from here */}
-        {projectExpirationMessageHandler && (
+        {!!projectExpirationMessageHandler && (
           <div id="message-limit-note" className="message-limit-note">
             <span style={{ color: "blue" }}>
               This project has been closed. The message function for this

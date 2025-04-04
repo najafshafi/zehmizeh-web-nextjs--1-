@@ -464,7 +464,7 @@ const JobDetails = () => {
     return undefined;
   }, [jobdetails]);
 
-  if (isProjectHiddenForFreelancer(jobdetails)) {
+  if (isProjectHiddenForFreelancer(jobdetails as any)) {
     toast.error(
       `Client has hidden this post - ${moment(
         jobdetails?.is_hidden?.date
@@ -486,7 +486,7 @@ const JobDetails = () => {
       {/* Details Banner */}
 
       {!isLoading && !isRefetching && jobdetails && (
-        <DetailsBanner data={jobdetails} refetch={refetch} />
+        <DetailsBanner data={jobdetails as any} refetch={refetch} />
       )}
 
       {!isLoading && !isRefetching && jobdetails && (
@@ -497,7 +497,7 @@ const JobDetails = () => {
               <div className="flex items-center justify-between w-full flex-wrap gap-3">
                 <div>
                   <Tabs
-                    tabs={tabItems}
+                    tabs={tabItems as any}
                     activeTab={activeTab}
                     onTabChange={onTabChange}
                     fontSize="1rem"
@@ -611,20 +611,20 @@ const JobDetails = () => {
                             "FREELANCER"
                               ? "Request to close project submitted."
                               : jobdetails?.milestone.filter(
-                                  (x: Milestone) => x.is_final_milestone
-                                ).length > 0 &&
-                                (jobdetails?.milestone[0]?.hourly_status ===
-                                  "paid" ||
-                                  jobdetails?.milestone[0]?.hourly_status ===
-                                    "released")
-                              ? "Waiting for client to end the project"
-                              : jobdetails?.milestone.filter(
-                                  (x: Milestone) => x.is_final_milestone
-                                ).length > 0
-                              ? "Final Hours Submitted"
-                              : jobdetails?.is_closure_request_accepted
-                              ? "Accepted client closure request"
-                              : "Client has requested to End the Project"}
+                                    (x: Milestone) => x.is_final_milestone
+                                  ).length > 0 &&
+                                  (jobdetails?.milestone[0]?.hourly_status ===
+                                    "paid" ||
+                                    jobdetails?.milestone[0]?.hourly_status ===
+                                      "released")
+                                ? "Waiting for client to end the project"
+                                : jobdetails?.milestone.filter(
+                                      (x: Milestone) => x.is_final_milestone
+                                    ).length > 0
+                                  ? "Final Hours Submitted"
+                                  : jobdetails?.is_closure_request_accepted
+                                    ? "Accepted client closure request"
+                                    : "Client has requested to End the Project"}
                           </div>
                         </>
                       )}
@@ -683,22 +683,22 @@ const JobDetails = () => {
             <>
               {jobdetails.proposal?.approved_budget?.type == "fixed" && (
                 <Milestones
-                  milestone={jobdetails?.milestone}
+                  milestone={jobdetails?.milestone as any}
                   jobStatus={jobdetails.status}
                   refetch={refetch}
                   clientUserId={jobdetails?._client_user_id}
                   jobPostId={jobdetails?.job_post_id}
-                  restrictPostingMilestone={jobdetails?.is_closure_request}
+                  restrictPostingMilestone={!!jobdetails?.is_closure_request}
                   remainingBudget={
-                    jobdetails?.milestone?.filter(
+                    (jobdetails?.milestone || []).filter(
                       (y: Milestone) =>
                         !["cancelled", "decline_dispute", "decline"].includes(
                           y.status
                         )
                     )?.length > 0
-                      ? jobdetails.proposal?.approved_budget?.amount -
-                        jobdetails?.milestone
-                          ?.filter(
+                      ? (jobdetails.proposal?.approved_budget?.amount || 0) -
+                        ((jobdetails?.milestone || [])
+                          .filter(
                             (y: Milestone) =>
                               ![
                                 "cancelled",
@@ -707,8 +707,8 @@ const JobDetails = () => {
                               ].includes(y.status)
                           )
                           .map((x: Milestone) => x.amount)
-                          .reduce((a: number, b: number) => a + b)
-                      : jobdetails.proposal?.approved_budget?.amount
+                          .reduce((a: number, b: number) => a + b) || 0)
+                      : jobdetails?.proposal?.approved_budget?.amount || 0
                   }
                 />
               )}
@@ -752,7 +752,7 @@ const JobDetails = () => {
         show={showHourForm}
         toggle={toggleHourForm}
         onSubmit={onSubmitFinalMilestone}
-        jobPostId={jobdetails?.job_post_id}
+        jobPostId={jobdetails?.job_post_id || ""}
         selectedMilestone={null}
         hourlyRate={jobdetails?.proposal?.approved_budget?.amount}
         isFinalHours={isFinalHours}
@@ -761,24 +761,24 @@ const JobDetails = () => {
         show={showMilestoneForm}
         toggle={toggleMilestoneForm}
         onSubmit={refetch}
-        clientUserId={jobdetails?._client_user_id}
-        jobPostId={jobdetails?.job_post_id}
+        clientUserId={jobdetails?._client_user_id || ""}
+        jobPostId={jobdetails?.job_post_id || ""}
         remainingBudget={
-          jobdetails?.milestone?.filter(
+          (jobdetails?.milestone || []).filter(
             (y: Milestone) =>
               !["cancelled", "decline_dispute", "decline"].includes(y.status)
           )?.length > 0
-            ? jobdetails?.proposal?.approved_budget?.amount -
-              jobdetails?.milestone
-                ?.filter(
+            ? (jobdetails?.proposal?.approved_budget?.amount || 0) -
+              ((jobdetails?.milestone || [])
+                .filter(
                   (y: Milestone) =>
                     !["cancelled", "decline_dispute", "decline"].includes(
                       y.status
                     )
                 )
                 .map((x: Milestone) => x.amount)
-                .reduce((a: number, b: number) => a + b)
-            : jobdetails?.proposal?.approved_budget?.amount
+                .reduce((a: number, b: number) => a + b) || 0)
+            : jobdetails?.proposal?.approved_budget?.amount || 0
         }
       />
       {/* <NextStepModal show={showNextStepModal} toggle={closeNextStepModal} /> */}
@@ -797,11 +797,11 @@ const JobDetails = () => {
       {jobdetails?.proposal?.approved_budget && (
         <>
           <ChangeBudgetRequestModal
-            jobDetails={jobdetails}
+            jobDetails={jobdetails as any}
             userType="freelancer"
           />
           <ChangeBudgetDeniedModal
-            jobDetails={jobdetails}
+            jobDetails={jobdetails as any}
             refetch={refetch}
             userType="freelancer"
           />

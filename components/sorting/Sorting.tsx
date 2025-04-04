@@ -42,17 +42,22 @@ const TypeDropdown = styled.div`
 `;
 const TypeDropdownToggle = styled.div``;
 
+interface SortType {
+  key: string;
+  label: string;
+}
+
 interface Props {
-  sortTypes: any;
-  sorting: any;
-  setSorting: any;
+  sortTypes: SortType[];
+  sorting: string;
+  setSorting: (key: string) => void;
 }
 
 const Sorting = ({ sortTypes, sorting, setSorting }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const [findSorts] = sortTypes.filter(function (type) {
+  const [findSorts] = sortTypes.filter(function (type: SortType) {
     return type.key === sorting;
   });
 
@@ -95,7 +100,7 @@ const Sorting = ({ sortTypes, sorting, setSorting }: Props) => {
 
       {isOpen && (
         <div className="dropdown-menu z-10 bg-white">
-          {sortTypes.map((item: any) => (
+          {sortTypes.map((item: SortType) => (
             <div
               key={item.key}
               className="dropdown-item px-4 py-2 text-base cursor-pointer hover:text-primary"

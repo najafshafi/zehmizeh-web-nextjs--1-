@@ -32,7 +32,23 @@ const Wrapper = styled.div`
   ${() => transition()}
 `;
 
-const WorkInProgressJobCard = ({ data }: { data: any }) => {
+interface JobData {
+  job_post_id: string | number;
+  job_title: string;
+  userdata?: {
+    user_image?: string;
+    first_name?: string;
+    last_name?: string;
+  };
+  proposal?: {
+    approved_budget?: {
+      amount?: number | string;
+      type?: string;
+    };
+  };
+}
+
+const WorkInProgressJobCard = ({ data }: { data: JobData }) => {
   return (
     <Link
       href={`/client-job-details/${data?.job_post_id}`}

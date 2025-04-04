@@ -551,7 +551,8 @@ const PostJobContextProvider = ({
       body.action = "edit_template";
     } else {
       if (body.post_template_id) {
-        delete body.post_template_id;
+        const { post_template_id, ...restBody } = body;
+        Object.assign(body, restBody);
       }
       body.action = "add_template";
     }

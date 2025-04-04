@@ -26,6 +26,20 @@ import AppLayout from "../layout/AppLayout";
 const INTERCOM_APP_ID = process.env.REACT_APP_INTERCOM_APP_ID || "";
 const GA_TRACKING_CODE = process.env.REACT_APP_GA_TRACKING_CODE;
 
+// Types for AOS
+type AnchorPlacement =
+  | "top-bottom"
+  | "top-center"
+  | "top-top"
+  | "center-bottom"
+  | "center-center"
+  | "center-top"
+  | "bottom-bottom"
+  | "bottom-center"
+  | "bottom-top";
+
+type EasingOptions = "linear" | "ease" | "ease-in" | "ease-out" | "ease-in-out";
+
 const initGA = () => {
   if (GA_TRACKING_CODE) {
     ReactGA.initialize(GA_TRACKING_CODE);
@@ -51,10 +65,10 @@ const AOS_CONFIG = {
   offset: 120,
   delay: 0,
   duration: 400,
-  easing: "ease",
+  easing: "ease" as EasingOptions,
   once: true,
   mirror: false,
-  anchorPlacement: "top-bottom" as any,
+  anchorPlacement: "top-bottom" as AnchorPlacement,
 };
 
 function ClientBootstrap({ children }: { children: React.ReactNode }) {
@@ -93,12 +107,15 @@ function ClientBootstrap({ children }: { children: React.ReactNode }) {
     if (isClient) {
       const urlSearchParams = new URLSearchParams(window.location.search);
       const params = Object.fromEntries(urlSearchParams.entries());
-      const utmParams = Object.entries(params).reduce((acc, [key, value]) => {
-        if (key.startsWith("utm_")) {
-          acc[key] = value;
-        }
-        return acc;
-      }, {} as Record<string, string>);
+      const utmParams = Object.entries(params).reduce(
+        (acc, [key, value]) => {
+          if (key.startsWith("utm_")) {
+            acc[key] = value;
+          }
+          return acc;
+        },
+        {} as Record<string, string>
+      );
 
       if (Object.keys(utmParams).length > 0) {
         setCookie("utm_info", JSON.stringify(utmParams));

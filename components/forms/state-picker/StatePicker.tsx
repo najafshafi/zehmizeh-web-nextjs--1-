@@ -36,7 +36,6 @@ const StateDropdown = ({
       setStates([]); // Clear states if no country is selected
     }
   }, [countryCode]);
-
   return (
     <div>
       <Select
@@ -46,9 +45,9 @@ const StateDropdown = ({
         components={{ NoOptionsMessage }}
         options={states}
         isSearchable={true}
-        isMulti={false} // Changed to false for single selection
+        isMulti={false as any}
         value={selectedState}
-        onChange={(option) => onSelectState(option)} // Call onSelectState with selected option
+        onChange={(option: any) => onSelectState(option as { label: string; value: string } | null)}
         isDisabled={!countryCode}
       />
     </div>

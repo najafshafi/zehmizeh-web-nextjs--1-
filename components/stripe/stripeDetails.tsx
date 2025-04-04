@@ -9,7 +9,7 @@ import { isUserStripeVerified, pusherApiKey } from "@/helpers/utils/helper";
 import StripeActivationModal from "@/pages/freelancer-profile-settings/partials/StripeActivationModal";
 import toast from "react-hot-toast";
 import HowToRegisterAccModal from "@/pages/freelancer-profile-settings/partials/HowToRegisterAccModal";
-import { TStripeStatus } from "@/helpers/types/stripe.type";
+import { IStripeObject, TStripeStatus } from "@/helpers/types/stripe.type";
 import StripeResetModal from "./stripeResetModal";
 import Pusher from "pusher-js";
 import { IDENTITY_DOCS } from "@/helpers/const/constants";
@@ -17,15 +17,41 @@ import StripeAcceptableIDModal from "./stripeAcceptableIDModal";
 import Link from "next/link";
 import CustomButton from "../custombutton/CustomButton";
 
+// Define the CountryCode type from the IDENTITY_DOCS keys
+type CountryCode = keyof typeof IDENTITY_DOCS;
+
 interface Prop {
-  stripe: any;
-  stripeStatus?: TStripeStatus;
-  totalEarnings: any;
+  stripe: IStripeObject | null;
+  stripeStatus?: TStripeStatus | null;
+  totalEarnings: number;
   refetch: () => void;
 }
 
 interface PusherDt {
   updated_status: string;
+}
+
+interface StripeDetailsState {
+  status: "pending" | "inprogress" | "verified";
+  message: string | ReactElement;
+}
+
+interface ContentType {
+  pending: {
+    label: string;
+    description: string;
+    tooltip: string;
+  };
+  inprogress: {
+    label: string;
+    description: string;
+    tooltip: string;
+  };
+  verified: {
+    label: string;
+    description: string;
+    tooltip: string;
+  };
 }
 
 let pusher: Pusher | null = null;
@@ -37,7 +63,7 @@ const CONSTANTS: { [key: string]: string } = {
 
 const StripeDetails = (props: Prop) => {
   const { stripe = null, stripeStatus = null, refetch } = props ?? {};
-  const [step, setStep] = useState<number>();
+  const [step, setStep] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [showBtn, setShowBtn] = useState<boolean>(true);
   const [generatingLink, setGeneratingLink] = useState<boolean>(false);
@@ -47,7 +73,7 @@ const StripeDetails = (props: Prop) => {
   const [ShowAcceptableIDModal, setAcceptableIDModal] =
     useState<boolean>(false);
   const [pusherInitialized, setPusherInitialized] = useState<boolean>(true);
-  const content = useMemo(() => {
+  const content = useMemo<ContentType>(() => {
     const data = {
       label: "Not started (Required)",
       description: "Submit your details so you can get paid on ZMZ",
@@ -99,7 +125,7 @@ const StripeDetails = (props: Prop) => {
     };
   }, [messageFromStripe, stripe?.id, stripeStatus]);
 
-  const [stripeDetails, setStripeDetails] = useState<any>({
+  const [stripeDetails, setStripeDetails] = useState<StripeDetailsState>({
     status: "pending",
     message: content["pending"].description,
   });
@@ -120,10 +146,13 @@ const StripeDetails = (props: Prop) => {
   const verificationHandler = async () => {
     setLoading(true);
     try {
-      const { account_url } = await getStripeVerificationLink(stripe.country);
+      const { account_url } = await getStripeVerificationLink(
+        stripe?.country || ""
+      );
       window.location.replace(account_url);
       setLoading(true);
-    } catch (error) {
+    } catch {
+      // Silently handle error
       setLoading(false);
     }
   };
@@ -221,8 +250,8 @@ const StripeDetails = (props: Prop) => {
               To finish verification - please add a Personal Identity Document.
             </b>
             <p className="mb-2">
-              To add: click &quot;Go to Stripe&quot; below, then click &quot;Edit&quot; by your
-              personal details.
+              To add: click &quot;Go to Stripe&quot; below, then click
+              &quot;Edit&quot; by your personal details.
             </p>
           </div>
         );
@@ -237,9 +266,14 @@ const StripeDetails = (props: Prop) => {
           </div>
         );
       }
-      finalMessage = stripe?.country &&
+
+      // Only reassign finalMessage if the condition is true
+      if (
+        stripe?.country &&
         stripe?.individual?.verification?.status &&
-        stripe?.individual?.verification?.status != "verified" && (
+        stripe?.individual?.verification?.status != "verified"
+      ) {
+        finalMessage = (
           <>
             {finalMessage}
             <div>
@@ -279,6 +313,7 @@ const StripeDetails = (props: Prop) => {
             </div>
           </>
         );
+      }
     } else {
       if (stripeStatus !== "bank_account_pending") setShowBtn(false);
       finalMessage = content["inprogress"].description;
@@ -292,7 +327,10 @@ const StripeDetails = (props: Prop) => {
 
   const stripeDetailsHandler = () => {
     if (!stripe?.id)
-      return setStripeDetails((prev) => ({ ...prev, status: "pending" }));
+      return setStripeDetails((prev: StripeDetailsState) => ({
+        ...prev,
+        status: "pending",
+      }));
 
     if (stripeStatus && !["verified"].includes(stripeStatus))
       return stripeInprogressHandler();
@@ -360,7 +398,13 @@ const StripeDetails = (props: Prop) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stripe]);
 
-  if (!content[status]) return null;
+  // Type guard to make sure status is a valid key of content
+  const isValidStatus = (s: string): s is keyof ContentType => {
+    return s === "pending" || s === "inprogress" || s === "verified";
+  };
+
+  // Make sure status is valid before rendering
+  if (!isValidStatus(status)) return null;
 
   const generateVerifyLink = (country: { country_short_name: string }) => {
     // This function will generate a stripe verification link to redirect the user to stripe
@@ -379,7 +423,7 @@ const StripeDetails = (props: Prop) => {
       });
   };
 
-  const onVerify = (country: any) => {
+  const onVerify = (country: { country_short_name: string }) => {
     setStep(NaN);
     generateVerifyLink(country);
   };
@@ -527,7 +571,8 @@ const StripeDetails = (props: Prop) => {
           )}
 
           {((stripe?.id &&
-            ["pending", "currently_due"].includes(stripeStatus) &&
+            stripeStatus &&
+            ["pending", "currently_due"].includes(stripeStatus as string) &&
             showBtn) ||
             isUserStripeVerified(stripe).length > 0) && (
             <CustomButton
@@ -542,7 +587,7 @@ const StripeDetails = (props: Prop) => {
       <StripeAcceptableIDModal
         show={ShowAcceptableIDModal}
         toggle={toggleAcceptableIDModal}
-        country={stripe?.country}
+        country={(stripe?.country || "US") as CountryCode}
       />
     </StripeContainer>
   );

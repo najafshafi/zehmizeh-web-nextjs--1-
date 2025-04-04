@@ -1,7 +1,7 @@
 import React from 'react';
-import PageWrapper from 'components/styled/PageWrapper';
+import PageWrapper from '@/components/styled/PageWrapper';
 import { Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from 'helpers/contexts/auth-context';
+import { useAuth } from '@/helpers/contexts/auth-context';
 
 function PageLayout() {
   const location = useLocation();

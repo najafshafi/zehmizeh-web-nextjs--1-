@@ -45,7 +45,7 @@ const ClientJobs = () => {
   const [searchSubmitted, setSearchSubmitted] = useState<boolean>(false);
   const [sortValue, setSortValue] = useState("");
 
-  const ref = useRef(null);
+  const ref = useRef<HTMLFormElement>(null);
   const onClose = () => {
     setSearchValue("");
   };

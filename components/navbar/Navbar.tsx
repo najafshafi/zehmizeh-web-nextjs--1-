@@ -8,7 +8,7 @@ import { IoClose, IoMenu } from "react-icons/io5";
 
 const Navbar = () => {
   const pathname = usePathname();
-  const url = pathname.split("/")[1];
+  const url = pathname?.split("/")[1];
   const [isOpen, setIsOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(0);
   useEffect(() => {

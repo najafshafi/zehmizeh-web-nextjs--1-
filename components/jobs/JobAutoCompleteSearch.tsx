@@ -103,18 +103,23 @@ const JobAutoCompleteSearch = ({
       />
       {searchValue !== "" && !searchSubmitted && jobs && jobs.length > 0 && (
         <SearchResults className="overlay">
-          {filteredJobs.map((opt, index) => (
-            <>
-              <li
-                key={opt?.job_post_id}
-                onClick={onJobClick(opt?.job_post_id)}
-                className="capital-first-ltr"
-              >
-                {convertToTitleCase(opt?.job_title)}
-              </li>
-              {index != filteredJobs.length - 1 ? <Divider /> : null}
-            </>
-          ))}
+          {filteredJobs.map(
+            (
+              opt: { job_post_id: string; job_title: string },
+              index: number
+            ) => (
+              <>
+                <li
+                  key={opt?.job_post_id}
+                  onClick={onJobClick(opt?.job_post_id)}
+                  className="capital-first-ltr"
+                >
+                  {convertToTitleCase(opt?.job_title)}
+                </li>
+                {index != filteredJobs.length - 1 ? <Divider /> : null}
+              </>
+            )
+          )}
           {jobs.length > 0 && hasNextPage ? (
             <div className="loadmore-btn p-2">
               <LoadMoreButton

@@ -332,10 +332,12 @@ const Applicants = ({ jobPostId, refetch, jobStatus, jobTitle }: Prop) => {
                           <div className="rounded-chip flex width-fit-content items-center">
                             <LocationIcon />
                             <div className="fs-1rem font-normal mx-1 light-text">
-                              {separateValuesWithComma([
-                                item?.location?.state,
-                                item?.location?.country_name,
-                              ])}
+                              {separateValuesWithComma(
+                                [
+                                  item?.location?.state,
+                                  item?.location?.country_name,
+                                ].filter(Boolean) as string[]
+                              )}
                             </div>
                           </div>
                         )}

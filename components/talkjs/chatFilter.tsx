@@ -7,8 +7,21 @@ import { useSelector } from "react-redux";
 import { removeDuplicateValues } from "@/helpers/utils/helper";
 import {
   ChatFilterAction,
+  ChatUser,
   SelectOption,
 } from "@/store/redux/slices/talkjs.interface";
+import { GroupBase, StylesConfig } from "react-select";
+
+// Define TalkJsChat state interface
+interface TalkJsChatState {
+  chatlist: ChatUser[];
+  isFilterApplied: boolean;
+  filters: {
+    job?: string;
+    status?: string;
+    type?: string;
+  };
+}
 
 const typeOptions = [
   { value: "job", label: "Projects" },
@@ -24,18 +37,21 @@ const statusOptions = [
 const ChatFilter = () => {
   const dispatch: AppDispatch = useDispatch();
   const { chatlist, isFilterApplied, filters } = useSelector(
-    (state: RootState) => state.talkJsChat
+    (state: RootState) =>
+      (state as unknown as { talkJsChat: TalkJsChatState }).talkJsChat
   );
 
-  const [job, setJob] = useState<SelectOption>();
-  const [chatStatus, setChatStatus] = useState<SelectOption>();
-  const [type, setType] = useState<SelectOption>();
+  const [job, setJob] = useState<SelectOption | undefined>(undefined);
+  const [chatStatus, setChatStatus] = useState<SelectOption | undefined>(
+    undefined
+  );
+  const [type, setType] = useState<SelectOption | undefined>(undefined);
 
   const jobFilterDropdown = useMemo(() => {
-    let options = chatlist.map((chat) => {
+    let options = chatlist.map((chat: ChatUser) => {
       return {
-        label: chat.custom.projectName,
-        value: chat.custom.jobPostId,
+        label: chat.custom.projectName || "",
+        value: chat.custom.jobPostId || "",
       };
     });
 
@@ -43,7 +59,7 @@ const ChatFilter = () => {
     return options;
   }, [chatlist]);
 
-  const selectStyles = {
+  const selectStyles: StylesConfig<unknown, boolean, GroupBase<unknown>> = {
     container: (base) => {
       return { ...base, width: "250px", fontSize: "14px" };
     },
@@ -64,29 +80,32 @@ const ChatFilter = () => {
   };
 
   const resetFilter = () => {
-    setJob(null);
-    setChatStatus(null);
-    setType(null);
+    setJob(undefined);
+    setChatStatus(undefined);
+    setType(undefined);
     applyFilter("reset");
   };
 
   const handler = () => {
     const selected_job = jobFilterDropdown.find(
-      (jb) => jb.value === filters.job
+      (jb: SelectOption) => jb.value === filters.job
     );
     if (selected_job) setJob(selected_job);
 
-    const selected_type = typeOptions.find((jb) => jb.value === filters.type);
+    const selected_type = typeOptions.find(
+      (jb: SelectOption) => jb.value === filters.type
+    );
     if (selected_type) setType(selected_type);
 
     const selected_status = statusOptions.find(
-      (jb) => jb.value === filters.status
+      (jb: SelectOption) => jb.value === filters.status
     );
     if (selected_status) setChatStatus(selected_status);
   };
 
   useEffect(() => {
     handler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   return (
@@ -94,7 +113,7 @@ const ChatFilter = () => {
       <T.Select
         options={jobFilterDropdown}
         value={job}
-        onChange={(value: SelectOption) => applyFilter("job", value)}
+        onChange={(value) => applyFilter("job", value as SelectOption)}
         placeholder="Filter by Project"
         components={{
           IndicatorSeparator: () => null,
@@ -103,7 +122,7 @@ const ChatFilter = () => {
       />
 
       <T.Select
-        onChange={(value: SelectOption) => applyFilter("status", value)}
+        onChange={(value) => applyFilter("status", value as SelectOption)}
         value={chatStatus}
         components={{ IndicatorSeparator: () => null }}
         options={statusOptions}
@@ -113,7 +132,7 @@ const ChatFilter = () => {
       <T.Select
         components={{ IndicatorSeparator: () => null }}
         value={type}
-        onChange={(value: SelectOption) => applyFilter("type", value)}
+        onChange={(value) => applyFilter("type", value as SelectOption)}
         options={typeOptions}
         placeholder="Type"
       />

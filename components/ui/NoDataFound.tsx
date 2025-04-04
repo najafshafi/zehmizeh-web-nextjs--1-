@@ -9,7 +9,7 @@ const NoDataWrapper = styled.div`
 
 interface Prop {
   className?: string;
-  title?: string | JSX.Element;
+  title?: string | React.ReactNode;
 }
 
 const NoDataFound = ({ className, title }: Prop) => {
