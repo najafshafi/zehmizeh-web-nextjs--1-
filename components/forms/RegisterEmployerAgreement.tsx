@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import CustomButton from "../custombutton/CustomButton";
 import { useState } from "react";
-import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+// import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import toast from "react-hot-toast";
 

@@ -10,6 +10,7 @@ import { capitalizeFirstLetter } from "@/helpers/utils/misc";
 import GalleryIcon from "@/public/icons/gallery.svg";
 import DeleteIcon from "@/public/icons/trash.svg";
 import { coverImgHandler } from "@/helpers/utils/coverImgHandler";
+import React from "react";
 
 type Props = {
   data: {
@@ -102,7 +103,7 @@ const PortfolioListItem = ({ data, onUpdate, allowEdit }: Props) => {
   };
 
   /** @function - This will stop propagation of parent click and will open the delete prompt */
-  const openDeletePrompt = (e: any) => {
+  const openDeletePrompt = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     toggleDeletePrompt();
   };

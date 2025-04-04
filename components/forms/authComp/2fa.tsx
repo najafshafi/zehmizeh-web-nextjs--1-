@@ -103,11 +103,11 @@ export default function TwoFactor() {
     }
   }, [user, router]);
 
-  const onChange = (value) => {
+  const onChange = (value: string) => {
     setOtp(value);
   };
 
-  const handleOTP = (e) => {
+  const handleOTP = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (otp === "") {
       showErr("Please enter a valid OTP");
@@ -170,27 +170,24 @@ export default function TwoFactor() {
             onClose={toggleEditModal}
           />
         </h2>
-        <form
-         className=" mt-4"
-          onSubmit={handleOTP}
-        >
+        <form className=" mt-4" onSubmit={handleOTP}>
           <OtpInputWrapper>
-          <ReactOtpInput
-            value={otp}
-            onChange={onChange}
-            renderSeparator={<span style={{ color: '#909090' }}>-</span>}
-            numInputs={6}
-            containerStyle="otp-input"
-            inputStyle={{
-              maxWidth: '3.5rem',
-              width: '100%',
-              height: '3.5rem',
-              borderRadius: 7,
-              margin: 8,
-            }}
-            shouldAutoFocus
-            renderInput={(props) => <input {...props} />}
-          />
+            <ReactOtpInput
+              value={otp}
+              onChange={onChange}
+              renderSeparator={<span style={{ color: "#909090" }}>-</span>}
+              numInputs={6}
+              containerStyle="otp-input"
+              inputStyle={{
+                maxWidth: "3.5rem",
+                width: "100%",
+                height: "3.5rem",
+                borderRadius: 7,
+                margin: 8,
+              }}
+              shouldAutoFocus
+              renderInput={(props) => <input {...props} />}
+            />
           </OtpInputWrapper>
 
           <StyledButton
@@ -202,7 +199,7 @@ export default function TwoFactor() {
             disabled={isLoading}
             background="#F2B420"
           >
-            {isLoading ? <LoadingButtons /> : 'Verify'}
+            {isLoading ? <LoadingButtons /> : "Verify"}
           </StyledButton>
 
           {timer > 0 ? (
@@ -251,21 +248,18 @@ export default function TwoFactor() {
           onClose={toggleEditModal}
         />
       </LimitedH2>
-      <form
-        className="  mt-4   "
-        onSubmit={handleOTP}
-      > 
+      <form className="  mt-4   " onSubmit={handleOTP}>
         <OtpInputWrapper>
-        <ReactOtpInput
+          <ReactOtpInput
             value={otp}
             onChange={onChange}
-            renderSeparator={<span style={{ color: '#909090' }}>-</span>}
+            renderSeparator={<span style={{ color: "#909090" }}>-</span>}
             numInputs={6}
             containerStyle="otp-input"
             inputStyle={{
-              maxWidth: '3.5rem',
-              width: '100%',
-              height: '3.5rem',
+              maxWidth: "3.5rem",
+              width: "100%",
+              height: "3.5rem",
               borderRadius: 7,
               margin: 8,
             }}
@@ -275,21 +269,21 @@ export default function TwoFactor() {
         </OtpInputWrapper>
 
         <StyledButton
-            className="mt-2"
-            width={200}
-            height={56}
-            type="submit"
-            padding="0"
-            disabled={isLoading}
-            background="#F2B420"
-            style={{ 
-              marginTop: '0.5rem',
-              width: '200px',
-              height: '56px',
-            }}
-          >
-            {isLoading ? <LoadingButtons /> : 'Verify'}
-          </StyledButton>
+          className="mt-2"
+          width={200}
+          height={56}
+          type="submit"
+          padding="0"
+          disabled={isLoading}
+          background="#F2B420"
+          style={{
+            marginTop: "0.5rem",
+            width: "200px",
+            height: "56px",
+          }}
+        >
+          {isLoading ? <LoadingButtons /> : "Verify"}
+        </StyledButton>
 
         {timer > 0 ? (
           <h4 className="mt-5 flex items-center justify-center ">
@@ -298,7 +292,7 @@ export default function TwoFactor() {
           </h4>
         ) : (
           <h4 className="mt-4 flex items-center justify-center g-1">
-              Didn&apos;t receive your code?{" "}
+            Didn&apos;t receive your code?{" "}
             <StyledButton
               onClick={onResend}
               variant="link"

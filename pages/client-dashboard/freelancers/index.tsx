@@ -8,7 +8,9 @@ import Loader from "@/components/Loader";
 import Tabs from "@/components/ui/Tabs";
 import NoDataFound from "@/components/ui/NoDataFound";
 import FreelancerCard from "./FreelancerCard";
-import useDashboardFreelancers from "./use-dashboard-freelancers";
+import useDashboardFreelancers, {
+  FreelancerData,
+} from "./use-dashboard-freelancers";
 
 const Wrapper = styled.div`
   border-radius: 0.75rem;
@@ -35,7 +37,7 @@ const Wrapper = styled.div`
 `;
 
 // Define an interface for the freelancer item
-interface FreelancerItem {
+interface FreelancerItem extends FreelancerData {
   bookmark_id?: string;
   job_post_id?: string;
   [key: string]: string | number | boolean | object | undefined;
@@ -99,17 +101,18 @@ const Freelancers = () => {
         !isRefetching &&
         (freelancers?.length > 0 ? (
           <div className="list mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-            {freelancers?.map((item: FreelancerItem) => (
+            {freelancers?.map((item: FreelancerData, index: number) => (
               <div
                 key={
-                  activeTab == "current_hires"
-                    ? item?.job_post_id
-                    : item?.bookmark_id
+                  (activeTab == "current_hires"
+                    ? (item as FreelancerItem)?.job_post_id
+                    : (item as FreelancerItem)?.bookmark_id) ||
+                  `freelancer-${index}`
                 }
                 className="mb-3"
               >
                 <FreelancerCard
-                  data={item}
+                  data={item as FreelancerItem}
                   activeTabKey={activeTab}
                   refetch={refetch}
                 />

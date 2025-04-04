@@ -65,7 +65,7 @@ const RegistrationCheckboxes = ({ shouldShow, payload, setStep }: Props) => {
           toggle={() => setTermsChecked((prev) => !prev)}
         />
         <span className="ms-2">
-          I agree to all of ZehMizeh's
+          I agree to all of ZehMizeh&apos;s
           <Link
             href="/terms-of-service"
             className="yellow-link"
@@ -107,7 +107,7 @@ const RegistrationCheckboxes = ({ shouldShow, payload, setStep }: Props) => {
         />
         <span className="ms-2">
           I understand that payment for projects found on ZMZ{" "}
-          <b>must be made through ZMZ's payment system</b> and that payment
+          <b>must be made through ZMZ&apos;s payment system</b> and that payment
           through any other method constitutes theft from the company (a
           violation of our Terms of Service and Halacha).
         </span>

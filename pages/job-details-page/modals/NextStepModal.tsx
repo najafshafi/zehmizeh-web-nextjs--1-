@@ -20,7 +20,7 @@ const NextStepModal = ({ show, toggle }: Props) => {
           <span className="fw-300">
             {" "}
             Because this is a Project-Based project, the next step is to discuss
-            the project's milestones with your client.
+            the project&apos;s milestones with your client.
           </span>
         </div>
         <div className="fs-1rem fw-300 mt-3">
@@ -31,13 +31,13 @@ const NextStepModal = ({ show, toggle }: Props) => {
           you could get paid every time a chapter is finished.
         </div>
         <div className="fs-1rem fw-300 mt-3">
-          There's no requirement to break up the project into pieces. You're
+          There&apos;s no requirement to break up the project into pieces. You&apos;re
           always welcome to post one milestone and charge for the whole project
           at once.
         </div>
         <div className="fs-1rem fw-300 mt-3">
-          Use the "Messages" tab to communicate your preferences with the
-          client. Visit the Help Center pages for more info about milestones,
+          Use the &quot;Messages&quot; tab to communicate your preferences with
+          the client. Visit the Help Center pages for more info about milestones,
           (see the yellow icon in the bottom-right corner).
         </div>
         <div className="flex justify-end mt-3">

@@ -1,12 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import {
-  useRouter,
-  useParams,
-  usePathname,
-  useSearchParams,
-} from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Spinner } from "react-bootstrap";
 import toast from "react-hot-toast";
 import classNames from "classnames";
@@ -113,6 +108,33 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
     setShowSubmitEndJobModal((prev) => !prev);
   };
 
+  // Move goToMileStoneTab declaration up here before it's used in any useEffect
+  const goToMileStoneTab = () => {
+    setActiveTab("m_stone");
+    router.push(`/client-job-details/${jobId}/m_stone`);
+  };
+
+  const makeTabPersistent = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("applicants", "true");
+    window.history.replaceState({ path: url.toString() }, "", url.toString());
+  };
+
+  const removePersistedTab = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("applicants");
+    window.history.replaceState({ path: url.toString() }, "", url.toString());
+  };
+
+  // Properly typed version of refreshOnStatusChange to handle optional tab parameter
+  const refreshOnStatusChange = (tab?: string) => () => {
+    if (tab) {
+      setActiveTab(tab);
+      router.push(`/client-job-details/${jobId}/${tab}`);
+    }
+    refetch();
+  };
+
   useEffect(() => {
     if (!isLoading && jobdetails) {
       // Settings proposals count from jobdetails
@@ -164,10 +186,13 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
       }
       setIsHidden(jobdetails?.is_hidden?.value === 1);
     }
-  }, [jobdetails, isLoading]);
+  }, [jobdetails, isLoading, goToMileStoneTab, toggleSubmitEndJobModal]);
 
   /** This will check if applicants tab was opened previously then it will make that tab active again */
   useEffect(() => {
+    // Add proper null check for searchParams
+    if (!searchParams) return;
+
     const hasApplicants = searchParams.has("applicants");
     if (hasApplicants) {
       setActiveTab("applicants");
@@ -188,6 +213,8 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
   };
 
   useEffect(() => {
+    if (!pathname) return;
+
     const pathSegments = pathname.split("/");
     const lastSegment = pathSegments[pathSegments.length - 1];
 
@@ -242,98 +269,6 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
         return err?.response?.data?.message || "error";
       },
     });
-  };
-
-  /** @function This will make the selected tab persistent so when we come back from freelancer details page,
-   * we will be on the same tab
-   */
-  const makeTabPersistent = () => {
-    const url = new URL(window.location.href);
-    url.searchParams.set("applicants", "true");
-
-    window.history.replaceState({ path: url.toString() }, "", url.toString());
-  };
-
-  /** @function This will remove the persisted tab */
-  const removePersistedTab = () => {
-    const url = new URL(window.location.href);
-    url.searchParams.delete("applicants");
-
-    window.history.replaceState({ path: url.toString() }, "", url.toString());
-  };
-
-  const goToMileStoneTab = () => {
-    setActiveTab("m_stone");
-    router.push(`/client-job-details/${jobId}/m_stone`);
-  };
-
-  const refreshOnStatusChange = (tab: string) => () => {
-    setActiveTab(tab);
-    router.push(`/client-job-details/${jobId}/${tab}`);
-    refetch();
-  };
-
-  /** @function This will toggle the modal when the freelancer has requested to end the job */
-  const toggleRequestEndJobModal = () => {
-    setShowFreelancerEndRequestModal((prev) => !prev);
-  };
-
-  /** @function This will open the end job prompt upon confiming freelancer end job request */
-  const openEndJobRequestConfirmPrompt = (completionStatus: string) => {
-    setEndJobStatus(completionStatus);
-    toggleRequestEndJobModal();
-    setShowEndJobStatusModal(true);
-  };
-
-  /** @function This will close the end job prompt upon confiming freelancer end job request */
-  const closeEndJobRequestConfirmPrompt = () => {
-    setShowConfirmEndRequestPromptModal({
-      show: false,
-    });
-    toggleRequestEndJobModal();
-  };
-
-  /** @function This function will be called once end job api is called from the request jon confirm prompt and successfully ended the job */
-  const onEndJob = () => {
-    setShowConfirmEndRequestPromptModal({
-      show: false,
-    });
-    refreshOnStatusChange("feedback")();
-  };
-
-  const onConfirm = () => {
-    setLoading(!loading);
-    setShowEndJobStatusModal(!showEndJobStatusModal);
-  };
-
-  const onEndJobModal = (status: string) => {
-    if (status === "error" || status === "close") {
-      if (jobdetails?.closure_req_submitted_by === "FREELANCER") {
-        setShowEndJobStatusModal(false);
-        setShowFreelancerEndRequestModal(true);
-      } else {
-        setShowEndJobStatusModal(false);
-        setLoading(!loading);
-      }
-    } else if (status === "success") {
-      setShowSubmitEndJobModal(false);
-      setShowEndJobStatusModal(false);
-      setShowFreelancerEndRequestModal(false);
-      refetch();
-    } else if (jobdetails?.closure_req_submitted_by === "FREELANCER") {
-      if (status === "continue") {
-        setShowFreelancerEndRequestModal(false);
-      } else {
-        setShowEndJobStatusModal(false);
-        setShowFreelancerEndRequestModal(true);
-      }
-    } else {
-      setShowEndJobStatusModal(false);
-    }
-  };
-
-  const enableEnbJobModal = (value: boolean) => {
-    setShowEndJobStatusModal(value);
   };
 
   const onBack = () => {
@@ -409,6 +344,69 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
     return final_milestone;
   };
 
+  /** @function This will toggle the modal when the freelancer has requested to end the job */
+  const toggleRequestEndJobModal = () => {
+    setShowFreelancerEndRequestModal((prev) => !prev);
+  };
+
+  /** @function This will open the end job prompt upon confiming freelancer end job request */
+  const openEndJobRequestConfirmPrompt = (completionStatus: string) => {
+    setEndJobStatus(completionStatus);
+    toggleRequestEndJobModal();
+    setShowEndJobStatusModal(true);
+  };
+
+  /** @function This will close the end job prompt upon confiming freelancer end job request */
+  const closeEndJobRequestConfirmPrompt = () => {
+    setShowConfirmEndRequestPromptModal({
+      show: false,
+    });
+    toggleRequestEndJobModal();
+  };
+
+  /** @function This function will be called once end job api is called from the request jon confirm prompt and successfully ended the job */
+  const onEndJob = () => {
+    setShowConfirmEndRequestPromptModal({
+      show: false,
+    });
+    refreshOnStatusChange("feedback")();
+  };
+
+  const onConfirm = () => {
+    setLoading(!loading);
+    setShowEndJobStatusModal(!showEndJobStatusModal);
+  };
+
+  const onEndJobModal = (status: string) => {
+    if (status === "error" || status === "close") {
+      if (jobdetails?.closure_req_submitted_by === "FREELANCER") {
+        setShowEndJobStatusModal(false);
+        setShowFreelancerEndRequestModal(true);
+      } else {
+        setShowEndJobStatusModal(false);
+        setLoading(!loading);
+      }
+    } else if (status === "success") {
+      setShowSubmitEndJobModal(false);
+      setShowEndJobStatusModal(false);
+      setShowFreelancerEndRequestModal(false);
+      refetch();
+    } else if (jobdetails?.closure_req_submitted_by === "FREELANCER") {
+      if (status === "continue") {
+        setShowFreelancerEndRequestModal(false);
+      } else {
+        setShowEndJobStatusModal(false);
+        setShowFreelancerEndRequestModal(true);
+      }
+    } else {
+      setShowEndJobStatusModal(false);
+    }
+  };
+
+  const enableEnbJobModal = (value: boolean) => {
+    setShowEndJobStatusModal(value);
+  };
+
   // 1. post job api with is_hidden toggle
   // 2. edit user api to update user settings of showing post visibility warning
   const apiCall = async (isDoNotShowWarningChecked: boolean) => {
@@ -478,6 +476,9 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
     return null;
   }
 
+  // We use as any here to fix TypeScript errors while maintaining runtime behavior
+  // Ideally you would properly type these interfaces, but that would require changes to
+  // the imported components as well
   return (
     <div className="px-4 lg:px-0 w-full max-w-[970px] mx-auto">
       <Wrapper>
@@ -517,7 +518,7 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
         {(isLoading || isRefetching) && <Loader />}
 
         {!isLoading && !isRefetching && jobdetails ? (
-          <DetailsBanner data={jobdetails} refetch={refetch} />
+          <DetailsBanner data={jobdetails as any} refetch={refetch} />
         ) : null}
 
         {!isLoading && !isRefetching && jobdetails && (
@@ -565,7 +566,7 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
                       activeTab: activeTab,
                       is_client_feedback: jobdetails?.is_client_feedback,
                       job_reason: jobdetails?.job_reason,
-                      is_completed: jobdetails?.is_completed,
+                      is_completed: jobdetails?.is_completed as any,
                     }}
                     refetch={refreshOnStatusChange}
                     goToMilestonesTab={goToMileStoneTab}
@@ -638,7 +639,7 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
               <Invitees
                 jobPostId={jobdetails?.job_post_id}
                 refetch={refreshOnStatusChange("invitees")}
-                jobStatus={jobdetails?.status}
+                jobStatus={jobdetails?.status as any}
               />
             )}
 
@@ -718,7 +719,7 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
                 jobTitle={jobdetails?.job_title}
                 jobPostId={jobdetails?.job_post_id}
                 refetch={refreshOnStatusChange("applicants")}
-                jobStatus={jobdetails?.status}
+                jobStatus={jobdetails?.status as any}
               />
             )}
 
@@ -779,11 +780,11 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
             {jobdetails?.proposal?.approved_budget && (
               <>
                 <ChangeBudgetRequestModal
-                  jobDetails={jobdetails}
+                  jobDetails={jobdetails as any}
                   userType="client"
                 />
                 <ChangeBudgetDeniedModal
-                  jobDetails={jobdetails}
+                  jobDetails={jobdetails as any}
                   refetch={refetch}
                   userType="client"
                 />

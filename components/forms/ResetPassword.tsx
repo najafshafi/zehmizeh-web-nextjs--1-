@@ -39,10 +39,10 @@ YupPassword(yup);
 const passwordError =
   "Every password must include at least: 1 uppercase letter, 1 lowercase letter, 1 number, 1 symbol, and at least 8 characters";
 
-interface FormData {
-  password: string;
-  confirm: string;
-}
+// interface FormData {
+//   password: string;
+//   confirm: string;
+// }
 
 export default function ResetPassword() {
   useStartPageFromTop();
@@ -56,7 +56,7 @@ export default function ResetPassword() {
   const [otp, setOtp] = useState<string>("");
   const router = useRouter();
 
-  const onChange = (value) => {
+  const onChange = (value: string) => {
     setOtp(value);
   };
 
@@ -73,7 +73,7 @@ export default function ResetPassword() {
       confirm: yup
         .string()
         .required("Password is required.")
-        .oneOf([yup.ref("password"), null], "Passwords don't match."),
+        .oneOf([yup.ref("password")], "Passwords don't match."),
     })
     .required();
 
@@ -84,7 +84,7 @@ export default function ResetPassword() {
     }
   }, [user?.email_id, router]);
 
-  const handleOTP = (e: any) => {
+  const handleOTP = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (otp === "") {
       showErr("Please enter a valid OTP");
@@ -143,7 +143,7 @@ export default function ResetPassword() {
   }, []);
 
   useEffect(() => {
-    let otpTimer;
+    let otpTimer: NodeJS.Timeout;
     if (timer > 0) {
       otpTimer = setTimeout(timeOutCallback, 1000);
     }

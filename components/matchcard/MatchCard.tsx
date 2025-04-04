@@ -20,7 +20,9 @@ const MatchCard: React.FC<MatchCardProps> = ({ title, count }) => {
         <p className="text-[24px] pb-3 text-center xl:px-8">{title}</p>
       </div>
       <div className="w-full text-[16px] font-normal bg-lightYellow text-orangeYellow rounded-md py-2 flex items-center justify-center">
-        {count} Freelancers
+        <span data-testid="freelancer-count">
+          {count} Freelancer{count !== 1 ? "s" : ""}
+        </span>
       </div>
     </div>
   );

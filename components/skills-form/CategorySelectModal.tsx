@@ -268,7 +268,7 @@ export const CategorySkillSelectModal = ({
     return (
       <Chip
         isActive={isActive}
-        key={item[constantKeys(type).id as keyof typeof item]}
+        key={`${item[constantKeys(type).id as keyof typeof item]}`}
         label={item[constantKeys(type).name as keyof typeof item]}
         className="m-1 transition-all"
         onSelect={() => {
@@ -322,9 +322,9 @@ export const CategorySkillSelectModal = ({
               {tooltip?.length > 0
                 ? tooltip
                 : user_type === "freelancer"
-                ? `If you were to think of the types of services you want to offer on ZMZ,
+                  ? `If you were to think of the types of services you want to offer on ZMZ,
               which of the listed categories would they fall into? Select all that apply.`
-                : `Think of the skill categories you want your freelancer to have in
+                  : `Think of the skill categories you want your freelancer to have in
               order to complete this project successfully. Type them in below and
               select relevant choices from the drop-down menu.`}
             </Tooltip>
@@ -347,7 +347,7 @@ export const CategorySkillSelectModal = ({
               {formData.map((item) => {
                 return (
                   <Chip
-                    key={item[constantKeys(type).id as keyof typeof item]}
+                    key={`${item[constantKeys(type).id as keyof typeof item]}`}
                     label={
                       item[
                         constantKeys(type).name as keyof typeof item

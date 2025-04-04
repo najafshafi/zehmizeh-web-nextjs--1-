@@ -55,8 +55,9 @@ const SearchableDropdown = ({
   }, [searchResults]);
 
   useEffect(() => {
-    const handleDocumentClick = (event) => {
-      if (!event.target.closest(`.searchable-input`)) {
+    const handleDocumentClick = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest(`.searchable-input`)) {
         setShowOptions(false);
       }
     };

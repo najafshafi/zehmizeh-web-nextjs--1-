@@ -7,6 +7,7 @@ import EditBlueIcon from "@/public/icons/edit-blue-outline.svg";
 import { StyledButton } from "@/components/forms/Buttons";
 import { IClientDetails } from "@/helpers/types/client.type";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+import Image from "next/image";
 
 type TData = Partial<IClientDetails & IFreelancerDetails>;
 
@@ -55,10 +56,12 @@ export const ProfilePhoto = ({
           className="profile__img pointer flex justify-center self-center my-3"
           onClick={() => setShowEditPictureModal((prev) => !prev)}
         >
-          <img
+          <Image
             className="img"
             src={formState?.user_image || "/images/default_avatar.png"}
             alt="freelancer-profile"
+            width={100}
+            height={100}
           />
           <div className="edit-picture-btn flex items-center justify-center">
             <EditBlueIcon />

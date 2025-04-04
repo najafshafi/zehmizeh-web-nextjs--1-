@@ -213,8 +213,8 @@ const Conversation = ({
           )}
 
           <p className="mt-5">
-            Messages in this chat will still be marked <b>'Unread'</b> until
-            they're seen on the project details page.
+            Messages in this chat will still be marked <b>&quot;Unread&quot;</b>{" "}
+            until they&apos;re seen on the project details page.
           </p>
         </div>
       </Wrapper>

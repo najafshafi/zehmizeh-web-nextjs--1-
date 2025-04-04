@@ -8,6 +8,7 @@ import useDashboardStats from "./use-dashboard-stats";
 import StarIcon from "@/public/icons/starYellow.svg";
 import { numberWithCommas } from "@/helpers/utils/misc";
 import { breakpoints } from "@/helpers/hooks/useResponsive";
+import { DashboardStats as DashboardStatsType } from "./use-dashboard-stats";
 
 const StatsWrapper = styled.div`
   .col,
@@ -62,7 +63,7 @@ const DashboardStats = () => {
             </div>
             {!isLoading ? (
               <div className="stat-value text-3xl font-bold mt-3 leading-relaxed tracking-wide">
-                {numberWithCommas(dashboardStats?.donejob)}
+                {numberWithCommas(dashboardStats?.donejob || 0)}
               </div>
             ) : (
               <div className="mt-3">
@@ -82,7 +83,7 @@ const DashboardStats = () => {
             {!isLoading ? (
               <div className="stat-value text-3xl font-bold mt-3 leading-relaxed tracking-wide">
                 {dashboardStats?.totalHired
-                  ? numberWithCommas(dashboardStats?.totalHired)
+                  ? numberWithCommas(dashboardStats.totalHired)
                   : 0}
               </div>
             ) : (
@@ -105,13 +106,13 @@ const DashboardStats = () => {
                 <StarIcon />
                 <div className="text-3xl font-bold leading-relaxed tracking-wide">
                   {dashboardStats?.ratings?.average
-                    ? dashboardStats?.ratings?.average?.toFixed(1)
+                    ? dashboardStats.ratings.average.toFixed(1)
                     : 0}
                 </div>
                 <div className="text-lg font-normal">
                   (
                   {dashboardStats?.ratings?.count
-                    ? numberWithCommas(dashboardStats?.ratings?.count)
+                    ? numberWithCommas(dashboardStats.ratings.count)
                     : 0}{" "}
                   reviews)
                 </div>

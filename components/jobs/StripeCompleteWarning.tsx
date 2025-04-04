@@ -49,7 +49,7 @@ const StripeCompleteWarning = ({ show, toggle, stripeStatus }: Props) => {
               <>
                 <h3 className="fs-36 fw-700">Stripe verification pending</h3>
                 <div className="fs-20 font-normal">
-                  Your Stripe account information is being verified. Once you're
+                  Your Stripe account information is being verified. Once you&apos;re
                   approved, you can add your bank information.
                 </div>
               </>

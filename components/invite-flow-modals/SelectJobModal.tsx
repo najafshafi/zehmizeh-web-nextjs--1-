@@ -67,13 +67,13 @@ const BudgetAndDate = ({
   if (budget.type === "fixed") {
     return (
       <div className="text-xl font-normal">
-        {showFormattedBudget(budget)} ({budget.type})
+        {showFormattedBudget(budget as any)} ({budget.type})
       </div>
     );
   } else if (budget.type === "hourly") {
     return (
       <div className="text-xl font-normal">
-        {showFormattedBudget(budget)} ({budget.type})
+        {showFormattedBudget(budget as any)} ({budget.type})
         {expectedDate && <span> | {expectedDate}</span>}
       </div>
     );

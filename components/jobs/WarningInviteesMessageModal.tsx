@@ -57,8 +57,8 @@ export const WarningInviteesMessageModal = ({
           />
 
           <p className="mt-4 mb-2">
-            Payment for projects found on ZMZ must be made through ZMZ's payment
-            system. Paying through{" "}
+            Payment for projects found on ZMZ must be made through ZMZ&apos;s
+            payment system. Paying through{" "}
             <b>any other method is theft from the company,</b> (violating our
             Terms of Service and halacha).
           </p>

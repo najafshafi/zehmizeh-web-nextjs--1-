@@ -1,4 +1,10 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+  AxiosHeaders,
+} from "axios";
 import { RetryQueueItem } from "@/helpers/types/axios.type";
 import toast from "react-hot-toast";
 
@@ -21,14 +27,19 @@ const isFreelancerProfilePath = () => {
 //   ngRokHeader['ngrok-skip-browser-warning'] = 'true';
 // }
 
-function onRequest(config: AxiosRequestConfig) {
+function onRequest(config: InternalAxiosRequestConfig) {
   const token = localStorage.getItem("token");
+
+  if (!config.headers) {
+    config.headers = new AxiosHeaders();
+  }
+
   if (token) {
-    config.headers["Authorization"] = "Bearer " + token;
+    config.headers.set("Authorization", "Bearer " + token);
   } else {
     // After logout also axios has the last storred token in auth, clearing it here
     //config.withCredentials = true;
-    config.headers["Authorization"] = "";
+    config.headers.set("Authorization", "");
   }
   return config;
 }
@@ -53,7 +64,11 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 };
 
 const onResponseError = async (error: AxiosError): Promise<unknown> => {
-  const originalRequest: AxiosRequestConfig = error.config;
+  if (!error.config) {
+    return Promise.reject(error);
+  }
+
+  const originalRequest = error.config;
 
   // Check if we're on a freelancer profile page
   const isOnFreelancerProfile = isFreelancerProfilePath();
@@ -111,9 +126,15 @@ const onResponseError = async (error: AxiosError): Promise<unknown> => {
 
         // Setting new token to localstorage and axios headers
         localStorage.setItem("token", response.data.data.token);
-        error.config.headers[
-          "Authorization"
-        ] = `Bearer ${response.data.data.token}`;
+
+        if (!error.config.headers) {
+          error.config.headers = new AxiosHeaders();
+        }
+
+        error.config.headers.set(
+          "Authorization",
+          `Bearer ${response.data.data.token}`
+        );
 
         // Retry all requests in the queue with the new token
         refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
@@ -147,8 +168,12 @@ const onResponseError = async (error: AxiosError): Promise<unknown> => {
 
     // If refresh token api is already pending then pushing other requests to queue and holding it until new token is created
     // once new token created then calling all failed api and giving response to respective function who called it
-    return new Promise<void>((resolve, reject) => {
-      refreshAndRetryQueue.push({ config: originalRequest, resolve, reject });
+    return new Promise((resolve, reject) => {
+      refreshAndRetryQueue.push({
+        config: originalRequest,
+        resolve: resolve as (value: unknown) => void,
+        reject,
+      });
     });
   }
 

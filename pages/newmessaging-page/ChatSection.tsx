@@ -1,4 +1,4 @@
-import SearchMessagesModal from "@/pages/messaging-page/partials/SearchMessagesModal";
+// import SearchMessagesModal from "@/pages/messaging-page/partials/SearchMessagesModal";
 import * as M from "./styled";
 import useResponsive from "@/helpers/hooks/useResponsive";
 import BackArrow from "@/public/icons/back-arrow.svg";
@@ -43,7 +43,7 @@ const ChatSection = () => {
                 {/* {getRemoteUser(activeChat)?.user_type === 'freelancer'
                   ? 'Freelancer'
                   : 'Client'} */}
-                Freelancer 's timezone:{" "}
+                Freelancer&apos;s timezone:{" "}
                 {/* {moment()
                   .tz(getRemoteUser(activeChat).timezone)
                   .format('hh:mm A')} */}

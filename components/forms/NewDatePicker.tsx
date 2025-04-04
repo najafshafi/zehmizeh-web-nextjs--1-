@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import DatePicker from "react-datepicker";
 import styled from "styled-components";
 import CalendarIcon from "@/public/icons/calendar.svg";
@@ -11,16 +11,8 @@ const DateInputWrapper = styled.div<{ value?: string }>`
   color: ${(props) => (props.value ? "#000" : "lightgray")};
 `;
 
-const NewCustomDatePicker = (props) => {
-  function range(start, stop, step) {
-    const a = [start];
-    let b = start;
-    while (b < stop) {
-      a.push((b += step || 1));
-    }
-    return b > stop ? a.slice(0, -1) : a;
-  }
-
+// Use generic type to allow all DatePicker props
+const NewCustomDatePicker = (props: any) => {
   const currentYear = new Date().getFullYear();
   const years = [currentYear, currentYear + 1];
   const months = [
@@ -37,6 +29,7 @@ const NewCustomDatePicker = (props) => {
     "November",
     "December",
   ];
+
   return (
     <div className="w-full">
       <DatePicker
@@ -61,7 +54,7 @@ const NewCustomDatePicker = (props) => {
             </button>
             <select
               value={new Date(date).getFullYear()}
-              onChange={({ target: { value } }) => changeYear(value)}
+              onChange={({ target: { value } }) => changeYear(parseInt(value))}
             >
               {years.map((option) => (
                 <option key={option} value={option}>
@@ -94,7 +87,7 @@ const NewCustomDatePicker = (props) => {
             </button>
           </div>
         )}
-        customInput={React.createElement(CustomInput)}
+        customInput={<CustomInput />}
         {...props}
       />
     </div>
@@ -103,24 +96,24 @@ const NewCustomDatePicker = (props) => {
 
 export default NewCustomDatePicker;
 
-const CustomInput = ({
-  value,
-  placeholder,
-  onClick,
-  ref,
-}: {
-  value: string;
+interface CustomInputProps {
+  value?: string;
   placeholder?: string;
-  onClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-  ref: any;
-}) => (
-  <DateInputWrapper
-    className="date-input flex items-center justify-between pointer"
-    onClick={onClick}
-    ref={ref}
-    value={value}
-  >
-    <div>{value || placeholder}</div>
-    {value ? "" : <CalendarIcon />}
-  </DateInputWrapper>
+  onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+}
+
+const CustomInput = forwardRef<HTMLDivElement, CustomInputProps>(
+  ({ value, placeholder, onClick }, ref) => (
+    <DateInputWrapper
+      className="date-input flex items-center justify-between pointer"
+      onClick={onClick}
+      ref={ref}
+      value={value}
+    >
+      <div>{value || placeholder}</div>
+      {value ? "" : <CalendarIcon />}
+    </DateInputWrapper>
+  )
 );
+
+CustomInput.displayName = "CustomInput";

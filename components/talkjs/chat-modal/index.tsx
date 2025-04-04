@@ -1,9 +1,9 @@
 import { StyledModal } from "@/components/styled/StyledModal";
 import { Session, Chatbox, Inbox } from "@talkjs/react";
 import ChatLoading from "@/public/icons/waiting.svg";
-import TalkJS from "@/pages/talk-js";
+// import TalkJS from "@/pages/talk-js";
 import * as T from "@/pages/talk-js/style";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/redux/store";
@@ -20,6 +20,19 @@ interface Prop {
   theme: "proposal" | "invite";
 }
 
+// TalkJS theme options interface
+interface ThemeOptions {
+  // Theme options properties
+  [key: string]: string | number | boolean | ThemeOptions | undefined;
+}
+
+// Define interface for TalkJsChat state
+interface TalkJsChatState {
+  themes: {
+    [key: string]: string | ThemeOptions;
+  };
+}
+
 const ChatModal = ({
   show,
   closeModal,
@@ -27,7 +40,10 @@ const ChatModal = ({
   freelancerName,
   theme,
 }: Prop) => {
-  const { themes } = useSelector((state: RootState) => state.talkJsChat);
+  const { themes } = useSelector(
+    (state: RootState) =>
+      (state as unknown as { talkJsChat: TalkJsChatState }).talkJsChat
+  );
   const { user } = useAuth();
   const [chatAuth, setChatAuth] = useState<{ token: string; loading: boolean }>(
     { loading: false, token: "" }
@@ -42,34 +58,39 @@ const ChatModal = ({
     </T.Loading>
   );
 
-  const talkjsAccessTokenHandler = async () => {
+  const talkjsAccessTokenHandler = useCallback(async () => {
     try {
-      setChatAuth({ ...chatAuth, loading: true });
+      // Use functional update to avoid dependency on chatAuth
+      setChatAuth((prevState) => ({ ...prevState, loading: true }));
 
       const response = await talkJSAccessTokenApi();
       if (response && response?.token) {
         setChatAuth({ loading: false, token: response.token });
       } else {
-        setChatAuth({ ...chatAuth, loading: false });
+        setChatAuth((prevState) => ({ ...prevState, loading: false }));
         toast.error("Failed to get chat token");
       }
     } catch (error) {
-      setChatAuth({ ...chatAuth, loading: false });
+      console.error("Error fetching chat token:", error);
+      setChatAuth((prevState) => ({ ...prevState, loading: false }));
       toast.error("Chat authentication failed");
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (user.user_id && !isStagingEnv() && show) {
       talkjsAccessTokenHandler();
     }
-  }, [user, show]);
+  }, [user, show, talkjsAccessTokenHandler]);
 
   // Get session parameters based on environment and token
   const sessionParams = useMemo(() => {
     if (isStagingEnv()) return {};
     return { token: chatAuth.token };
   }, [chatAuth.token]);
+
+  // Ensure talkjsApiKey never returns undefined
+  const apiKey = useMemo(() => talkjsApiKey() || "", []);
 
   return (
     <StyledModal
@@ -99,11 +120,7 @@ const ChatModal = ({
             )}
 
             {((chatAuth.token && !chatAuth.loading) || isStagingEnv()) && (
-              <Session
-                {...sessionParams}
-                appId={talkjsApiKey()}
-                userId={user.user_id}
-              >
+              <Session {...sessionParams} appId={apiKey} userId={user.user_id}>
                 <Chatbox
                   messageField={{
                     placeholder: "Type your message here...",

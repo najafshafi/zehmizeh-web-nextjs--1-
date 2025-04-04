@@ -10,9 +10,9 @@ import { GetStartedWrapper } from "./style";
 import { IoMdClose } from "react-icons/io";
 import { StyledModal } from "@/components/styled/StyledModal";
 import { Modal } from "react-bootstrap";
-import { StyledButton } from "@/components/forms/Buttons";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 import { FREELANCER_PROFILE_TABS } from "@/helpers/const/tabs";
+import CustomButton from "../custombutton/CustomButton";
 
 type Props = {
   user: IFreelancerDetails;
@@ -97,14 +97,12 @@ export const GetStarted = ({ user, isLoading }: Props) => {
             profile! A ZMZ staff member will check your account for approval
             shortly!
           </span>
-          <StyledButton
-            padding="1.125rem 2.5rem"
-            margin="10px 4px"
-            className="mt-4"
+
+          <CustomButton
+            text="Close"
+            className="my-[10px] mx-[4px] py-[1.125rem] px-[2.5rem] bg-primary text-white rounded-md hover:scale-105 transition-all duration-300 mt-4"
             onClick={() => setIsShowingCompleteModal(0)}
-          >
-            Close
-          </StyledButton>
+          />
         </Modal.Body>
       </StyledModal>
     );

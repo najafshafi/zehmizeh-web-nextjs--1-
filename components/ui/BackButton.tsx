@@ -42,7 +42,7 @@
 "use client"; // Required for Next.js client components
 
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+// import Image from "next/image";
 import BackArrow from "../../public/icons/back-arrow.svg";
 
 type Props = {

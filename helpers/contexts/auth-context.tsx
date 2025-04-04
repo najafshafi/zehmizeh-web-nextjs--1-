@@ -125,8 +125,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const getUserSkills = () => {
     if (!user || user.user_type !== "freelancer" || !Array.isArray(user.skills))
       return [];
-    let categories = user?.skills.filter((skl) => skl.category_name);
-    categories = categories.map((cat) =>
+    let categories = user?.skills.filter((skl: any) => skl.category_name);
+    categories = categories.map((cat: any) =>
       capitalizeFirstLetter(cat.category_name)
     );
     return categories;
@@ -143,7 +143,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     );
     if (intercomFlag.includes(false)) return boot();
 
-    const ACCOUNTSTATUS = {
+    const ACCOUNTSTATUS: Record<number, string> = {
       0: "Rejected",
       1: "Approved",
     };
@@ -162,7 +162,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const customAttributes: IntercomPayload = {
       user_type: capitalizeFirstLetter(user.user_type),
-      account_status: ACCOUNTSTATUS[user.is_account_approved] ?? "Under Review",
+      account_status:
+        ACCOUNTSTATUS[user.is_account_approved as 0 | 1] ?? "Under Review",
       last_modified: moment(user.lat).format("MMM DD, YYYY"),
       country: user.location.country_name,
     };
@@ -224,7 +225,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
           user: userAllData,
         });
 
-        const fromPath = searchParams.get("from")
+        const fromPath = searchParams?.get("from")
           ? `${pathname}${searchParams.toString()}`
           : null;
         if (fromPath) {
@@ -274,7 +275,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
             apiClient.defaults.headers.common["Authorization"] =
               "Bearer " + res.data?.data?.token;
 
-            const fromPath = searchParams.get("from");
+            const fromPath = searchParams?.get("from");
             if (fromPath) {
               router.push(fromPath);
             } else if (res.data?.data?.user_type === "client") {
@@ -297,7 +298,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
           setIsLoading(false);
           console.log(err);
           toast.error(
-            err.response?.data?.message || "Something went wrong, try later!"
+            (err as any).response?.data?.message ||
+              "Something went wrong, try later!"
           );
         });
     }
@@ -325,7 +327,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error("Registration:", error);
       setIsLoading(false);
       toast.error(
-        error.response?.data?.message || "Something went wrong, try later!"
+        (error as any).response?.data?.message ||
+          "Something went wrong, try later!"
       );
     }
   };
@@ -359,7 +362,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
           setIsLoading(false);
           console.log(err);
           toast.error(
-            err.response?.data?.message || "Something went wrong, try later!"
+            (err as any).response?.data?.message ||
+              "Something went wrong, try later!"
           );
         });
     } else {
@@ -378,7 +382,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       twoFactor,
       submitRegisterUser,
       setEmail: (email: string) =>
-        setUser((prev) => ({ ...prev, email_id: email })),
+        setUser((prev: any) => ({ ...prev, email_id: email })),
     }),
     [isLoading, signout, user, twoFactor, setUser]
   );

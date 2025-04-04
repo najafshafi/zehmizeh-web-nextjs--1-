@@ -2,7 +2,9 @@ import { useState } from "react";
 import styled from "styled-components";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { generateAwsUrl } from "helpers/http/common";
+import { generateAwsUrl } from "@/helpers/http/common";
+import Image from "next/image";
+import React from "react";
 
 const ImageWrapper = styled.div`
   position: relative;
@@ -64,8 +66,12 @@ const ImageUploader = ({
 }: Props) => {
   const [uploading, setUploading] = useState<boolean>(false);
 
-  const handleUploadImage = (e: any) => {
+  const handleUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     /* Uploaded file details */
+    if (!e.target.files || e.target.files.length === 0) {
+      return;
+    }
+
     const fileSize = e.target.files[0].size / 1024 / 1024;
     const name = e.target.files[0].name;
     const extension = e.target.files[0].type?.replace(/(.*)\//g, "");
@@ -80,7 +86,6 @@ const ImageUploader = ({
     } else {
       setUploading(true);
       const file = e.target.files[0];
-      // eslint-disable-next-line no-debugger
 
       /* This will generate a url where the image shoule be uploaded */
       generateAwsUrl({
@@ -111,10 +116,12 @@ const ImageUploader = ({
 
   return (
     <ImageWrapper>
-      <img
-        src={imageUrl || null}
+      <Image
+        src={imageUrl || ""}
         className="profile-pic-img"
         alt="uploaded-profile-image"
+        width={100}
+        height={100}
       />
       {!uploading && (
         <>

@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React from "react";
 import CustomButton from "../custombutton/CustomButton";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -16,7 +16,7 @@ interface RegisterFreelancerQuestionProps {
 
 const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = ({
   onNext,
-  initialData,
+  //initialData,
 }) => {
   const router = useRouter();
   const pathname = usePathname();

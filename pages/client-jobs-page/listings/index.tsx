@@ -22,6 +22,7 @@ interface JobItem {
   job_post_id: string;
   job_title: string;
   status: string;
+  date_created?: string;
   userdata?: {
     user_id: string;
     first_name: string;
@@ -233,7 +234,7 @@ const Listings = ({ data, listingType, sortFilter, toggleReset }: Props) => {
                   <div className="text-2xl font-normal mb-4">
                     {convertToTitleCase(item.job_title)}
                   </div>
-                  <ListingFooter item={item} listingType={listingType} />
+                  <ListingFooter item={item as any} />
                 </div>
 
                 {/* Right section of the Job card */}
@@ -244,7 +245,7 @@ const Listings = ({ data, listingType, sortFilter, toggleReset }: Props) => {
                     </div>
                   )}
                   <StatusAndDateSection
-                    item={item}
+                    item={item as any}
                     onInvite={
                       item?.userdata ? onInviteClick(item.userdata) : () => {}
                     }

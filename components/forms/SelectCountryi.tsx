@@ -14,7 +14,7 @@ interface SelectCountryProps {
 
 const SelectCountry: React.FC<SelectCountryProps> = ({
   countries,
-  selectedCountry,
+  //selectedCountry,
   setSelectedCountry,
   setSelectedState,
 }) => {

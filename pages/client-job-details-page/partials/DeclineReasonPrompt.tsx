@@ -11,9 +11,22 @@ type Props = {
   show: boolean;
   toggle: () => void;
   onSubmit: () => void;
-  milestoneId: any;
+  milestoneId: string | number;
   type: string;
 };
+
+interface DeclineRequestBody {
+  decline_reason: string;
+  status: string;
+  action?: string;
+  milestone_id?: string | number;
+  hourly_id?: string | number;
+}
+
+interface ApiResponse {
+  response: string;
+  data?: unknown;
+}
 
 const DeclineReasonPrompt = ({
   show,
@@ -31,10 +44,10 @@ const DeclineReasonPrompt = ({
     }
   }, [type, show]);
 
-  const submitDeclineReason = (e: any) => {
+  const submitDeclineReason = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const body: any = {
+    const body: DeclineRequestBody = {
       decline_reason: "Declined",
       status: "decline",
     };
@@ -58,7 +71,7 @@ const DeclineReasonPrompt = ({
     if (promise) {
       toast.promise(promise, {
         loading: "Loading...",
-        success: (res: any) => {
+        success: (res: ApiResponse) => {
           setLoading(false);
           toggle();
           onSubmit();
@@ -106,13 +119,15 @@ const DeclineReasonPrompt = ({
               If you are simply not ready to deliver payment because you have
               feedback about the work your freelancer delivered - or because
               your freelancer has not yet delivered the work - close this window
-              and communicate with them in the “Messages” tab.
+              and communicate with them in the &quot;Messages&quot; tab.
             </div>
             <div className="flex align-itms-center justify-center gap-3 flex-wrap mt-4">
               <StyledButton variant="outline-dark" onClick={closeWarning}>
                 Terminate Milestone
               </StyledButton>
-              <StyledButton onClick={toggle}>I’ll Send Feedback</StyledButton>
+              <StyledButton onClick={toggle}>
+                I&apos;ll Send Feedback
+              </StyledButton>
             </div>
           </div>
         )}
@@ -121,9 +136,9 @@ const DeclineReasonPrompt = ({
           <>
             <div className="fs-20 font-normal text-center">
               Are you sure you would like to decline this Final Hours
-              Submission? This will return the project to a "Project in
-              Progress" status and the freelancer will be able to continue to
-              submit hours.
+              Submission? This will return the project to a &quot;Project in
+              Progress&quot; status and the freelancer will be able to continue
+              to submit hours.
             </div>
             <FormWrapper>
               <Form onSubmit={submitDeclineReason}>

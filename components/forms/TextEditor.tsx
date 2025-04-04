@@ -146,7 +146,7 @@ const TextEditor = ({ placeholder, value, onChange, maxChars }: Props) => {
         }}
         onReady={onReady}
         ref={ckeditorRef}
-        onChange={(event, editor) => {
+        onChange={(event: any, editor: any) => {
           if (editor) {
             try {
               const html = editor.getData();

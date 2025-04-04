@@ -16,6 +16,12 @@ import { useMemo, useState } from "react";
 import { PostVisibilityModal } from "../modals/PostVisibilityModal";
 import CustomButton from "@/components/custombutton/CustomButton";
 
+// Define a type for Yup validation errors that matches getYupErrors expectations
+interface YupError {
+  inner: { path: string; message: string }[];
+  message: string;
+}
+
 interface FooterButtonsProps {
   params?: { id?: string; type?: string };
 }
@@ -44,8 +50,8 @@ export const FooterButtons = ({ params }: FooterButtonsProps = {}) => {
 
   const isLastPage = step === POST_JOB_STEPS.PROJECT_PAYMENT.number;
 
-  // Using any here for compatibility with getYupErrors
-  const handleError = (err: any) => {
+  // Using YupError type instead of any
+  const handleError = (err: YupError) => {
     const errors = getYupErrors(err);
     toast.error("Missing required details");
     setErrors({ ...errors });
@@ -73,7 +79,7 @@ export const FooterButtons = ({ params }: FooterButtonsProps = {}) => {
           });
           return true;
         } catch (error) {
-          handleError(error);
+          handleError(error as YupError);
           return false;
         }
       case POST_JOB_STEPS.SKILLS.number:
@@ -83,7 +89,7 @@ export const FooterButtons = ({ params }: FooterButtonsProps = {}) => {
           });
           return true;
         } catch (error) {
-          handleError(error);
+          handleError(error as YupError);
           return false;
         }
       case POST_JOB_STEPS.PROJECT_TIMING.number:
@@ -93,7 +99,7 @@ export const FooterButtons = ({ params }: FooterButtonsProps = {}) => {
           });
           return true;
         } catch (error) {
-          handleError(error);
+          handleError(error as YupError);
           return false;
         }
       case POST_JOB_STEPS.PROJECT_PREFERENCES.number:
@@ -103,7 +109,7 @@ export const FooterButtons = ({ params }: FooterButtonsProps = {}) => {
           });
           return true;
         } catch (error) {
-          handleError(error);
+          handleError(error as YupError);
           return false;
         }
       case POST_JOB_STEPS.PROJECT_PAYMENT.number:
@@ -113,7 +119,7 @@ export const FooterButtons = ({ params }: FooterButtonsProps = {}) => {
           });
           return true;
         } catch (error) {
-          handleError(error);
+          handleError(error as YupError);
           return false;
         }
       default:

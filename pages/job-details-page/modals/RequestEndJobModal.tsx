@@ -33,9 +33,9 @@ const EndJobModal = ({ show, toggle, onConfirm }: Props) => {
           {!errorMsg ? (
             <>
               <div className="description fs-20 font-normal text-center mb-2">
-                Are you sure you're ready to end this project? If the employer
-                accepts this request, you won't be able to post any more
-                submissions.
+                Are you sure you&apos;re ready to end this project? If the
+                employer accepts this request, you won&apos;t be able to post
+                any more submissions.
               </div>
               <StyledButton
                 className="fs-16 font-normal mt-4 w-100"
@@ -43,7 +43,7 @@ const EndJobModal = ({ show, toggle, onConfirm }: Props) => {
                 padding="1.125rem 2.25rem"
                 onClick={toggle}
               >
-                No, I'm not ready
+                No, I&apos;m not ready
               </StyledButton>
               <StyledButton
                 className="fs-16 font-normal mt-3 w-100"
@@ -51,7 +51,7 @@ const EndJobModal = ({ show, toggle, onConfirm }: Props) => {
                 padding="1.125rem 2.25rem"
                 onClick={() => onConfirm()}
               >
-                Yes, I'm finished - request to close
+                Yes, I&apos;m finished - request to close
               </StyledButton>
             </>
           ) : (

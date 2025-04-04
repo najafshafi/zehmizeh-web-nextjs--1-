@@ -234,7 +234,7 @@ const SearchMessagesModal = ({
           searchResults?.length === 0 &&
           deboubcedSearch !== "" && (
             <div className="mt-4 fs-18 text-center">
-              No messages found with "{deboubcedSearch}"
+              No messages found with &quot;{deboubcedSearch}&quot;
             </div>
           )}
       </Modal.Body>

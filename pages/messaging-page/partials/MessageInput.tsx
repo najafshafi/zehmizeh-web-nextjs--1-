@@ -1,5 +1,5 @@
 import { CONSTANTS } from '@/helpers/const/constants';
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, {  useEffect, useCallback, useRef } from 'react';
 
 const MessageInput = ({ disabled, setMessageText, onSendMessage, placeholder }: any) => {
   const inputRef = useRef(null);

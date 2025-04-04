@@ -1,6 +1,3 @@
-/*
- * This is the main component of this file
- */
 "use client";
 import React, { useState } from "react";
 import cns from "classnames";
@@ -10,14 +7,12 @@ import { useRouter } from "next/navigation";
 import YupPassword from "yup-password";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { StyledButton } from "@/components/forms/Buttons";
 import AuthLayout from "@/components/layout/AuthLayout";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import LoadingButtons from "@/components/LoadingButtons";
 import { changePassword } from "@/helpers/http/auth";
 import useStartPageFromTop from "@/helpers/hooks/useStartPageFromTop";
 import Eye from "@/public/icons/eye.svg";
-import { goBack } from "@/helpers/utils/goBack";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import CustomButton from "../custombutton/CustomButton";
 
@@ -58,7 +53,7 @@ export default function ChangePassword() {
     confirmPassword: yup
       .string()
       .oneOf(
-        [yup.ref("newPassword"), null],
+        [yup.ref("newPassword"), undefined],
         "New password and confirm password must match"
       ),
   });
@@ -74,7 +69,7 @@ export default function ChangePassword() {
     onChangePassword(data);
   };
 
-  const onChangePassword = (data) => {
+  const onChangePassword = (data: any) => {
     // Change password api call
     setLoading(true);
     const body = {
@@ -86,8 +81,7 @@ export default function ChangePassword() {
       loading: "Loading...",
       success: (res) => {
         setLoading(false);
-        goBack(
-          router,
+        router.push(
           auth?.user?.user_type == "freelancer"
             ? "/freelancer/account/profile"
             : "/client/account/profile"

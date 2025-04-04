@@ -79,8 +79,8 @@ export const DetailsWrapper = styled.div<{
       !props.isMobile && props.isShowingDeclinedHeadline
         ? "3.5rem"
         : !props.isMobile
-        ? "1.5rem"
-        : "unset"};
+          ? "1.5rem"
+          : "unset"};
     color: #f2b420;
     margin: ${(props) => (props.isMobile ? "1rem 0" : 0)};
     width: ${(props) => (props.isMobile ? "100%" : "unset")};
@@ -162,8 +162,8 @@ const ProposalDetailsModal = ({
   const [showInviteMessageModal, setShowInviteMessageModal] =
     useState<boolean>(false);
   const [proposalDetails, setProposalDetails] = useState<
-    TProposalDetails & TInviteSentDetails
-  >(null);
+    Partial<TProposalDetails & TInviteSentDetails>
+  >({});
   const [proMessModal, setProMessModal] = useState(false);
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
   const [
@@ -201,9 +201,8 @@ const ProposalDetailsModal = ({
     const chatProposalId = `proposal_${proposalDetails.proposal_id}`;
 
     const initializeChat = async () => {
-      const { conversation } = await talkJsFetchSingleConversation(
-        chatProposalId
-      );
+      const { conversation } =
+        await talkJsFetchSingleConversation(chatProposalId);
       toast.remove();
 
       setFreelancerName(
@@ -264,7 +263,7 @@ const ProposalDetailsModal = ({
         "get-received-proposals",
       ]);
       const dashboardJobDetails = proposals?.data?.find(
-        (proposal) => proposal?.job_post_id === jobId
+        (proposal: any) => proposal?.job_post_id === jobId
       );
 
       const clientJobDetails: any = queryClient.getQueryData([
@@ -332,7 +331,7 @@ const ProposalDetailsModal = ({
     if (!proposalDetails?._job_post_id) return;
     const proposals: any = queryClient.getQueryData(["get-received-proposals"]);
     const dashboardJobDetails = proposals?.data?.find(
-      (proposal) => proposal?.job_post_id === proposalDetails._job_post_id
+      (proposal: any) => proposal?.job_post_id === proposalDetails._job_post_id
     );
 
     const clientJobDetails: any = queryClient.getQueryData([
@@ -404,8 +403,8 @@ const ProposalDetailsModal = ({
           status == "accept"
             ? "Accepting"
             : status == "pending"
-            ? "Reopening"
-            : "Declining"
+              ? "Reopening"
+              : "Declining"
         } the proposal...`,
         success: (res) => {
           setLoading(false);
@@ -463,7 +462,7 @@ const ProposalDetailsModal = ({
     acceptProposal: (
       <StyledButton
         padding="1rem 2rem"
-        className={isMobile ? "w-100" : null}
+        className={isMobile ? "w-100" : undefined}
         variant="primary"
         onClick={handleAcceptFreelancer}
         disabled={loading}
@@ -474,7 +473,7 @@ const ProposalDetailsModal = ({
     declineProposal: (
       <StyledButton
         padding="1rem 2rem"
-        className={isMobile ? "w-100" : null}
+        className={isMobile ? "w-100" : undefined}
         variant="outline-dark"
         onClick={onAcceptDecline("denied")}
         disabled={loading}
@@ -485,7 +484,7 @@ const ProposalDetailsModal = ({
     messageFreelancerOrGotoChat: (
       <StyledButton
         padding="1rem 2rem"
-        className={isMobile ? "w-100" : null}
+        className={isMobile ? "w-100" : undefined}
         variant="outline-dark"
         disabled={loading}
         onClick={() => conversationHandler()}
@@ -497,7 +496,7 @@ const ProposalDetailsModal = ({
     seeProjectPost: (
       <StyledButton
         padding="1rem 2rem"
-        className={isMobile ? "w-100" : null}
+        className={isMobile ? "w-100" : undefined}
         variant="primary"
         onClick={() =>
           router.push(
@@ -517,9 +516,9 @@ const ProposalDetailsModal = ({
         <ProposalMessageModal
           show
           setShow={setProMessModal}
-          freelancerName={`${proposalDetails?.first_name} ${proposalDetails?.last_name}`}
-          proposal={proposalDetails}
-          jobId={proposalDetails?._job_post_id}
+          freelancerName={`${proposalDetails?.first_name || ""} ${proposalDetails?.last_name || ""}`}
+          proposal={proposalDetails as any}
+          jobId={proposalDetails?._job_post_id || ""}
           messagePopupCount={warningPopupCount}
         />
       )}
@@ -611,7 +610,7 @@ const ProposalDetailsModal = ({
                 >
                   <StyledButton
                     padding="1rem 2rem"
-                    className={isMobile ? "w-100" : null}
+                    className={isMobile ? "w-100" : undefined}
                     variant="primary"
                     disabled={loading}
                   >
@@ -656,8 +655,12 @@ const ProposalDetailsModal = ({
                             <StatusBadge
                               className="width-fit-content"
                               color={
-                                JOBS_STATUS[proposalDetails?.status]?.color
-                                  ? JOBS_STATUS[proposalDetails?.status]?.color
+                                proposalDetails?.status &&
+                                typeof proposalDetails.status === "string" &&
+                                proposalDetails.status in JOBS_STATUS
+                                  ? JOBS_STATUS[
+                                      proposalDetails.status as keyof typeof JOBS_STATUS
+                                    ]?.color
                                   : "gray"
                               }
                             >
@@ -731,7 +734,7 @@ const ProposalDetailsModal = ({
                   </div>
                   <div className="description-text text-lg font-normal">
                     <StyledHtmlText
-                      htmlString={proposalDetails?.description}
+                      htmlString={proposalDetails?.description || ""}
                       id={`proposal_${selectedProposalId}`}
                     />
                   </div>
@@ -746,7 +749,7 @@ const ProposalDetailsModal = ({
                         <div className="text-base font-bold">Price:</div>
                         <div className="text-base font-light">
                           {numberWithCommas(
-                            proposalDetails?.proposed_budget?.amount,
+                            proposalDetails?.proposed_budget?.amount || 0,
                             "USD"
                           )}
                           {proposalDetails?.proposed_budget?.type == "hourly"
@@ -764,7 +767,9 @@ const ProposalDetailsModal = ({
                         <div>
                           {numberWithCommas(
                             getValueByPercentage(
-                              Number(proposalDetails?.proposed_budget?.amount),
+                              Number(
+                                proposalDetails?.proposed_budget?.amount || 0
+                              ),
                               102.9
                             ),
                             "USD"
@@ -775,7 +780,9 @@ const ProposalDetailsModal = ({
                           -{" "}
                           {numberWithCommas(
                             getValueByPercentage(
-                              Number(proposalDetails?.proposed_budget?.amount),
+                              Number(
+                                proposalDetails?.proposed_budget?.amount || 0
+                              ),
                               104.9
                             ),
                             "USD"
@@ -894,7 +901,7 @@ const ProposalDetailsModal = ({
                   <div className="bottom-buttons flex flex-wrap gap-3">
                     <StyledButton
                       padding="1rem 2rem"
-                      className={isMobile ? "w-full" : null}
+                      className={isMobile ? "w-full" : undefined}
                       variant="primary"
                       onClick={onAcceptDecline("pending")}
                       disabled={loading}
@@ -914,7 +921,7 @@ const ProposalDetailsModal = ({
                   <div className="bottom-buttons flex flex-wrap gap-3">
                     <StyledButton
                       padding="1rem 2rem"
-                      className={isMobile ? "w-full" : null}
+                      className={isMobile ? "w-full" : undefined}
                       variant="primary"
                       disabled={loading}
                       onClick={() => {
@@ -926,7 +933,7 @@ const ProposalDetailsModal = ({
                     </StyledButton>
                     <StyledButton
                       padding="1rem 2rem"
-                      className={isMobile ? "w-full" : null}
+                      className={isMobile ? "w-full" : undefined}
                       variant="outline-dark"
                       onClick={() => updateStatus("canceled")}
                       disabled={loading}
@@ -944,7 +951,7 @@ const ProposalDetailsModal = ({
                   <div className="bottom-buttons flex flex-wrap gap-3">
                     <StyledButton
                       padding="1rem 2rem"
-                      className={isMobile ? "w-full" : null}
+                      className={isMobile ? "w-full" : undefined}
                       variant="primary"
                       disabled={loading}
                       onClick={() => updateStatus("pending")}
@@ -962,7 +969,7 @@ const ProposalDetailsModal = ({
                   <div className="bottom-buttons flex flex-wrap gap-3">
                     <StyledButton
                       padding="1rem 2rem"
-                      className={isMobile ? "w-full" : null}
+                      className={isMobile ? "w-full" : undefined}
                       variant="primary"
                       disabled={loading}
                       onClick={() => {
@@ -995,9 +1002,9 @@ const ProposalDetailsModal = ({
 
       <ChatModal
         theme="proposal"
-        freelancerName={freelancerName}
+        freelancerName={freelancerName || ""}
         show={openChatModal}
-        conversationId={conversationId}
+        conversationId={conversationId || ""}
         closeModal={closeChatModal}
         key={"proposal-chat-modal"}
       />

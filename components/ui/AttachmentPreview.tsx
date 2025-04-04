@@ -5,7 +5,7 @@ import { useState } from "react";
 import classNames from "classnames";
 import Image from "next/image";
 
-const FILE_PATHS = {
+const FILE_PATHS: Record<string, string> = {
   docx: "/images/doc.png",
   pdf: "/images/pdf.png",
   xls: "/images/sheet.png",
@@ -32,7 +32,7 @@ const FILE_PATHS = {
 type Props = {
   fileName?: string;
   onDelete?: () => void;
-  uploadedFile?: any;
+  uploadedFile?: string;
   removable?: boolean;
   shouldShowFileNameAndExtension?: boolean;
 };
@@ -86,65 +86,71 @@ const PreviewWrapper = styled.div`
   }
 `;
 
+/** @function This function will download the sample csv file - works across all browsers */
+const downloadSampleFile = (
+  uploadedFile: string,
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+) => {
+  setIsLoading(true);
+  fetch(uploadedFile, {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      Accept: "*",
+      pragma: "no-cache",
+      "cache-control": "no-cache",
+    },
+  })
+    .then((res) => {
+      return res.blob();
+    })
+    .then((blob) => {
+      const href = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = href;
+      link.setAttribute("download", getFileDetails(uploadedFile)?.fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setIsLoading(false);
+    })
+    .catch((err) => {
+      setIsLoading(false);
+      return Promise.reject({ Error: "Something Went Wrong", err });
+    });
+};
+
 const AttachmentPreview = ({
   fileName,
-  uploadedFile,
+  uploadedFile = "",
   onDelete,
   removable = true,
   shouldShowFileNameAndExtension = true,
 }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  /** @function This function will download the sample csv file - works across all browsers */
-  const downloadSampleFile = () => {
-    // const requestOptions = {
-    //   method: 'GET',
-    //   mode: 'cors',
-    //   headers: { Accept: '*' },
-    // };
-
-    setIsLoading(true);
-    fetch(uploadedFile, {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        Accept: "*",
-        pragma: "no-cache",
-        "cache-control": "no-cache",
-      },
-    })
-      .then((res) => {
-        return res.blob();
-      })
-      .then((blob) => {
-        const href = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = href;
-        link.setAttribute("download", getFileDetails(uploadedFile)?.fileName);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        return Promise.reject({ Error: "Something Went Wrong", err });
-      });
+  const handleDownload = () => {
+    if (uploadedFile) {
+      downloadSampleFile(uploadedFile, setIsLoading);
+    }
   };
+
+  // Get file details only if uploadedFile exists
+  const fileDetails = uploadedFile ? getFileDetails(uploadedFile) : null;
+  const isImage = uploadedFile ? fileIsAnImage(uploadedFile) : false;
 
   return (
     <PreviewWrapper
       className={`flex attachment-preview position-relative ${
         isLoading ? "shimmer-loading" : ""
       }`}
-      title={fileName || getFileDetails(uploadedFile)?.fileName || ""}
+      title={fileName || fileDetails?.fileName || ""}
     >
-      {/* <a href={uploadedFile} target="_blank" rel="noreferrer"> */}
       <div
-        onClick={downloadSampleFile}
+        onClick={handleDownload}
         className={`cursor-pointer ${isLoading ? "opacity-25" : ""}`}
       >
-        {fileIsAnImage(uploadedFile) ? (
+        {isImage ? (
           <Image
             src={uploadedFile}
             alt="uploaded"
@@ -159,7 +165,7 @@ const AttachmentPreview = ({
             })}
           >
             <Image
-              src={getFileDetails(uploadedFile)?.fileIcon || "/images/pdf.png"}
+              src={fileDetails?.fileIcon || "/images/pdf.png"}
               alt="uploaded"
               height={100}
               width={100}
@@ -168,17 +174,16 @@ const AttachmentPreview = ({
             {shouldShowFileNameAndExtension && (
               <div className="doctype-preview-details ms-2">
                 <div className="file-title text-start capitalize font-medium">
-                  {fileName || getFileDetails(uploadedFile)?.fileName}
+                  {fileName || fileDetails?.fileName || ""}
                 </div>
                 <div className="extension text-start text-uppercase text-sm">
-                  {getFileDetails(uploadedFile)?.fileExtension}
+                  {fileDetails?.fileExtension || ""}
                 </div>
               </div>
             )}
           </div>
         )}
       </div>
-      {/* </a> */}
       {removable && (
         <div
           className="delete-preview position-absolute flex items-center justify-center cursor-pointer"

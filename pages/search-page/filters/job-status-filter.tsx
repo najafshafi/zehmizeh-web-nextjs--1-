@@ -1,7 +1,6 @@
 import { useSearchFilters } from '@/helpers/contexts/search-filter-context';
 import Checkbox from '@/components/forms/FilterCheckBox2';
 import * as S from './Filters.styled';
-import { useState } from 'react';
 
 type Status = 'prospects' | 'closed';
 const JobStatusFilter = () => {

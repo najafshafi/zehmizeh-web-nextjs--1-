@@ -48,9 +48,11 @@ export const Portfolio = ({
   const [showAddPortfolioModal, setShowAddPortfolioModal] =
     useState<boolean>(false);
 
-  const { data: portfolioData = [], isLoading } = useQueryData<PortfolioItem[]>(
-    queryKeys.getFreelancerPortfolio(freelancerId)
-  ) || { data: [] };
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const portfolioData =
+    useQueryData<PortfolioItem[]>(
+      queryKeys.getFreelancerPortfolio(freelancerId)
+    ) || [];
   const { refetch } = useRefetch(
     queryKeys.getFreelancerPortfolio(freelancerId)
   );

@@ -17,6 +17,27 @@ import { useAuth } from "./auth-context";
 const SearchFiltersContext = React.createContext<any>(null!);
 Object.freeze(SEARCH_CLIENT_INITIAL_FILTERS);
 Object.freeze(SEARCH_FREELANCER_INITIAL_FILTERS);
+
+// Define interfaces for structured data
+interface Category {
+  id: string;
+  name: string;
+  skills: Array<{ id: string; name: string }>;
+}
+
+interface SearchPayload {
+  page: number;
+  limit: number;
+  keyword: string;
+  searchTypeForFreelancer?: "name" | "profile";
+  filter: {
+    categories: string[];
+    skills: string[];
+    languages: string[];
+    [key: string]: any;
+  };
+}
+
 function SearchFilterProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -148,8 +169,8 @@ function SearchFilterProvider({ children }: { children: React.ReactNode }) {
     } else router.push("/");
   };
 
-  const paramsHandler = (payload, searchType) => {
-    let paramsToAdd: any = {
+  const paramsHandler = (payload: SearchPayload, searchType: string) => {
+    let paramsToAdd: Record<string, any> = {
       page: payload.page,
       keyword: payload.keyword,
       languages: payload.filter.languages,
@@ -174,7 +195,7 @@ function SearchFilterProvider({ children }: { children: React.ReactNode }) {
         ...paramsToAdd,
         job_type: payload.filter.job_type,
         fixed_budget: payload.filter.fixed_budget,
-        job_status: payload.filter.job_status.join(","),
+        job_status: payload.filter.job_status?.join(","),
       };
     }
 
@@ -183,7 +204,7 @@ function SearchFilterProvider({ children }: { children: React.ReactNode }) {
     jsonKeys.forEach((key) => {
       if (
         typeof payload.filter[key] === "object" &&
-        Object.keys(payload.filter[key]).length > 0
+        Object.keys(payload.filter[key] || {}).length > 0
       ) {
         paramsToAdd[key] = JSON.stringify(payload.filter[key]);
       } else {
@@ -195,17 +216,29 @@ function SearchFilterProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const categoryChangeHandler = (categories: any[]) => {
-    const selectedCategories = categoryList.filter((cat) => {
-      return categories.includes(`${cat.name}#${cat.id}`);
-    });
-
-    let selectedCatSkills = [selectedCategories.map((cat) => cat.skills)].flat(
-      Infinity
+  const categoryChangeHandler = (categories: string[]) => {
+    const selectedCategories = (categoryList as Category[]).filter(
+      (cat: Category) => {
+        return categories.includes(`${cat.name}#${cat.id}`);
+      }
     );
 
-    selectedCatSkills = selectedCatSkills.map((slk) => `${slk.name}#${slk.id}`);
-    return filters.skills.filter((slk) => selectedCatSkills.includes(slk));
+    // Get all skills from all categories and flatten the array
+    const allSkills: Array<{ id: string; name: string }> = [];
+    selectedCategories.forEach((cat: Category) => {
+      if (Array.isArray(cat.skills)) {
+        cat.skills.forEach((skill) => allSkills.push(skill));
+      }
+    });
+
+    const skillIdentifiers = allSkills.map(
+      (skill) => `${skill.name}#${skill.id}`
+    );
+
+    // Filter the skills in filters to only include those that are in selected categories
+    return filters.skills.filter((skillId: string) =>
+      skillIdentifiers.includes(skillId)
+    );
   };
 
   const updateFilterHandler = async (field: string, item: any) => {
@@ -222,7 +255,7 @@ function SearchFilterProvider({ children }: { children: React.ReactNode }) {
 
   const searchHandler = async (filter: any) => {
     try {
-      const payload = {
+      const payload: SearchPayload = {
         page,
         limit: 10,
         keyword: debouncedSearchTerm,
@@ -236,24 +269,45 @@ function SearchFilterProvider({ children }: { children: React.ReactNode }) {
       specialKeys.forEach((key) => {
         if (Array.isArray(payload?.filter[key])) {
           payload.filter[key] = payload.filter[key].map(
-            (elem) => elem?.split("#")[1]
+            (elem: string) => elem?.split("#")[1]
           );
         }
       });
 
+      // Make searchTypeForFreelancer optional so it can be deleted
+      const searchPayload = { ...payload } as {
+        searchTypeForFreelancer?: "name" | "profile";
+        [key: string]: any;
+      };
+
       if (searchType === "jobs") {
-        delete payload.searchTypeForFreelancer;
+        delete searchPayload.searchTypeForFreelancer;
       }
 
       setLoading(true);
-      const response = await search(searchType, payload);
+      const response = await search(searchType, searchPayload);
       setLoading(false);
 
       setData(response);
-    } catch (error) {
+    } catch (error: unknown) {
       console.log("Error: ", error);
       setLoading(false);
-      toast.error(error?.response?.data?.message ?? error.message);
+
+      // Safe error handling
+      if (error && typeof error === "object") {
+        const errorObj = error as {
+          response?: { data?: { message?: string } };
+          message?: string;
+        };
+
+        const errorMessage =
+          errorObj.response?.data?.message ||
+          (errorObj.message ? errorObj.message : "An error occurred");
+
+        toast.error(errorMessage);
+      } else {
+        toast.error("An error occurred");
+      }
     }
   };
 

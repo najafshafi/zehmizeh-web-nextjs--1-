@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import styled from "styled-components";
+import React from "react";
 
 type Props = {
   src: string;
@@ -60,7 +61,7 @@ const BlurredImage = ({
   // else it'll be handled locally
   const [isShowingImage, setIsShowingImage] = state || localState;
 
-  const toggleBlur = (e: any) => {
+  const toggleBlur = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     e.preventDefault();
     if (allowToUnblur) {
