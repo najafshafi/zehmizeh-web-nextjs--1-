@@ -11,7 +11,21 @@ import { validateAccountDetailsWithRouting } from "@/helpers/validation/common";
 import { getYupErrors } from "@/helpers/utils/misc";
 import { managePayment } from "@/helpers/http/freelancer";
 
-const initialState = {
+// Define proper interfaces for form state and errors
+interface BankAccountForm {
+  accountHolderName: string;
+  accountNumber: string;
+  routingNumber: string;
+}
+
+interface FormErrors {
+  accountHolderName?: string;
+  accountNumber?: string;
+  routingNumber?: string;
+  [key: string]: string | undefined;
+}
+
+const initialState: BankAccountForm = {
   accountHolderName: "",
   accountNumber: "",
   routingNumber: "",
@@ -22,17 +36,20 @@ type Props = {
 };
 
 const AddBankAccount = ({ onPrevious }: Props) => {
-  const [formState, setFormState] = useState<any>(initialState);
-  const [errors, setErrors] = useState<any>({});
+  const [formState, setFormState] = useState<BankAccountForm>(initialState);
+  const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter(); // Changed from useNavigate
 
-  const handleChange = useCallback((field, value) => {
-    setFormState((prevFormState: any) => {
-      return { ...prevFormState, [field]: value };
-    });
-  }, []);
+  const handleChange = useCallback(
+    (field: keyof BankAccountForm, value: string) => {
+      setFormState((prevFormState) => {
+        return { ...prevFormState, [field]: value };
+      });
+    },
+    []
+  );
 
   const validateForm = () => {
     validateAccountDetailsWithRouting.isValid(formState).then((valid) => {
@@ -40,8 +57,8 @@ const AddBankAccount = ({ onPrevious }: Props) => {
         validateAccountDetailsWithRouting
           .validate(formState, { abortEarly: false })
           .catch((err) => {
-            const errors = getYupErrors(err);
-            setErrors({ ...errors });
+            const validationErrors = getYupErrors(err);
+            setErrors(validationErrors as FormErrors);
           });
       } else {
         setErrors({});
@@ -82,12 +99,12 @@ const AddBankAccount = ({ onPrevious }: Props) => {
       <div className="account-form">
         <StyledFormGroup>
           <Form.Control
-            placeholder="Account holder’s name"
+            placeholder="Account holder's name"
             className="form-input"
-            value={formState?.accountHolderName}
+            value={formState.accountHolderName}
             onChange={(e) => handleChange("accountHolderName", e.target.value)}
           />
-          {errors?.accountHolderName && (
+          {errors.accountHolderName && (
             <ErrorMessage message={errors.accountHolderName} />
           )}
         </StyledFormGroup>
@@ -97,10 +114,10 @@ const AddBankAccount = ({ onPrevious }: Props) => {
           <Form.Control
             placeholder={"Bank account number"}
             className="form-input"
-            value={formState?.accountNumber}
+            value={formState.accountNumber}
             onChange={(e) => handleChange("accountNumber", e.target.value)}
           />
-          {errors?.accountNumber && (
+          {errors.accountNumber && (
             <ErrorMessage message={errors.accountNumber} />
           )}
         </StyledFormGroup>
@@ -109,10 +126,10 @@ const AddBankAccount = ({ onPrevious }: Props) => {
           <Form.Control
             placeholder="Routing number"
             className="form-input"
-            value={formState?.routingNumber}
+            value={formState.routingNumber}
             onChange={(e) => handleChange("routingNumber", e.target.value)}
           />
-          {errors?.routingNumber && (
+          {errors.routingNumber && (
             <ErrorMessage message={errors.routingNumber} />
           )}
         </StyledFormGroup>

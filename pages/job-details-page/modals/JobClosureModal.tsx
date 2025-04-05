@@ -29,15 +29,15 @@ const JobClosureModal = ({ show, onConfirm, loading = false }: Props) => {
               this project, press “Accept Closure” below to close the project.
             </li>
             <li className="mt-2 fs-18 font-normal text-start">
-              If you've completed work that you haven't been paid for yet, you
-              have the opportunity to submit one last hour submission by
-              selecting "Submit Final Hours." This project will close once these
-              hours are paid for, so be sure to include all remaining unpaid
-              hours in your submission.
+              If you&apos;ve completed work that you haven&apos;t been paid for
+              yet, you have the opportunity to submit one last hour submission
+              by selecting &quot;Submit Final Hours.&quot; This project will
+              close once these hours are paid for, so be sure to include all
+              remaining unpaid hours in your submission.
             </li>
             <li className="mt-2 fs-18 font-normal text-left">
-              If you need to speak to the client before closing, press “Delay
-              Closure” below.
+              If you need to speak to the client before closing, press &quot;Delay
+              Closure&quot; below.
             </li>
           </ul>
           <div className="fs-18 font-normal text-center">

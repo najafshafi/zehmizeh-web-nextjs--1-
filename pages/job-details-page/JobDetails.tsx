@@ -629,9 +629,9 @@ const JobDetails = () => {
                         </>
                       )}
                       {jobdetails?.budget?.type === "fixed" && (
-                        <div className="w-full text-center">
+                        <div className="w-full text-center flex justify-center items-center">
                           <CustomButton
-                            text={" Open the Client&apos;s Closure Request"}
+                            text={" Open the Client's Closure Request"}
                             className="px-[2rem] py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5"
                             onClick={() => {
                               setShowJobClosureModal({

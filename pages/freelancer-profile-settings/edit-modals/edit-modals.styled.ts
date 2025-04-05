@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const EditFormWrapper = styled.div`
   .content {
@@ -65,7 +65,7 @@ export const StyledFormGroup = styled.div`
     position: absolute;
     top: 30%;
     bottom: 0;
-    content: '$';
+    content: "$";
     left: 1rem;
   }
   .active-button {
@@ -103,21 +103,21 @@ export const MultiSelectCustomStyle = {
   control: (base: any) => ({
     ...base,
     minHeight: 60,
-    border: '1px solid #000',
-    borderRadius: '7px',
+    border: "1px solid #000",
+    borderRadius: "7px",
   }),
   indicatorSeparator: () => ({
-    display: 'none',
+    display: "none",
   }),
   dropdownIndicator: () => ({
-    display: 'none',
+    display: "none",
   }),
   multiValue: () => {
     return {
-      margin: '5px 10px 5px 0px',
+      margin: "5px 10px 5px 0px",
       borderRadius: 6,
-      backgroundColor: 'rgba(209, 229, 255, 0.4)',
-      display: 'flex',
+      backgroundColor: "rgba(209, 229, 255, 0.4)",
+      display: "flex",
     };
   },
   multiValueLabel: () => ({
@@ -125,31 +125,31 @@ export const MultiSelectCustomStyle = {
   }),
   multiValueRemove: (styles: any) => ({
     ...styles,
-    ':hover': {
-      backgroundColor: 'rgba(209, 229, 255,1)',
+    ":hover": {
+      backgroundColor: "rgba(209, 229, 255,1)",
     },
   }),
-  option: (provided) => ({
+  option: (provided: any) => ({
     ...provided,
     // backgroundColor: state.isSelected ? 'rgba(209, 229, 255,1)' : 'white',
-    color: '#000',
-    padding: '1rem 1rem',
-    cursor: 'pointer',
-    ':hover': {
-      backgroundColor: 'rgba(209, 229, 255,1)',
+    color: "#000",
+    padding: "1rem 1rem",
+    cursor: "pointer",
+    ":hover": {
+      backgroundColor: "rgba(209, 229, 255,1)",
     },
   }),
-  menu: (base) => ({
+  menu: (base: any) => ({
     ...base,
     zIndex: 10,
   }),
-  menuList: (base) => ({
+  menuList: (base: any) => ({
     ...base,
-    '::-webkit-scrollbar': {
-      width: '8px',
+    "::-webkit-scrollbar": {
+      width: "8px",
     },
-    '::-webkit-scrollbar-thumb': {
-      height: '50px',
+    "::-webkit-scrollbar-thumb": {
+      height: "50px",
     },
   }),
 };

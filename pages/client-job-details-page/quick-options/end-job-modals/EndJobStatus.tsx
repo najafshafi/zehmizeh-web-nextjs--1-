@@ -68,17 +68,23 @@ const JOB_ENDING_REASONS = [
   "Other",
 ];
 
-const initialState = {
+interface FormState {
+  selectedStatus: string;
+  endingReason: string;
+  incompleteJobDescription: string;
+}
+
+const initialState: FormState = {
   selectedStatus: "",
   endingReason: "",
   incompleteJobDescription: "",
 };
 
 const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
-  const [formState, setFormState] = useState(initialState);
+  const [formState, setFormState] = useState<FormState>(initialState);
 
-  const handleChange = useCallback((field, value) => {
-    setFormState((prevFormState: any) => {
+  const handleChange = useCallback((field: keyof FormState, value: string) => {
+    setFormState((prevFormState: FormState) => {
       return { ...prevFormState, [field]: value };
     });
   }, []);
@@ -104,11 +110,11 @@ const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
       formState;
     if (selectedStatus == "in-complete") {
       if (endingReason == "") {
-        toast.error("Please select the reason why you’re ending the project.");
+        toast.error("Please select the reason why you're ending the project.");
         return;
       }
       if (incompleteJobDescription === "") {
-        toast.error("Please elaborate on why you’re ending the project.");
+        toast.error("Please elaborate on why you're ending the project.");
         return;
       }
     }
@@ -120,7 +126,7 @@ const EndJobStatus = ({ onContinue, endJobSelectedStatus }: Props) => {
     });
   };
 
-  const onSelectReason = (item: any) => () => {
+  const onSelectReason = (item: string) => () => {
     handleChange("endingReason", item);
     toggleDropdownOptions();
   };

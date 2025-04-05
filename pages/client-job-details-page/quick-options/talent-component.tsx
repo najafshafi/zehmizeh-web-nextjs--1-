@@ -11,6 +11,36 @@ import StarIcon from "@/public/icons/star-yellow.svg";
 import BlurredImage from "@/components/ui/BlurredImage";
 import StyledHtmlText from "@/components/ui/StyledHtmlText";
 
+interface Skill {
+  id: string | number;
+  name: string;
+}
+
+interface Location {
+  state?: string;
+  country_name?: string;
+}
+
+interface TalentData {
+  user_id?: string;
+  user_image?: string;
+  first_name: string;
+  last_name: string;
+  job_title?: string | null;
+  about_me?: string;
+  skills?: Skill[];
+  hourly_rate?: string | number;
+  location?: Location;
+  ratings?: number | null;
+  rating?: number;
+}
+
+interface TalentComponentProps {
+  data?: TalentData;
+  onSelect: () => void;
+  isSelected: boolean;
+}
+
 const TalentComponentWrapper = styled.div<{ isSelected: boolean }>`
   background: ${(props) => props.theme.colors.white};
   margin: auto;
@@ -73,14 +103,12 @@ const TalentComponent = ({
   data,
   onSelect,
   isSelected,
-}: {
-  data?: any;
-  onSelect: () => void;
-  isSelected: boolean;
-}) => {
+}: TalentComponentProps) => {
   const COLORS = useMemo(() => ["orange", "green", "blue"], []);
 
   const { isMobile } = useResponsive();
+
+  if (!data) return null;
 
   return (
     <>
@@ -128,7 +156,7 @@ const TalentComponent = ({
             </div>
           )}
           <div className="skills flex items-center flex-wrap">
-            {data?.skills?.map((skill: any, index) => (
+            {data?.skills?.map((skill: Skill, index: number) => (
               <StatusBadge key={skill.id} color={COLORS[index % COLORS.length]}>
                 {skill.name}
               </StatusBadge>
@@ -142,7 +170,7 @@ const TalentComponent = ({
 
 export default TalentComponent;
 
-const OtherDetails = ({ data }: any) => {
+const OtherDetails = ({ data }: { data: TalentData }) => {
   return (
     <div className="talent__other-details flex items-center flex-wrap">
       <div className="flex budget width-fit-content items-center">
@@ -162,8 +190,8 @@ const OtherDetails = ({ data }: any) => {
           <LocationIcon />
           <div className="flex fs-1rem font-normal mx-1">
             {separateValuesWithComma([
-              data?.location?.state,
-              data?.location?.country_name,
+              data?.location?.state || "",
+              data?.location?.country_name || "",
             ])}
           </div>
         </div>

@@ -12,8 +12,24 @@ import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 
 type TData = Partial<IClientDetails & IFreelancerDetails>;
 
+// Define language types
+interface Language {
+  id: number;
+  name: string;
+}
+
+interface LanguageOption {
+  label: string;
+  value: string;
+}
+
+interface LanguageApiResponse {
+  language_id: string;
+  language_name: string;
+}
+
 type Props = {
-  languagesProps?: TData["languages"];
+  languagesProps?: Language[];
   onUpdate: (data: TData) => void;
   onPrevious: () => void;
   skipForNow: () => void;
@@ -31,11 +47,13 @@ const Languages = ({
   onPrevious,
   skipForNow,
 }: Props) => {
-  const [languages, setLanguages] = useState(languagesProps);
+  const [languages, setLanguages] = useState<Language[] | undefined>(
+    languagesProps
+  );
 
   const handleUpdate = () => {
     // Validations and parent function call to store the data in parent
-    if (!languages || languages?.length == 0) {
+    if (!languages || languages.length === 0) {
       toast.error("Please add at least one language.");
     } else {
       onUpdate({ languages });
@@ -45,9 +63,9 @@ const Languages = ({
   const languageOptions = (inputValue: string) => {
     // This will be called when user types and will call languages api with the keyword
 
-    const languagesLocal: { label: string; value: string }[] = [];
+    const languagesLocal: LanguageOption[] = [];
     return getLanguages(inputValue || "").then((res) => {
-      res.data.forEach(function (item) {
+      res.data.forEach(function (item: LanguageApiResponse) {
         const obj = {
           label: item.language_name,
           value: item.language_id,
@@ -61,16 +79,17 @@ const Languages = ({
   const getDefaultlanguageOptions = useMemo(() => {
     // This will format all the availbale languages to the format that the react async requires
 
-    if (languages?.length > 0) {
-      return languages?.map((item) => {
-        return { label: item.name, value: item.id };
+    if (languages && languages.length > 0) {
+      return languages.map((item) => {
+        return { label: item.name, value: item.id.toString() };
       });
     }
+    return undefined;
   }, [languages]);
 
-  const onSelect = (selected) => {
-    const data = selected.map((item) => {
-      return { id: item.value, name: item.label };
+  const onSelect = (selected: readonly LanguageOption[]) => {
+    const data = selected.map((item: LanguageOption) => {
+      return { id: parseInt(item.value, 10), name: item.label };
     });
     setLanguages(data);
   };
@@ -92,9 +111,10 @@ const Languages = ({
             {...multiSelectProps}
             placeholder="Enter your languages"
             components={{ NoOptionsMessage }}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            loadOptions={languageOptions as any}
-            onChange={(options) => onSelect(options)}
+            loadOptions={languageOptions}
+            onChange={(options) =>
+              onSelect(options as readonly LanguageOption[])
+            }
             value={getDefaultlanguageOptions}
             defaultOptions={true}
           />
@@ -115,6 +135,7 @@ const Languages = ({
 
 export default Languages;
 
+// Using the correct type from react-select components
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const NoOptionsMessage = (props: any) => {
   return (

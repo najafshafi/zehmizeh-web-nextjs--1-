@@ -142,7 +142,7 @@ export const Invitees = ({
 
       {jobStatus === "prospects" && (
         <>
-          <p className="mb-1">You haven't invited anyone yet!</p>
+          <p className="mb-1">You haven&apos;t invited anyone yet!</p>
           <p>
             To invite freelancers, visit the{" "}
             <Link
@@ -164,9 +164,8 @@ export const Invitees = ({
     setThreadLoading(true);
     toast.loading("loading chat...");
     const invite_convo_id = `invite_${invite.invite_id}`;
-    const { conversation } = await talkJsFetchSingleConversation(
-      invite_convo_id
-    );
+    const { conversation } =
+      await talkJsFetchSingleConversation(invite_convo_id);
     toast.remove();
 
     setFreelancerName(`${invite.first_name} ${invite.last_name}`);

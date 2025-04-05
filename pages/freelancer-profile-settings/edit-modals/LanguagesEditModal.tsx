@@ -11,7 +11,24 @@ import { IoClose } from "react-icons/io5";
 import { editUser } from "@/helpers/http/auth";
 import { getLanguages } from "@/helpers/http/common";
 
+// Define types for languages and selection
+interface Language {
+  id: number;
+  name: string;
+}
+
+interface LanguageOption {
+  label: string;
+  value: string;
+}
+
+interface LanguageApiResponse {
+  language_id: string;
+  language_name: string;
+}
+
 // Custom MultiValueRemove component
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CustomMultiValueRemove = (props: any) => {
   return (
     <components.MultiValueRemove {...props}>
@@ -21,6 +38,7 @@ const CustomMultiValueRemove = (props: any) => {
 };
 
 // Custom ClearIndicator component to clear all selections
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ClearIndicator = (props: any) => {
   const {
     innerProps,
@@ -44,12 +62,13 @@ const ClearIndicator = (props: any) => {
 type Props = {
   show: boolean;
   onClose: () => void;
-  languagesProps?: any;
+  languagesProps?: Language[];
   onUpdate: () => void;
 };
 
-// Customized styles for the AsyncSelect component
+
 const customSelectStyles = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: (base: any) => ({
     ...base,
     minHeight: "60px",
@@ -61,30 +80,34 @@ const customSelectStyles = {
       border: "2px solid #2684ff",
     },
   }),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   menu: (base: any) => ({
     ...base,
     borderRadius: "0.375rem",
     boxShadow:
       "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
   }),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   option: (base: any, state: any) => ({
     ...base,
     backgroundColor: state.isSelected
       ? "#d1e5ff66"
       : state.isFocused
-      ? "#d1e5ff66"
-      : "white",
+        ? "#d1e5ff66"
+        : "white",
     color: state.isSelected ? "#212529" : "#212529",
     "&:active": {
       backgroundColor: "#d1e5ff66",
     },
   }),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   multiValue: (base: any) => ({
     ...base,
     backgroundColor: "#d1e5ff66",
     borderRadius: "6px",
     margin: "5px 10px 5px 0px",
   }),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   multiValueLabel: (base: any) => ({
     ...base,
     color: "#212529",
@@ -93,6 +116,7 @@ const customSelectStyles = {
     padding: "2px 8px",
     margin: "2px 0px",
   }),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   multiValueRemove: (base: any) => ({
     ...base,
     color: "#212529",
@@ -118,7 +142,7 @@ const LanguagesEditModal = ({
   onUpdate,
 }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [languages, setLanguages] = useState<any>(languagesProps);
+  const [languages, setLanguages] = useState<Language[]>(languagesProps || []);
 
   const handleUpdate = () => {
     setLoading(true);
@@ -141,9 +165,9 @@ const LanguagesEditModal = ({
   };
 
   const languageOptions = (inputValue: string) => {
-    const languagesLocal: { label: any; value: any }[] = [];
+    const languagesLocal: LanguageOption[] = [];
     return getLanguages(inputValue || "").then((res) => {
-      res.data.forEach(function (item: any) {
+      res.data.forEach(function (item: LanguageApiResponse) {
         const obj = {
           label: item.language_name,
           value: item.language_id,
@@ -156,15 +180,20 @@ const LanguagesEditModal = ({
 
   const getDefaultLanguageOptions = useMemo(() => {
     if (languages?.length > 0) {
-      return languages?.map((item: any) => {
-        return { label: item.name, value: item.id };
+      return languages.map((item: Language) => {
+        return { label: item.name, value: item.id.toString() };
       });
     }
+    return undefined;
   }, [languages]);
 
-  const onSelect = (selected: any) => {
-    const data = selected.map((item: any) => {
-      return { id: item.value, name: item.label };
+  const onSelect = (selected: readonly LanguageOption[] | null) => {
+    if (!selected || selected.length === 0) {
+      setLanguages([]);
+      return;
+    }
+    const data = selected.map((item: LanguageOption) => {
+      return { id: parseInt(item.value, 10), name: item.label };
     });
     setLanguages(data);
   };
@@ -198,6 +227,7 @@ const LanguagesEditModal = ({
             </div>
 
             <div className="w-full">
+             
               <AsyncSelect
                 {...multiSelectProps}
                 placeholder="Enter your languages"
@@ -207,7 +237,10 @@ const LanguagesEditModal = ({
                   ClearIndicator,
                 }}
                 loadOptions={languageOptions}
-                onChange={(options) => onSelect(options)}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                onChange={(options: any) =>
+                  onSelect(options as readonly LanguageOption[] | null)
+                }
                 value={getDefaultLanguageOptions}
                 defaultOptions={true}
                 className="w-full"
@@ -236,6 +269,7 @@ const LanguagesEditModal = ({
 
 export default LanguagesEditModal;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const NoOptionsMessage = (props: any) => {
   return (
     <components.NoOptionsMessage {...props}>

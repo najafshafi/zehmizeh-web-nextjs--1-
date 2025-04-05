@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const PhoneInputWrapper = styled.div`
   border: 1px solid #ced4da;
@@ -21,7 +21,11 @@ const PhoneInputWrapper = styled.div`
       border: none;
       outline: none;
       box-shadow: none !important;
+      outline: none;
     }
   }
+
+  
 `;
 export default PhoneInputWrapper;
+

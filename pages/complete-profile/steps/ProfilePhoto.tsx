@@ -25,10 +25,10 @@ export const ProfilePhoto = ({
   onUpdate,
   updatingProfile,
 }: Props) => {
-  const [formState, setFormState] = useState(profileData);
+  const [formState, setFormState] = useState<TData>(profileData || {});
   const [showEditPictureModal, setShowEditPictureModal] = useState(false);
 
-  const handleChange = useCallback((field: keyof typeof profileData, value) => {
+  const handleChange = useCallback((field: keyof TData, value: string) => {
     setFormState((prevFormState) => {
       return { ...prevFormState, [field]: value };
     });
@@ -71,7 +71,7 @@ export const ProfilePhoto = ({
           show={showEditPictureModal}
           onUpdate={handleImageChange}
           onClose={() => setShowEditPictureModal((prev) => !prev)}
-          profilePic={formState?.user_image || null}
+          profilePic={formState?.user_image || undefined}
         />
       </Container>
       <div className="flex justify-center justify-content-md-end gap-3">

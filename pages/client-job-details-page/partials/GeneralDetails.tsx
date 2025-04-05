@@ -92,7 +92,7 @@ const JobOtherDetails = ({ data }: any) => {
                       {/* START ----------------------------------------- Style Samples Links */}
                       {data.reference_links?.length > 0 && (
                         <div className="mb-3">
-                          {data.reference_links.map((referenceLink) => {
+                          {data.reference_links.map((referenceLink: string) => {
                             if (!referenceLink.includes("http")) {
                               referenceLink = `http://${referenceLink}`;
                             }
@@ -158,7 +158,7 @@ const JobOtherDetails = ({ data }: any) => {
                   data?.proposal?.attachments?.length > 0 && (
                     <div className="flex items-center gap-3 flex-wrap mt-3">
                       <div className="flex flex-wrap">
-                        {data.proposal.attachments.map((attachment) => (
+                        {data.proposal.attachments.map((attachment: string) => (
                           <div className="m-1" key={attachment}>
                             <AttachmentPreview
                               uploadedFile={attachment}
@@ -183,8 +183,8 @@ const JobOtherDetails = ({ data }: any) => {
               {data.budget?.type == "fixed"
                 ? "Project-Based"
                 : data.budget?.type == "hourly"
-                ? "Hourly"
-                : "Unsure"}
+                  ? "Hourly"
+                  : "Unsure"}
             </div>
           }
         />
@@ -200,10 +200,10 @@ const JobOtherDetails = ({ data }: any) => {
                   {data.status == "active" || data.status == "closed"
                     ? showFormattedBudget(data.proposal?.approved_budget)
                     : data?.budget?.isProposal === true
-                    ? "Open to Proposals"
-                    : data?.budget
-                    ? showFormattedBudget(data.budget)
-                    : "-"}
+                      ? "Open to Proposals"
+                      : data?.budget
+                        ? showFormattedBudget(data.budget)
+                        : "-"}
                 </div>
               }
             />
@@ -223,7 +223,7 @@ const JobOtherDetails = ({ data }: any) => {
                         key={`category-${item.category_id}-${index}`}
                       >
                         {item.category_name}
-                        {index < arr?.length - 1 ? "," : ""} 
+                        {index < arr?.length - 1 ? "," : ""}
                       </div>
                     )
                 )}
@@ -246,7 +246,7 @@ const JobOtherDetails = ({ data }: any) => {
                         key={`skill-${item.skill_id}-${index}`}
                       >
                         {item.skill_name}
-                        {index < arr?.length - 1 ? "," : ""} 
+                        {index < arr?.length - 1 ? "," : ""}
                       </div>
                     )
                 )}
@@ -293,15 +293,20 @@ const JobOtherDetails = ({ data }: any) => {
             title="Language"
             atributeValue={
               <div className="flex items-center mt-3 flex-wrap">
-                {data.languages?.map((item, index: number) => (
-                  <div
-                    className="description-text line-height-2rem fw-300 fs-18"
-                    key={`language-${item.id}-${index}`}
-                  >
-                    {item.name}
-                    {index < data?.languages?.length - 1 ? "," : ""} 
-                  </div>
-                ))}
+                {data.languages?.map(
+                  (
+                    item: { id: string | number; name: string },
+                    index: number
+                  ) => (
+                    <div
+                      className="description-text line-height-2rem fw-300 fs-18"
+                      key={`language-${item.id}-${index}`}
+                    >
+                      {item.name}
+                      {index < data?.languages?.length - 1 ? "," : ""}
+                    </div>
+                  )
+                )}
               </div>
             }
           />

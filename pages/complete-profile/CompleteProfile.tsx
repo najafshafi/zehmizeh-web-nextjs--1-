@@ -1,24 +1,49 @@
-"use client"
-import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation'; // Changed from react-router-dom
-import { Wrapper, StepIndicator } from './complete-profile.styled';
-import PersonalDetails from './steps/PersonalDetails';
-import AboutMe from './steps/AboutMe';
-import Skills from './steps/Skills';
-import Languages from './steps/Languages';
-import { editUser } from '@/helpers/http/auth';
-import { useAuth } from '@/helpers/contexts/auth-context';
-import { ProfilePhoto } from './steps/ProfilePhoto';
-import { getCategories, getSkills } from '@/helpers/utils/helper';
+"use client";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { Wrapper, StepIndicator } from "./complete-profile.styled";
+import PersonalDetails from "./steps/PersonalDetails";
+import AboutMe from "./steps/AboutMe";
+import Skills from "./steps/Skills";
+import Languages from "./steps/Languages";
+import { editUser } from "@/helpers/http/auth";
+import { useAuth } from "@/helpers/contexts/auth-context";
+import { ProfilePhoto } from "./steps/ProfilePhoto";
+import { getCategories, getSkills } from "@/helpers/utils/helper";
+import { IClientDetails } from "@/helpers/types/client.type";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+
+// Define skill type
+interface Skill {
+  category_id?: number;
+  category_name?: string;
+  skill_id?: number;
+  skill_name?: string;
+  [key: string]: any;
+}
+
+// Import the Language type from IFreelancerDetails
+type LanguageType = IFreelancerDetails["languages"][0];
+
+// Define a type for profile data
+interface ProfileData {
+  about_me: string;
+  job_title: string;
+  user_image: string;
+  hourly_rate: number;
+  skills: Skill[];
+  languages: LanguageType[];
+  [key: string]: any; // Index signature to allow string indexing
+}
 
 const CompleteProfile = () => {
-  const router = useRouter(); // Changed from useNavigate
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const [profileData, setProfileData] = useState({
-    about_me: '',
-    job_title: '',
-    user_image: '',
+  const [profileData, setProfileData] = useState<ProfileData>({
+    about_me: "",
+    job_title: "",
+    user_image: "",
     hourly_rate: 0,
     skills: [],
     languages: [],
@@ -27,10 +52,15 @@ const CompleteProfile = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    const userData = {};
-    Object.keys(user || {}).forEach((key) => {
-      if (Object.keys(profileData).includes(key) && user[key]) {
-        userData[key] = user[key];
+    if (!user) return;
+
+    const userData: Partial<ProfileData> = {};
+    Object.keys(user).forEach((key) => {
+      if (
+        Object.keys(profileData).includes(key) &&
+        user[key as keyof typeof user]
+      ) {
+        userData[key as keyof ProfileData] = user[key as keyof typeof user];
       }
     });
     setProfileData((prev) => ({ ...prev, ...userData }));
@@ -41,10 +71,11 @@ const CompleteProfile = () => {
     setCurrentStep((prev) => prev - 1);
   };
 
-  const goToNextStep = (data: typeof user) => {
-    const newProfileData = { ...profileData, ...data };
+  const goToNextStep = (data: Partial<IClientDetails & IFreelancerDetails>) => {
+    // Use type assertion to resolve compatibility issues
+    const newProfileData = { ...profileData, ...data } as ProfileData;
 
-    if (user.user_type === 'client') {
+    if (user?.user_type === "client") {
       updateClientProfile(newProfileData);
     } else {
       setProfileData(newProfileData);
@@ -60,30 +91,33 @@ const CompleteProfile = () => {
     }
   };
 
-  const updateClientProfile = (data: typeof user) => {
+  const updateClientProfile = (data: ProfileData) => {
     const body = {
       about_me: data.about_me,
     };
     const promise = editUser(body);
     toast.promise(promise, {
-      loading: 'Updating your details - please wait...',
+      loading: "Updating your details - please wait...",
       success: (res) => {
-        router.push('/client/account/profile'); // Changed from navigate
+        router.push("/client/account/profile");
         return res.message;
       },
       error: (err) => {
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
 
-  const updateFreelancerProfile = (newProfileData: typeof user) => {
+  const updateFreelancerProfile = (newProfileData: ProfileData) => {
     const { user_image, job_title, hourly_rate, about_me, skills, languages } =
       newProfileData;
     setUpdatingProfile(true);
-    const body: Partial<typeof profileData> = {
-      user_image: user_image || '/images/default_avatar.png',
+
+    // Use type assertion to resolve compatibility issues
+    const body: any = {
+      user_image: user_image || "/images/default_avatar.png",
     };
+
     if (job_title) body.job_title = job_title;
     if (parseFloat(hourly_rate?.toString()))
       body.hourly_rate = parseFloat(hourly_rate.toString());
@@ -93,37 +127,35 @@ const CompleteProfile = () => {
 
     const promise = editUser(body);
     toast.promise(promise, {
-      loading: 'Updating your details - please wait...',
+      loading: "Updating your details - please wait...",
       success: (res) => {
         setUpdatingProfile(false);
-        router.push('/freelancer/account/profile', { // Changed from navigate
-          state: {
-            fromRegister: true,
-          },
-        });
+        // Use Next.js router searchParams instead of state
+        router.push("/freelancer/account/profile?fromRegister=true");
         return res.message;
       },
       error: (err) => {
         setUpdatingProfile(false);
-        return err?.response?.data?.message || 'error';
+        return err?.response?.data?.message || "error";
       },
     });
   };
 
   const skipForNowHandler = () => {
-    if (currentStep >= 5) router.push('/freelancer/account/profile'); // Changed from navigate
+    if (currentStep >= 5) router.push("/freelancer/account/profile");
     else setCurrentStep((stp) => stp + 1);
   };
 
+  // Use type assertion for component props to resolve compatibility issues
   const ClientUI = () => {
     return (
-      user?.user_type === 'client' && (
+      user?.user_type === "client" && (
         <>
           <div className="mt-2">
             <PersonalDetails
               client={true}
               onUpdate={goToNextStep}
-              profileData={profileData}
+              profileData={profileData as any}
               skipForNow={skipForNowHandler}
             />
           </div>
@@ -147,7 +179,7 @@ const CompleteProfile = () => {
         Component = (
           <PersonalDetails
             onUpdate={goToNextStep}
-            profileData={profileData}
+            profileData={profileData as any}
             skipForNow={skipForNowHandler}
           />
         );
@@ -178,7 +210,7 @@ const CompleteProfile = () => {
           <Languages
             onUpdate={goToNextStep}
             onPrevious={onPrevious}
-            languagesProps={profileData?.languages}
+            languagesProps={profileData?.languages as any}
             skipForNow={skipForNowHandler}
           />
         );
@@ -186,7 +218,7 @@ const CompleteProfile = () => {
       case 5:
         Component = (
           <ProfilePhoto
-            profileData={profileData}
+            profileData={profileData as any}
             onUpdate={goToNextStep}
             onPrevious={onPrevious}
             updatingProfile={updatingProfile}
@@ -198,7 +230,7 @@ const CompleteProfile = () => {
         break;
     }
     return (
-      user?.user_type === 'freelancer' && (
+      user?.user_type === "freelancer" && (
         <div className="forms mt-4">{Component}</div>
       )
     );
@@ -209,7 +241,7 @@ const CompleteProfile = () => {
       <div className="fs-32 fw-700">Set Your Profile</div>
 
       <div>
-        {user?.user_type !== 'client' && (
+        {user?.user_type !== "client" && (
           <StepIndicator className="mt-2">
             Step {currentStep} of 5
           </StepIndicator>

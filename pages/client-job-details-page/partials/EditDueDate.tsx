@@ -22,7 +22,7 @@ type Props = {
 };
 
 const EditDueDate = ({ show, toggle, update, data }: Props) => {
-  const [dueDate, setDueDate] = React.useState<any>("");
+  const [dueDate, setDueDate] = React.useState<Date | null>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
 
   useEffect(() => {
@@ -33,25 +33,38 @@ const EditDueDate = ({ show, toggle, update, data }: Props) => {
   }, [data?.dueDate, show]);
 
   /** @function This will set the entered due date into the state */
-  const handleDueDateChange = (value: string) => {
-    setDueDate(adjustTimezone(value));
+  const handleDueDateChange = (value: Date) => {
+    if (value) {
+      setDueDate(adjustTimezone(value) as Date);
+    } else {
+      setDueDate(null);
+    }
   };
 
   /** @function This will call an api to update the due date */
-  const handleUpdate = (e) => {
+  const handleUpdate = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
+    // Ensure job_post_id is defined
+    if (!data?.jobId) {
+      toast.error("Job ID is required");
+      setLoading(false);
+      return;
+    }
+
     const body = {
       due_date: moment(dueDate).format("YYYY-MM-DD"),
-      job_post_id: data?.jobId,
+      job_post_id: data.jobId,
     };
 
     const promise = editJobDueDate(body);
     toast.promise(promise, {
       loading: "Please wait...",
       success: (res) => {
-        update();
+        if (update) {
+          update();
+        }
         toggle();
         setLoading(false);
         return res.response || "Due date updated successfully";

@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { transition } from '@/styles/transitions';
+import styled from "styled-components";
+import { transition } from "@/styles/transitions";
 
 export const TabContent = styled.div`
   height: 500px;

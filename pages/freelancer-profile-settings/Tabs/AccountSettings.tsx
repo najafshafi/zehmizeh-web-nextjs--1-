@@ -42,11 +42,12 @@ interface Location {
   country_code: string;
   country_name: string;
   country_short_name: string;
+  value: string | number | boolean; // Updated to match CountryOptionType exactly
 }
 
 interface NotificationOption {
   label: string;
-  value: string;
+  value: number; // Changed from string to number to match CONSTANTS
 }
 
 interface StateSelection {
@@ -76,6 +77,7 @@ const initialState: TFormData = {
     country_code: "",
     country_name: "",
     country_short_name: "",
+    value: "", // Value is now required
   } as Location,
 };
 
@@ -89,8 +91,9 @@ type TFormData = Pick<
   | "formatted_phonenumber"
   | "notification_email"
   | "new_message_email_notification"
-  | "location"
->;
+> & {
+  location: Location;
+};
 
 type TInputFieldLoading =
   | "first name"
@@ -105,9 +108,10 @@ type TInputFieldLoading =
 
 export const AccountSettings = () => {
   const router = useRouter();
-  const { data } = useQueryData<IFreelancerDetails>(
+  const result = useQueryData<IFreelancerDetails>(
     queryKeys.getFreelancerProfile
   );
+  const profileData = result ? (result as any).data : undefined;
   const { refetch } = useRefetch(queryKeys.getFreelancerProfile);
 
   const [isAccountClosureModalOpen, setIsAccountClosureModalOpen] =
@@ -122,27 +126,45 @@ export const AccountSettings = () => {
   const [errors, setErrors] = useState<Partial<TFormData>>({});
 
   useEffect(() => {
-    if (data) {
+    if (profileData) {
+      // Ensure location has a value property if it exists
+      const locationWithValue = profileData.location
+        ? {
+            ...profileData.location,
+            value: profileData.location.country_name,
+          }
+        : initialState.location;
+
       setFormData({
-        first_name: data.first_name || "",
-        last_name: data.last_name || "",
-        formatted_phonenumber: data.formatted_phonenumber || "",
-        is_agency: data.is_agency || 0,
+        first_name: profileData.first_name || "",
+        last_name: profileData.last_name || "",
+        formatted_phonenumber: profileData.formatted_phonenumber || "",
+        is_agency: profileData.is_agency || 0,
         new_message_email_notification:
-          data.new_message_email_notification || 0,
-        notification_email: data.notification_email || 0,
-        phone_number: data.phone_number || "",
-        u_email_id: data.u_email_id || "",
-        location: data.location || initialState.location,
+          profileData.new_message_email_notification || 0,
+        notification_email: profileData.notification_email || 0,
+        phone_number: profileData.phone_number || "",
+        u_email_id: profileData.u_email_id || "",
+        location: locationWithValue,
       });
     }
-  }, [data]);
+  }, [profileData]);
 
-  const notificationEmailOptions = async (): Promise<NotificationOption[]> =>
-    CONSTANTS.NOTIFICATION_EMAIL;
+  // Fixed the return type and implementation to match AsyncSelect requirements
+  const notificationEmailOptions = (
+    inputValue: string
+  ): Promise<NotificationOption[]> => {
+    return Promise.resolve(CONSTANTS.NOTIFICATION_EMAIL);
+  };
 
-  const newMessageEmailOptions = async (): Promise<NotificationOption[]> =>
-    CONSTANTS.NEW_MESSAGE_EMAIL_OPTIONS;
+  // Fixed the return type and implementation to match AsyncSelect requirements
+  const newMessageEmailOptions = (
+    inputValue: string
+  ): Promise<NotificationOption[]> => {
+    return Promise.resolve(
+      CONSTANTS.NEW_MESSAGE_EMAIL_OPTIONS as NotificationOption[]
+    );
+  };
 
   const handleCancelDeletionRequest = () => {
     const promise = cancelAccountClosure();
@@ -193,7 +215,7 @@ export const AccountSettings = () => {
   };
 
   const handleDelete = () => {
-    if (data?.deletion_requested == 1) {
+    if (profileData?.deletion_requested == 1) {
       handleCancelDeletionRequest();
     } else {
       setIsAccountClosureModalOpen(true);
@@ -249,15 +271,18 @@ export const AccountSettings = () => {
           }
         }}
       >
-        {data?.[dataKey] !== formData[dataKey] && (
-          <div className="text-base font-normal">
-            {inputFieldLoading === loadingKey ? (
-              <Spinner className="mr-1" />
-            ) : (
-              "Save"
-            )}
-          </div>
-        )}
+        {profileData &&
+          dataKey in profileData &&
+          profileData[dataKey as keyof IFreelancerDetails] !==
+            formData[dataKey] && (
+            <div className="text-base font-normal">
+              {inputFieldLoading === loadingKey ? (
+                <Spinner className="mr-1" />
+              ) : (
+                "Save"
+              )}
+            </div>
+          )}
       </div>
     );
   };
@@ -374,6 +399,38 @@ export const AccountSettings = () => {
               </div>
             </StyledFormGroup>
           </div>
+          {/* <div className="w-full lg:w-1/2 px-3">
+            <StyledFormGroup className="relative">
+              <div className="text-sm font-normal">
+                Phone<span className="mandatory">&nbsp;*</span>
+              </div>
+              <PhoneInputWrapper className="phone-input-wrapper">
+                <PhoneNumberInput
+                  initialValue={formData?.phone_number}
+                  formattedValue={formData?.formatted_phonenumber}
+                  onChange={(phone, formattedValue) => {
+                    if (
+                      phone !== formData.phone_number ||
+                      formattedValue !== formData.formatted_phonenumber
+                    ) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        phone_number: phone,
+                        formatted_phonenumber: formattedValue,
+                      }));
+                    }
+                  }}
+                />
+                {SaveButtonUI("phone number", "formatted_phonenumber", 30, {
+                  phone_number: formData.phone_number,
+                })}
+              </PhoneInputWrapper>
+            </StyledFormGroup>
+            {errors?.formatted_phonenumber && (
+              <ErrorMessage message={errors.formatted_phonenumber} />
+            )}
+          </div>
+        </div> */}
           <div className="w-full lg:w-1/2 px-3">
             <StyledFormGroup className="relative">
               <div className="text-sm font-normal">
@@ -383,11 +440,16 @@ export const AccountSettings = () => {
                 <PhoneNumberInput
                   initialValue={formData?.formatted_phonenumber}
                   onChange={(phone, formattedValue) => {
-                    setFormData((prev) => ({
-                      ...prev,
-                      phone_number: phone,
-                      formatted_phonenumber: formattedValue,
-                    }));
+                    if (
+                      phone !== formData.phone_number ||
+                      formattedValue !== formData.formatted_phonenumber
+                    ) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        phone_number: phone,
+                        formatted_phonenumber: formattedValue,
+                      }));
+                    }
                   }}
                 />
                 {SaveButtonUI("phone number", "formatted_phonenumber", 30, {
@@ -410,10 +472,19 @@ export const AccountSettings = () => {
                 Country<span className="mandatory">&nbsp;*</span>
               </div>
               <CountryDropdown
-                selectedCountry={formData?.location}
+                selectedCountry={
+                  formData?.location as any /* Type cast to avoid type mismatch */
+                }
                 onSelectCountry={(item) => {
-                  const newLocation = {
+                  const newLocation: Location = {
                     ...item,
+                    // Ensure all required properties are present
+                    state: item.state || "",
+                    country_id: item.country_id || 0,
+                    country_code: item.country_code || "",
+                    country_name: item.country_name || "",
+                    country_short_name: item.country_short_name || "",
+                    value: item.value || item.country_name || "",
                   };
                   setFormData((prev) => ({
                     ...prev,
@@ -425,7 +496,9 @@ export const AccountSettings = () => {
                 }}
               />
               {errors?.location?.country_name && (
-                <ErrorMessage message={errors.location.country_name} />
+                <ErrorMessage
+                  message={errors.location.country_name as string}
+                />
               )}
             </StyledFormGroup>
           </div>
@@ -452,7 +525,7 @@ export const AccountSettings = () => {
                   }
                 />
                 {errors?.location?.state && (
-                  <ErrorMessage message={errors.location.state} />
+                  <ErrorMessage message={errors.location.state as string} />
                 )}
               </StyledFormGroup>
             </div>
@@ -575,13 +648,13 @@ export const AccountSettings = () => {
                 loadOptions={newMessageEmailOptions}
                 onChange={(options) => {
                   const value = (
-                    options as unknown as { label: string; value: string }
+                    options as unknown as { label: string; value: number }
                   ).value;
                   setFormData((prev) => ({
                     ...prev,
                     new_message_email_notification: Number(value),
                   }));
-                  handleEditUser("Frequency of Project Board Emails", {
+                  handleEditUser("Unread Message Notification", {
                     new_message_email_notification: Number(value),
                   });
                 }}
@@ -599,7 +672,7 @@ export const AccountSettings = () => {
       <div className="flex flex-wrap">
         <div className="w-full">
           <div className="text-2xl font-normal mb-4">Account Status</div>
-          {data?.deletion_requested === 1 ? (
+          {profileData?.deletion_requested === 1 ? (
             <StyledButton
               className="text-lg font-normal cursor-pointer"
               variant="primary"
@@ -618,7 +691,7 @@ export const AccountSettings = () => {
         </div>
         <EmailEditModal
           show={showEditEmailModal}
-          existingEmail={data?.u_email_id}
+          existingEmail={profileData?.u_email_id}
           onClose={() => setShowEditEmailModal(false)}
           onUpdateEmail={() => refetch()}
         />
