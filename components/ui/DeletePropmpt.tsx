@@ -23,7 +23,6 @@ const DeletePrompt = ({
   if (!show) return null;
 
   return (
-
     <div className="fixed inset-0 z-50">
       {/* Backdrop */}
       <div
@@ -41,7 +40,9 @@ const DeletePrompt = ({
 
           {/* Content */}
           <div className="text-center">
-            <h3 className="text-2xl font-normal text-gray-900">{text}</h3>
+            <h3 className="text-2xl font-normal text-gray-900 leading-9">
+              {text}
+            </h3>
 
             {/* Buttons */}
             <div className="mt-6 flex items-center justify-center gap-3">
@@ -66,7 +67,6 @@ const DeletePrompt = ({
                 )}
               </button>
             </div>
-
           </div>
         </div>
       </div>

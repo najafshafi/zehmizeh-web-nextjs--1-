@@ -86,11 +86,11 @@ export const PostVisibilityConfirmationModal = ({
         className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm"
         onClick={() => !isLoading && setShow(false)}
       />
-      <div className="relative bg-white rounded-xl px-6 py-8 md:p-12 max-w-[500px] w-full mx-4">
+      <div className="relative bg-white rounded-xl px-6 py-8 md:p-12 max-w-[800px] w-full mx-4">
         {!isLoading && (
           <button
             type="button"
-            className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 transition-colors duration-200"
+            className="absolute right-4 top-4 lg:top-0 lg:-right-8 lg:text-white text-gray-500 hover:text-gray-600 transition-colors duration-200"
             onClick={() => setShow(false)}
             aria-label="Close modal"
           >
@@ -99,11 +99,11 @@ export const PostVisibilityConfirmationModal = ({
         )}
 
         <div className="flex flex-col items-center">
-          <h2 className="text-2xl font-normal text-center mb-3">
+          <h2 className="text-2xl font-normal text-center mb-5">
             {content.title}
           </h2>
           <div
-            className="mb-4 text-lg text-center px-3"
+            className="mb-4 text-lg text-center text-gray-900 px-3"
             dangerouslySetInnerHTML={{ __html: content.text }}
           />
 
@@ -115,10 +115,10 @@ export const PostVisibilityConfirmationModal = ({
             {content.buttons.map((button) => (
               <button
                 key={button.text}
-                className={`px-8 py-3 rounded-full text-base font-normal transition-all duration-200 hover:scale-105 disabled:opacity-50 ${
+                className={`px-9 py-[0.85rem] rounded-full text-lg font-normal transition-all duration-200 hover:scale-105 disabled:opacity-50 ${
                   button.variant === "primary"
                     ? "bg-[#F2B420] text-[#212529]"
-                    : "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                    : "border border-gray-300 text-gray-700 bg-[#e7e7e7] hover:bg-gray-50"
                 }`}
                 onClick={button.onClick}
                 disabled={isLoading}
@@ -128,7 +128,7 @@ export const PostVisibilityConfirmationModal = ({
             ))}
           </div>
 
-          <label className="flex items-center gap-2 mt-4 cursor-pointer select-none">
+          <label className="flex items-center gap-2 mt-5 cursor-pointer select-none">
             <input
               type="checkbox"
               className="w-4 h-4 rounded border-gray-300 text-[#F2B420] focus:ring-[#F2B420]"
