@@ -19,6 +19,39 @@ import { clientProfileTabValidation } from "@/helpers/validation/clientProfileTa
 import { CONSTANTS } from "@/helpers/const/constants";
 import { IClientDetails } from "@/helpers/types/client.type";
 
+// Define the interface for location data used in this component
+interface LocationData {
+  country_name?: string;
+  country_short_name?: string;
+  state?: string;
+  [key: string]: any; // Allow any additional properties
+}
+
+// Define type for country dropdown options
+type CountryOption = {
+  label: string;
+  value: string | number | boolean;
+  country_name: string;
+  country_short_name?: string;
+  [key: string]: any;
+};
+
+// Define type for state dropdown options
+interface StateOption {
+  label: string;
+  value: string;
+}
+
+// Define type for validation errors
+type ErrorRecord = {
+  [key: string]: string | ErrorRecord | undefined;
+  location?: {
+    country_name?: string;
+    state?: string;
+    [key: string]: any;
+  };
+};
+
 type Props = {
   show: boolean;
   onClose: () => void;
@@ -41,14 +74,14 @@ const initialState: TFormState = {
   last_name: "",
   user_image: "",
   company_name: "",
-  location: null,
+  location: {} as any,
   u_email_id: "",
 };
 
 const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [formState, setFormState] = useState<TFormState>(initialState);
-  const [errors, setErrors] = useState<TFormState>(undefined);
+  const [errors, setErrors] = useState<ErrorRecord>({});
   const [showEditEmailModal, setShowEditEmailModal] = useState<boolean>(false);
 
   const toggleEditModal = () => {
@@ -65,12 +98,12 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
     if (data && show) {
       /* This will set the data in fields from profile data */
       setFormState({
-        first_name: data?.first_name?.trim(),
-        last_name: data?.last_name?.trim(),
-        user_image: data?.user_image,
-        company_name: data?.company_name,
-        location: data?.location,
-        u_email_id: data?.u_email_id,
+        first_name: data?.first_name?.trim() || "",
+        last_name: data?.last_name?.trim() || "",
+        user_image: data?.user_image || "",
+        company_name: data?.company_name || "",
+        location: data?.location || ({} as any),
+        u_email_id: data?.u_email_id || "",
       });
     } else {
       setFormState(initialState);
@@ -88,7 +121,7 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
   );
 
   const handleUpdate = () => {
-    setErrors(undefined);
+    setErrors({});
     clientProfileTabValidation
       .validate(formState, { abortEarly: false })
       .then(() => {
@@ -121,19 +154,76 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
         });
       })
       .catch((err) => {
-        const errors = getYupErrors(err);
-        setErrors({ ...errors });
+        const errorsData = getYupErrors(err);
+        setErrors(errorsData as ErrorRecord);
       });
   };
 
-  const onSelectCountry = (item: TFormState["location"]) => {
-    handleChange("location", item);
+  const onSelectCountry = (item: any) => {
+    if (!item) return;
+
+    // Use type assertion to create a location object
+    const location = {
+      country_name: item.country_name,
+      country_short_name: item.country_short_name,
+      state: formState?.location?.state,
+    };
+
+    // Update the location in formState
+    handleChange("location", location as any);
   };
 
-  const onSelectState = (item: string) => {
+  const onSelectState = (item: StateOption | null) => {
+    if (!item) return;
+
     const formData = { ...formState };
-    formData.location.state = item;
-    setFormState(formData);
+    if (formData.location) {
+      // Update the state property in location
+      const updatedLocation = {
+        ...formData.location,
+        state: item.value,
+      };
+
+      formData.location = updatedLocation;
+      setFormState(formData);
+    }
+  };
+
+  // Convert location to CountryOptionType format for CountryDropdown
+  const getCountryOptionFromLocation = () => {
+    if (!formState?.location?.country_name) return null;
+
+    return {
+      label: formState.location.country_name,
+      value:
+        formState.location.country_short_name ||
+        formState.location.country_name,
+      country_name: formState.location.country_name,
+      country_short_name: formState.location.country_short_name,
+    };
+  };
+
+  // Get state option for StatesDropdown
+  const getStateOption = (): StateOption | null => {
+    if (!formState?.location?.state) return null;
+
+    return {
+      label: formState.location.state,
+      value: formState.location.state,
+    };
+  };
+
+  // Helper function to safely access nested error messages
+  const getErrorMessage = (path: string): string | undefined => {
+    const parts = path.split(".");
+    let current: any = errors;
+
+    for (const part of parts) {
+      if (!current || typeof current !== "object") return undefined;
+      current = current[part];
+    }
+
+    return typeof current === "string" ? current : undefined;
   };
 
   return (
@@ -165,8 +255,10 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
                         )
                       }
                     />
-                    {errors?.first_name && (
-                      <ErrorMessage message={errors.first_name} />
+                    {getErrorMessage("first_name") && (
+                      <ErrorMessage
+                        message={getErrorMessage("first_name") as string}
+                      />
                     )}
                   </StyledFormGroup>
                 </Col>
@@ -187,8 +279,10 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
                         )
                       }
                     />
-                    {errors?.last_name && (
-                      <ErrorMessage message={errors.last_name} />
+                    {getErrorMessage("last_name") && (
+                      <ErrorMessage
+                        message={getErrorMessage("last_name") as string}
+                      />
                     )}
                   </StyledFormGroup>
                 </Col>
@@ -222,11 +316,15 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
                       Country<span className="mandatory">&nbsp;*</span>
                     </div>
                     <CountryDropdown
-                      selectedCountry={formState?.location}
+                      selectedCountry={getCountryOptionFromLocation()}
                       onSelectCountry={onSelectCountry}
                     />
-                    {errors?.location?.country_name && (
-                      <ErrorMessage message={errors.location.country_name} />
+                    {getErrorMessage("location.country_name") && (
+                      <ErrorMessage
+                        message={
+                          getErrorMessage("location.country_name") as string
+                        }
+                      />
                     )}
                   </StyledFormGroup>
                 </Col>
@@ -246,17 +344,12 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
                       <StatesDropdopwn
                         countryCode={formState?.location?.country_short_name}
                         onSelectState={onSelectState}
-                        selectedState={
-                          formState?.location?.state
-                            ? {
-                                label: formState?.location?.state,
-                                value: formState?.location?.state,
-                              }
-                            : null
-                        }
+                        selectedState={getStateOption()}
                       />
-                      {errors?.location?.state && (
-                        <ErrorMessage message={errors.location.state} />
+                      {getErrorMessage("location.state") && (
+                        <ErrorMessage
+                          message={getErrorMessage("location.state") as string}
+                        />
                       )}
                     </StyledFormGroup>
                   </Col>

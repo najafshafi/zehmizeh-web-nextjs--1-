@@ -20,7 +20,7 @@ interface CategoryItem {
   freelancer_count?: number;
   total_freelancers?: number;
   total?: number;
-  [key: string]: any; // Allow for any other properties that might exist
+  [key: string]: unknown; // Allow for any other properties that might exist
 }
 
 interface HomeCountsData {
@@ -47,14 +47,15 @@ export default function Home() {
     }
   }, []);
 
-  const { data, isLoading, error } = useQuery<
-    { data: HomeCountsData; status: boolean },
-    Error
-  >("home-counts", () => getHomeCounts(), {
-    onError: (err) => {
-      console.error("Error fetching home counts:", err);
-    },
-  });
+  const { data } = useQuery<{ data: HomeCountsData; status: boolean }, Error>(
+    "home-counts",
+    () => getHomeCounts(),
+    {
+      onError: (err) => {
+        console.error("Error fetching home counts:", err);
+      },
+    }
+  );
 
   // Transform popular_category data to match the expected MatchData structure
   const matchesData =

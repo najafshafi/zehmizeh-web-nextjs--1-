@@ -130,7 +130,7 @@ const Disputes = () => {
                   <div className="label text-xl font-normal">Milestone:</div>
                   <div className="value text-xl font-normal">
                     <StyledHtmlText
-                      htmlString={item?.milestone?.title}
+                      htmlString={item?.milestone?.title || ""}
                       id={`dispute_${item?.milestone?.title}`}
                       needToBeShorten={true}
                     />
@@ -140,7 +140,7 @@ const Disputes = () => {
                   <div className="label text-xl font-normal">Reason:</div>
                   <div className="value text-xl font-normal">
                     <StyledHtmlText
-                      htmlString={item?.description}
+                      htmlString={item?.description || ""}
                       id={`dispute_${item.dispute_id}`}
                       needToBeShorten={true}
                     />

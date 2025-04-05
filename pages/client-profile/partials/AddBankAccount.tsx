@@ -8,7 +8,13 @@ import { addBankAccountValidationHandler } from "@/helpers/validation/common";
 import { getYupErrors } from "@/helpers/utils/misc";
 import { managePayment } from "@/helpers/http/freelancer";
 import { camelCaseToNormalCase } from "@/helpers/utils/helper";
-import Select from "react-select";
+import Select, {
+  StylesConfig,
+  ControlProps,
+  CSSObjectWithLabel,
+  OptionProps,
+  SingleValue,
+} from "react-select";
 
 const StyledFormGroup = styled.div`
   margin-top: 1.25rem;
@@ -20,8 +26,16 @@ const StyledFormGroup = styled.div`
   }
 `;
 
-const MultiSelectCustomStyle = {
-  control: (base: any) => ({
+interface AccountHolderType {
+  label: string;
+  value: string | number;
+}
+
+const MultiSelectCustomStyle: StylesConfig<AccountHolderType, false> = {
+  control: (
+    base: CSSObjectWithLabel,
+    _state: ControlProps<AccountHolderType, false>
+  ) => ({
     ...base,
     minHeight: 60,
     // border: '1px solid #000',
@@ -44,13 +58,16 @@ const MultiSelectCustomStyle = {
   multiValueLabel: () => ({
     margin: 5,
   }),
-  multiValueRemove: (styles: any) => ({
+  multiValueRemove: (styles: CSSObjectWithLabel) => ({
     ...styles,
     ":hover": {
       backgroundColor: "rgba(209, 229, 255,1)",
     },
   }),
-  option: (provided) => ({
+  option: (
+    provided: CSSObjectWithLabel,
+    _state: OptionProps<AccountHolderType, false>
+  ) => ({
     ...provided,
     // backgroundColor: state.isSelected ? 'rgba(209, 229, 255,1)' : 'white',
     color: "#000",
@@ -60,11 +77,11 @@ const MultiSelectCustomStyle = {
       backgroundColor: "rgba(209, 229, 255,1)",
     },
   }),
-  menu: (base) => ({
+  menu: (base: CSSObjectWithLabel) => ({
     ...base,
     zIndex: 10,
   }),
-  menuList: (base) => ({
+  menuList: (base: CSSObjectWithLabel) => ({
     ...base,
     "::-webkit-scrollbar": {
       width: "8px",
@@ -75,7 +92,22 @@ const MultiSelectCustomStyle = {
   }),
 };
 
-const initialState = {
+interface FormState {
+  accountHolderFirstName: string;
+  accountHolderLastName: string;
+  accountHolderType: string;
+  accountNumber: string;
+  routingNumber: string;
+  [key: string]: string;
+}
+
+interface ErrorRecordValue {
+  [key: string]: string | ErrorRecordValue;
+}
+
+type ErrorRecord = Record<string, string | ErrorRecordValue>;
+
+const initialState: FormState = {
   accountHolderFirstName: "",
   accountHolderLastName: "",
   accountHolderType: "",
@@ -89,14 +121,9 @@ type Props = {
   onBankAccountAdded: () => void;
 };
 
-interface AccountHolderType {
-  label: string;
-  value: string | number;
-}
-
 const AddBankAccount = ({ onCancel, onBankAccountAdded }: Props) => {
-  const [formState, setFormState] = useState<any>(initialState);
-  const [errors, setErrors] = useState<any>({});
+  const [formState, setFormState] = useState<FormState>(initialState);
+  const [errors, setErrors] = useState<ErrorRecord>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [accountHolderTypeOptions] = useState<AccountHolderType[]>([
     {
@@ -109,8 +136,8 @@ const AddBankAccount = ({ onCancel, onBankAccountAdded }: Props) => {
     },
   ]);
 
-  const handleChange = useCallback((field, value) => {
-    setFormState((prevFormState: any) => {
+  const handleChange = useCallback((field: keyof FormState, value: string) => {
+    setFormState((prevFormState: FormState) => {
       return { ...prevFormState, [field]: value };
     });
   }, []);
@@ -124,7 +151,7 @@ const AddBankAccount = ({ onCancel, onBankAccountAdded }: Props) => {
       if (!valid) {
         validateEq.validate(formState, { abortEarly: false }).catch((err) => {
           const errors = getYupErrors(err);
-          setErrors({ ...errors });
+          setErrors(errors as ErrorRecord);
         });
       } else {
         setErrors({});
@@ -174,12 +201,14 @@ const AddBankAccount = ({ onCancel, onBankAccountAdded }: Props) => {
     <div>
       <div className="account-form">
         <StyledFormGroup>
-          <Select
+          <Select<AccountHolderType>
             styles={MultiSelectCustomStyle}
             options={accountHolderTypeOptions}
-            onChange={({ value }) => {
-              handleChange("accountHolderType", value);
-              setErrors({});
+            onChange={(option: SingleValue<AccountHolderType>) => {
+              if (option && option.value !== undefined) {
+                handleChange("accountHolderType", String(option.value));
+                setErrors({});
+              }
             }}
             placeholder="Select Account Type"
             key={"bank-account-holder-type"}
@@ -187,7 +216,7 @@ const AddBankAccount = ({ onCancel, onBankAccountAdded }: Props) => {
           />
 
           {errors?.accountHolderType && (
-            <ErrorMessage message={errors.accountHolderType} />
+            <ErrorMessage message={errors.accountHolderType as string} />
           )}
         </StyledFormGroup>
 
@@ -212,7 +241,9 @@ const AddBankAccount = ({ onCancel, onBankAccountAdded }: Props) => {
                 maxLength={60}
               />
               {errors?.accountHolderFirstName && (
-                <ErrorMessage message={errors.accountHolderFirstName} />
+                <ErrorMessage
+                  message={errors.accountHolderFirstName as string}
+                />
               )}
             </StyledFormGroup>
           </Col>
@@ -235,7 +266,9 @@ const AddBankAccount = ({ onCancel, onBankAccountAdded }: Props) => {
                 maxLength={60}
               />
               {errors?.accountHolderLastName && (
-                <ErrorMessage message={errors.accountHolderLastName} />
+                <ErrorMessage
+                  message={errors.accountHolderLastName as string}
+                />
               )}
             </StyledFormGroup>
           </Col>
@@ -253,7 +286,7 @@ const AddBankAccount = ({ onCancel, onBankAccountAdded }: Props) => {
             maxLength={20}
           />
           {errors?.accountNumber && (
-            <ErrorMessage message={errors.accountNumber} />
+            <ErrorMessage message={errors.accountNumber as string} />
           )}
         </StyledFormGroup>
 
@@ -271,12 +304,12 @@ const AddBankAccount = ({ onCancel, onBankAccountAdded }: Props) => {
             onChange={(e) => handleChange("routingNumber", e.target.value)}
           />
           {errors?.routingNumber && (
-            <ErrorMessage message={errors.routingNumber} />
+            <ErrorMessage message={errors.routingNumber as string} />
           )}
         </StyledFormGroup>
       </div>
 
-      <div className="d-flex justify-content-center justify-content-md-end mt-4 gap-3">
+      <div className="flex justify-center md:justify-end mt-4 gap-3">
         <StyledButton
           variant="outline-dark"
           disabled={loading}

@@ -3,7 +3,7 @@ import { clientJobNameSearch } from "@/helpers/http/jobs";
 
 const LIMIT = 10;
 // This custom hook fetches the Jobs which are in progress, prospects, drafts and also templates for client dashboard
-function useGetAllJobs(deboubcedSearch) {
+function useGetAllJobs(deboubcedSearch: string | undefined) {
   const {
     data,
     isLoading,
@@ -13,13 +13,7 @@ function useGetAllJobs(deboubcedSearch) {
     isFetchingNextPage,
     refetch,
   } = useInfiniteQuery<{
-    data: any;
-    isLoading: boolean;
-    fetchNextPage: boolean;
-    hasNextPage: boolean;
-    isFetching: boolean;
-    isFetchingNextPage: boolean;
-    refetch: any;
+    data: any[];
     total: number;
   }>(
     ["get-all-client-search-jobs", deboubcedSearch],

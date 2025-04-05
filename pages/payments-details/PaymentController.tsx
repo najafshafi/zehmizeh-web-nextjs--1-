@@ -1,7 +1,7 @@
-"use client"
-import { apiClient } from '@/helpers/http';
-import React, { useState } from 'react';
-import { useQuery } from 'react-query';
+"use client";
+import { apiClient } from "@/helpers/http";
+import React, { useState, ReactNode } from "react";
+import { useQuery, QueryFunctionContext } from "react-query";
 
 const getFreelancerStripeBalance = () =>
   apiClient
@@ -11,10 +11,21 @@ const getFreelancerStripeBalance = () =>
       throw new Error(err?.response?.data);
     });
 
-const getPayoutList = ({ queryKey }: { queryKey: any[] }) => {
+// Define types for payloads
+type PayoutPayload = {
+  limit: number;
+  page: number;
+};
+
+// Using a more generic approach to avoid complex type issues with QueryFunctionContext
+const getPayoutList = (context: QueryFunctionContext) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, page, limit] = queryKey;
-  const payload: any = {
+  const [_, page, limit] = context.queryKey as readonly [
+    string,
+    number,
+    number,
+  ];
+  const payload: PayoutPayload = {
     limit,
     page: page || 1,
   };
@@ -22,7 +33,9 @@ const getPayoutList = ({ queryKey }: { queryKey: any[] }) => {
   return apiClient
     .post(`/payment/payouts-list`, payload)
     .then((res) => {
-      const totalPages = res.data?.data?.total ? Math.ceil(res.data?.data?.total / limit) : 0;
+      const totalPages = res.data?.data?.total
+        ? Math.ceil(res.data?.data?.total / limit)
+        : 0;
       return { ...res.data?.data, totalPages, currentPage: payload.page };
     })
     .catch((err) => {
@@ -30,10 +43,24 @@ const getPayoutList = ({ queryKey }: { queryKey: any[] }) => {
     });
 };
 
-const getPaymentList = ({ queryKey }: { queryKey: any[] }) => {
+type PaymentPayload = {
+  filter: string;
+  limit: number;
+  page: number;
+  job_post_id?: string;
+};
+
+// Using a more generic approach for QueryFunctionContext
+const getPaymentList = (context: QueryFunctionContext) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, jobId, filter, page, limit] = queryKey;
-  const payload: any = {
+  const [_, jobId, filter, page, limit] = context.queryKey as readonly [
+    string,
+    string | undefined,
+    string,
+    number,
+    number,
+  ];
+  const payload: PaymentPayload = {
     filter,
     limit,
     page: page || 1,
@@ -44,7 +71,9 @@ const getPaymentList = ({ queryKey }: { queryKey: any[] }) => {
   return apiClient
     .post(`/payment/get-list`, payload)
     .then((res) => {
-      const totalPages = res.data?.data?.total ? Math.ceil(res.data?.data?.total / limit) : 0;
+      const totalPages = res.data?.data?.total
+        ? Math.ceil(res.data?.data?.total / limit)
+        : 0;
       return { ...res.data?.data, totalPages, currentPage: payload.page };
     })
     .catch((err) => {
@@ -55,7 +84,7 @@ const getPaymentList = ({ queryKey }: { queryKey: any[] }) => {
 const getJobs = () =>
   apiClient
     .post(`/job/manage-dispute`, {
-      action: 'get_project',
+      action: "get_project",
       is_transactions: true,
     })
     .then((res) => res.data)
@@ -63,37 +92,80 @@ const getJobs = () =>
       throw new Error(err?.response?.data);
     });
 
-const PaymentControllerContext = React.createContext<any>(null);
+// Define more specific types for payments and payouts
+interface PaymentData {
+  results: unknown[];
+  total: number;
+  totalPages: number;
+  currentPage: number;
+  [key: string]: unknown;
+}
 
-const PaymentControllerProvider = ({ children }: any) => {
-  const [filters, setFilters] = useState({
-    filter: 'alltime',
-    job_post_id: '',
+// Define types for payment controller context
+interface PaymentControllerContextType {
+  payments: PaymentData | undefined;
+  payouts: PaymentData | undefined;
+  filters: FilterState;
+  updateFilters: (newFilters: Partial<FilterState>) => void;
+  isLoadingPayments: boolean;
+  isLoadingPayouts: boolean;
+}
+
+interface FilterState {
+  filter: string;
+  job_post_id: string;
+  page: number;
+  limit: number;
+  activeTab: string;
+}
+
+const PaymentControllerContext =
+  React.createContext<PaymentControllerContextType | null>(null);
+
+interface PaymentControllerProviderProps {
+  children: ReactNode;
+}
+
+const PaymentControllerProvider = ({
+  children,
+}: PaymentControllerProviderProps) => {
+  const [filters, setFilters] = useState<FilterState>({
+    filter: "alltime",
+    job_post_id: "",
     page: 1,
     limit: 10,
-    activeTab: 'Transactions',
+    activeTab: "Transactions",
   });
 
-  const { data: payments, isLoading: isLoadingPayments } = useQuery(
-    ['PAYMENT_LIST', filters.job_post_id, filters.filter, filters.page, filters.limit],
-    getPaymentList,
-    {
-      enabled: (!!filters.job_post_id || !!filters.filter) && filters.activeTab === 'Transactions',
-      keepPreviousData: true,
-    }
-  );
+  const { data: payments, isLoading: isLoadingPayments } =
+    useQuery<PaymentData>(
+      [
+        "PAYMENT_LIST",
+        filters.job_post_id,
+        filters.filter,
+        filters.page,
+        filters.limit,
+      ],
+      getPaymentList,
+      {
+        enabled:
+          (!!filters.job_post_id || !!filters.filter) &&
+          filters.activeTab === "Transactions",
+        keepPreviousData: true,
+      }
+    );
 
-  const { data: payouts, isLoading: isLoadingPayouts } = useQuery(
-    ['PAYOUT_LIST', filters.page, filters.limit],
+  const { data: payouts, isLoading: isLoadingPayouts } = useQuery<PaymentData>(
+    ["PAYOUT_LIST", filters.page, filters.limit],
     getPayoutList,
     {
-      enabled: filters.activeTab === 'Payouts',
+      enabled: filters.activeTab === "Payouts",
       keepPreviousData: true,
     }
   );
 
   const updateFilters = React.useCallback(
-    (newFilters) => {
+    (newFilters: Partial<FilterState>) => {
       setFilters({ ...filters, ...newFilters });
     },
     [filters]
@@ -108,18 +180,39 @@ const PaymentControllerProvider = ({ children }: any) => {
       isLoadingPayments,
       isLoadingPayouts,
     }),
-    [filters, isLoadingPayments, isLoadingPayouts, payments, payouts, updateFilters]
+    [
+      filters,
+      isLoadingPayments,
+      isLoadingPayouts,
+      payments,
+      payouts,
+      updateFilters,
+    ]
   );
-  return <PaymentControllerContext.Provider value={value}>{children}</PaymentControllerContext.Provider>;
+  return (
+    <PaymentControllerContext.Provider value={value}>
+      {children}
+    </PaymentControllerContext.Provider>
+  );
 };
 
-function usePaymentController() {
-  return React.useContext(PaymentControllerContext);
+function usePaymentController(): PaymentControllerContextType {
+  const context = React.useContext(PaymentControllerContext);
+  if (!context) {
+    throw new Error(
+      "usePaymentController must be used within a PaymentControllerProvider"
+    );
+  }
+  return context;
 }
 
 export const useJobOptions = () => {
-  const { data: jobList } = useQuery('JOB_LIST', getJobs);
+  const { data: jobList } = useQuery("JOB_LIST", getJobs);
   return jobList?.data;
 };
 
-export { usePaymentController, PaymentControllerProvider, getFreelancerStripeBalance };
+export {
+  usePaymentController,
+  PaymentControllerProvider,
+  getFreelancerStripeBalance,
+};

@@ -24,6 +24,11 @@ type Props = {
   required?: boolean;
 };
 
+// Define an interface for job details
+interface JobDetails {
+  [key: string]: any;
+}
+
 const Wrapper = styled.div``;
 
 const EndModal = ({
@@ -36,8 +41,9 @@ const EndModal = ({
   onError,
   required,
 }: Props) => {
-  const { data: jobDetails } =
-    useQueryData(queryKeys.jobDetails(jobPostId)) || {};
+  const { data: jobDetails = {} } = (useQueryData(
+    queryKeys.jobDetails(jobPostId)
+  ) || {}) as { data?: JobDetails };
 
   const dontAllowToSubmitReview = isNotAllowedToSubmitReview(jobDetails);
 
@@ -79,7 +85,9 @@ const EndModal = ({
 
   const onEndConfim = (onlyToggleModal = false) => {
     toggle();
-    if (!onlyToggleModal) onEndJob();
+    if (!onlyToggleModal && onEndJob) {
+      onEndJob();
+    }
   };
 
   const handleEndJobError = (msg: string) => {
@@ -105,7 +113,7 @@ const EndModal = ({
     ) {
       return (
         <EndJobStatus
-          endJobSelectedStatus={endJobSelectedStatus}
+          endJobSelectedStatus={endJobSelectedStatus || ""}
           onContinue={onContinueWithStatus}
         />
       );
@@ -126,6 +134,9 @@ const EndModal = ({
         />
       );
     }
+
+    // Return null as a fallback
+    return null;
   };
 
   return (

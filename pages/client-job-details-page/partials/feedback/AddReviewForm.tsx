@@ -94,7 +94,7 @@ const AddReviewForm = ({
       <div className="text-end">
         <StyledButton
           padding="0.75rem 2rem"
-          variant="outline"
+          variant="outline-primary"
           className="button"
           disabled={loading}
           onClick={addFeedback}

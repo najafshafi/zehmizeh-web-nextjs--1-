@@ -9,6 +9,31 @@ import { IoClose } from "react-icons/io5";
 import { VscClose } from "react-icons/vsc";
 import { FaRegCircleCheck } from "react-icons/fa6";
 
+// Define types for the API responses
+interface CategoryResponse {
+  id: number;
+  name: string;
+  [key: string]: unknown;
+}
+
+interface SkillResponse {
+  id: number;
+  name: string;
+  categories: { id: number; name: string }[];
+  [key: string]: unknown;
+}
+
+// Define type for API error responses
+interface ApiErrorResponse {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+  message?: string;
+  [key: string]: unknown;
+}
+
 type Props = {
   labelClassName?: string;
   label?: string;
@@ -31,6 +56,16 @@ type Props = {
 };
 
 type TSkills = (TJobDetails["skills"][0] & { skills: TJobDetails["skills"] })[];
+
+// Define a type for skill or category item
+interface SkillCategoryItem {
+  category_id?: number;
+  category_name?: string;
+  skill_id?: number;
+  skill_name?: string;
+  categories?: number[];
+  [key: string]: unknown;
+}
 
 const constantKeys = (type: Props["type"]) => {
   if (type === "CATEGORY") {
@@ -142,8 +177,8 @@ export const CategorySkillSelectModal = ({
   const [allItems, setAllItems] = useState<TSkills>([]);
   const [search, setSearch] = useState("");
   const [selectedItems, setSelectedItems] = useState<Props["formData"]>([]);
-  const [allCategories, setAllCategories] = useState<any[]>([]);
-  const [allSkills, setAllSkills] = useState<any[]>([]);
+  const [allCategories, setAllCategories] = useState<CategoryResponse[]>([]);
+  const [allSkills, setAllSkills] = useState<SkillResponse[]>([]);
 
   /* START ----------------------------------------- Set form data in selected state */
   useEffect(() => {
@@ -165,16 +200,17 @@ export const CategorySkillSelectModal = ({
       setIsLoading(false);
 
       if (Array.isArray(data)) setAllCategories(data);
-    } catch (error: any) {
+    } catch (error: unknown) {
       let errorMessage = "Failed to load categories";
+      const err = error as ApiErrorResponse;
       if (
-        error?.response?.data?.message &&
-        typeof error?.response?.data?.message === "string"
+        err?.response?.data?.message &&
+        typeof err?.response?.data?.message === "string"
       )
-        errorMessage = error.response.data.message;
-      else if (error?.message && typeof error.message === "string")
-        errorMessage = error.message;
-      else if (error && typeof error === "string") errorMessage = error;
+        errorMessage = err.response.data.message;
+      else if (err?.message && typeof err.message === "string")
+        errorMessage = err.message;
+      else if (err && typeof err === "string") errorMessage = err;
       toast.error(errorMessage);
       setIsLoading(false);
     }
@@ -187,16 +223,17 @@ export const CategorySkillSelectModal = ({
       setIsLoading(false);
 
       if (Array.isArray(data)) setAllSkills(data);
-    } catch (error: any) {
+    } catch (error: unknown) {
       let errorMessage = "Failed to load skills";
+      const err = error as ApiErrorResponse;
       if (
-        error?.response?.data?.message &&
-        typeof error?.response?.data?.message === "string"
+        err?.response?.data?.message &&
+        typeof err?.response?.data?.message === "string"
       )
-        errorMessage = error.response.data.message;
-      else if (error?.message && typeof error.message === "string")
-        errorMessage = error.message;
-      else if (error && typeof error === "string") errorMessage = error;
+        errorMessage = err.response.data.message;
+      else if (err?.message && typeof err.message === "string")
+        errorMessage = err.message;
+      else if (err && typeof err === "string") errorMessage = err;
       toast.error(errorMessage);
       setIsLoading(false);
     }
@@ -248,7 +285,7 @@ export const CategorySkillSelectModal = ({
       .map((item) => ({
         skill_id: item.id,
         skill_name: item.name,
-        categories: item.categories.map((x: any) => x.id),
+        categories: item.categories.map((x) => x.id),
       }));
     const relevantSkills: TSkills = getRelevantSkillsBasedOnCategory([
       ...skills,
@@ -257,7 +294,7 @@ export const CategorySkillSelectModal = ({
     setAllItems(relevantSkills);
   };
 
-  const SkillChip = (item: any) => {
+  const SkillChip = (item: SkillCategoryItem) => {
     const isActive =
       selectedItems.findIndex(
         (selectedCategory) =>
@@ -269,7 +306,7 @@ export const CategorySkillSelectModal = ({
       <Chip
         isActive={isActive}
         key={`${item[constantKeys(type).id as keyof typeof item]}`}
-        label={item[constantKeys(type).name as keyof typeof item]}
+        label={item[constantKeys(type).name as keyof typeof item] as string}
         className="m-1 transition-all"
         onSelect={() => {
           const maxItemsAllowedToSelect =
@@ -294,14 +331,16 @@ export const CategorySkillSelectModal = ({
             if (existIndex >= 0) {
               newItems.splice(existIndex, 1);
             } else {
-              const objectToPush: any = {
+              const objectToPush: SkillCategoryItem = {
                 [constantKeys(type).id]:
                   item[constantKeys(type).id as keyof typeof item],
                 [constantKeys(type).name]:
                   item[constantKeys(type).name as keyof typeof item],
               };
-              if (type === "SKILL") objectToPush.categories = item.categories;
-              newItems.push(objectToPush);
+              if (type === "SKILL" && item.categories) {
+                objectToPush.categories = item.categories;
+              }
+              newItems.push(objectToPush as TJobDetails["skills"][0]);
             }
             return newItems;
           });

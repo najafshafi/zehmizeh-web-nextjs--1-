@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Spinner } from "react-bootstrap";
 import toast from "react-hot-toast";
@@ -42,6 +42,7 @@ import { editUser } from "@/helpers/http/auth";
 import useClientProfile from "@/controllers/useClientProfile";
 import { USER_PROFILE_SETTINGS_KEY } from "@/helpers/const/constants";
 import { StatusBadge } from "@/components/styled/Badges";
+import { TJOB_STATUS } from "@/helpers/types/job.type";
 
 export type TcomponentConnectorRef = React.MutableRefObject<{
   openMilestoneListModal: () => void;
@@ -104,15 +105,15 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
     },
   });
 
-  const toggleSubmitEndJobModal = () => {
+  const toggleSubmitEndJobModal = useCallback(() => {
     setShowSubmitEndJobModal((prev) => !prev);
-  };
+  }, []);
 
   // Move goToMileStoneTab declaration up here before it's used in any useEffect
-  const goToMileStoneTab = () => {
+  const goToMileStoneTab = useCallback(() => {
     setActiveTab("m_stone");
     router.push(`/client-job-details/${jobId}/m_stone`);
-  };
+  }, [jobId, router, setActiveTab]);
 
   const makeTabPersistent = () => {
     const url = new URL(window.location.href);
@@ -518,7 +519,14 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
         {(isLoading || isRefetching) && <Loader />}
 
         {!isLoading && !isRefetching && jobdetails ? (
-          <DetailsBanner data={jobdetails as any} refetch={refetch} />
+          <DetailsBanner
+            data={
+              jobdetails as unknown as Parameters<
+                typeof DetailsBanner
+              >[0]["data"]
+            }
+            refetch={refetch}
+          />
         ) : null}
 
         {!isLoading && !isRefetching && jobdetails && (
@@ -548,7 +556,7 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
                   <QuickOptions
                     payAllBtn
                     jobData={{
-                      status: jobdetails?.status,
+                      status: jobdetails?.status as unknown as TJOB_STATUS,
                       jobPostId: jobdetails?.job_post_id,
                       jobType: jobdetails?.budget?.type,
                       freelancerUserId: jobdetails?._freelancer_user_id,
@@ -566,7 +574,7 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
                       activeTab: activeTab,
                       is_client_feedback: jobdetails?.is_client_feedback,
                       job_reason: jobdetails?.job_reason,
-                      is_completed: jobdetails?.is_completed as any,
+                      is_completed: jobdetails?.is_completed ? 1 : (0 as 0 | 1),
                     }}
                     refetch={refreshOnStatusChange}
                     goToMilestonesTab={goToMileStoneTab}
@@ -639,7 +647,7 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
               <Invitees
                 jobPostId={jobdetails?.job_post_id}
                 refetch={refreshOnStatusChange("invitees")}
-                jobStatus={jobdetails?.status as any}
+                jobStatus={jobdetails?.status as unknown as TJOB_STATUS}
               />
             )}
 
@@ -670,7 +678,7 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
                     milestone={jobdetails?.milestone}
                     refetch={refetch}
                     isRefetching={isRefetching}
-                    jobstatus={jobdetails?.status}
+                    jobstatus={jobdetails?.status as unknown as TJOB_STATUS}
                     componentConnectorRef={componentConnectorRef}
                   />
                 )}
@@ -719,7 +727,7 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
                 jobTitle={jobdetails?.job_title}
                 jobPostId={jobdetails?.job_post_id}
                 refetch={refreshOnStatusChange("applicants")}
-                jobStatus={jobdetails?.status as any}
+                jobStatus={jobdetails?.status as unknown as TJOB_STATUS}
               />
             )}
 
@@ -780,11 +788,19 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
             {jobdetails?.proposal?.approved_budget && (
               <>
                 <ChangeBudgetRequestModal
-                  jobDetails={jobdetails as any}
+                  jobDetails={
+                    jobdetails as unknown as Parameters<
+                      typeof ChangeBudgetRequestModal
+                    >[0]["jobDetails"]
+                  }
                   userType="client"
                 />
                 <ChangeBudgetDeniedModal
-                  jobDetails={jobdetails as any}
+                  jobDetails={
+                    jobdetails as unknown as Parameters<
+                      typeof ChangeBudgetDeniedModal
+                    >[0]["jobDetails"]
+                  }
                   refetch={refetch}
                   userType="client"
                 />

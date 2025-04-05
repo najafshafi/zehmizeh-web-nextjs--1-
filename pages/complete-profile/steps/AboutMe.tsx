@@ -57,7 +57,7 @@ const AboutMe = ({ aboutMe, onUpdate, onPrevious, skipForNow }: Props) => {
   const onDescriptionChange = (data: typeof aboutMe) => {
     setContent(data);
     if (
-      (getPlainText(data).length || 0) <= CONSTANTS.ABOUT_ME_MAXIMUM_CHARACTERS
+      (getPlainText(data || '') || '').length <= CONSTANTS.ABOUT_ME_MAXIMUM_CHARACTERS
     ) {
       if (isMaxLimitReached) {
         setIsMaxLimitReached(false);

@@ -17,6 +17,11 @@ interface Props {
   handlePayment: () => void;
 }
 
+interface Milestone {
+  status: string;
+  amount: number;
+}
+
 export const AcceptAndPaynowModal: React.FC<Props> = ({
   show,
   toggle,
@@ -25,7 +30,7 @@ export const AcceptAndPaynowModal: React.FC<Props> = ({
   const params = useParams<{ id: string }>();
   const id = (params?.id as string) || "";
   const { amount } = usePayments();
-  const { data } = useQueryData<TJobDetails>(queryKeys.jobDetails(id));
+  const data = useQueryData<TJobDetails>(queryKeys.jobDetails(id));
 
   // Body scroll lock effect
   useEffect(() => {
@@ -45,18 +50,19 @@ export const AcceptAndPaynowModal: React.FC<Props> = ({
     };
   }, [show]);
 
-  const clientAcceptedMilestoneAmount = data?.milestone.reduce((sum, item) => {
-    if (item.status === "paid" || item.status === "released") {
-      return sum + item.amount;
-    }
-    return sum;
-  }, 0);
+  const clientAcceptedMilestoneAmount =
+    data?.milestone.reduce((sum: number, item: Milestone) => {
+      if (item.status === "paid" || item.status === "released") {
+        return sum + item.amount;
+      }
+      return sum;
+    }, 0) || 0;
 
   const remainingBudget = data?.proposal?.approved_budget?.amount
     ? data.proposal.approved_budget.amount - clientAcceptedMilestoneAmount
     : data?.budget?.amount
-    ? data.budget.amount - clientAcceptedMilestoneAmount
-    : 0;
+      ? data.budget.amount - clientAcceptedMilestoneAmount
+      : 0;
 
   const remainingAmount = `${numberWithCommas(remainingBudget, "USD")}`;
   const isOverBudget = remainingBudget - amount < 0;

@@ -52,6 +52,15 @@ type Props = {
   processingPayment: boolean;
 };
 
+interface BankAccount {
+  user_bank_id: string;
+  stripe_bank_account_id: string;
+  account_holder_name: string;
+  account_holder_type: string;
+  last_4_digit: string;
+  routing_number?: string;
+}
+
 const BankAccountsList = ({ onPay, processingPayment }: Props) => {
   const { jobType } = usePayments();
   const [selectedAccountId, setSelectedAccountId] = useState<string>("");
@@ -72,32 +81,37 @@ const BankAccountsList = ({ onPay, processingPayment }: Props) => {
   };
 
   const onContinuePay = () => {
-    if (selectedAccountId == "") {
+    if (selectedAccountId === "") {
       toast.error("Please select a bank account.");
       return;
     }
     onPay(selectedAccountId);
   };
 
-  return (
-    <p
-      style={{
-        color: "#ff0000",
-        fontSize: "1.2rem",
-        fontWeight: "bold",
-        textAlign: "center",
-        padding: "20px",
-        border: "1px solid #ff0000",
-        borderRadius: "5px",
-        backgroundColor: "#ffe6e6",
-        margin: "20px 0",
-      }}
-    >
-      Please note that our bank account payment processing system is currently
-      undergoing maintenance. During this time, we kindly request that you use
-      your credit card for any payments.
-    </p>
-  );
+  // Show maintenance message instead of the bank account list
+  const showMaintenanceMessage = true;
+
+  if (showMaintenanceMessage) {
+    return (
+      <p
+        style={{
+          color: "#ff0000",
+          fontSize: "1.2rem",
+          fontWeight: "bold",
+          textAlign: "center",
+          padding: "20px",
+          border: "1px solid #ff0000",
+          borderRadius: "5px",
+          backgroundColor: "#ffe6e6",
+          margin: "20px 0",
+        }}
+      >
+        Please note that our bank account payment processing system is currently
+        undergoing maintenance. During this time, we kindly request that you use
+        your credit card for any payments.
+      </p>
+    );
+  }
 
   return (
     <Wrapper>
@@ -106,11 +120,11 @@ const BankAccountsList = ({ onPay, processingPayment }: Props) => {
       <div className="listings">
         {!isLoading &&
           data?.data?.length > 0 &&
-          data?.data?.map((item) => (
+          data?.data?.map((item: BankAccount) => (
             <StyledBankItem
               key={item?.user_bank_id}
               className={`p-3 mt-3 pointer ${
-                selectedAccountId == item?.stripe_bank_account_id
+                selectedAccountId === item?.stripe_bank_account_id
                   ? "selected"
                   : ""
               }`}
@@ -118,42 +132,46 @@ const BankAccountsList = ({ onPay, processingPayment }: Props) => {
             >
               <div>
                 <table className="bank-table">
-                  <tr className="fs-1rem font-normal">
-                    <td>
-                      <span className="acc-info--label">
-                        Name on Account: &nbsp;
-                      </span>
-                    </td>
-                    <td className="capitalize">{item?.account_holder_name}</td>
-                  </tr>
-                  <tr className="fs-1rem font-normal">
-                    <td>
-                      <span className="acc-info--label">
-                        Account Type: &nbsp;
-                      </span>
-                    </td>
-                    <td className="capital-first-ltr">
-                      {item?.account_holder_type}
-                    </td>
-                  </tr>
-                  <tr className="fs-1rem font-normal">
-                    <td>
-                      <span className="acc-info--label">
-                        Account Number: &nbsp;
-                      </span>
-                    </td>
-                    <td>{formatingAccountNumber(item?.last_4_digit)}</td>
-                  </tr>
-                  {item?.routing_number && (
+                  <tbody>
                     <tr className="fs-1rem font-normal">
                       <td>
                         <span className="acc-info--label">
-                          Routing Number: &nbsp;
+                          Name on Account: &nbsp;
                         </span>
                       </td>
-                      <td>{formatRoutingNumber(item?.routing_number)}</td>
+                      <td className="capitalize">
+                        {item?.account_holder_name}
+                      </td>
                     </tr>
-                  )}
+                    <tr className="fs-1rem font-normal">
+                      <td>
+                        <span className="acc-info--label">
+                          Account Type: &nbsp;
+                        </span>
+                      </td>
+                      <td className="capital-first-ltr">
+                        {item?.account_holder_type}
+                      </td>
+                    </tr>
+                    <tr className="fs-1rem font-normal">
+                      <td>
+                        <span className="acc-info--label">
+                          Account Number: &nbsp;
+                        </span>
+                      </td>
+                      <td>{formatingAccountNumber(item?.last_4_digit)}</td>
+                    </tr>
+                    {item?.routing_number && (
+                      <tr className="fs-1rem font-normal">
+                        <td>
+                          <span className="acc-info--label">
+                            Routing Number: &nbsp;
+                          </span>
+                        </td>
+                        <td>{formatRoutingNumber(item?.routing_number)}</td>
+                      </tr>
+                    )}
+                  </tbody>
                 </table>
               </div>
             </StyledBankItem>

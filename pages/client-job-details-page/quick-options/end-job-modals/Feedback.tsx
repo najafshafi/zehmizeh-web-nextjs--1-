@@ -11,11 +11,32 @@ import AnimatedStar from "./AnimatedStar";
 import { endJob } from "@/helpers/http/jobs";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 
+interface EndJobState {
+  selectedStatus: string;
+  endingReason?: string;
+  incompleteJobDescription?: string;
+}
+
+interface ApiResponse {
+  status: boolean;
+  message: string;
+  response?: any;
+}
+
+interface EndJobPayload {
+  job_id: string;
+  status: string;
+  rate?: number;
+  description?: string;
+  reason?: string;
+  incomplete_description?: string;
+}
+
 type Props = {
   onEndJob?: () => void;
   freelancerName: string;
   jobPostId: string;
-  endJobState: any;
+  endJobState: EndJobState;
   onError: (msg: string) => void;
 };
 
@@ -83,7 +104,7 @@ const Feedback = ({
     // End job api call
 
     setLoading(true);
-    const body: any = {
+    const body: EndJobPayload = {
       job_id: jobPostId,
       status:
         endJobState?.selectedStatus == "closed" ? "closed" : "in-complete",
@@ -99,10 +120,12 @@ const Feedback = ({
     toast.loading("Please wait...");
 
     endJob(body)
-      .then((res) => {
+      .then((res: ApiResponse) => {
         setLoading(false);
         if (res.status) {
-          onEndJob();
+          if (onEndJob) {
+            onEndJob();
+          }
           toast.success(res.message);
         } else {
           onError(res.message);
@@ -133,7 +156,7 @@ const Feedback = ({
                 <div className="ratings__stars flex items-center mx-3">
                   {Array(5)
                     .fill(1)
-                    .map((item: any, index) => (
+                    .map((item: number, index) => (
                       <div key={`star_${index}`} className="pointer">
                         <AnimatedStar
                           isFilled={index < ratings}
@@ -173,7 +196,7 @@ const Feedback = ({
                   <div className="ratings__stars flex items-center mx-3">
                     {Array(5)
                       .fill(1)
-                      .map((item: any, index) => (
+                      .map((item: number, index) => (
                         <div key={`star_${index}`} className="pointer">
                           <AnimatedStar
                             isFilled={index < ratings}

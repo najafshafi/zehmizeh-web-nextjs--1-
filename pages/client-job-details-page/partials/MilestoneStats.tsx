@@ -92,12 +92,13 @@ const MilestoneStats: React.FC<MilestoneStatsProps> = ({
         : "data-milestone-status";
 
       const allMilestones = document.querySelectorAll(".milestone-item");
-      allMilestones.forEach((milestone: HTMLElement) => {
+      allMilestones.forEach((element) => {
+        const milestone = element as HTMLElement;
         milestone.style.backgroundColor = "";
         milestone.style.transition = "";
       });
 
-      let targetMilestones;
+      let targetMilestones: NodeListOf<Element>;
       if (isHourly) {
         if (status === "released") {
           targetMilestones = document.querySelectorAll(
@@ -135,7 +136,8 @@ const MilestoneStats: React.FC<MilestoneStatsProps> = ({
       }
 
       if (targetMilestones.length > 0) {
-        targetMilestones.forEach((milestone: HTMLElement) => {
+        targetMilestones.forEach((element) => {
+          const milestone = element as HTMLElement;
           milestone.style.transition = "background-color 0.3s ease";
           milestone.style.backgroundColor = "#f7dfa1";
         });
@@ -147,7 +149,8 @@ const MilestoneStats: React.FC<MilestoneStatsProps> = ({
         });
 
         setTimeout(() => {
-          targetMilestones.forEach((milestone: HTMLElement) => {
+          targetMilestones.forEach((element) => {
+            const milestone = element as HTMLElement;
             milestone.style.backgroundColor = "";
           });
         }, 3000);

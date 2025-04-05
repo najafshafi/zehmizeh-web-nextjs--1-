@@ -11,9 +11,18 @@ import {
   getSkills,
 } from "@/helpers/utils/helper";
 
+// Define the Skill type to match what's expected
+type Skill = Partial<{
+  category_id: number;
+  category_name: string;
+  skill_id: number;
+  skill_name: string;
+  categories: number[];
+}>;
+
 type Props = {
-  selectedSkills?: Partial<IClientDetails & IFreelancerDetails>["skills"];
-  selectedCategories: Partial<IClientDetails & IFreelancerDetails>["skills"];
+  selectedSkills?: Skill[];
+  selectedCategories: Skill[];
   onUpdate: (data: Partial<IClientDetails & IFreelancerDetails>) => void;
   onPrevious: () => void;
   skipForNow: () => void;
@@ -22,15 +31,16 @@ type Props = {
 const initialErrorMessages = { skills: "", categories: "" };
 
 const Skills = ({
-  selectedSkills,
-  selectedCategories,
+  selectedSkills = [], // Default to empty array if undefined
+  selectedCategories = [], // Default to empty array if undefined
   onUpdate,
   onPrevious,
   skipForNow,
 }: Props) => {
-  const [categoryAndSkillData, setCategoryAndSkillData] = useState<
-    typeof selectedCategories
-  >([...selectedCategories, ...selectedSkills]);
+  const [categoryAndSkillData, setCategoryAndSkillData] = useState<Skill[]>([
+    ...selectedCategories,
+    ...selectedSkills,
+  ]);
   const [error, setError] = useState(initialErrorMessages);
 
   const handleUpdate = () => {

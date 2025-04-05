@@ -39,19 +39,33 @@ export default function PaymentForm({ onCardAdded, onCancel }: Props) {
   const elements = useElements();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // This funtion will generate a token for the card
     e.preventDefault();
+
+    // Check if stripe or elements is not available
+    if (!stripe || !elements) {
+      showErr("Stripe has not been initialized properly");
+      return;
+    }
 
     // eslint-disable-next-line no-debugger
     try {
       setLoading(true);
-      const data = await stripe.createToken(elements.getElement(CardElement));
+      const cardElement = elements.getElement(CardElement);
+
+      if (!cardElement) {
+        showErr("Card information is missing");
+        setLoading(false);
+        return;
+      }
+
+      const data = await stripe.createToken(cardElement);
       if (data.token) {
         // After token is generated, it will process the payment on backend side
         saveCard(data.token.id);
       } else if (data.error) {
-        showErr(data.error.message);
+        showErr(data.error.message || "An error occurred with your card");
         setLoading(false);
       }
     } catch (err) {
@@ -95,7 +109,10 @@ export default function PaymentForm({ onCardAdded, onCancel }: Props) {
           >
             Cancel
           </StyledButton>
-          <StyledButton type="submit" disabled={loading}>
+          <StyledButton
+            type="submit"
+            disabled={loading || !stripe || !elements}
+          >
             Save
           </StyledButton>
         </div>

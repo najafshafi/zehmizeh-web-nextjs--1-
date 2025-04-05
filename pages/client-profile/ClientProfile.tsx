@@ -49,6 +49,12 @@ import { IClientDetails } from "@/helpers/types/client.type";
 import AccountClosureDescriptionModal from "@/components/profile/AccountClosureDescriptionModal";
 import { queryKeys } from "@/helpers/const/queryKeys";
 import { useRefetch } from "@/helpers/hooks/useQueryData";
+import {
+  StylesConfig,
+  CSSObjectWithLabel,
+  OptionProps,
+  GroupBase,
+} from "react-select";
 
 // Add type definition for Window with intercomSettings
 declare global {
@@ -80,10 +86,55 @@ type TFormData = Pick<
   | "new_message_email_notification"
 >;
 
-const singleSelectProps = {
+// Define the specific option type for the message notification dropdown
+type MessageNotificationOption = {
+  label: string;
+  value: number;
+};
+
+// Create a specific styles config for message notifications with explicit type annotations
+const messageNotificationStyles: StylesConfig<
+  MessageNotificationOption,
+  false
+> = {
+  control: (base: CSSObjectWithLabel) => ({
+    ...base,
+    minHeight: 60,
+    borderRadius: "7px",
+  }),
+  indicatorSeparator: () => ({
+    display: "none",
+  }),
+  dropdownIndicator: () => ({
+    display: "none",
+  }),
+  option: (
+    provided: CSSObjectWithLabel,
+    state: OptionProps<
+      MessageNotificationOption,
+      false,
+      GroupBase<MessageNotificationOption>
+    >
+  ) => ({
+    ...provided,
+    backgroundColor: state.isSelected ? "rgba(209, 229, 255,1)" : "white",
+    color: "#000",
+    padding: "1rem 1rem",
+    cursor: "pointer",
+    ":hover": {
+      backgroundColor: "rgba(209, 229, 255,1)",
+    },
+  }),
+  menu: (base: CSSObjectWithLabel) => ({
+    ...base,
+    zIndex: 10,
+  }),
+};
+
+// Modified singleSelectProps for AsyncSelect
+const singleMessageNotificationProps = {
   closeMenuOnSelect: true,
-  isMulti: false,
-  styles: MultiSelectCustomStyle,
+  styles: messageNotificationStyles,
 };
 
 interface SaveButtonUIProps {
@@ -386,6 +437,41 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
     return <Loader />;
   }
 
+  const SaveButtonUI = (
+    loadingKey: typeof inputFieldLoading,
+    dataKey: keyof typeof formData,
+    top?: number,
+    additionalPayload: TEditUserRequest = {}
+  ) => {
+    return (
+      <div
+        className="absolute right-0 mr-4 cursor-pointer"
+        style={top ? { top: `${top}%` } : { top: "50%" }}
+        onClick={() => {
+          if (inputFieldLoading !== loadingKey) {
+            handleEditUser(loadingKey, {
+              [dataKey]: formData[dataKey],
+              ...additionalPayload,
+            });
+          }
+        }}
+      >
+        {profileData &&
+          dataKey in profileData &&
+          profileData[dataKey as keyof IFreelancerDetails] !==
+            formData[dataKey] && (
+            <div className="text-base font-normal">
+              {inputFieldLoading === loadingKey ? (
+                <Spinner className="mr-1" />
+              ) : (
+                "Save"
+              )}
+            </div>
+          )}
+      </div>
+    );
+  };
+
   return (
     <C.ClientProfileWrapper>
       <ClientProfileTabs currentTab={clientId} />
@@ -632,7 +718,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                       {/* END ------------------------------------------- State / region */}
 
                       {/* START ----------------------------------------- Phone number */}
-                      <div>
+                      {/* <div>
                         <StyledFormGroup className="flex flex-col">
                           <div className="text-sm font-normal">
                             Phone<span className="text-red-500">&nbsp;*</span>
@@ -664,7 +750,47 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                             message={errors.formatted_phonenumber}
                           />
                         )}
+                      </div> */}
+
+                      <div className="w-full px-3">
+                        <StyledFormGroup className="relative">
+                          <div className="text-sm font-normal">
+                            Phone<span className="mandatory">&nbsp;*</span>
+                          </div>
+                          <PhoneInputWrapper className="phone-input-wrapper ">
+                            <PhoneNumberInput
+                              initialValue={formData?.formatted_phonenumber}
+                              onChange={(phone, formattedValue) => {
+                                if (
+                                  phone !== formData.phone_number ||
+                                  formattedValue !==
+                                    formData.formatted_phonenumber
+                                ) {
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    phone_number: phone,
+                                    formatted_phonenumber: formattedValue,
+                                  }));
+                                }
+                              }}
+                            />
+                            {SaveButtonUI(
+                              "phone number",
+                              "formatted_phonenumber",
+                              30,
+                              {
+                                phone_number: formData.phone_number,
+                              }
+                            )}
+                          </PhoneInputWrapper>
+                        </StyledFormGroup>
+                        {errors?.formatted_phonenumber && (
+                          <ErrorMessage
+                            message={errors.formatted_phonenumber}
+                          />
+                        )}
                       </div>
+
                       {/* END ------------------------------------------- Phone number */}
                     </div>
 
@@ -751,8 +877,9 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                               would like to receive these emails.
                             </Tooltip>
                           </div>
-                          <AsyncSelect
-                            {...singleSelectProps}
+                          <AsyncSelect<MessageNotificationOption>
+                            {...singleMessageNotificationProps}
+                            isMulti={false}
                             placeholder="New Message Email"
                             loadOptions={newMessageEmailOptions}
                             onChange={(options) => {

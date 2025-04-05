@@ -13,9 +13,19 @@ import { IClientDetails } from "@/helpers/types/client.type";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 import { completeProfilePersonalDetailsValidation } from "@/helpers/validation/completProfileValidation";
 
+// Profile data contains fields from both client and freelancer interfaces
+type ProfileDataType = Partial<IClientDetails & IFreelancerDetails>;
+
+// Define error record type that matches what getYupErrors returns
+interface ErrorRecordValue {
+  [key: string]: string | ErrorRecordValue;
+}
+
+type ErrorRecord = Record<string, string | ErrorRecordValue>;
+
 type Props = {
-  onUpdate: (data: Partial<IClientDetails & IFreelancerDetails>) => void;
-  profileData?: Partial<IClientDetails & IFreelancerDetails>;
+  onUpdate: (data: ProfileDataType) => void;
+  profileData?: ProfileDataType;
   client?: boolean;
   skipForNow: () => void;
 };
@@ -26,22 +36,27 @@ const PersonalDetails = ({
   client = false,
   skipForNow,
 }: Props) => {
-  const [formState, setFormState] = useState(profileData);
-  const [errors, setErrors] = useState<
-    Partial<Record<keyof typeof profileData, string>>
-  >({});
+  const [formState, setFormState] = useState<ProfileDataType>(
+    profileData || {}
+  );
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [seeMore, setSeeMore] = useState(false);
   const [showEditPictureModal, setShowEditPictureModal] = useState(false);
 
   useEffect(() => {
-    setFormState(profileData);
+    if (profileData) {
+      setFormState(profileData);
+    }
   }, [profileData]);
 
-  const handleChange = useCallback((field: keyof typeof profileData, value) => {
-    setFormState((prevFormState) => {
-      return { ...prevFormState, [field]: value };
-    });
-  }, []);
+  const handleChange = useCallback(
+    <K extends keyof ProfileDataType>(field: K, value: ProfileDataType[K]) => {
+      setFormState((prevFormState) => {
+        return { ...prevFormState, [field]: value };
+      });
+    },
+    []
+  );
 
   const validate = () => {
     setErrors({});
@@ -52,12 +67,30 @@ const PersonalDetails = ({
         onUpdate(formState);
       })
       .catch((err) => {
-        const errors = getYupErrors(err);
-        setErrors({ ...errors });
+        const errorData = getYupErrors(err);
+        // Convert the error data to the expected format
+        const formattedErrors: Record<string, string> = {};
+
+        // Extract string error messages for each field
+        Object.entries(errorData).forEach(([key, value]) => {
+          if (typeof value === "string") {
+            formattedErrors[key] = value;
+          } else if (value && typeof value === "object") {
+            // Handle nested errors if needed
+            const nestedValue = value as Record<string, string>;
+            Object.entries(nestedValue).forEach(([nestedKey, nestedValue]) => {
+              if (typeof nestedValue === "string") {
+                formattedErrors[`${key}.${nestedKey}`] = nestedValue;
+              }
+            });
+          }
+        });
+
+        setErrors(formattedErrors);
       });
   };
 
-  const countCharactersWithoutSpaces = (text) => {
+  const countCharactersWithoutSpaces = (text: string = "") => {
     return text.replace(/\s+/g, "").length;
   };
 
@@ -113,7 +146,7 @@ const PersonalDetails = ({
               show={showEditPictureModal}
               onUpdate={handleImageChange}
               onClose={() => setShowEditPictureModal((prev) => !prev)}
-              profilePic={formState?.user_image || null}
+              profilePic={formState?.user_image || undefined}
             />
           </div>
         </>
@@ -134,17 +167,17 @@ const PersonalDetails = ({
                 </b>
                 <p className="fs-base mt-2 mb-0 text-justify text-secondary">
                   Your headline should introduce your work as a freelancer. When
-                  clients search for freelancers, they'll see it directly under
+                  clients search for freelancers, they&apos;ll see it directly under
                   your name as a personal subtitle or slogan.
                 </p>
                 {seeMore && (
                   <p className="fs-base mb-0 mt-2 text-justify text-secondary">
                     The simplest way to introduce yourself would be to mention
-                    your job title (“Ghostwriter” or “Accountant”).
+                    your job title (&quot;Ghostwriter&quot; or &quot;Accountant&quot;).
                     Alternatively, you could list your freelancing skills
-                    (“Photoshop | Adobe | FinalCut Pro”). Or you could even use
-                    a tagline that makes it clear what you do (“Editing You Can
-                    Count On”).
+                    (&quot;Photoshop | Adobe | FinalCut Pro&quot;). Or you could even use
+                    a tagline that makes it clear what you do (&quot;Editing You Can
+                    Count On&quot;).
                   </p>
                 )}
                 <SeeMore onClick={() => setSeeMore((prev) => !prev)}>
@@ -154,7 +187,7 @@ const PersonalDetails = ({
               <Form.Control
                 placeholder="Add a tagline to introduce what you do professionally"
                 className="form-input"
-                value={formState?.job_title}
+                value={formState?.job_title || ""}
                 onChange={(e) => handleChange("job_title", e.target.value)}
                 maxLength={150}
               />
@@ -183,13 +216,18 @@ const PersonalDetails = ({
                 <Form.Control
                   placeholder="Enter your hourly rate"
                   className="form-input rate-input"
-                  value={formState?.hourly_rate}
-                  onChange={(e) =>
+                  value={
+                    formState?.hourly_rate !== undefined
+                      ? String(formState.hourly_rate)
+                      : ""
+                  }
+                  onChange={(e) => {
+                    const numericValue = e.target.value.replace(/\D/g, "");
                     handleChange(
                       "hourly_rate",
-                      e.target.value.replace(/\D/g, "")
-                    )
-                  }
+                      numericValue ? Number(numericValue) : undefined
+                    );
+                  }}
                   maxLength={3}
                 />
               </span>

@@ -3,7 +3,6 @@
   serves all different sections available in design like, Description, expertise, budget etc.. *
  */
 import React from "react";
-import styled from "styled-components";
 import StyledHtmlText from "@/components/ui/StyledHtmlText";
 import AttachmentPreview from "@/components/ui/AttachmentPreview";
 import { showFormattedBudget, expectedHoursRemap } from "@/helpers/utils/misc";

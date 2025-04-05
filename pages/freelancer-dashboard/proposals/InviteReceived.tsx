@@ -45,7 +45,7 @@ const InviteReceived = () => {
                     <div className="proposal__client-detail-label text-sm font-normal">
                       Sent by:
                     </div>
-                    <div className="text-sm font-normal capitalize">
+                    <div className="text-base font-normal capitalize">
                       {item?.first_name} {item?.last_name}
                     </div>
                   </div>

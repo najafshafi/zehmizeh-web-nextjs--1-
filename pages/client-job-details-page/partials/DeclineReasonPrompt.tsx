@@ -18,7 +18,7 @@ type Props = {
 interface DeclineRequestBody {
   decline_reason: string;
   status: string;
-  action?: string;
+  action: string;
   milestone_id?: string | number;
   hourly_id?: string | number;
 }
@@ -50,24 +50,30 @@ const DeclineReasonPrompt = ({
     const body: DeclineRequestBody = {
       decline_reason: "Declined",
       status: "decline",
+      action: type === "milestone" ? "edit_milestone" : "edit_hours",
     };
     if (type === "milestone") {
-      body.action = "edit_milestone";
       body.milestone_id = milestoneId;
     } else {
-      body.action = "edit_hours";
       body.hourly_id = milestoneId;
     }
 
     setLoading(true);
-    // let promise;
 
     let promise = null;
     if (type === "hourly") {
-      promise = manageHours(body);
+      promise = manageHours(
+        body as {
+          action: string;
+          hourly_id?: string;
+          status?: string;
+          decline_reason?: string;
+        }
+      );
     } else {
-      promise = manageMilestone(body);
+      promise = manageMilestone(body as any);
     }
+
     if (promise) {
       toast.promise(promise, {
         loading: "Loading...",

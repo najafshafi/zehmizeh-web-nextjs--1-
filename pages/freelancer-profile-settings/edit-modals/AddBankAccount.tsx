@@ -22,6 +22,22 @@ const initialState = {
   routingNumber: "",
 };
 
+// Define form state interface
+interface BankAccountFormState {
+  accountHolderFirstName: string;
+  accountHolderLastName: string;
+  accountHolderType: string;
+  accountNumber: string;
+  routingNumber: string;
+  transitNumber?: string;
+  institutionNumber?: string;
+}
+
+// Error record type
+interface ErrorRecord {
+  [key: string]: string;
+}
+
 type Props = {
   show: boolean;
   userCountry: string;
@@ -35,8 +51,9 @@ interface AccountHolderType {
 }
 
 const AddBankAccount = ({ show, onClose, onUpdate }: Props) => {
-  const [formState, setFormState] = useState<any>(initialState);
-  const [errors, setErrors] = useState<any>({});
+  const [formState, setFormState] =
+    useState<BankAccountFormState>(initialState);
+  const [errors, setErrors] = useState<ErrorRecord>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [accountHolderTypeOptions] = useState<AccountHolderType[]>([
     {
@@ -50,11 +67,14 @@ const AddBankAccount = ({ show, onClose, onUpdate }: Props) => {
   ]);
   const auth = useAuth();
 
-  const handleChange = useCallback((field, value) => {
-    setFormState((prevFormState: any) => {
-      return { ...prevFormState, [field]: value };
-    });
-  }, []);
+  const handleChange = useCallback(
+    (field: keyof BankAccountFormState, value: string | number) => {
+      setFormState((prevFormState) => {
+        return { ...prevFormState, [field]: value };
+      });
+    },
+    []
+  );
 
   const validateForm = () => {
     const country: string = auth?.user?.preferred_banking_country;
@@ -65,8 +85,8 @@ const AddBankAccount = ({ show, onClose, onUpdate }: Props) => {
     validateEq.isValid(formState).then((valid) => {
       if (!valid) {
         validateEq.validate(formState, { abortEarly: false }).catch((err) => {
-          const errors = getYupErrors(err);
-          setErrors({ ...errors });
+          const validationErrors = getYupErrors(err);
+          setErrors(validationErrors as ErrorRecord);
         });
       } else {
         setErrors({});
@@ -86,7 +106,17 @@ const AddBankAccount = ({ show, onClose, onUpdate }: Props) => {
       transitNumber,
       accountHolderType,
     } = formState;
-    const body = {
+
+    interface BankAccountBody {
+      action: string;
+      account_holder_name: string;
+      account_holder_type: string;
+      account_number: string;
+      routing_number?: string;
+      [key: string]: string | undefined;
+    }
+
+    const body: BankAccountBody = {
       action: "add_account",
       account_holder_name:
         camelCaseToNormalCase(accountHolderFirstName) +
@@ -94,12 +124,11 @@ const AddBankAccount = ({ show, onClose, onUpdate }: Props) => {
         camelCaseToNormalCase(accountHolderLastName),
       account_holder_type: accountHolderType,
       account_number: accountNumber,
-      // routing_number: routingNumber,
     };
 
-    if (routingNumber) body["routing_number"] = routingNumber;
+    if (routingNumber) body.routing_number = routingNumber;
     if (institutionNumber && transitNumber)
-      body["routing_number"] = `${transitNumber}-${institutionNumber}`;
+      body.routing_number = `${transitNumber}-${institutionNumber}`;
     const promise = managePayment(body).then((res) => {
       if (res.status) return res;
       else throw res;
@@ -183,9 +212,11 @@ const AddBankAccount = ({ show, onClose, onUpdate }: Props) => {
               <Select
                 styles={MultiSelectCustomStyle}
                 options={accountHolderTypeOptions}
-                onChange={({ value }) => {
-                  handleChange("accountHolderType", value);
-                  setErrors({});
+                onChange={(option: AccountHolderType | null) => {
+                  if (option) {
+                    handleChange("accountHolderType", option.value);
+                    setErrors({});
+                  }
                 }}
                 placeholder="Select Account Type"
                 key={"bank-account-holder-type"}

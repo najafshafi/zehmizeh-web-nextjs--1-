@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 // import { Spinner } from "react-bootstrap";
-import Spinner from "@/components/forms/Spin/Spinner"
+import Spinner from "@/components/forms/Spin/Spinner";
 import CustomButton from "@/components/custombutton/CustomButton";
 import {
   FreelancerContent,
@@ -24,22 +24,24 @@ import { FREELANCER_PROFILE_TABS } from "@/helpers/const/tabs";
 import { StyledButton } from "@/components/forms/Buttons";
 import { useTheme } from "styled-components";
 
-const INTERCOM_APP_ID = process.env.NEXT_PUBLIC_INTERCOM_APP_ID;
+const INTERCOM_APP_ID = process.env.NEXT_PUBLIC_INTERCOM_APP_ID || "";
 
-interface CustomWindow extends Window {
-  intercomSettings?: {
-    appId: string;
-    email: string;
-    user_id: string;
-    name: string;
-    avatar: {
-      type: string;
-      image_url: string;
-    };
+// Define Intercom settings interface
+interface IntercomSettings {
+  appId: string;
+  email: string;
+  user_id: string;
+  name: string;
+  avatar: {
+    type: string;
+    image_url: string;
   };
 }
 
-const myWindow: CustomWindow = window as CustomWindow;
+// Use type assertion for the window object
+type CustomWindow = Window & {
+  intercomSettings?: IntercomSettings;
+};
 
 const FreelancerProfileSettings = () => {
   const theme = useTheme();
@@ -48,7 +50,9 @@ const FreelancerProfileSettings = () => {
   const searchParams = useSearchParams();
   const { setUser, user } = useAuth();
 
-  const decodedTabKey = decodeURIComponent(params.tabkey);
+  const decodedTabKey = params
+    ? decodeURIComponent(params.tabkey)
+    : FREELANCER_PROFILE_TABS.PROFILE;
   const { profileData, isLoading, isRefetching, refetch } = useProfile();
 
   useEffect(() => {
@@ -61,14 +65,15 @@ const FreelancerProfileSettings = () => {
 
   useEffect(() => {
     if (user) {
-      myWindow.intercomSettings = {
+      // Use type assertion
+      (window as CustomWindow).intercomSettings = {
         appId: INTERCOM_APP_ID,
-        email: user?.u_email_id,
-        user_id: user?.user_id,
-        name: user?.first_name + " " + user?.last_name,
+        email: user?.u_email_id || "",
+        user_id: user?.user_id || "",
+        name: `${user?.first_name || ""} ${user?.last_name || ""}`,
         avatar: {
           type: "avatar",
-          image_url: user.user_image,
+          image_url: user.user_image || "",
         },
       };
     }
@@ -88,7 +93,7 @@ const FreelancerProfileSettings = () => {
   }, [isLoading]);
 
   const onBack = () => {
-    const fromRegister = searchParams.get("fromRegister");
+    const fromRegister = searchParams?.get("fromRegister");
     if (fromRegister) {
       router.push("/");
     } else {
@@ -120,11 +125,8 @@ const FreelancerProfileSettings = () => {
         <Wrapper>
           <div className="flex justify-between items-center">
             <BackButton onBack={onBack}>
-              {isRefetching ? (
-                <Spinner  className="ms-1" />
-              ) : null}
+              {isRefetching ? <Spinner className="ms-1" /> : null}
             </BackButton>
-
 
             <StyledButton
               className="hover:scale-105 transition-all duration-300 hover:shadow-sm"

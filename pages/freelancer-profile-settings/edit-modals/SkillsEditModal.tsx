@@ -19,7 +19,13 @@ type Props = {
   onUpdate: () => void;
 };
 
-const initialErrorMessages = { skills: "", categories: "" } as const;
+// Define a proper interface for error messages
+interface ErrorMessages {
+  skills: string;
+  categories: string;
+}
+
+const initialErrorMessages: ErrorMessages = { skills: "", categories: "" };
 
 const SkillsEditModal = ({
   show,
@@ -32,8 +38,7 @@ const SkillsEditModal = ({
   const [categoryAndSkillData, setCategoryAndSkillData] = useState<
     IFreelancerDetails["skills"]
   >([...selectedCategories, ...selectedSkills]);
-  const [error, setError] =
-    useState<typeof initialErrorMessages>(initialErrorMessages);
+  const [error, setError] = useState<ErrorMessages>(initialErrorMessages);
   const [isSkillCategorySelectModalOpen, setIsSkillCategorySelectModalOpen] =
     useState(false);
 

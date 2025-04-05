@@ -35,6 +35,7 @@ interface FreelancerData {
   last_name: string;
 }
 
+// Updated Milestone interface to match the expected type in MilestoneListModal
 interface Milestone {
   hourly_id?: string;
   milestone_id?: string;
@@ -43,8 +44,9 @@ interface Milestone {
   status?: string;
   total_amount?: number;
   amount?: number;
-  title?: string;
-  description?: string;
+  title: string; // Changed from optional to required
+  description: string; // Changed from optional to required
+  [key: string]: string | number | undefined;
 }
 
 interface JobData {
@@ -611,16 +613,25 @@ const QuickOptions: React.FC<Props> = ({
     }
   }, [isOpenMilestoneListModal, showConfirmationModal, showPayNowModal]);
 
+  // Make sure the milestones have required fields that MilestoneListModal expects
+  const getValidMilestones = (milestones: Milestone[]): Milestone[] => {
+    return milestones.map((milestone) => ({
+      ...milestone,
+      title: milestone.title || "",
+      description: milestone.description || "",
+    }));
+  };
+
   return (
     <>
       {isOpenMilestoneListModal && (
         <MilestoneListModal
-          jobdetails={jobData}
+          jobdetails={{ jobType: jobData.jobType }}
           setShow={setIsOpenMilestoneListModal}
           show={isOpenMilestoneListModal}
           setSelectedMilestones={setSelectedMilestones}
           selectedMilestones={selectedMilestones}
-          milestones={jobData?.milestones}
+          milestones={getValidMilestones(jobData?.milestones)}
           askForConfirmation={askForConfirmation}
         />
       )}
@@ -676,8 +687,8 @@ const QuickOptions: React.FC<Props> = ({
                   jobData?.jobType === "hourly"
                     ? toggleFreelancerClosureRequest
                     : disputeMilestone === "under_dispute"
-                    ? openEndJobErrorModal
-                    : openEndJobModal
+                      ? openEndJobErrorModal
+                      : openEndJobModal
                 )}
               />
             ) : null}

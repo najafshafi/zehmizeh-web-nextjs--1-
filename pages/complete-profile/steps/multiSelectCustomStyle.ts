@@ -28,7 +28,7 @@ export const MultiSelectCustomStyle = {
       backgroundColor: 'rgba(209, 229, 255,1)',
     },
   }),
-  menu: (base) => ({
+  menu: (base: any) => ({
     ...base,
     zIndex: 10,
   }),

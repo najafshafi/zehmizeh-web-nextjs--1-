@@ -16,13 +16,19 @@ const Wrapper = styled.div`
   }
 `;
 
-const options = [
+// Define option type for React-Select
+interface OptionType {
+  value: string;
+  label: string;
+}
+
+const options: OptionType[] = [
   { value: "1", label: "Once A Week" },
   { value: "2", label: "Twice A Week" },
   { value: "3", label: "Disable Job Alerts" },
 ];
 
-const defaultOptions = {
+const defaultOptions: Record<number, OptionType> = {
   1: { value: "1", label: "Once A Week" },
   2: { value: "2", label: "Twice A Week" },
   3: { value: "3", label: "Disable Job Alerts" },
@@ -31,9 +37,9 @@ const defaultOptions = {
 type Props = {
   show: boolean;
   toggle: () => void;
-  onConfirm: (data) => void;
+  onConfirm: (data: OptionType) => void;
   loading: boolean;
-  defaultEmailNotification: any;
+  defaultEmailNotification: number;
 };
 
 const ManageNotificationModal = ({
@@ -43,13 +49,16 @@ const ManageNotificationModal = ({
   loading,
   defaultEmailNotification = 1,
 }: Props) => {
-  const [selectedOPT, setSelectedOPT] = useState(
-    defaultOptions[defaultEmailNotification]
+  const [selectedOPT, setSelectedOPT] = useState<OptionType>(
+    defaultOptions[defaultEmailNotification] || defaultOptions[1]
   );
 
   useEffect(() => {
-    if (show) setSelectedOPT(defaultOptions[defaultEmailNotification]);
-  }, [show]);
+    if (show)
+      setSelectedOPT(
+        defaultOptions[defaultEmailNotification] || defaultOptions[1]
+      );
+  }, [show, defaultEmailNotification]);
 
   return (
     <StyledModal maxwidth={678} show={show} size="sm" onHide={toggle} centered>
@@ -67,7 +76,7 @@ const ManageNotificationModal = ({
               value={selectedOPT}
               className="mt-3"
               options={options}
-              onChange={(dt) => setSelectedOPT(dt)}
+              onChange={(dt) => setSelectedOPT(dt as OptionType)}
             />
           </div>
           <div className="mt-4 flex items-center justify-center">

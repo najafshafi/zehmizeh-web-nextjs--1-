@@ -20,7 +20,7 @@ import useResponsive from "@/helpers/hooks/useResponsive";
 import { getPaymentFees } from "@/helpers/http/common";
 import { REGEX } from "@/helpers/const/regex";
 import { CONSTANTS } from "@/helpers/const/constants";
-import { useAuth } from "@/helpers/contexts/auth-context";
+// import { useAuth } from "@/helpers/contexts/auth-context";
 
 type Props = {
   show: boolean;
@@ -63,7 +63,6 @@ const AddHoursForm = ({
   );
   const zehmizehFees =
     paymentData?.data[0]?.fee_structure?.OTHER?.percentage || 0;
-  const auth = useAuth();
 
   useEffect(() => {
     if (show && selectedMilestone) {

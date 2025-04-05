@@ -14,6 +14,23 @@ import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 import { freelancerProfileTabValidation } from "@/helpers/validation/freelancerProfileTabValidation";
 import { CONSTANTS } from "@/helpers/const/constants";
 
+// Added interface for YupError
+interface YupError {
+  inner: Array<{ path: string; message: string }>;
+}
+
+// CountryOptionType to match the dropdown requirements
+interface CountryOptionType {
+  label: string;
+  value: string | number | boolean;
+  country_name: string;
+  country_id: number;
+  country_code: string;
+  country_short_name: string;
+  state?: string;
+  [key: string]: any;
+}
+
 type Props = {
   show: boolean;
   onClose: () => void;
@@ -24,13 +41,10 @@ type Props = {
 
 type TFormState = Pick<
   IFreelancerDetails,
-  | "user_image"
-  | "first_name"
-  | "last_name"
-  | "location"
-  | "hourly_rate"
-  | "u_email_id"
->;
+  "user_image" | "first_name" | "last_name" | "hourly_rate" | "u_email_id"
+> & {
+  location: CountryOptionType | null;
+};
 
 const initialState: TFormState = {
   user_image: "",
@@ -70,11 +84,15 @@ const InfoEditModal = ({ show, onClose, onUpdate, data, refetch }: Props) => {
   useEffect(() => {
     if (show) {
       document.body.style.overflow = "hidden";
+      const locationWithValue = data?.location
+        ? { ...data.location, value: data.location.country_name }
+        : null;
+
       setFormState({
         user_image: data?.user_image || "",
         first_name: data?.first_name || "",
         last_name: data?.last_name || "",
-        location: data?.location || null,
+        location: locationWithValue,
         hourly_rate: data?.hourly_rate || 0,
         u_email_id: data?.u_email_id || "",
       });
@@ -92,19 +110,20 @@ const InfoEditModal = ({ show, onClose, onUpdate, data, refetch }: Props) => {
     setFormState((prev) => ({ ...prev, [field]: value }));
   }, []);
 
-  const handleUpdate =  () => {
-   
+  const handleUpdate = () => {
     try {
       setErrors({});
       setLoading(true);
       // Validate form
-       freelancerProfileTabValidation.validate(formState, { abortEarly: false });
-  
-      const body = {
+      freelancerProfileTabValidation.validate(formState, { abortEarly: false });
+
+      const body: Record<string, any> = {
         user_image: formState.user_image,
         first_name: formState.first_name.trim(),
         last_name: formState.last_name.trim(),
-        hourly_rate: formState.hourly_rate ? parseFloat(formState.hourly_rate.toString()) : 0,
+        hourly_rate: formState.hourly_rate
+          ? parseFloat(formState.hourly_rate.toString())
+          : 0,
         location: formState.location,
       };
 
@@ -126,25 +145,26 @@ const InfoEditModal = ({ show, onClose, onUpdate, data, refetch }: Props) => {
       });
     } catch (err) {
       setLoading(false);
-      const validationErrors = getYupErrors(err);
+      const validationErrors = getYupErrors(err as YupError);
       setErrors(validationErrors);
     }
   };
 
   const onSelectState = (item: { label: string; value: string } | null) => {
     setFormState((prevFormState) => {
-      const newState = {
+      if (!prevFormState.location) return prevFormState;
+
+      return {
         ...prevFormState,
         location: {
           ...prevFormState.location,
-          state: item ? item.value : null,
+          state: item ? item.value : "",
         },
       };
-      return newState;
     });
   };
 
-  const onSelectCountry = (item: TFormState["location"]) => {
+  const onSelectCountry = (item: CountryOptionType) => {
     handleChange("location", item);
   };
 
@@ -257,36 +277,39 @@ const InfoEditModal = ({ show, onClose, onUpdate, data, refetch }: Props) => {
                 onSelectCountry={onSelectCountry}
               />
               {errors?.location?.country_name && (
-                <ErrorMessage message={errors?.location?.country_name} />
+                <ErrorMessage
+                  message={errors?.location?.country_name as string}
+                />
               )}
             </div>
 
             {/* State/Region Section */}
-            {!CONSTANTS.COUNTRIES_SHORT_NAME_WITHOUT_STATE.includes(
-              formState?.location?.country_short_name
-            ) && (
-              <div>
-                <label className="text-sm font-normal mb-1 block">
-                  State/Region<span className="text-red-500">*</span>
-                </label>
-                <StateDropdown
-                  countryCode={formState?.location?.country_short_name}
-                  onSelectState={onSelectState}
-                  selectedState={
-                    formState?.location?.state
-                      ? {
-                          label: formState?.location?.state,
-                          value: formState?.location?.state,
-                        }
-                      : null
-                  }
-                  borderColor="#000"
-                />
-                {errors?.location?.state && (
-                  <ErrorMessage message={errors.location.state} />
-                )}
-              </div>
-            )}
+            {formState?.location &&
+              !CONSTANTS.COUNTRIES_SHORT_NAME_WITHOUT_STATE.includes(
+                formState?.location?.country_short_name
+              ) && (
+                <div>
+                  <label className="text-sm font-normal mb-1 block">
+                    State/Region<span className="text-red-500">*</span>
+                  </label>
+                  <StateDropdown
+                    countryCode={formState?.location?.country_short_name}
+                    onSelectState={onSelectState}
+                    selectedState={
+                      formState?.location?.state
+                        ? {
+                            label: formState?.location?.state,
+                            value: formState?.location?.state,
+                          }
+                        : null
+                    }
+                    borderColor="#000"
+                  />
+                  {errors?.location?.state && (
+                    <ErrorMessage message={errors.location.state as string} />
+                  )}
+                </div>
+              )}
           </div>
 
           <div className="flex justify-center md:justify-end mt-6">

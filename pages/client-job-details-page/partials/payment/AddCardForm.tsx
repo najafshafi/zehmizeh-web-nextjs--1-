@@ -46,18 +46,32 @@ export default function AddCardForm({
 
   const { jobType } = usePayments();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // This funtion will generate a token for the card
     e.preventDefault();
     // eslint-disable-next-line no-debugger
     try {
+      // Check if stripe or elements are null
+      if (!stripe || !elements) {
+        showErr("Stripe hasn't loaded yet. Please try again.");
+        return;
+      }
+
+      const cardElement = elements.getElement(CardElement);
+      if (!cardElement) {
+        showErr("Card element not found. Please refresh and try again.");
+        return;
+      }
+
       setLoading(true);
-      const data = await stripe.createToken(elements.getElement(CardElement));
+      const data = await stripe.createToken(cardElement);
       if (data.token) {
         // After token is generated, it will process the payment on backend side
         onPay(data.token.id);
       } else if (data.error) {
-        showErr(data.error.message);
+        showErr(
+          data.error.message || "Card validation failed. Please try again."
+        );
       }
     } catch (err) {
       showErr("Something went wrong, please try again");

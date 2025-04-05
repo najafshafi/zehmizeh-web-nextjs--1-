@@ -6,7 +6,6 @@ import {
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd";
-import { Button } from "react-bootstrap";
 import {
   coverImgHandler,
   isAudio,
