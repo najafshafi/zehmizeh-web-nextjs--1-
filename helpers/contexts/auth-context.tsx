@@ -57,6 +57,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     logoutApi();
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("token_expiration");
     setUser(null);
     router.push("/"); // Use router.push instead of navigate
   }, [router]);
@@ -259,6 +261,35 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
               user_id: res.data?.data?.user?.id,
             };
 
+            // Store token and user
+            const token = res.data?.data?.token;
+            setUser(userAllData);
+            saveAuthStorage({
+              token,
+              user: userAllData,
+            });
+
+            // Store refresh token if available
+            if (res.data?.data?.refresh_token) {
+              localStorage.setItem(
+                "refresh_token",
+                res.data?.data?.refresh_token
+              );
+            }
+
+            // Store token expiration if available
+            if (res.data?.data?.expires_in) {
+              const expirationTime =
+                Date.now() + res.data?.data?.expires_in * 1000;
+              localStorage.setItem(
+                "token_expiration",
+                expirationTime.toString()
+              );
+            }
+
+            apiClient.defaults.headers.common["Authorization"] =
+              "Bearer " + token;
+
             const currentTimezone = moment.tz.guess();
             if (
               res?.data?.data?.user &&
@@ -267,13 +298,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
             ) {
               editUser({ timezone: currentTimezone });
             }
-            setUser(userAllData);
-            saveAuthStorage({
-              token: res.data?.data?.token,
-              user: userAllData,
-            });
-            apiClient.defaults.headers.common["Authorization"] =
-              "Bearer " + res.data?.data?.token;
 
             const fromPath = searchParams?.get("from");
             if (fromPath) {
