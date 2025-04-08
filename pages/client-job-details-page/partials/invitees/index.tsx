@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Loader from "@/components/Loader";
-import ProposalDetailsModal from "@/components/jobs/ProposalDetailsModal";
+import dynamic from "next/dynamic";
 import { StatusBadge } from "@/components/styled/Badges";
 import BlurredImage from "@/components/ui/BlurredImage";
 import PaginationComponent from "@/components/ui/Pagination";
@@ -25,8 +25,16 @@ import {
   talkJsFetchSingleConversation,
 } from "@/helpers/http/common";
 import { useAuth } from "@/helpers/contexts/auth-context";
-import ChatModal from "@/components/talkjs/chat-modal";
 import CustomButton from "@/components/custombutton/CustomButton";
+
+// Dynamically import components that might use browser APIs
+const ProposalDetailsModal = dynamic(
+  () => import("@/components/jobs/ProposalDetailsModal"),
+  { ssr: false }
+);
+const ChatModal = dynamic(() => import("@/components/talkjs/chat-modal"), {
+  ssr: false,
+});
 
 const RECORDS_PER_PAGE = 10;
 
@@ -159,6 +167,9 @@ export const Invitees = ({
   );
 
   const handleTalkJSConversation = async (invite: InviteeData) => {
+    // Skip chat functionality during server-side rendering
+    if (typeof window === "undefined") return;
+
     if (threadLoading) return false;
 
     setThreadLoading(true);
@@ -204,6 +215,11 @@ export const Invitees = ({
       },
     });
   };
+
+  // Return empty div during SSR to prevent 'self is not defined' error
+  if (typeof window === "undefined") {
+    return <div className="invitees-loading">Loading invitees...</div>;
+  }
 
   return (
     <InviteesWrapper className="flex flex-col">
@@ -322,13 +338,15 @@ export const Invitees = ({
         </div>
       )}
 
-      <ProposalDetailsModal
-        show={showInviteeDetails}
-        toggle={toggleInviteeDetailsModal}
-        selectedProposalId={selectedInviteeId}
-        refetch={onRefetch}
-        type="invite"
-      />
+      {showInviteeDetails && (
+        <ProposalDetailsModal
+          show={showInviteeDetails}
+          toggle={toggleInviteeDetailsModal}
+          selectedProposalId={selectedInviteeId}
+          refetch={onRefetch}
+          type="invite"
+        />
+      )}
 
       {openChatModal && (
         <ChatModal

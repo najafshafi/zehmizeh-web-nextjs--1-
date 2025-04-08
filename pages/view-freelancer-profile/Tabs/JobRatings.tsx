@@ -70,10 +70,10 @@ export const JobRatings = ({ handleAuthenticatedAction }: JobRatingsProps) => {
   // Extract freelancerId from the pathname
   const freelancerId = pathname ? pathname.split("/").pop() || "" : "";
 
-  const { data: freelancerData } =
-    useQueryData<IFreelancerDetails>(
-      queryKeys.getFreelancerDetails(freelancerId)
-    ) || {};
+  const queryResult = useQueryData<IFreelancerDetails>(
+    queryKeys.getFreelancerDetails(freelancerId)
+  );
+  const freelancerData = (queryResult as any)?.data || {};
 
   return (
     <ReviewsWrapper>

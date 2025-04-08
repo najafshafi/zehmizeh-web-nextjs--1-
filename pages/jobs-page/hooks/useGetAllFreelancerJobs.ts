@@ -1,9 +1,11 @@
-import { useInfiniteQuery } from 'react-query';
-import { freelancerJobNameSearch } from '@/helpers/http/jobs';
+"use client";
+
+import { useInfiniteQuery } from "react-query";
+import { freelancerJobNameSearch } from "@/helpers/http/jobs";
 
 const LIMIT = 10;
 // This custom hook fetches the Jobs which are in progress, prospects, drafts and also templates for client dashboard
-function useGetAllFreelancerJobs(deboubcedSearch) {
+function useGetAllFreelancerJobs(deboubcedSearch: string | undefined) {
   const {
     data,
     isLoading,
@@ -24,11 +26,11 @@ function useGetAllFreelancerJobs(deboubcedSearch) {
     refetch: any;
     total: number;
   }>(
-    ['get-all-freelancer-search-jobs', deboubcedSearch],
+    ["get-all-freelancer-search-jobs", deboubcedSearch],
     ({ pageParam = 1 }) =>
       freelancerJobNameSearch({
-        status: 'all_jobs',
-        text: deboubcedSearch || '',
+        status: "all_jobs",
+        text: deboubcedSearch || "",
         page: pageParam,
         limit: LIMIT,
       }),

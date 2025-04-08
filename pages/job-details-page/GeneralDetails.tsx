@@ -9,6 +9,22 @@ import { showFormattedBudget, expectedHoursRemap } from "@/helpers/utils/misc";
 import { getCategories, getSkills } from "@/helpers/utils/helper";
 import Link from "next/link";
 
+interface Budget {
+  type: "fixed" | "hourly";
+  amount: number;
+  isProposal: boolean;
+  min?: number;
+  max?: number;
+}
+
+interface Skill {
+  category_id: number;
+  category_name: string;
+  skill_id: number;
+  skill_name: string;
+  categories: number[];
+}
+
 interface JobData {
   job_description?: string;
   attachments?: string[];
@@ -18,22 +34,16 @@ interface JobData {
     description?: string;
     attachments?: string[];
     status?: string;
-    approved_budget?: {
-      type?: string;
-      amount?: number;
-    };
+    approved_budget?: Budget;
   };
-  budget?: {
-    type?: string;
-    isProposal?: boolean;
-    amount?: number;
-    min?: number;
-    max?: number;
-  };
-  skills?: any[];
+  budget?: Budget;
+  skills?: Skill[];
   expected_delivery_date?: string;
   time_scope?: string;
-  languages?: { id: string; name: string }[];
+  languages?: Array<{
+    id: string;
+    name: string;
+  }>;
   preferred_location?: string[];
   status?: string;
 }
@@ -50,69 +60,27 @@ const JobOtherDetails = ({ data }: { data: JobData }) => {
               <div className="description-text line-height-2rem font-light text-lg mt-3 opacity-70 leading-8">
                 {/* This will convert html to normal text */}
                 <StyledHtmlText
-                  htmlString={data?.job_description}
+                  htmlString={data?.job_description || ""}
                   needToBeShorten={true}
                   minlines={3}
                 />
               </div>
-              {(data.attachments?.length > 0 ||
-                data?.reference_links?.length > 0 ||
-                data?.reference_attachments?.length > 0) && (
+              {(data.attachments?.length ||
+                0 > 0 ||
+                data?.reference_links?.length ||
+                0 > 0 ||
+                data?.reference_attachments?.length ||
+                0 > 0) && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
                   {/* START ----------------------------------------- Related Files */}
-                  {data.attachments?.length > 0 && (
-                    <div>
-                      <div className="text-xl font-normal mb-2">
-                        Related Files
-                      </div>
-                      <div className="flex flex-wrap" style={{ gap: "10px" }}>
-                        {data.attachments?.map((item: string) => (
-                          <AttachmentPreview
-                            key={item}
-                            uploadedFile={item}
-                            removable={false}
-                            shouldShowFileNameAndExtension={false}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {/* END ------------------------------------------- Related Files */}
-
-                  {(data?.reference_links?.length > 0 ||
-                    data?.reference_attachments?.length > 0) && (
-                    <div>
-                      <div className="text-xl font-normal mb-3">
-                        Style Samples
-                      </div>
-                      {/* START ----------------------------------------- Style Samples Links */}
-                      {data.reference_links?.length > 0 && (
-                        <div className="mb-3">
-                          {data.reference_links.map((referenceLink: string) => {
-                            if (!referenceLink.includes("http")) {
-                              referenceLink = `http://${referenceLink}`;
-                            }
-                            return (
-                              <div key={referenceLink}>
-                                <Link
-                                  className="text-primary"
-                                  href={referenceLink}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  {referenceLink}
-                                </Link>
-                              </div>
-                            );
-                          })}
+                  {data.attachments?.length ||
+                    (0 > 0 && (
+                      <div>
+                        <div className="text-xl font-normal mb-2">
+                          Related Files
                         </div>
-                      )}
-                      {/* END ------------------------------------------- Style Samples Links */}
-
-                      {/* START ----------------------------------------- Style Samples Attachments */}
-                      {data?.reference_attachments?.length > 0 && (
                         <div className="flex flex-wrap" style={{ gap: "10px" }}>
-                          {data?.reference_attachments?.map((item: string) => (
+                          {data.attachments?.map((item: string) => (
                             <AttachmentPreview
                               key={item}
                               uploadedFile={item}
@@ -121,7 +89,64 @@ const JobOtherDetails = ({ data }: { data: JobData }) => {
                             />
                           ))}
                         </div>
-                      )}
+                      </div>
+                    ))}
+                  {/* END ------------------------------------------- Related Files */}
+
+                  {(data?.reference_links?.length ||
+                    0 > 0 ||
+                    data?.reference_attachments?.length ||
+                    0 > 0) && (
+                    <div>
+                      <div className="text-xl font-normal mb-3">
+                        Style Samples
+                      </div>
+                      {/* START ----------------------------------------- Style Samples Links */}
+                      {data.reference_links &&
+                        data.reference_links.length > 0 && (
+                          <div className="mb-3">
+                            {data.reference_links.map(
+                              (referenceLink: string) => {
+                                if (!referenceLink.includes("http")) {
+                                  referenceLink = `http://${referenceLink}`;
+                                }
+                                return (
+                                  <div key={referenceLink}>
+                                    <Link
+                                      className="text-primary"
+                                      href={referenceLink}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      {referenceLink}
+                                    </Link>
+                                  </div>
+                                );
+                              }
+                            )}
+                          </div>
+                        )}
+                      {/* END ------------------------------------------- Style Samples Links */}
+
+                      {/* START ----------------------------------------- Style Samples Attachments */}
+                      {data?.reference_attachments?.length ||
+                        (0 > 0 && (
+                          <div
+                            className="flex flex-wrap"
+                            style={{ gap: "10px" }}
+                          >
+                            {data?.reference_attachments?.map(
+                              (item: string) => (
+                                <AttachmentPreview
+                                  key={item}
+                                  uploadedFile={item}
+                                  removable={false}
+                                  shouldShowFileNameAndExtension={false}
+                                />
+                              )
+                            )}
+                          </div>
+                        ))}
                       {/* END ------------------------------------------- Style Samples Attachments */}
                     </div>
                   )}
@@ -185,8 +210,8 @@ const JobOtherDetails = ({ data }: { data: JobData }) => {
                 {data.budget?.type == "fixed"
                   ? "Project-Based"
                   : data.budget?.type == "hourly"
-                  ? "Hourly"
-                  : "Unsure"}
+                    ? "Hourly"
+                    : "Unsure"}
               </div>
             }
           />
@@ -201,13 +226,21 @@ const JobOtherDetails = ({ data }: { data: JobData }) => {
                 title="Budget"
                 atributeValue={
                   <div className="job-detail-item-value text-xl font-normal mt-5">
-                    {data.status == "active" || data.status == "closed"
-                      ? showFormattedBudget(data.proposal?.approved_budget)
+                    {data.status === "active" || data.status === "closed"
+                      ? showFormattedBudget({
+                          type: data.proposal?.approved_budget?.type || "fixed",
+                          amount: data.proposal?.approved_budget?.amount || 0,
+                          isProposal: false,
+                        } as Budget)
                       : data?.budget?.isProposal === true
-                      ? "Open to Proposals"
-                      : data?.budget
-                      ? showFormattedBudget(data.budget)
-                      : "-"}
+                        ? "Open to Proposals"
+                        : data?.budget
+                          ? showFormattedBudget({
+                              type: data.budget.type || "fixed",
+                              amount: data.budget.amount || 0,
+                              isProposal: false,
+                            } as Budget)
+                          : "-"}
                   </div>
                 }
               />
@@ -215,14 +248,14 @@ const JobOtherDetails = ({ data }: { data: JobData }) => {
           )}
 
         {/* Skills Category */}
-        {getCategories(data.skills).length > 0 && (
+        {data.skills && getCategories(data.skills as Skill[])?.length > 0 && (
           <div>
             <DetailsItem
               title="Skills Category"
               atributeValue={
                 <div className="flex items-center mt-3 flex-wrap">
                   <div className="description-text line-height-2rem font-light text-xl capitalize opacity-70 leading-8">
-                    {getCategories(data.skills)
+                    {getCategories(data.skills as Skill[])
                       .map((dt) => dt.category_name)
                       .join(", ")}
                   </div>
@@ -233,13 +266,13 @@ const JobOtherDetails = ({ data }: { data: JobData }) => {
         )}
 
         {/* Skills */}
-        {getSkills(data.skills)?.length > 0 && (
+        {data.skills && getSkills(data.skills as Skill[])?.length > 0 && (
           <div>
             <DetailsItem
               title="Skill(s)"
               atributeValue={
                 <div className="flex items-center mt-3 flex-wrap">
-                  {getSkills(data.skills)?.map(
+                  {getSkills(data.skills as Skill[])?.map(
                     (item, index: number) =>
                       item.skill_id && (
                         <div
@@ -247,7 +280,8 @@ const JobOtherDetails = ({ data }: { data: JobData }) => {
                           key={item.skill_id}
                         >
                           {item.skill_name}
-                          {index < getSkills(data?.skills)?.length - 1
+                          {index <
+                          (getSkills(data.skills as Skill[])?.length || 0) - 1
                             ? ","
                             : ""}
                           &nbsp;
@@ -282,13 +316,13 @@ const JobOtherDetails = ({ data }: { data: JobData }) => {
         )}
 
         {/* Expected Hours */}
-        {expectedHoursRemap(data.time_scope) && (
+        {data.time_scope && (
           <div>
             <DetailsItem
               title="Expected Hours Required"
               atributeValue={
                 <div className="mt-3 text-xl font-normal">
-                  {expectedHoursRemap(data.time_scope)}
+                  {data.time_scope}
                 </div>
               }
             />
@@ -296,19 +330,20 @@ const JobOtherDetails = ({ data }: { data: JobData }) => {
         )}
 
         {/* Language */}
-        {data.languages?.length > 0 && (
+        {data.languages && data.languages.length > 0 && (
           <div>
             <DetailsItem
               title="Language"
               atributeValue={
                 <div className="flex items-center mt-3 flex-wrap">
-                  {data.languages?.map((item, index: number) => (
+                  {data.languages.map((item, index: number) => (
                     <div
                       className="description-text line-height-2rem font-light text-xl opacity-70 leading-8"
                       key={item.id}
                     >
                       {item.name}
-                      {index < data?.languages?.length - 1 ? "," : ""}&nbsp;
+                      {index < (data.languages?.length || 0) - 1 ? "," : ""}
+                      &nbsp;
                     </div>
                   ))}
                 </div>

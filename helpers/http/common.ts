@@ -126,6 +126,12 @@ export const GETSTRIPEKEYHANDLER = () => {
     LIVE: "pk_live_51L3oMuCJ6McpLFC2juXrzmucghjmt6syjqYor6nOCtG7K4P5ZPblmH1XyR9I5NjDzyb3YB4Q7s016Mr3uAqBpHrs00dcOYK1Vs",
     TEST: "pk_test_51L3oMuCJ6McpLFC2lFoHaRU2hkCyjaoyev3oREV5ue8Y0wO3Xwpf3aY2vueWFslfoWUkev4eV8E4yIhCRknpyeFb00yWAMVuZo",
   };
+
+  // Check if window is defined (client-side) before accessing window.location
+  if (typeof window === "undefined") {
+    return KEYS.TEST; // Default to test key during server-side rendering
+  }
+
   switch (window.location.origin) {
     case "https://beta.zehmizeh.com":
       return KEYS.TEST;

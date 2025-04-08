@@ -3,13 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import SelectJobModal from "@/components/invite-flow-modals/SelectJobModal";
-import InviteFreelancerMessageModal from "@/components/invite-flow-modals/InviteFreelancerMessageModal";
-import InviteFreelancer from "./InviteFreelancer";
-import JobEndedSuccessModal from "./JobEndedSuccessModal";
-import EndJobErrorModal from "@/components/jobs/EndJobErrorModal";
-import FreelancerClosureRequestModal from "./FreelancerClosureRequestModal";
-import EndModal from "./end-job-modals/EndModal";
+import dynamic from "next/dynamic";
 import DeletePropmpt from "@/components/ui/DeletePropmpt";
 import { deleteJob } from "@/helpers/http/client";
 import {
@@ -19,15 +13,64 @@ import {
   manageMilestoneNew,
 } from "@/helpers/http/jobs";
 import useResponsive from "@/helpers/hooks/useResponsive";
-import PaymentModal from "../partials/payment/PaymentModal";
-import { usePayments } from "../controllers/usePayments";
-import { MilestoneListModal } from "../partials/milestones/milestoneListModal";
-import ConfirmPaymentModal from "../partials/payment/ConfirmPaymentModal";
 import { isNotAllowedToSubmitReview } from "@/helpers/utils/helper";
-import ProposalExistsModal from "@/components/invite-flow-modals/ProposalExistsModa";
 import { TcomponentConnectorRef } from "../ClientJobDetails";
-import { AcceptAndPaynowModal } from "../partials/payment/AcceptAndPaynowModal";
 import CustomButton from "@/components/custombutton/CustomButton";
+
+// Import the components that might use browser APIs with SSR disabled
+const SelectJobModal = dynamic(
+  () => import("@/components/invite-flow-modals/SelectJobModal"),
+  { ssr: false }
+);
+const InviteFreelancerMessageModal = dynamic(
+  () => import("@/components/invite-flow-modals/InviteFreelancerMessageModal"),
+  { ssr: false }
+);
+const InviteFreelancer = dynamic(() => import("./InviteFreelancer"), {
+  ssr: false,
+});
+const JobEndedSuccessModal = dynamic(() => import("./JobEndedSuccessModal"), {
+  ssr: false,
+});
+const EndJobErrorModal = dynamic(
+  () => import("@/components/jobs/EndJobErrorModal"),
+  { ssr: false }
+);
+const FreelancerClosureRequestModal = dynamic(
+  () => import("./FreelancerClosureRequestModal"),
+  { ssr: false }
+);
+const EndModal = dynamic(() => import("./end-job-modals/EndModal"), {
+  ssr: false,
+});
+const PaymentModal = dynamic(() => import("../partials/payment/PaymentModal"), {
+  ssr: false,
+});
+const MilestoneListModal = dynamic(
+  () =>
+    import("../partials/milestones/milestoneListModal").then(
+      (mod) => mod.MilestoneListModal
+    ),
+  { ssr: false }
+);
+const ConfirmPaymentModal = dynamic(
+  () => import("../partials/payment/ConfirmPaymentModal"),
+  { ssr: false }
+);
+const ProposalExistsModal = dynamic(
+  () => import("@/components/invite-flow-modals/ProposalExistsModa"),
+  { ssr: false }
+);
+const AcceptAndPaynowModal = dynamic(
+  () =>
+    import("../partials/payment/AcceptAndPaynowModal").then(
+      (mod) => mod.AcceptAndPaynowModal
+    ),
+  { ssr: false }
+);
+
+// Dynamically import usePayments
+import { usePayments } from "../controllers/usePayments";
 
 // Define interfaces for strongly typed objects
 interface FreelancerData {

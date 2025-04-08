@@ -23,7 +23,7 @@ import moment from "moment";
 import { TJOB_STATUS } from "@/helpers/types/job.type";
 import { JOBS_STATUS } from "@/pages/jobs-page/consts";
 import { formatDateAndTime } from "@/helpers/utils/formatter";
-import Sorting from "@/components/sorting/sorting";
+import Sorting from "@/components/sorting/Sorting";
 import ChatModal from "@/components/talkjs/chat-modal";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import {

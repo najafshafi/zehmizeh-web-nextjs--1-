@@ -64,10 +64,12 @@ const LocationFilter = () => {
         setSearchQuery={setSearchQuery}
         fetching={fetching}
         searchResults={searchResults}
-        onSelectItem={(item) => onSelectItem(item.label)}
+        onSelectItem={(item: { label: string; value: string }) =>
+          onSelectItem(item.label)
+        }
       />
       {filters?.location?.length > 0 &&
-        filters?.location?.map((item: any) => (
+        filters?.location?.map((item: string) => (
           <div
             className="filter__checkbox__row flex items-center"
             key={`location-${item}`}

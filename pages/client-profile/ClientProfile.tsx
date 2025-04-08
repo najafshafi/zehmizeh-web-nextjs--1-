@@ -63,7 +63,7 @@ declare global {
   }
 }
 
-const INTERCOM_APP_ID = process.env.REACT_APP_INTERCOM_APP_ID;
+const INTERCOM_APP_ID = process.env.NEXT_PUBLIC_INTERCOM_APP_ID;
 
 const myWindow: Window = window;
 
@@ -438,8 +438,8 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
   }
 
   const SaveButtonUI = (
-    loadingKey: typeof inputFieldLoading,
-    dataKey: keyof typeof formData,
+    loadingKey: TInputFieldLoading,
+    dataKey: keyof TFormData,
     top?: number,
     additionalPayload: TEditUserRequest = {}
   ) => {
@@ -458,8 +458,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
       >
         {profileData &&
           dataKey in profileData &&
-          profileData[dataKey as keyof IFreelancerDetails] !==
-            formData[dataKey] && (
+          profileData[dataKey] !== formData[dataKey] && (
             <div className="text-base font-normal">
               {inputFieldLoading === loadingKey ? (
                 <Spinner className="mr-1" />
@@ -599,11 +598,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                               }))
                             }
                           />
-                          <SaveButtonUI
-                            loadingFieldName="first name"
-                            fieldName="first_name"
-                            onSave={handleEditUser}
-                          />
+                          {SaveButtonUI("first name", "first_name")}
                         </StyledFormGroup>
                         {errors?.first_name && (
                           <ErrorMessage message={errors.first_name} />
@@ -628,11 +623,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                               }))
                             }
                           />
-                          <SaveButtonUI
-                            loadingFieldName="last name"
-                            fieldName="last_name"
-                            onSave={handleEditUser}
-                          />
+                          {SaveButtonUI("last name", "last_name")}
                         </StyledFormGroup>
                         {errors?.last_name && (
                           <ErrorMessage message={errors.last_name} />

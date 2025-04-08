@@ -185,8 +185,6 @@
 // export const { setUser, setToken, setLoading, setBootstraping, setEmail } = authSlice.actions;
 // export default authSlice.reducer;
 
-
-
 // import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 // import { apiClient } from '@/helpers/http/index';
 // import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
@@ -414,17 +412,14 @@
 // export const { setUser, setToken, setLoading, setBootstraping, setEmail } = authSlice.actions;
 // export default authSlice.reducer;
 
-
-
-
 // src/redux/authSlice.ts
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { apiClient } from '@/helpers/http/index';
-import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
-import { IClientDetails } from '@/helpers/types/client.type';
-import { saveAuthStorage } from '@/helpers/services/auth';
-import toast from 'react-hot-toast';
-import moment from 'moment-timezone';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { apiClient } from "@/helpers/http/index";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+import { IClientDetails } from "@/helpers/types/client.type";
+import { saveAuthStorage } from "@/helpers/services/auth";
+import toast from "react-hot-toast";
+import moment from "moment-timezone";
 
 interface AuthState {
   user: (IFreelancerDetails & IClientDetails) | null;
@@ -442,8 +437,8 @@ interface LoginPayload {
 
 interface TwoFactorPayload {
   formdata: {
-    action: 'send_otp' | 'verify_otp';
-    type: 'new_registration' | 'login';
+    action: "send_otp" | "verify_otp";
+    type: "new_registration" | "login";
     otp?: string;
   };
   email: string;
@@ -456,7 +451,7 @@ interface RegisterPayload {
   last_name: string;
   phone_number: string;
   terms_agreement: boolean;
-  user_type: 'freelancer' | 'client';
+  user_type: "freelancer" | "client";
 }
 
 interface AuthResponse {
@@ -472,80 +467,95 @@ const initialState: AuthState = {
 };
 
 // Async thunk to fetch user data
-export const fetchUser = createAsyncThunk('auth/fetchUser', async (_, { rejectWithValue }) => {
-  try {
-    const response = await apiClient.get('/user/get');
-    if (response.data.status) {
-      return response.data.data;
-    }
-    throw new Error('Failed to fetch user');
-  } catch (error: any) {
-    return rejectWithValue(error.message || 'Failed to fetch user');
-  }
-});
-
-// Async thunk for login
-export const login = createAsyncThunk<AuthResponse, LoginPayload, { rejectValue: string }>(
-  'auth/login',
-  async (formdata, { rejectWithValue }) => {
+export const fetchUser = createAsyncThunk(
+  "auth/fetchUser",
+  async (_, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post<{ status: boolean; data: AuthResponse; message: string }>(
-        '/auth/login',
-        formdata
-      );
+      const response = await apiClient.get("/user/get");
       if (response.data.status) {
         return response.data.data;
       }
-      return rejectWithValue(response.data.message);
+      throw new Error("Failed to fetch user");
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Login failed');
+      return rejectWithValue(error.message || "Failed to fetch user");
     }
   }
 );
 
+// Async thunk for login
+export const login = createAsyncThunk<
+  AuthResponse,
+  LoginPayload,
+  { rejectValue: string }
+>("auth/login", async (formdata, { rejectWithValue }) => {
+  try {
+    const response = await apiClient.post<{
+      status: boolean;
+      data: AuthResponse;
+      message: string;
+    }>("/auth/login", formdata);
+    if (response.data.status) {
+      return response.data.data;
+    }
+    return rejectWithValue(response.data.message);
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data?.message || "Login failed");
+  }
+});
+
 // Async thunk for logout
-export const logout = createAsyncThunk('auth/logout', async () => {
-  await apiClient.get('/auth/logout');
+export const logout = createAsyncThunk("auth/logout", async () => {
+  await apiClient.get("/auth/logout");
 });
 
 // Async thunk for two-factor authentication
 export const twoFactor = createAsyncThunk(
-  'auth/twoFactor',
-  async ({ formdata, email }: { formdata: any; email: string }, { rejectWithValue }) => {
+  "auth/twoFactor",
+  async (
+    { formdata, email }: { formdata: any; email: string },
+    { rejectWithValue }
+  ) => {
     try {
       formdata.email_id = email;
-      const response = await apiClient.post('/auth/otp', formdata);
+      const response = await apiClient.post("/auth/otp", formdata);
       if (response.data.status) {
         return response.data.data;
       }
       return rejectWithValue(response.data.message);
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Two-factor authentication failed');
+      return rejectWithValue(
+        error.response?.data?.message || "Two-factor authentication failed"
+      );
     }
   }
 );
 
 // Async thunk for registration
 export const registerUser = createAsyncThunk(
-  'auth/register',
+  "auth/register",
   async (payload: any, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post('/auth/register', payload);
+      const response = await apiClient.post("/auth/register", payload);
       if (response.data.status) {
         return response.data.data;
       }
       return rejectWithValue(response.data.message);
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Registration failed');
+      return rejectWithValue(
+        error.response?.data?.message || "Registration failed"
+      );
     }
   }
 );
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<(IFreelancerDetails & IClientDetails) | null>) => {
+    setUser: (
+      state,
+      action: PayloadAction<(IFreelancerDetails & IClientDetails) | null>
+    ) => {
       state.user = action.payload;
     },
     setToken: (state, action: PayloadAction<string | null>) => {
@@ -561,7 +571,8 @@ const authSlice = createSlice({
       if (state.user) {
         state.user.email_id = action.payload;
       } else {
-        state.user = { email_id: action.payload } as IFreelancerDetails & IClientDetails;
+        state.user = { email_id: action.payload } as IFreelancerDetails &
+          IClientDetails;
       }
     },
   },
@@ -590,10 +601,15 @@ const authSlice = createSlice({
         state.user = user;
         state.token = token;
         state.isLoading = false;
-        saveAuthStorage({ token, user });
+        // Add email property to user object before saving to storage
+        const userWithEmail = {
+          ...user,
+          email: user.email_id, // Map email_id to email for storage
+        };
+        saveAuthStorage({ token, user: userWithEmail });
         const currentTimezone = moment.tz.guess();
         if (user.timezone !== currentTimezone) {
-          apiClient.put('/user/edit', { timezone: currentTimezone });
+          apiClient.put("/user/edit", { timezone: currentTimezone });
         }
       })
       .addCase(login.rejected, (state, action) => {
@@ -604,8 +620,8 @@ const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.token = null;
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
       })
       // Two-Factor
       .addCase(twoFactor.pending, (state) => {
@@ -613,11 +629,14 @@ const authSlice = createSlice({
       })
       .addCase(twoFactor.fulfilled, (state, action) => {
         state.isLoading = false;
-        if (action.meta.arg.formdata.action === 'verify_otp' && action.meta.arg.formdata.type === 'new_registration') {
+        if (
+          action.meta.arg.formdata.action === "verify_otp" &&
+          action.meta.arg.formdata.type === "new_registration"
+        ) {
           state.token = action.payload.token;
-          localStorage.setItem('token', action.payload.token);
+          localStorage.setItem("token", action.payload.token);
         }
-        toast.success('Two-factor authentication successful');
+        toast.success("Two-factor authentication successful");
       })
       .addCase(twoFactor.rejected, (state, action) => {
         state.isLoading = false;
@@ -638,8 +657,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser, setToken, setLoading, setBootstraping, setEmail } = authSlice.actions;
+export const { setUser, setToken, setLoading, setBootstraping, setEmail } =
+  authSlice.actions;
 export default authSlice.reducer;
-
-
-

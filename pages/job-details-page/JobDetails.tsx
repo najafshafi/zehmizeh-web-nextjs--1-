@@ -46,15 +46,22 @@ import CustomButton from "@/components/custombutton/CustomButton";
 
 // Add these interfaces right after the imports, before the component definition
 interface Milestone {
-  milestone_id: string;
+  milestone_id: string | number;
+  hourly_status: string;
+  is_final_milestone: boolean;
   title: string;
-  amount: number;
-  status: string;
-  description: string;
-  is_final_milestone?: boolean;
-  hourly_status?: string;
+  hourly_id: string;
+  dispute_submitted_by?: "CLIENT" | "FREELANCER";
+  is_paid?: number;
+  payment_method?: "ACH" | "OTHER" | string;
   date_created?: string;
   cancelled_date?: string;
+  paid_date?: string;
+  description: string;
+  attachments?: string;
+  total_amount: number;
+  amount?: number;
+  status?: string;
 }
 
 interface Budget {
@@ -660,7 +667,9 @@ const JobDetails = () => {
               refetch={refetch}
             />
           )}
-          {activeTab == "gen_details" && <GeneralDetails data={jobdetails} />}
+          {activeTab == "gen_details" && (
+            <GeneralDetails data={jobdetails as any} />
+          )}
           {activeTab == "messages" && id && <SingleMessaging id={id} />}
           {activeTab == "feedback" && jobdetails?.is_completed === 0 && (
             <NoDataFound
@@ -693,7 +702,7 @@ const JobDetails = () => {
                     (jobdetails?.milestone || []).filter(
                       (y: Milestone) =>
                         !["cancelled", "decline_dispute", "decline"].includes(
-                          y.status
+                          y.status || ""
                         )
                     )?.length > 0
                       ? (jobdetails.proposal?.approved_budget?.amount || 0) -
@@ -704,10 +713,10 @@ const JobDetails = () => {
                                 "cancelled",
                                 "decline_dispute",
                                 "decline",
-                              ].includes(y.status)
+                              ].includes(y.status || "")
                           )
-                          .map((x: Milestone) => x.amount)
-                          .reduce((a: number, b: number) => a + b) || 0)
+                          .map((x: Milestone) => x.amount || 0)
+                          .reduce((a: number, b: number) => a + b, 0) || 0)
                       : jobdetails?.proposal?.approved_budget?.amount || 0
                   }
                 />
@@ -717,7 +726,9 @@ const JobDetails = () => {
                   milestone={jobdetails?.milestone}
                   refetch={refetch}
                   jobPostId={jobdetails?.job_post_id}
-                  hourlyRate={jobdetails?.proposal?.approved_budget?.amount}
+                  hourlyRate={
+                    jobdetails?.proposal?.approved_budget?.amount || 0
+                  }
                 />
               )}
             </>
@@ -766,18 +777,20 @@ const JobDetails = () => {
         remainingBudget={
           (jobdetails?.milestone || []).filter(
             (y: Milestone) =>
-              !["cancelled", "decline_dispute", "decline"].includes(y.status)
+              !["cancelled", "decline_dispute", "decline"].includes(
+                y.status || ""
+              )
           )?.length > 0
             ? (jobdetails?.proposal?.approved_budget?.amount || 0) -
               ((jobdetails?.milestone || [])
                 .filter(
                   (y: Milestone) =>
                     !["cancelled", "decline_dispute", "decline"].includes(
-                      y.status
+                      y.status || ""
                     )
                 )
-                .map((x: Milestone) => x.amount)
-                .reduce((a: number, b: number) => a + b) || 0)
+                .map((x: Milestone) => x.amount || 0)
+                .reduce((a: number, b: number) => a + b, 0) || 0)
             : jobdetails?.proposal?.approved_budget?.amount || 0
         }
       />

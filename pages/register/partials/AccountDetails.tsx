@@ -28,6 +28,13 @@ import { StyledButton } from "@/components/forms/Buttons";
 import LoadingButtons from "@/components/LoadingButtons";
 import { TRegisterProps } from "../types/commonProp";
 
+// Add LocationType definition to match what signUpValidationSchema expects
+interface LocationType {
+  country_short_name: string;
+  country_name?: string;
+  state?: string;
+}
+
 interface PhoneNumberInputProps {
   initialValue?: string;
   onChange: (phone: string, formattedValue: string) => void;
@@ -117,7 +124,11 @@ export const AccountDetails = ({ setStep, setPayload, shouldShow }: Props) => {
       agency_name?: string;
       user_type: string;
     }>({
-      resolver: yupResolver(signUpValidationSchema(location)),
+      resolver: yupResolver(
+        signUpValidationSchema(
+          (location as LocationType) || { country_short_name: "" }
+        )
+      ),
       mode: "onTouched",
     });
 
@@ -149,8 +160,9 @@ export const AccountDetails = ({ setStep, setPayload, shouldShow }: Props) => {
   };
 
   const isCountryHaveState =
+    location?.country_short_name &&
     !CONSTANTS.COUNTRIES_SHORT_NAME_WITHOUT_STATE.includes(
-      location?.country_short_name
+      location.country_short_name
     );
 
   const togglePasswordPreview = (field: "password") => {
@@ -168,10 +180,10 @@ export const AccountDetails = ({ setStep, setPayload, shouldShow }: Props) => {
   };
 
   /** @function This function will set the selected state in the form (state variable) */
-  const onSelectState = (item: string) => {
-    if (location) {
+  const onSelectState = (item: { label: string; value: string } | null) => {
+    if (location && item) {
       const currentLocation = { ...location };
-      currentLocation.state = item;
+      currentLocation.state = item.value;
       setLocation(currentLocation);
       setValue("state", currentLocation.state, { shouldValidate: true });
     }
@@ -366,7 +378,14 @@ export const AccountDetails = ({ setStep, setPayload, shouldShow }: Props) => {
         {/* START ----------------------------------------- Country */}
         <Col xs={12} lg={isCountryHaveState ? 6 : 12}>
           <CountryDropdown
-            selectedCountry={location}
+            selectedCountry={
+              location && {
+                label: location.country_name || "",
+                value: location.country_name || "",
+                country_name: location.country_name || "",
+                country_short_name: location.country_short_name,
+              }
+            }
             onSelectCountry={onSelectCountry}
           />
           <ErrorMessage>{formState.errors?.country?.message}</ErrorMessage>

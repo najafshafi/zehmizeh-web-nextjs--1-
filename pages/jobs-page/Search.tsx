@@ -47,12 +47,13 @@ export const SearchWrapper = styled.div<{ focused: boolean }>`
 const Search = ({ searchTerm, onChange }: Props) => {
   const [focused, setFocused] = useState<boolean>(false);
 
-  const toggleSearch = (value) => {
+  const toggleSearch = (value: boolean) => {
     // This will toggle the search box
+    const searchBox = document.getElementById("search-box");
     if (value) {
-      document.getElementById("search-box").classList.add("active");
+      searchBox?.classList.add("active");
     } else {
-      document.getElementById("search-box").classList.remove("active");
+      searchBox?.classList.remove("active");
     }
     setFocused(value);
   };

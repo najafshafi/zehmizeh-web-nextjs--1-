@@ -8,7 +8,7 @@ import useDashboardStats from "./use-dashboard-stats";
 import StarIcon from "@/public/icons/starYellow.svg";
 import { numberWithCommas } from "@/helpers/utils/misc";
 import { breakpoints } from "@/helpers/hooks/useResponsive";
-import { DashboardStats as DashboardStatsType } from "./use-dashboard-stats";
+// import { DashboardStats as DashboardStatsType } from "./use-dashboard-stats";
 
 const StatsWrapper = styled.div`
   .col,

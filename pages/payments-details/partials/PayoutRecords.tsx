@@ -22,6 +22,13 @@ type PayoutRow = {
   arrival_date: string;
 };
 
+// Define the payouts data structure
+interface PayoutsData {
+  payouts: PayoutRow[];
+  totalPages: number;
+  currentPage: number;
+}
+
 const columns = [
   {
     label: "Amount",
@@ -43,8 +50,9 @@ const columns = [
 function PayoutRecords() {
   const { isMobile } = useResponsive();
   const { payouts, isLoadingPayouts, updateFilters } = usePaymentController();
+  const payoutsData = payouts as unknown as PayoutsData;
 
-  if (!payouts?.payouts?.length && !isLoadingPayouts) {
+  if (!payoutsData?.payouts?.length && !isLoadingPayouts) {
     return (
       <div className="py-12">
         <NoDataFound title="No payouts found" />
@@ -61,7 +69,7 @@ function PayoutRecords() {
   return (
     <div className="m-3">
       {!isMobile
-        ? payouts?.payouts?.length > 0 && (
+        ? payoutsData?.payouts?.length > 0 && (
             <div className="overflow-x-auto w-full">
               <table className="w-full table">
                 <thead className="bg-[rgba(29,30,27,0.1)]">
@@ -77,7 +85,7 @@ function PayoutRecords() {
                   </tr>
                 </thead>
                 <tbody className="[&>tr>td]:min-h-[60px] [&>tr>td]:h-[60px] [&>tr>td]:align-middle [&>tr>td]:border-[#f5f5f5]">
-                  {payouts?.payouts.map((row: PayoutRow) => (
+                  {(payoutsData?.payouts || []).map((row: PayoutRow) => (
                     <tr
                       key={row.payout_id}
                       className={classNames(
@@ -114,16 +122,16 @@ function PayoutRecords() {
               </table>
             </div>
           )
-        : payouts?.payouts?.length > 0 &&
-          payouts?.payouts.map((row: PayoutRow) => (
+        : payoutsData?.payouts?.length > 0 &&
+          (payoutsData?.payouts || []).map((row: PayoutRow) => (
             <PayoutCard key={row.payout_id} data={row} />
           ))}
-      {payouts?.totalPages > 0 && (
+      {payoutsData?.totalPages && payoutsData.totalPages > 0 && (
         <div className="flex items-center justify-center w-full mx-auto py-3">
           <PaginationComponent
-            total={payouts?.totalPages}
+            total={payoutsData.totalPages || 0}
             onPageChange={(page) => updateFilters({ page: page.selected + 2 })}
-            currentPage={payouts?.currentPage}
+            currentPage={payoutsData.currentPage || 0}
           />
         </div>
       )}

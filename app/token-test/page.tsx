@@ -8,6 +8,7 @@ import {
   isTokenExpired,
   forceTokenExpiration,
 } from "@/helpers/services/auth";
+import { AxiosError } from "axios";
 
 export default function TokenTestPage() {
   const [tokenInfo, setTokenInfo] = useState({
@@ -46,9 +47,10 @@ export default function TokenTestPage() {
       // Call a secure endpoint that requires authentication
       const response = await apiClient.get("/user/get");
       setTestCallResult(JSON.stringify(response.data, null, 2));
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError;
       setTestCallResult(
-        `Error: ${error.message}\n${JSON.stringify(error.response?.data || {}, null, 2)}`
+        `Error: ${axiosError.message}\n${JSON.stringify(axiosError.response?.data || {}, null, 2)}`
       );
     } finally {
       setIsLoading(false);
@@ -120,15 +122,18 @@ export default function TokenTestPage() {
         </h2>
         <ol className="list-decimal pl-6 space-y-2">
           <li>Make a test API call to verify your current authentication</li>
-          <li>Click "Force Token Expiration" to simulate an expired token</li>
+          <li>
+            Click &quot;Force Token Expiration&quot; to simulate an expired
+            token
+          </li>
           <li>Wait 5 seconds until the token expires</li>
           <li>
             Make another API call - the system should automatically refresh your
             token
           </li>
           <li>
-            Check the "Current Token Information" section to see if a new token
-            was issued
+            Check the &quot;Current Token Information&quot; section to see if a
+            new token was issued
           </li>
         </ol>
       </div>

@@ -39,9 +39,9 @@ interface JobMilestone {
 }
 
 interface JobData {
-  job_post_id: string | number;
+  job_post_id: string;
   job_title: string;
-  status: string;
+  status: keyof typeof JOBS_STATUS;
   date_created: string;
   due_date?: string;
   job_start_date?: string;
@@ -76,6 +76,20 @@ interface JobData {
       requested_by: string;
     };
   };
+  _client_user_id?: string;
+  _freelancer_user_id?: string;
+  job_description?: string;
+  attachments?: any[];
+  skills?: any[];
+  languages?: any[];
+  time_scope?: string;
+  expected_delivery_date?: string;
+  is_job_deleted?: number;
+  proposed_budget?: {
+    amount: number;
+    type: string;
+  };
+  // ... other required properties from TJobDetails
 }
 
 interface DetailsBannerProps {
@@ -112,7 +126,7 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
   const onBookmarkClick = () => {
     if (!user) return;
     setLoading(true);
-    toggleBookmarkPost(data.job_post_id).then((res) => {
+    toggleBookmarkPost(data.job_post_id.toString()).then((res) => {
       if (res.status) {
         setISaved(!isSaved);
       }
@@ -324,8 +338,11 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
               </div>
               <div className="mt-1 text-xl font-normal">
                 {data?.budget?.type === "hourly"
-                  ? `${numberWithCommas(data?.total_hours)} Hours`
-                  : numberWithCommas(totalMilestoneAmount, "USD")}
+                  ? `${numberWithCommas(data?.total_hours?.toString() || "0")} Hours`
+                  : numberWithCommas(
+                      totalMilestoneAmount?.toString() || "0",
+                      "USD"
+                    )}
               </div>
             </div>
             <div className="hidden md:block w-px h-[58px] bg-black"></div>
@@ -344,7 +361,7 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
             <ChangeBudgetModal
               show={changeBudgetModal}
               toggle={() => setChangeBudgetModal((prev) => !prev)}
-              jobDetails={data}
+              jobDetails={data as any}
               userType="freelancer"
             />
           )}
@@ -352,7 +369,7 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
           <ChangeBudgetDeleteRequest
             show={changeBudgetDeleteModal}
             setShow={setChangeBudgetDeleteModal}
-            jobPostId={data.job_post_id}
+            jobPostId={data.job_post_id.toString()}
             refetch={refetch}
           />
         </div>
@@ -440,7 +457,8 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
                 {data.avg_rating?.toFixed(1)}
               </div>
               <div className="text-sm font-light opacity-50 ml-1">
-                Ratings ({numberWithCommas(data?.count_rating) || 0})
+                Ratings (
+                {numberWithCommas(data?.count_rating?.toString() || "0")})
               </div>
             </div>
           </div>
@@ -482,6 +500,7 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
                           disabled
                           className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] disabled:opacity-50"
                           text="Submit Proposal"
+                          onClick={() => {}}
                         />
                       }
                       className="inline-block align-middle"
@@ -497,6 +516,7 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
                         disabled
                         className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] disabled:opacity-50"
                         text="Submit Proposal"
+                        onClick={() => {}}
                       />
                     }
                     className="inline-block align-middle"
@@ -521,7 +541,7 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
       <SubmitProposalModal
         show={showSubmitProposalModal}
         toggle={toggleProposalModal}
-        data={data}
+        data={data as any}
         onSubmitProposal={onSubmitProposal}
       />
     </NoPropsalWrapper>

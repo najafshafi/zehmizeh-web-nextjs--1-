@@ -16,6 +16,18 @@ import { validateGeneralInquiryForm } from "@/helpers/validation/common";
 import { getPlainText, getYupErrors } from "@/helpers/utils/misc";
 import { postGeneralInquiry } from "@/helpers/http/dispute";
 
+type CKEditorInstance = {
+  editing: {
+    view: {
+      change: (callback: (writer: any) => void) => void;
+      document: {
+        getRoot: () => any;
+      };
+    };
+  };
+  getData: () => string;
+};
+
 const GeneralInquiryForm = () => {
   const { isMobile } = useResponsive();
   const [loading, setLoading] = useState<boolean>(false);
@@ -37,20 +49,18 @@ const GeneralInquiryForm = () => {
     }[]
   >([]);
 
-  const handleUploadImage = ({
-    file,
-    fileName,
-  }: {
-    file: string;
-    fileName?: string;
-  }) => {
+  const handleUploadImage = (
+    file: Partial<{ file: string; fileName: string; fileUrl: string }>
+  ) => {
     /* This function will save the file uploaded url */
-    setAttachments([
-      {
-        fileName,
-        fileUrl: file,
-      },
-    ]);
+    if (file.file) {
+      setAttachments([
+        {
+          fileName: file.fileName,
+          fileUrl: file.file,
+        },
+      ]);
+    }
   };
 
   const removeAttachment = () => {
@@ -167,8 +177,8 @@ const GeneralInquiryForm = () => {
           config={{
             toolbar: ["bold", "italic", "numberedList", "bulletedList"],
           }}
-          onReady={(editor) => {
-            editor.editing.view.change((writer) => {
+          onReady={(editor: CKEditorInstance) => {
+            editor.editing.view.change((writer: any) => {
               writer.setStyle(
                 "max-height",
                 "200px",
@@ -176,7 +186,7 @@ const GeneralInquiryForm = () => {
               );
             });
           }}
-          onChange={(event, editor) => {
+          onChange={(event: any, editor: CKEditorInstance) => {
             const data = editor.getData();
             setDescription(data);
           }}
@@ -207,7 +217,7 @@ const GeneralInquiryForm = () => {
           padding="0.875rem 1.875rem"
           onClick={() => validate()}
           disabled={loading}
-          className={isMobile ? "w-100" : null}
+          className={isMobile ? "w-100" : undefined}
         >
           Submit
         </StyledButton>

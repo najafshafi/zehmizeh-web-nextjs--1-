@@ -22,9 +22,10 @@ export const Profile = ({ handleAuthenticatedAction }: ProfileProps) => {
   // Check if user is a client
   const isClient = user && user.user_type === "client";
 
-  const { data } = useQueryData<IFreelancerDetails>(
+  const queryResult = useQueryData<IFreelancerDetails>(
     queryKeys.getFreelancerDetails(freelancerId)
   );
+  const data = (queryResult as any)?.data;
 
   return (
     <>

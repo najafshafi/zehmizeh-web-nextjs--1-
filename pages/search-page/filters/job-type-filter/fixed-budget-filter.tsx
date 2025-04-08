@@ -13,7 +13,7 @@ const FixedBudgetFilter = () => {
 
     if (filters.fixed_budget.includes(value)) {
       updatedFixBudgetFilter = filters.fixed_budget.filter(
-        (rate) => rate !== value
+        (rate: string) => rate !== value
       );
     } else {
       updatedFixBudgetFilter = [...filters.fixed_budget, value];

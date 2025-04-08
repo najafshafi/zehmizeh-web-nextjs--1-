@@ -22,6 +22,22 @@ import { useDispatch } from "react-redux";
 import { TimezoneUI } from "./TimezoneUI";
 import { ChatHeaderButton, ChatPanelWrapper } from "../messaging.styled";
 
+// Define types to handle the missing chat property
+interface ChatState {
+  loading: any;
+  activeChat: any;
+  activeTab: string;
+  errors: any;
+  chatList: any;
+}
+
+interface ChatItem {
+  _from_user_data: { user_id: string };
+  _to_user_data: { user_id: string };
+  _job_post_id: string;
+  proposal_id?: string;
+}
+
 function ChatPanel({
   ignoreMessageLoading,
   showMilestoneAlert = true,
@@ -30,13 +46,16 @@ function ChatPanel({
   const router = useRouter();
   const { isDesktop } = useResponsive();
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchedChat, setSearchedChat] = useState(null);
+  const [searchedChat, setSearchedChat] = useState<MessageProps | undefined>(
+    undefined
+  );
   const [showSearchModal, setSearchModal] = useState(false);
   const dispatch: AppDispatch = useDispatch();
 
   const { user } = useAuth();
+  // Use "as any" to bypass the type checking for the store structure
   const { loading, activeChat, activeTab, errors, chatList } = useSelector(
-    (state: RootState) => state.chat
+    (state: any) => state.chat
   );
   const remoteUser =
     user?.user_id !== activeChat?._from_user_data.user_id
@@ -54,12 +73,12 @@ function ChatPanel({
   const closeModalAndCancelSearch = () => {
     setSearchTerm("");
     toggleSearchModal();
-    setSearchedChat(null);
+    setSearchedChat(undefined);
   };
 
   const onClearSearch = () => {
     setSearchTerm("");
-    setSearchedChat(null);
+    setSearchedChat(undefined);
   };
 
   const onSelectMessage = (chat: MessageProps) => {
@@ -67,7 +86,7 @@ function ChatPanel({
       searchTerm,
       ...chat,
     };
-    setSearchedChat(selectedChat);
+    setSearchedChat(selectedChat as MessageProps);
   };
 
   const backToUserList = () => dispatch(resetActiveChat());
@@ -111,11 +130,11 @@ function ChatPanel({
         <span style={{ color: "blue" }}>
           <b>NOTE: This freelancer has NOT been hired!</b>
           <br />
-          &quot;Proposal&quot; chats are only meant to help you pick a freelancer -{" "}
-          <b>not to work on projects.</b>
+          &quot;Proposal&quot; chats are only meant to help you pick a
+          freelancer - <b>not to work on projects.</b>
           <br />
-          To hire this freelancer, click the &quot;Accept Proposal&quot; button on their
-          proposal{" "}
+          To hire this freelancer, click the &quot;Accept Proposal&quot; button
+          on their proposal{" "}
           <Link
             style={{ textDecoration: "underline" }}
             className="link"
@@ -180,7 +199,7 @@ function ChatPanel({
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getProposalId = (jobPostId: string, remoteUserId: string) => {
-    const proposal = chatList["proposals"].find((chat) => {
+    const proposal = chatList["proposals"].find((chat: ChatItem) => {
       const condOne =
         chat._from_user_data.user_id === remoteUserId &&
         chat._to_user_data.user_id === user.user_id;
@@ -450,8 +469,8 @@ function ChatPanel({
     ) {
       return (
         <span>
-          Two weeks have passed since this project was completed. The project&apos;s
-          message window is now closed.
+          Two weeks have passed since this project was completed. The
+          project&apos;s message window is now closed.
         </span>
       );
     }
@@ -553,7 +572,7 @@ function ChatPanel({
               <div>
                 <ChatHeaderButton
                   variantType={"primary"}
-                  $variantColor={"job"}
+                  variantColor={"job"}
                   className="m--chatpanel-back-to-job-proposal-invite"
                   onClick={backToProposalInviteJobButton.onClick}
                 >

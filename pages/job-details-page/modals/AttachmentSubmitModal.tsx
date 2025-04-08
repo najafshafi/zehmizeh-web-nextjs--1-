@@ -6,6 +6,7 @@ import CustomUploader from "@/components/ui/CustomUploader";
 import AttachmentPreview from "@/components/ui/AttachmentPreview";
 import { deleteFileFromStorage } from "@/helpers/http/common";
 import { CONSTANTS } from "@/helpers/const/constants";
+import { TCustomUploaderFile } from "@/components/ui/CustomUploader";
 
 export interface FileAttachment {
   fileUrl: string;
@@ -31,19 +32,18 @@ const AttachmentSubmitModal = ({
   const [existingWork, setExistingWork] = useState<FileAttachment[]>([]);
   const [uploadLimit] = useState<number>(5);
 
-  const handleUploadImage = ({
-    file,
-    fileName,
-  }: {
-    file: string;
-    fileName?: string;
-  }) => {
-    setAttachments([...attachments, { fileUrl: file, fileName }]);
+  const handleUploadImage = (file: TCustomUploaderFile) => {
+    if (!file.file) return;
+    setAttachments([
+      ...attachments,
+      { fileUrl: file.file, fileName: file.fileName || "" },
+    ]);
   };
 
-  const removeAttachment = (removeIndex: number, fileUrl?: string) => {
+  const removeAttachment = (index?: number, fileUrl?: string) => {
+    if (typeof index !== "number") return;
     const allAttachments = [...attachments].filter(
-      (_, index: number) => index !== removeIndex
+      (_, i: number) => i !== index
     );
     setAttachments(allAttachments);
     if (fileUrl) deleteFileFromStorage(fileUrl);
@@ -67,7 +67,7 @@ const AttachmentSubmitModal = ({
   };
 
   const handler = () => {
-    if (postedWork.length <= 0) return null;
+    if (!postedWork || postedWork.length <= 0) return null;
     postedWorkHandler(postedWork);
   };
 

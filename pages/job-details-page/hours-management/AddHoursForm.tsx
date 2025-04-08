@@ -32,6 +32,33 @@ type Props = {
   isFinalHours?: any;
 };
 
+interface FormState {
+  screenshot_link: Array<{
+    fileUrl?: string;
+    fileName?: string;
+  }>;
+}
+
+interface UploadedFile {
+  file: string;
+  fileName?: string;
+  fileUrl?: string;
+}
+
+interface PaymentData {
+  data: Array<{
+    fee_structure: {
+      OTHER: {
+        percentage: number;
+      };
+    };
+  }>;
+}
+
+interface ErrorRecordValue {
+  message: string;
+}
+
 const AddHoursForm = ({
   show,
   toggle,
@@ -46,14 +73,13 @@ const AddHoursForm = ({
   const [title, setTitle] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<Record<string, ErrorRecordValue>>({});
   const [loading, setLoading] = useState<boolean>(false);
-  const [formState, setFormState] = useState<{
-    screenshot_link: { fileUrl?: string; fileName?: string }[];
-  }>({
+  const [formState, setFormState] = useState<FormState>({
     screenshot_link: [],
   });
-  const { data: paymentData } = useQuery(
+
+  const { data: paymentData } = useQuery<PaymentData>(
     ["get-payment-fees"],
     () => getPaymentFees(),
     {
@@ -61,6 +87,7 @@ const AddHoursForm = ({
       enabled: show,
     }
   );
+
   const zehmizehFees =
     paymentData?.data[0]?.fee_structure?.OTHER?.percentage || 0;
 
@@ -127,7 +154,7 @@ const AddHoursForm = ({
     })
     .required();
 
-  const validate = (e: any) => {
+  const validate = (e: React.FormEvent) => {
     e.preventDefault();
     validationSchema
       .isValid({ hoursWorked, title, amount, description })
@@ -139,12 +166,15 @@ const AddHoursForm = ({
               { abortEarly: false }
             )
             .catch((err) => {
-              const errors = getYupErrors(err);
-              setErrors({ ...errors });
+              const yupErrors = getYupErrors(err);
+              const typedErrors: Record<string, ErrorRecordValue> = {};
+              Object.keys(yupErrors).forEach((key) => {
+                typedErrors[key] = { message: String(yupErrors[key]) };
+              });
+              setErrors(typedErrors);
             });
         } else {
           setErrors({});
-          // create milestone
           submitHours();
         }
       });
@@ -204,16 +234,16 @@ const AddHoursForm = ({
     toggle();
   };
 
-  const changeHours = (value) => {
+  const changeHours = (value: string) => {
     // This will make sure only numeric value is entered and calculate the total amount
-    if (!isNaN(value)) {
+    if (!isNaN(Number(value))) {
       const hourlyValue =
         value.indexOf(".") >= 0
           ? value.substr(0, value.indexOf(".")) +
             value.substr(value.indexOf("."), 3)
           : value;
       setHoursWorked(hourlyValue);
-      const totalAmount = hourlyValue * hourlyRate;
+      const totalAmount = Number(hourlyValue) * hourlyRate;
       setAmount(totalAmount + "");
     }
   };
@@ -232,36 +262,36 @@ const AddHoursForm = ({
     setDescription(data);
   };
 
-  const handleChange = useCallback((field, value) => {
-    setFormState((prevFormState: any) => {
-      return { ...prevFormState, [field]: value };
-    });
-  }, []);
+  const handleChange = useCallback(
+    (field: keyof FormState, value: FormState[keyof FormState]) => {
+      setFormState((prevFormState: FormState) => {
+        return { ...prevFormState, [field]: value };
+      });
+    },
+    []
+  );
 
-  const handleUploadImage = ({
-    file,
-    fileName,
-  }: {
-    file: string;
-    fileName?: string;
-  }) => {
+  const handleUploadImage = (file: Partial<UploadedFile>) => {
+    if (!file.file) return;
     handleChange("screenshot_link", [
       ...formState.screenshot_link,
-      { fileUrl: file, fileName },
+      { fileUrl: file.file, fileName: file.fileName },
     ]);
   };
 
-  const removeAttachment = (index: number) => {
-    formState.screenshot_link.splice(index, 1);
-    handleChange("screenshot_link", formState.screenshot_link);
+  const removeAttachment = (index?: number, fileUrl?: string) => {
+    if (index === undefined) return;
+    const newAttachments = [...formState.screenshot_link];
+    newAttachments.splice(index, 1);
+    handleChange("screenshot_link", newAttachments);
   };
 
-  const handleMultipleUploadImage = (
-    files: { file: string; fileName?: string }[]
-  ) => {
-    const newUploadedFiles = files.map(({ file, fileName }) => {
-      return { fileUrl: file, fileName };
-    });
+  const handleMultipleUploadImage = (files: Partial<UploadedFile>[]) => {
+    const newUploadedFiles = files
+      .filter((file): file is UploadedFile => file.file !== undefined)
+      .map(({ file, fileName }) => {
+        return { fileUrl: file, fileName };
+      });
 
     handleChange("screenshot_link", [
       ...formState.screenshot_link,
@@ -286,8 +316,8 @@ const AddHoursForm = ({
             {selectedMilestone
               ? "Edit Hours"
               : isFinalHours
-              ? "Submit Final Hours"
-              : "Add Hours"}
+                ? "Submit Final Hours"
+                : "Add Hours"}
           </div>
           <StyledFormGroup>
             <div className="fs-1rem fw-300">
@@ -303,7 +333,7 @@ const AddHoursForm = ({
               autoFocus
               //disabled={jobTitle != ''}
             />
-            {errors?.title && <ErrorMessage message={errors?.title} />}
+            {errors?.title && <ErrorMessage message={errors?.title.message} />}
           </StyledFormGroup>
           <StyledFormGroup>
             <FormLabel className="fs-1rem fw-300">
@@ -316,7 +346,7 @@ const AddHoursForm = ({
               className="form-input"
             />
             {errors?.hoursWorked && (
-              <ErrorMessage message={errors?.hoursWorked} />
+              <ErrorMessage message={errors?.hoursWorked.message} />
             )}
           </StyledFormGroup>
           <StyledFormGroup>
@@ -389,7 +419,7 @@ const AddHoursForm = ({
               maxChars={2000}
             />
             {errors?.description && (
-              <ErrorMessage message={errors?.description} />
+              <ErrorMessage message={errors?.description.message} />
             )}
           </StyledFormGroup>
           <StyledFormGroup>
@@ -398,11 +428,20 @@ const AddHoursForm = ({
               incomplete drafts may be worth sharing.)
             </FormLabel>
             <CustomUploader
-              handleUploadImage={handleUploadImage}
-              attachments={
-                formState?.screenshot_link ? formState?.screenshot_link : []
-              }
-              removeAttachment={removeAttachment}
+              handleUploadImage={(file: Partial<UploadedFile>) => {
+                if (!file.file) return;
+                handleChange("screenshot_link", [
+                  ...formState.screenshot_link,
+                  { fileUrl: file.file, fileName: file.fileName },
+                ]);
+              }}
+              attachments={formState?.screenshot_link || []}
+              removeAttachment={(index?: number, fileUrl?: string) => {
+                if (index === undefined) return;
+                const newAttachments = [...formState.screenshot_link];
+                newAttachments.splice(index, 1);
+                handleChange("screenshot_link", newAttachments);
+              }}
               placeholder="Attach doc"
               acceptedFormats={[
                 ...CONSTANTS.DEFAULT_ATTACHMENT_SUPPORTED_TYPES,
@@ -411,12 +450,25 @@ const AddHoursForm = ({
               ].join(", ")}
               suggestions="File type: PDF, DOC, DOCX, XLS, XLSX, Image Files, Audio Files, Video Files"
               shouldShowFileNameAndExtension={false}
-              handleMultipleUploadImage={handleMultipleUploadImage}
+              handleMultipleUploadImage={(files: Partial<UploadedFile>[]) => {
+                const newUploadedFiles = files
+                  .filter(
+                    (file): file is UploadedFile => file.file !== undefined
+                  )
+                  .map(({ file, fileName }) => {
+                    return { fileUrl: file, fileName };
+                  });
+
+                handleChange("screenshot_link", [
+                  ...formState.screenshot_link,
+                  ...newUploadedFiles,
+                ]);
+              }}
               limit={5}
               multiple
             />
             {errors?.screenshot_link && (
-              <ErrorMessage message={errors.screenshot_link} />
+              <ErrorMessage message={errors.screenshot_link.message} />
             )}
           </StyledFormGroup>
           <div className="flex g-2 bottom-buttons flex-wrap">

@@ -13,7 +13,7 @@ import AttachmentPreview from "@/components/ui/AttachmentPreview";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import { useWebSpellChecker } from "@/helpers/hooks/useWebSpellChecker";
 import { useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/redux/store";
+import { AppDispatch } from "@/store/redux/store";
 import { AddMessagePayload } from "@/store/redux/slices/chat.interface";
 import { useDispatch } from "react-redux";
 import messageService from "@/helpers/http/message";
@@ -25,6 +25,17 @@ import { appendNewMessage } from "@/store/redux/slices/chatSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+
+// Define file type structure
+interface UploadedFile {
+  fileName: string;
+  fileUrl: string;
+}
+
+interface UploadResult {
+  success: boolean;
+  data?: UploadedFile;
+}
 
 const Notice = styled.div`
   width: 100%;
@@ -124,7 +135,7 @@ export default function CreateMessage({
   conversationId,
 }: Prop) {
   const { activeChat, loading, activeTab } = useSelector(
-    (state: RootState) => state.chat
+    (state: any) => state.chat || {}
   );
   // checking for the chat thred  in talkjs
   const [newChatLoading, setNewChatLoading] = useState<boolean>(true);
@@ -135,14 +146,14 @@ export default function CreateMessage({
   const router = useRouter();
   const { user } = useAuth();
   const remoteUser =
-    user.user_id !== activeChat?._from_user_data.user_id
+    user?.user_id !== activeChat?._from_user_data?.user_id
       ? activeChat?._from_user_data
       : activeChat?._to_user_data;
   useWebSpellChecker();
 
   const [uploadLoading, setUploadLoading] = useState(false);
   const [messageText, setMessageText] = useState("");
-  const [files, setFiles] = useState<any[]>([]);
+  const [files, setFiles] = useState<UploadedFile[]>([]);
 
   const clearMessageInput = () => {
     const element = document.getElementById("wsc-check");
@@ -150,19 +161,20 @@ export default function CreateMessage({
   };
 
   const addMessageToArr = (message: AddMessagePayload) => {
-    message._from_user_id = user.user_id;
+    message._from_user_id = user?.user_id;
     dispatch(appendNewMessage(message));
   };
 
   const sendMessage = (e?: React.FormEvent<HTMLFormElement>) => {
     if (e && e.preventDefault) e.preventDefault();
+    if (!activeChat || !remoteUser?.user_id) return;
 
     if (isFileUploaded()) {
       sendFile();
     } else {
       const message: AddMessagePayload = {
-        to_user_id: remoteUser?.user_id,
-        job_post_id: activeChat?._job_post_id,
+        to_user_id: remoteUser.user_id,
+        job_post_id: activeChat._job_post_id,
         type: "TEXT",
         message_text: messageText,
         tab: activeTab,
@@ -173,7 +185,7 @@ export default function CreateMessage({
       if (activeChat.proposal_id) message.proposal_id = activeChat.proposal_id;
 
       dispatch(addNewMessage({ message }));
-      message._from_user_id = user.user_id;
+      message._from_user_id = user?.user_id;
       addMessageToArr(message);
       setMessageText("");
       clearMessageInput();
@@ -181,14 +193,14 @@ export default function CreateMessage({
   };
 
   const sendFile = async () => {
-    if (!Array.isArray(files)) return;
+    if (!Array.isArray(files) || !activeChat || !remoteUser?.user_id) return;
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
 
       const message: AddMessagePayload = {
-        to_user_id: remoteUser?.user_id,
-        job_post_id: activeChat?._job_post_id,
+        to_user_id: remoteUser.user_id,
+        job_post_id: activeChat._job_post_id,
         type: "FILE",
         message_text: `${file.fileUrl}#docname=${file.fileName}`,
         tab: activeTab,
@@ -207,7 +219,7 @@ export default function CreateMessage({
   };
 
   const fileUploadHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const uploadedFilesArr = [];
+    const uploadedFilesArr: UploadedFile[] = [];
 
     if (e.target.files) {
       for (let i = 0; i < e.target.files.length; i++) {
@@ -221,14 +233,14 @@ export default function CreateMessage({
     setFiles([...files, ...uploadedFilesArr]);
   };
 
-  const uploadAttachement = async (uploadfile: any) => {
+  const uploadAttachement = async (uploadfile: File): Promise<UploadResult> => {
     try {
       const fileSize = uploadfile.size / 1024 / 1024;
       const name = uploadfile.name;
 
       if (fileSize > 100) {
         showErr("File size must not exceed 100MB.");
-        return;
+        return { success: false };
       }
       setUploadLoading(true);
       const file = uploadfile;
@@ -310,14 +322,14 @@ export default function CreateMessage({
   };
 
   const createTalkJSConversation = async () => {
-    if (threadLoading) return false;
+    if (threadLoading || !activeChat) return false;
     const { _job_post_id, job_title, _from_user_data, _to_user_data } =
       activeChat;
     const payload = {
       conversationId,
       // doesn't matter if the ID's flip over, we just need both id's
-      clientId: _from_user_data.user_id,
-      freelancerId: _to_user_data.user_id,
+      clientId: _from_user_data?.user_id,
+      freelancerId: _to_user_data?.user_id,
       subject: job_title,
       custom: {
         projectName: job_title,
@@ -332,12 +344,14 @@ export default function CreateMessage({
     toast.promise(promise, {
       loading: "create thread...",
       success: () => {
-        router.push(`/messages-new/${conversationId}`);
+        if (conversationId) {
+          router.push(`/messages-new/${conversationId}`);
+        }
         setThreadLoading(false);
         return "thread created successfully";
       },
       error: (err) => {
-        console.log(err.response.data);
+        console.log(err.response?.data);
         setThreadLoading(false);
         return "Error: " + err.toString();
       },
@@ -447,10 +461,10 @@ export default function CreateMessage({
               padding="4px 10px"
               type="submit"
               disabled={
-                (!messageText && !isFileUploaded()) || loading.sendingMessage
+                (!messageText && !isFileUploaded()) || loading?.sendingMessage
               }
               className={
-                (!messageText && !isFileUploaded()) || loading.sendingMessage
+                (!messageText && !isFileUploaded()) || loading?.sendingMessage
                   ? "submit-disabled"
                   : ""
               }
@@ -465,7 +479,7 @@ export default function CreateMessage({
             ) : (
               <>
                 <input
-                  disabled={loading.sendingMessage}
+                  disabled={loading?.sendingMessage}
                   type="file"
                   multiple
                   id="upload"

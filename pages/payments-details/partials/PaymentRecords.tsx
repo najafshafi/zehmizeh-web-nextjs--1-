@@ -48,6 +48,13 @@ type PaymentCardData = {
   payment_type: string;
 };
 
+// Define the payments data structure
+interface PaymentsData {
+  payments: PaymentRow[];
+  totalPages: number;
+  currentPage: number;
+}
+
 // Function to adapt payment row to PaymentCard data format
 const adaptToPaymentCardData = (row: PaymentRow): PaymentCardData => {
   const milestone = Array.isArray(row.milestone)
@@ -81,6 +88,7 @@ const columns = [
 function PaymentRecords() {
   const { isMobile } = useResponsive();
   const { payments, isLoadingPayments, updateFilters } = usePaymentController();
+  const paymentsData = payments as unknown as PaymentsData;
   const [invoiceModal, setInvoiceModal] = React.useState({
     show: false,
     data: null,
@@ -90,7 +98,7 @@ function PaymentRecords() {
     setInvoiceModal({ show: false, data: null });
   };
 
-  if (!payments?.payments?.length && !isLoadingPayments) {
+  if (!paymentsData?.payments?.length && !isLoadingPayments) {
     return (
       <div className="py-12">
         <NoDataFound title="No payments found" />
@@ -109,7 +117,7 @@ function PaymentRecords() {
   return (
     <div className="m-3">
       {!isMobile
-        ? payments?.payments?.length > 0 && (
+        ? paymentsData?.payments?.length > 0 && (
             <div className="overflow-x-auto w-full">
               <table className="w-full table border-collapse">
                 <thead className="bg-[rgba(29,30,27,0.1)]">
@@ -125,7 +133,7 @@ function PaymentRecords() {
                   </tr>
                 </thead>
                 <tbody className="[&>tr>td]:min-h-[60px] [&>tr>td]:h-[60px] [&>tr>td]:align-middle [&>tr>td]:border-[#f5f5f5]">
-                  {payments?.payments.map((row: PaymentRow) => (
+                  {(paymentsData?.payments || []).map((row: PaymentRow) => (
                     <tr
                       key={row.stripe_txn_id}
                       className={classNames("border-b border-gray-500/20", {
@@ -171,20 +179,20 @@ function PaymentRecords() {
               </table>
             </div>
           )
-        : payments?.payments?.length > 0 &&
-          payments?.payments.map((row: PaymentRow) => (
+        : paymentsData?.payments?.length > 0 &&
+          (paymentsData?.payments || []).map((row: PaymentRow) => (
             <PaymentCard
               key={row.stripe_txn_id}
               data={adaptToPaymentCardData(row)}
             />
           ))}
 
-      {payments?.totalPages > 0 && (
+      {paymentsData?.totalPages && paymentsData.totalPages > 0 && (
         <div className="flex items-center justify-center w-full mx-auto py-3">
           <PaginationComponent
-            total={payments?.totalPages}
+            total={paymentsData.totalPages || 0}
             onPageChange={(page) => updateFilters({ page: page.selected + 1 })}
-            currentPage={payments?.currentPage}
+            currentPage={paymentsData.currentPage || 0}
           />
         </div>
       )}

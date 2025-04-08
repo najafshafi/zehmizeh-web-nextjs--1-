@@ -1,4 +1,3 @@
-import { StyledButton } from "@/components/forms/Buttons";
 import { StyledModal } from "@/components/styled/StyledModal";
 import useClientProfile from "@/controllers/useClientProfile";
 import { CONSTANTS } from "@/helpers/const/constants";
@@ -6,6 +5,7 @@ import { editUser } from "@/helpers/http/auth";
 import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useSearchParams } from "next/navigation";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 export const ModalAfterPostingProject = () => {
   const { profileData } = useClientProfile();
@@ -98,13 +98,11 @@ export const ModalAfterPostingProject = () => {
         )}
         {/* END ------------------------------------------- Do not show again checkbox */}
         <div className="flex justify-center">
-          <StyledButton
-            padding="1.125rem 2.5rem"
-            margin="10px 4px"
+          <CustomButton
+            text={"Okay"}
+            className={`px-[2.5rem] py-[1.125rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white hover:border-none my-[10px] mx-[4px]`}
             onClick={handleOkay}
-          >
-            Okay
-          </StyledButton>
+          />
         </div>
       </div>
     </StyledModal>

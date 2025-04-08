@@ -12,6 +12,8 @@ type CountryCode = keyof typeof IDENTITY_DOCS;
 interface Country {
   country_name: string;
   country_short_name: CountryCode;
+  label: string;
+  value: string | number;
 }
 
 interface Props {
@@ -256,7 +258,17 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
                       <CountryDropdown
                         placeholder="Enter the country that your payments will be sent to"
                         selectedCountry={country}
-                        onSelectCountry={(item: Country) => setCountry(item)}
+                        onSelectCountry={(item: Country) => {
+                          const selectedCountry: Country = {
+                            ...item,
+                            country_name: item.country_name,
+                            country_short_name:
+                              item.country_short_name as CountryCode,
+                            label: item.label || item.country_name,
+                            value: item.value || item.country_short_name,
+                          };
+                          setCountry(selectedCountry);
+                        }}
                       />
                     </div>
                     {countryErr && !country && (

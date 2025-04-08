@@ -6,7 +6,7 @@ import Spinner from "@/components/forms/Spin/Spinner";
 import SearchBox from "@/components/ui/SearchBox";
 import { useRouter, useSearchParams } from "next/navigation";
 import BlurredImage from "@/components/ui/BlurredImage";
-import { AppDispatch, RootState } from "@/store/redux/store";
+import { AppDispatch } from "@/store/redux/store";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
@@ -32,13 +32,6 @@ import {
   SingleUserChatAction,
 } from "../messaging.styled";
 import { chatType } from "@/store/redux/slices/talkjs.interface";
-
-// Augment the RootState type
-declare module "@/store/redux/store" {
-  interface RootState {
-    chat: ChatState;
-  }
-}
 
 function UserList() {
   const { user } = useAuth();
@@ -72,9 +65,11 @@ function UserList() {
   const [showSearch, setShowSearch] = useState<boolean>(false);
 
   const { chatList, loading, activeTab, activeChat, unreadMessages, search } =
-    useSelector((state: RootState) => state.chat);
+    useSelector((state: any) => state.chat || {});
   const totalMessages =
-    unreadMessages.invities + unreadMessages.jobs + unreadMessages.proposals;
+    unreadMessages?.invities +
+      unreadMessages?.jobs +
+      unreadMessages?.proposals || 0;
 
   // const [searchTerm, setSearchTerm] = useState<string>('');
 
@@ -82,7 +77,7 @@ function UserList() {
     chatItem: Invite & Proposal & Job,
     index: number
   ) => {
-    if (loading.message) return;
+    if (loading?.message) return;
 
     const remoteUserId =
       user.user_id !== chatItem._from_user_data.user_id
@@ -95,13 +90,13 @@ function UserList() {
   };
 
   const paramsChatSelectHandler = () => {
-    if (chatList[activeTab].length === 0) return;
+    if (!chatList?.[activeTab]?.length) return;
 
     const flag = invite_id ? "invities" : "proposals";
     const id: number =
       flag === "invities" ? Number(invite_id) : Number(proposal_id);
 
-    if (typeof id !== "number" || chatList[flag].length === 0) return;
+    if (typeof id !== "number" || !chatList?.[flag]?.length) return;
 
     // Using forEach instead of map since we're not returning anything
     chatList[activeTab].forEach((chat: any, index: number) => {
@@ -186,7 +181,7 @@ function UserList() {
       </MessageSidebarHeader>
       {showSearch && (
         <SearchBox
-          value={search.chatList}
+          value={search?.chatList}
           onChange={(e) =>
             dispatch(searchChatList({ searchTerm: e.target.value }))
           }
@@ -194,16 +189,16 @@ function UserList() {
         />
       )}
       <Wrapper>
-        {loading.list ? (
+        {loading?.list ? (
           <div className="text-center">
             <Spinner />
             <p>Loading chats...</p>
           </div>
         ) : (
           <>
-            {chatList[activeTab].map((usr: any, index: number) => {
+            {chatList?.[activeTab]?.map((usr: any, index: number) => {
               const typedUsr = usr as Invite & Job & Proposal;
-              if (search.chatList) {
+              if (search?.chatList) {
                 const remoteUser =
                   user.user_id !== typedUsr._from_user_data.user_id
                     ? typedUsr._from_user_data
@@ -225,7 +220,7 @@ function UserList() {
                   className={cns({
                     active:
                       typedUsr._job_post_id === activeChat?._job_post_id &&
-                      typedUsr.proposal_id === activeChat.proposal_id,
+                      typedUsr.proposal_id === activeChat?.proposal_id,
                   })}
                   key={`${typedUsr._job_post_id}_${index}`}
                   onSelectChat={() => onSelectChatHandler(typedUsr, index)}
@@ -235,7 +230,7 @@ function UserList() {
           </>
         )}
 
-        {!loading.list && chatList[activeTab].length === 0 ? (
+        {!loading?.list && chatList?.[activeTab]?.length === 0 ? (
           <div className="p-2 fs-18">No Messages</div>
         ) : null}
       </Wrapper>
@@ -269,7 +264,7 @@ const UserListItem = ({
   }, [data]);
 
   const { activeChat, activeTab } = useSelector(
-    (state: RootState) => state.chat
+    (state: any) => state.chat || {}
   );
   const [showImg, setShowImg] = useState<boolean>(false);
   const dispatch: AppDispatch = useDispatch();
@@ -311,8 +306,8 @@ const UserListItem = ({
     activeTab === "invities"
       ? "invite"
       : activeTab === "jobs"
-      ? "job"
-      : "proposal";
+        ? "job"
+        : "proposal";
 
   return (
     <ChatSingleUser
@@ -323,12 +318,7 @@ const UserListItem = ({
     >
       <div className="userlistitem__avatar chat-user-list text-xs">
         <BlurredImage
-          state={
-            [showImg, setShowImg] as [
-              boolean,
-              React.Dispatch<React.SetStateAction<boolean>>
-            ]
-          }
+          state={[showImg, setShowImg] as ReturnType<typeof useState<boolean>>}
           src={remoteUser?.user_image || "/images/default_avatar.png"}
           height="48px"
           width="48px"

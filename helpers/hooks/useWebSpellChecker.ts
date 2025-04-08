@@ -24,8 +24,8 @@ export const useWebSpellChecker: TuseWebSpellChecker = (
     if (
       !condition ||
       !domElement ||
-      !process.env.REACT_APP_WSC_WPROOFREADER_SERVICE_ID ||
-      process.env.REACT_APP_WSC_WPROOFREADER_SERVICE_ID === "null"
+      !process.env.NEXT_PUBLIC_WSC_WPROOFREADER_SERVICE_ID ||
+      process.env.NEXT_PUBLIC_WSC_WPROOFREADER_SERVICE_ID === "null"
     )
       return;
     window?.WEBSPELLCHECKER?.init?.({

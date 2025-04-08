@@ -5,10 +5,16 @@ import styled from "styled-components";
 import Link from "next/link";
 import Loader from "@/components/Loader";
 import NoDataFound from "@/components/ui/NoDataFound";
-import ProposalDetailsModal from "@/components/jobs/ProposalDetailsModal";
 import ProposalCard from "./ProposalCard";
 import useProposals from "./use-proposals";
 import { useState } from "react";
+import dynamic from "next/dynamic";
+
+// Dynamically import ProposalDetailsModal with SSR disabled to prevent "self is not defined" error
+const ProposalDetailsModal = dynamic(
+  () => import("@/components/jobs/ProposalDetailsModal"),
+  { ssr: false }
+);
 
 const Wrapper = styled.div`
   border-radius: 0.75rem;

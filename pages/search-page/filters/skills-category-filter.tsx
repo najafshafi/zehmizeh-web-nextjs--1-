@@ -1,28 +1,32 @@
-import { useSearchFilters } from '@/helpers/contexts/search-filter-context';
-import { getCategoriesApi } from '@/helpers/http/common';
-import React, { useEffect, useMemo, useRef } from 'react';
-import toast from 'react-hot-toast';
-import { TJobDetails } from '@/helpers/types/job.type';
-import useOnClickOutside from '@/helpers/hooks/useClickOutside';
-import { Form, Spinner } from 'react-bootstrap';
-import Checkbox from '@/components/forms/FilterCheckBox2';
-import { SkillAndCategoryFilterWrapper } from './skillAndCategoryStyled';
-import { IoMdClose } from 'react-icons/io';
+import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
+import { getCategoriesApi } from "@/helpers/http/common";
+import React, { useEffect, useMemo, useRef } from "react";
+import toast from "react-hot-toast";
+import { TJobDetails } from "@/helpers/types/job.type";
+import useOnClickOutside from "@/helpers/hooks/useClickOutside";
+import { Form, Spinner } from "react-bootstrap";
+import Checkbox from "@/components/forms/FilterCheckBox2";
+import { SkillAndCategoryFilterWrapper } from "./skillAndCategoryStyled";
+import { IoMdClose } from "react-icons/io";
 
-type TSkills = (TJobDetails['skills'][0] & { skills: TJobDetails['skills'] })[];
+type TSkills = (TJobDetails["skills"][0] & { skills: TJobDetails["skills"] })[];
+type TCategory = {
+  id: number;
+  name: string;
+};
 
 export const SkillCategoryFilter = () => {
   const { filters, updateFilterHandler, modalOpen, setModalOpen } =
     useSearchFilters();
-  const modalRef = useRef<HTMLDivElement>();
+  const modalRef = useRef<HTMLDivElement>(null);
 
-  const [allCategories, setAllCategories] = React.useState([]);
+  const [allCategories, setAllCategories] = React.useState<TCategory[]>([]);
   const [allItems, setAllItems] = React.useState<TSkills>([]);
-  const [search, setSearch] = React.useState('');
+  const [search, setSearch] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
 
   useOnClickOutside(modalRef, () => {
-    if (modalOpen === 'CATEGORIES') setModalOpen('');
+    if (modalOpen === "CATEGORIES") setModalOpen("");
   });
 
   const getCategories = async () => {
@@ -30,23 +34,23 @@ export const SkillCategoryFilter = () => {
       setIsLoading(true);
       const { data } = await getCategoriesApi();
       setIsLoading(false);
-      if (Array.isArray(data)) setAllCategories(data);
-    } catch (error) {
+      if (Array.isArray(data)) setAllCategories(data as TCategory[]);
+    } catch (error: any) {
       setIsLoading(false);
-      let errorMessage = 'Failed to load categories';
+      let errorMessage = "Failed to load categories";
       if (
         error?.response?.data?.message &&
-        typeof error?.response?.data?.message === 'string'
+        typeof error.response.data.message === "string"
       )
         errorMessage = error.response.data.message;
-      else if (error?.message && typeof error.message === 'string')
+      else if (error?.message && typeof error.message === "string")
         errorMessage = error.message;
-      else if (error && typeof error === 'string') errorMessage = error;
+      else if (error && typeof error === "string") errorMessage = error;
       toast.error(errorMessage);
     }
   };
 
-  const loadAllCategories = async (keyword = '') => {
+  const loadAllCategories = async (keyword = "") => {
     const options = allCategories
       .filter((item) =>
         item?.name?.toLowerCase()?.includes(keyword?.toLowerCase())
@@ -62,7 +66,7 @@ export const SkillCategoryFilter = () => {
 
   useEffect(() => {
     getCategories();
-    return () => setModalOpen('');
+    return () => setModalOpen("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -72,11 +76,11 @@ export const SkillCategoryFilter = () => {
   }, [search, allCategories]);
 
   useEffect(() => {
-    if (modalOpen === 'CATEGORIES' && modalRef.current) {
+    if (modalOpen === "CATEGORIES" && modalRef.current) {
       modalRef.current.scrollIntoView({
-        behavior: 'smooth',
-        inline: 'center',
-        block: 'center',
+        behavior: "smooth",
+        inline: "center",
+        block: "center",
       });
     }
   }, [modalOpen]);
@@ -113,7 +117,7 @@ export const SkillCategoryFilter = () => {
             const objectToPush = `${item.category_name}#${item.category_id}`;
             categories.push(objectToPush);
           }
-          updateFilterHandler('categories', categories);
+          updateFilterHandler("categories", categories);
         }}
         label={item.category_name}
       />
@@ -129,7 +133,7 @@ export const SkillCategoryFilter = () => {
           <IoMdClose
             className="pointer ms-2"
             onClick={() => {
-              setModalOpen('');
+              setModalOpen("");
             }}
           />
         </div>
@@ -149,8 +153,8 @@ export const SkillCategoryFilter = () => {
           <p
             className="text-primary pointer mx-2"
             onClick={() => {
-              updateFilterHandler('categories', []);
-              setModalOpen('');
+              updateFilterHandler("categories", []);
+              setModalOpen("");
             }}
           >
             Clear all
@@ -174,7 +178,7 @@ export const SkillCategoryFilter = () => {
 
   return (
     <SkillAndCategoryFilterWrapper
-      $isModalOpen={modalOpen === 'CATEGORIES'}
+      $isModalOpen={modalOpen === "CATEGORIES"}
       $type="CATEGORIES"
     >
       {searchUI()}
@@ -190,7 +194,7 @@ export const SkillCategoryFilter = () => {
             })}
             <p
               className="pointer text-primary m-0 mt-2"
-              onClick={() => setModalOpen('CATEGORIES')}
+              onClick={() => setModalOpen("CATEGORIES")}
             >
               {allItems.slice(5).length} More
             </p>

@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "@/helpers/contexts/auth-context";
-import { AppDispatch, RootState } from "@/store/redux/store";
+import { AppDispatch } from "@/store/redux/store";
 import {
   fetchMyConversation,
   resetConversation,
@@ -29,11 +29,12 @@ interface Props {
   conversationId?: string;
 }
 
-// Augment the RootState type
-declare module "@/store/redux/store" {
-  interface RootState {
-    talkJsChat: Record<string, unknown>;
-  }
+interface TalkJsState {
+  chatlist: any[];
+  loading: boolean;
+  selectedConversation: any;
+  filters: any;
+  themes: any;
 }
 
 const TalkJS = ({ singleConversation, conversationId }: Props) => {
@@ -42,7 +43,7 @@ const TalkJS = ({ singleConversation, conversationId }: Props) => {
   const [apiKeyError, setApiKeyError] = useState<boolean>(false);
 
   const { chatlist, loading, selectedConversation, filters, themes } =
-    useSelector((state: RootState) => state.talkJsChat);
+    useSelector((state: any) => (state.talkJsChat as TalkJsState) || {});
 
   const { isDesktop } = useResponsive();
   const { user } = useAuth();

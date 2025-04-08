@@ -51,7 +51,7 @@ export const AcceptAndPaynowModal: React.FC<Props> = ({
   }, [show]);
 
   const clientAcceptedMilestoneAmount =
-    data?.milestone.reduce((sum: number, item: Milestone) => {
+    data?.milestone?.reduce((sum: number, item: Milestone) => {
       if (item.status === "paid" || item.status === "released") {
         return sum + item.amount;
       }

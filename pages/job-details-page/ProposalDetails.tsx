@@ -115,7 +115,9 @@ const ProposalDetails = ({
     if (!proposal || !proposal?.proposal_id)
       return toast.error("Invalid request.");
 
-    const response = reopenProposal({ proposal_id: proposal?.proposal_id });
+    const response = reopenProposal({
+      proposal_id: Number(proposal.proposal_id),
+    });
     setLoading(true);
 
     toast.promise(response, {
