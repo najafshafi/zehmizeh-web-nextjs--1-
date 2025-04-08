@@ -56,19 +56,23 @@ const ConfirmPaymentModal: React.FC<Props> = ({
     };
   }, [show]);
 
-  const clientAcceptedMilestoneAmount =
-    data?.milestone.reduce((sum: number, item: Milestone) => {
-      if (item.status === "paid" || item.status === "released") {
-        return sum + item.amount;
+  // Add null check and default empty array for milestones
+  const clientAcceptedMilestoneAmount = (data?.milestone || []).reduce(
+    (sum: number, item: Milestone) => {
+      if (item?.status === "paid" || item?.status === "released") {
+        return sum + (item?.amount || 0);
       }
       return sum;
-    }, 0) || 0;
+    },
+    0
+  );
 
+  // Add null checks for budget calculations
   const remainingBudget = data?.proposal?.approved_budget?.amount
     ? data.proposal.approved_budget.amount - clientAcceptedMilestoneAmount
     : data?.budget?.amount
-      ? data.budget.amount - clientAcceptedMilestoneAmount
-      : 0;
+    ? data.budget.amount - clientAcceptedMilestoneAmount
+    : 0;
 
   const remainingAmount = `${numberWithCommas(remainingBudget, "USD")}`;
   const isOverBudget = remainingBudget - amount < 0;
@@ -130,8 +134,8 @@ const ConfirmPaymentModal: React.FC<Props> = ({
                   {isOverBudget
                     ? CONSTANTS.payment.theMilestoneGoesOverBudget
                     : isReleasePrompt
-                      ? CONSTANTS.payment.areYouSureAboutThisDelivery
-                      : CONSTANTS.payment.areYouSureAboutThisTransaction}
+                    ? CONSTANTS.payment.areYouSureAboutThisDelivery
+                    : CONSTANTS.payment.areYouSureAboutThisTransaction}
                 </div>
                 {isReleasePrompt ? (
                   <>

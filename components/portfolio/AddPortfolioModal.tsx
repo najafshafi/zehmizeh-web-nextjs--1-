@@ -107,21 +107,21 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
     }
 
     try {
-      const promise = addEditPortfolio(body);
-      toast.promise(promise, {
-        loading: "Please wait...",
-        success: (res: { message: string }) => {
-          onCloseModal();
-          onUpdate();
-          return res.message;
-        },
-        error: (err) => {
+    const promise = addEditPortfolio(body);
+    toast.promise(promise, {
+      loading: "Please wait...",
+      success: (res: { message: string }) => {
+        onCloseModal();
+        onUpdate();
+        return res.message;
+      },
+      error: (err) => {
           if (err?.response?.data?.message) {
             return err.response.data.message;
           }
           return "An unexpected error occurred.";
-        },
-      });
+      },
+    });
     } catch (error) {
       console.error("Error submitting portfolio:", error);
       toast.error("Failed to save portfolio");
@@ -150,7 +150,7 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
         fileUrl: url,
         fileName: url.split("/")[url.split("/").length - 1],
       }));
-      setAttachments(attData);
+    setAttachments(attData);
     }
   }, [portfolio]);
 
@@ -164,8 +164,8 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
     try {
       const res = await getSkills(inputValue || "");
       return res.data.map((item: { skill_name: string; skill_id: string }) => ({
-        label: item.skill_name,
-        value: item.skill_id,
+          label: item.skill_name,
+          value: item.skill_id,
       }));
     } catch (error) {
       console.error("Error fetching skills:", error);
@@ -183,7 +183,7 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
         id: item.value,
         name: item.label,
       }));
-      setSkills(data);
+    setSkills(data);
     }
   };
 
@@ -206,7 +206,7 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <h2 className="text-[#212529] text-[1.75rem] font-normal text-left">
-                {portfolio ? "Edit" : "Add New"} Portfolio Album
+            {portfolio ? "Edit" : "Add New"} Portfolio Album
               </h2>
 
               {/* Album Name */}
@@ -216,13 +216,13 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter album name"
+              placeholder="Enter album name"
                   className="w-full rounded-lg border border-gray-300 px-5 py-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                  maxLength={100}
-                  {...register("project_name")}
-                />
-                <ErrorMessage>{errors.project_name?.message}</ErrorMessage>
-              </div>
+              maxLength={100}
+              {...register("project_name")}
+            />
+            <ErrorMessage>{errors.project_name?.message}</ErrorMessage>
+          </div>
 
               {/* Album Year */}
               <div className="space-y-2">
@@ -231,58 +231,58 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
                 </label>
                 <input
                   type="number"
-                  placeholder="Enter album year"
+              placeholder="Enter album year"
                   className="w-full rounded-lg border border-gray-300 px-5 py-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                  {...register("project_year", {
-                    max: 4,
+              {...register("project_year", {
+                max: 4,
                     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                      const value = e.target.value;
+                  const value = e.target.value;
                       e.target.value = value.slice(0, 4);
-                    },
-                  })}
-                />
-                <ErrorMessage>{errors.project_year?.message}</ErrorMessage>
-              </div>
+                },
+              })}
+            />
+            <ErrorMessage>{errors.project_year?.message}</ErrorMessage>
+          </div>
 
               {/* Album Skills */}
               <div className="space-y-2">
                 <label className="text-sm font-normal text-gray-700">
                   Album Skills
                 </label>
-                <AsyncSelect
-                  {...multiSelectProps}
+            <AsyncSelect
+              {...multiSelectProps}
                   placeholder="Enter your skills"
-                  components={{ NoOptionsMessage }}
-                  loadOptions={skillOptions}
-                  onChange={onSelectSkill}
-                  value={getDefaultSkillOptions}
-                  isOptionDisabled={() => skills?.length > 14}
-                  defaultOptions={true}
-                />
-              </div>
+              components={{ NoOptionsMessage }}
+              loadOptions={skillOptions}
+              onChange={onSelectSkill}
+              value={getDefaultSkillOptions}
+              isOptionDisabled={() => skills?.length > 14}
+              defaultOptions={true}
+            />
+          </div>
 
               {/* Album Description */}
               <div className="space-y-2">
                 <label className="text-sm font-normal text-gray-700">
                   Enter Album Description
                 </label>
-                <textarea
-                  placeholder="Enter album description"
+            <textarea
+              placeholder="Enter album description"
                   className="w-full rounded-lg border border-gray-300 px-5 py-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                  maxLength={500}
-                  {...register("project_description")}
-                />
+              maxLength={500}
+              {...register("project_description")}
+            />
                 <ErrorMessage>
                   {errors.project_description?.message}
                 </ErrorMessage>
-              </div>
+          </div>
 
               {/* Attachments Section */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-1">
                     <p className="text-lg font-normal">
-                      Add album&apos;s images, videos, audio, or document files{" "}
+                  Add album&apos;s images, videos, audio, or document files{" "}
                       <span className="font-light">(25 max)</span>
                     </p>
                     <p className="text-sm font-light">
@@ -290,45 +290,45 @@ const AddPortfolioModal = ({ show, onClose, onUpdate, portfolio }: Props) => {
                       drop them into this window.
                     </p>
                     <p className="text-sm font-light">
-                      Supported file types:{" "}
+                  Supported file types:{" "}
                       <span className="lowercase">
                         {CONSTANTS.PORTFOLIO_ATTACHMENT_SUPPORTED_TYPES.join(
                           ", "
                         )}
-                      </span>
+                  </span>
                     </p>
                     <p className="text-sm font-light">
-                      Max size: {CONSTANTS.FILE_SIZE[30]}MB
+                  Max size: {CONSTANTS.FILE_SIZE[30]}MB
                     </p>
-                  </div>
-                  <div className="text-lg font-normal text-gray-800">
-                    {attachments?.length}/25
-                  </div>
                 </div>
+                  <div className="text-lg font-normal text-gray-800">
+                {attachments?.length}/25
+              </div>
+            </div>
 
                 {/* Uploads preview */}
                 <div className="flex flex-wrap gap-3">
                   {attachments?.map((item, index) => {
                     if (!item.fileName || !item.fileUrl) return null;
-                    return (
-                      <AttachmentPreview
+                return (
+                  <AttachmentPreview
                         key={item.fileUrl}
-                        uploadedFile={item.fileUrl}
-                        fileName={item.fileName}
-                        onDelete={removeAttachment(index)}
-                      />
-                    );
-                  })}
+                    uploadedFile={item.fileUrl}
+                    fileName={item.fileName}
+                    onDelete={removeAttachment(index)}
+                  />
+                );
+              })}
 
                   {/* Add new file option */}
-                  {attachments?.length !== 25 && (
-                    <FileUploadToAws
-                      onFileUpload={onFileUpload}
-                      attachments={attachments}
-                    />
-                  )}
-                </div>
-              </div>
+              {attachments?.length !== 25 && (
+                <FileUploadToAws
+                  onFileUpload={onFileUpload}
+                  attachments={attachments}
+                />
+              )}
+            </div>
+          </div>
 
               <div className="mt-6 flex justify-end">
                 <button
