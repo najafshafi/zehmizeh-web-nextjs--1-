@@ -1,13 +1,12 @@
-import React from 'react'
-import FreelancerDashboard from '@/pages/freelancer-dashboard/FreelancerDashboard'
+import React from "react";
+import FreelancerDashboard from "./FreelancerDashboard";
 
 const page = () => {
   return (
     <div className="pt-[110px] bg-secondary flex flex-col items-center">
       <FreelancerDashboard />
-  </div>
-  )
-}
+    </div>
+  );
+};
 
-export default page
-
+export default page;

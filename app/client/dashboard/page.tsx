@@ -1,5 +1,5 @@
 import React from "react";
-import ClientDashboard from "@/pages/client-dashboard/ClientDashboard";
+import ClientDashboard from "./ClientDashboard";
 
 const page = () => {
   return (

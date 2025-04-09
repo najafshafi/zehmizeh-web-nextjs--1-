@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import ClientJobDetails from "@/pages/client-job-details-page/ClientJobDetails";
+import ClientJobDetails from "../ClientJobDetails";
 import { useParams } from "next/navigation";
 
 const ClientJobDetailsPage = () => {

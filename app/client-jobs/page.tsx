@@ -1,5 +1,5 @@
 import React from "react";
-import ClientJobs from "@/pages/client-jobs-page/ClientJobs";
+import ClientJobs from "./ClientJobs";
 
 const page = () => {
   return (

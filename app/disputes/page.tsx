@@ -1,4 +1,4 @@
-import Disputes from "@/pages/disputes-page/Disputes";
+import Disputes from "./Disputes";
 
 export default function DisputesPage() {
   return (

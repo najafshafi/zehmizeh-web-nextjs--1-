@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 
 // Dynamically import TalkJS with SSR disabled
-const TalkJS = dynamic(() => import("@/pages/talk-js"), {
+const TalkJS = dynamic(() => import("@/components/talkjs/talk-js"), {
   ssr: false,
 });
 

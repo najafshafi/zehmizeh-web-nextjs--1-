@@ -1,6 +1,6 @@
 "use client";
 
-import JobDetails from "@/pages/job-details-page/JobDetails";
+import JobDetails from "../../JobDetails";
 
 export default function GenDetailsPage() {
   return (

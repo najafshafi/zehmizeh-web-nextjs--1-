@@ -1,5 +1,5 @@
 import React from "react";
-import ViewFreelancerProfile from "@/pages/view-freelancer-profile/ViewFreelancerProfile";
+import ViewFreelancerProfile from "./ViewFreelancerProfile";
 
 const Page = () => {
   return (

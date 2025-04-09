@@ -4,12 +4,12 @@ import { useParams } from "next/navigation";
 import Spinner from "@/components/forms/Spin/Spinner";
 import styled from "styled-components";
 import BackButton from "@/components/ui/BackButton";
-import { Wrapper } from "@/pages/portfolio-details/portfolio-details.styled";
+import { Wrapper } from "../portfolio-details.styled";
 import { capitalizeFirstLetter } from "@/helpers/utils/misc";
 import { isAudio, isPDF, isVideo } from "@/helpers/utils/coverImgHandler";
-import usePortfolioDetails from "@/pages/portfolio-details/controllers/usePortfolioDetails";
-import VideoPortfolioItem from "@/pages/portfolio-details/partials/VideoPortfolioItem";
-import PortfolioListItem from "@/pages/portfolio-details/partials/PortfolioListItem";
+import usePortfolioDetails from "../controllers/usePortfolioDetails";
+import VideoPortfolioItem from "../partials/VideoPortfolioItem";
+import PortfolioListItem from "../partials/PortfolioListItem";
 
 // Styled components
 const Container = styled.div`

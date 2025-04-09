@@ -5,7 +5,7 @@ import Clock from "@/public/icons/clock.svg";
 import { useMemo } from "react";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import moment from "moment";
-import { ChatHeaderButton } from "@/pages/messaging-page/messaging.styled";
+import { ChatHeaderButton } from "@/components/messaging-page/messaging.styled";
 import { chatTypeSolidColor } from "@/helpers/http/common";
 import {
   RemoteUserProp,

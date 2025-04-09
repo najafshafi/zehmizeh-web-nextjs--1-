@@ -1,11 +1,11 @@
-import React from 'react'
-import CompleteProfile from '@/pages/complete-profile/CompleteProfile'
+import React from "react";
+import CompleteProfile from "./CompleteProfile";
 const page = () => {
   return (
     <div className="flex flex-col w-full h-screen items-center bg-secondary">
-        <CompleteProfile />
+      <CompleteProfile />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

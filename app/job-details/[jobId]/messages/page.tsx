@@ -1,6 +1,6 @@
 "use client";
 
-import JobDetails from "@/pages/job-details-page/JobDetails";
+import JobDetails from "../../JobDetails";
 
 // export default function MessagesPage({ params }: { params: { jobId: string } }) {
 //   return <div className="pt-[90px] bg-secondary flex flex-col items-center">

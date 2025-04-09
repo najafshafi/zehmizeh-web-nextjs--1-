@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import ClientJobDetails from "@/pages/client-job-details-page/ClientJobDetails";
+import ClientJobDetails from "../../ClientJobDetails";
 
 export default function ClientJobDetailsCatchAll() {
   const params = useParams();

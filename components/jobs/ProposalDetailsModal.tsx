@@ -32,7 +32,7 @@ import {
   getValueByPercentage,
 } from "@/helpers/utils/helper";
 import { TProposalDetails } from "@/helpers/types/proposal.type";
-import { JOBS_STATUS } from "@/pages/jobs-page/consts";
+import { JOBS_STATUS } from "@/app/jobs/consts";
 import InviteFreelancerMessageModal from "@/components/invite-flow-modals/InviteFreelancerMessageModal";
 import { updateInvitationStatus, editInvitation } from "@/helpers/http/jobs";
 import { TInviteSentDetails } from "@/helpers/types/invite.type";
