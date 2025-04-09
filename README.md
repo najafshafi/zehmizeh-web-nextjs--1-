@@ -5,10 +5,17 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 First, set up your environment variables by creating a `.env.local` file in the root directory with the following variables:
 
 ```env
-NEXT_PUBLIC_BACKEND_API=https://api.zehmizeh.com
+NEXT_PUBLIC_BACKEND_API=https://apidev.zehmizeh.com
 NEXT_PUBLIC_PUSHER_API_KEY=your_pusher_api_key
 NEXT_PUBLIC_PUSHER_API_KEY_PROD=your_pusher_api_key_prod
 NEXT_PUBLIC_INTERCOM_APP_ID=your_intercom_app_id
+
+NEXT_PUBLIC_INTERCOM_APP_ID=your_api_key
+
+NEXT_PUBLIC_GA_TRACKING_CODE=your_api_key
+
+NEXT_PUBLIC_WSC_WPROOFREADER_SERVICE_ID=your_api_key
+
 ```
 
 Then, run the development server:

@@ -262,21 +262,21 @@ const AddMilestoneForm = ({
                     Title<span className="text-red-500">&nbsp;*</span>
                   </label>
                   <input
-                    placeholder="Pick a title that indicates what you'll do for this milestone"
-                    title="Enter a title that captures what you'll complete in this milestone"
-                    value={formState.title}
-                    onChange={(e) =>
+              placeholder="Pick a title that indicates what you'll do for this milestone"
+              title="Enter a title that captures what you'll complete in this milestone"
+              value={formState.title}
+              onChange={(e) =>
                       handleChange(
                         "title",
                         e.target.value.replace(REGEX.TITLE, "")
                       )
-                    }
+              }
                     className="w-full px-5 py-4 border rounded-md focus:outline-none border-gray-400 focus:ring-4 focus:ring-[#0d6efd40] transition-all"
-                    maxLength={70}
-                    autoFocus
-                  />
+              maxLength={70}
+              autoFocus
+            />
                   {errors?.title && <ErrorMessage message={errors.title} />}
-                </div>
+          </div>
 
                 <div className="space-y-2">
                   <div>
@@ -290,13 +290,13 @@ const AddMilestoneForm = ({
                     </p>
                   </div>
                   <input
-                    placeholder="Enter amount"
-                    value={formState.amount}
-                    onChange={(e) => handleChange("amount", e.target.value)}
+              placeholder="Enter amount"
+              value={formState.amount}
+              onChange={(e) => handleChange("amount", e.target.value)}
                     className="w-full px-5 py-4 border rounded-md focus:outline-none border-gray-400 focus:ring-4 focus:ring-[#0d6efd40] transition-all"
-                    maxLength={5}
-                  />
-                  {formState.amount !== "" && (
+              maxLength={5}
+            />
+            {formState.amount !== "" && (
                     <div className="flex items-center gap-2 text-sm">
                       <Tooltip>
                         <div>Final takeaway: {calculateFinalAmount}</div>
@@ -305,7 +305,7 @@ const AddMilestoneForm = ({
                     </div>
                   )}
                   {errors?.amount && <ErrorMessage message={errors.amount} />}
-                </div>
+          </div>
 
                 <div className="space-y-2">
                   <label className="block text-base font-semibold">
@@ -317,25 +317,25 @@ const AddMilestoneForm = ({
                     What will be done when you&apos;re finished? What content
                     will you deliver? Is this a draft, a segment, a complete
                     project?
-                  </p>
-                  <TextEditor
-                    value={formState.description}
-                    onChange={onDescriptionChange}
-                    placeholder="Write the milestone description here."
-                    maxChars={2000}
-                  />
-                  {errors?.description && (
+            </p>
+            <TextEditor
+              value={formState.description}
+              onChange={onDescriptionChange}
+              placeholder="Write the milestone description here."
+              maxChars={2000}
+            />
+            {errors?.description && (
                     <ErrorMessage message={errors.description} />
-                  )}
-                </div>
+            )}
+          </div>
 
                 <div className="w-full space-y-2">
                   <label className="block text-base font-semibold">
                     Due Date<span className="text-red-500">&nbsp;*</span>
                   </label>
-                  <NewCustomDatePicker
-                    id="due_date"
-                    placeholderText="Select due date"
+            <NewCustomDatePicker
+              id="due_date"
+              placeholderText="Select due date"
                     onChange={(value: Date | null) =>
                       handleChange(
                         "dueDate",
@@ -345,24 +345,24 @@ const AddMilestoneForm = ({
                     selected={
                       formState?.dueDate ? new Date(formState.dueDate) : null
                     }
-                    minDate={new Date()}
-                    format="YYYY-MM-DD"
+              minDate={new Date()}
+              format="YYYY-MM-DD"
                     maxDate={new Date(moment().add(3, "years").toISOString())}
-                    isClearable={!!formState?.dueDate}
-                  />
+              isClearable={!!formState?.dueDate}
+            />
                   {errors?.dueDate && <ErrorMessage message={errors.dueDate} />}
-                </div>
+          </div>
 
 
                 <div
                   className={`${isMobile ? "w-full" : "w-fit"} flex self-end`}
                 >
                   <button
-                    type="submit"
-                    disabled={loading}
+              type="submit"
+              disabled={loading}
                     className="bg-[#f2b420] text-[#212529] px-9 py-[1.15rem] hover:scale-105 duration-300 text-lg rounded-full disabled:opacity-70 "
-                  >
-                    Propose New Milestone
+            >
+              Propose New Milestone
                   </button>
                 </div>
               </form>

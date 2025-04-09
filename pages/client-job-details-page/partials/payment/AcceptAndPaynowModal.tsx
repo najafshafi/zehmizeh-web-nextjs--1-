@@ -50,19 +50,23 @@ export const AcceptAndPaynowModal: React.FC<Props> = ({
     };
   }, [show]);
 
+
   const clientAcceptedMilestoneAmount =
     data?.milestone?.reduce((sum: number, item: Milestone) => {
       if (item.status === "paid" || item.status === "released") {
         return sum + item.amount;
+
       }
       return sum;
-    }, 0) || 0;
+    },
+    0
+  );
 
   const remainingBudget = data?.proposal?.approved_budget?.amount
     ? data.proposal.approved_budget.amount - clientAcceptedMilestoneAmount
     : data?.budget?.amount
-      ? data.budget.amount - clientAcceptedMilestoneAmount
-      : 0;
+    ? data.budget.amount - clientAcceptedMilestoneAmount
+    : 0;
 
   const remainingAmount = `${numberWithCommas(remainingBudget, "USD")}`;
   const isOverBudget = remainingBudget - amount < 0;

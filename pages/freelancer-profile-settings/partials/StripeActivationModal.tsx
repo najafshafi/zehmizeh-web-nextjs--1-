@@ -123,13 +123,13 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
             <li className="mt-1">Birthdate</li>
             {country?.country_short_name === "US" && (
               <>
-                <li className="mt-1">Address</li>
-                <li className="mt-1">Phone Number</li>
-                <li className="mt-1">
-                  Last 4 Digits of your SSN or Identity document
-                </li>
+                  <li className="mt-1">Address</li>
+                  <li className="mt-1">Phone Number</li>
+                  <li className="mt-1">
+                    Last 4 Digits of your SSN or Identity document
+                  </li>
               </>
-            )}
+              )}
             <li className="mt-1">Bank Account Details</li>
           </ul>
           <p className="mt-4">
@@ -152,7 +152,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
               )}
           </ul>
           <p className="mt-2">
-            For more details, please click{" "}
+          For more details, please click{" "}
             {country?.country_short_name && (
               <Link
                 href={`https://docs.stripe.com/acceptable-verification-documents?country=${country.country_short_name}`}
@@ -221,13 +221,13 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
 
             {/* Step Counter */}
             <div className="text-right">
-              {step}/{modalContent.length}
-            </div>
+          {step}/{modalContent.length}
+        </div>
 
             {/* Title */}
             <h3 className="!text-[2rem] !normal-case !text-black font-bold !mb-4">
-              {modalContent[currIndex]?.title}
-            </h3>
+          {modalContent[currIndex]?.title}
+        </h3>
 
             {/* Content */}
             <div className="prose max-w-none">
@@ -237,7 +237,7 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
             {/* Actions */}
             <div className="mt-6 flex justify-start gap-3">
               {/* Step 1 */}
-              {step === 1 && (
+        {step === 1 && (
                 <button
                   onClick={() => setStep(step + 1)}
                   className="bg-[#f2b420] text-[#212529] px-8 py-[0.9rem] hover:scale-105 duration-300 text-lg rounded-full disabled:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
@@ -247,14 +247,15 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
               )}
 
               {/* Step 2 */}
-              {step === 2 && (
+        {step === 2 && (
                 <div className="flex flex-col gap-6 w-full">
                   <div className="w-full">
                     <p className="my-2">
-                      Preferred Banking Country
+                Preferred Banking Country
                       <span className="text-red-500">&nbsp;*</span>
-                    </p>
+              </p>
                     <div className="w-full">
+
                       <CountryDropdown
                         placeholder="Enter the country that your payments will be sent to"
                         selectedCountry={country}
@@ -270,88 +271,89 @@ const StripeActivationModal = ({ onVerify, step, setStep }: Props) => {
                           setCountry(selectedCountry);
                         }}
                       />
+
                     </div>
-                    {countryErr && !country && (
+              {countryErr && !country && (
                       <p className="text-red-600 text-sm mt-1">
                         This field is required
                       </p>
-                    )}
-                  </div>
+              )}
+            </div>
                   <div className="flex justify-start gap-5">
                     <button
                       onClick={() => setStep(step - 1)}
                       className="rounded-full bg-[#f2b420] px-8 py-[0.9rem] text-lg font-medium text-[#1d1e1b] hover:scale-105 duration-300 focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
-                    >
-                      Previous
+              >
+                Previous
                     </button>
                     <button
-                      onClick={() => {
-                        setCountryErr(true);
+                onClick={() => {
+                  setCountryErr(true);
                         if (country) setStep(step + 1);
-                      }}
+                }}
                       className="rounded-full bg-[#f2b420] px-8 py-[0.9rem] text-lg font-medium text-[#1d1e1b] hover:scale-105 duration-300 focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
-                    >
-                      Next
+              >
+                Next
                     </button>
                   </div>
-                </div>
-              )}
+            </div>
+        )}
 
               {/* Step 3 */}
-              {step === 3 && (
+        {step === 3 && (
                 <div className="flex flex-col gap-4 w-full">
                   <div className="flex items-center mb-4">
-                    <Checkbox
-                      checked={check}
-                      toggle={(e) => setCheck(e.target.checked)}
-                    />
+              <Checkbox
+                checked={check}
+                toggle={(e) => setCheck(e.target.checked)}
+              />
                     <span className="ml-2">
                       I have read these instructions and I understand.
-                    </span>
-                  </div>
-                  {checkErr && !check && (
+              </span>
+            </div>
+            {checkErr && !check && (
                     <p className="text-red-600 text-sm mb-2">
                       Please confirm that the instructions are read.
-                    </p>
-                  )}
+              </p>
+            )}
                   <div className="flex justify-start gap-5">
                     <button
                       onClick={() => setStep(step - 1)}
                       className="rounded-full bg-[#f2b420] px-8 py-[0.9rem] text-lg font-medium text-[#1d1e1b] hover:scale-105 duration-300 focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
-                    >
-                      Previous
+              >
+                Previous
                     </button>
                     <button
-                      onClick={() => {
-                        setCheckErr(true);
+                onClick={() => {
+                  setCheckErr(true);
                         if (check) setStep(step + 1);
-                      }}
+                }}
                       className="rounded-full bg-[#f2b420] px-8 py-[0.9rem] text-lg font-medium text-[#1d1e1b] hover:scale-105 duration-300 focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
-                    >
-                      Next
+              >
+                Next
                     </button>
                   </div>
-                </div>
-              )}
+            </div>
+        )}
 
               {/* Step 4 */}
-              {step === 4 && (
+        {step === 4 && (
                 <div className="flex justify-end gap-3">
                   <button
                     onClick={() => setStep(step - 1)}
                     className="rounded-full bg-[#f2b420] px-8 py-[0.9rem] text-lg font-medium text-[#1d1e1b] hover:scale-105 duration-300 focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
-                  >
-                    Previous
+            >
+              Previous
                   </button>
                   <button
-                    onClick={() => {
+              onClick={() => {
                       if (check && country) {
                         onVerify(country);
                       }
-                    }}
+              }}
                     className="rounded-full bg-[#f2b420] px-8 py-[0.9rem] text-lg font-medium text-[#1d1e1b] hover:scale-105 duration-300 focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2"
-                  >
-                    Continue to Stripe Registration
+            >
+              Continue to Stripe Registration
                   </button>
                 </div>
               )}
