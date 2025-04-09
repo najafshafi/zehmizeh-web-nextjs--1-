@@ -27,7 +27,7 @@ import { getPaymentFees } from "@/helpers/http/common";
 import { REGEX } from "@/helpers/const/regex";
 import NewCustomDatePicker from "@/components/forms/NewDatePicker";
 
-import { useAuth } from "@/helpers/contexts/auth-context";
+// import { useAuth } from "@/helpers/contexts/auth-context";
 
 
 interface FormState {

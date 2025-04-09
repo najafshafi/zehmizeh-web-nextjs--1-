@@ -93,7 +93,7 @@ function PaymentHeader({ onTabUpdate }: Props) {
     label: string;
   }) => {
     // Page will also be initialized to 1
-    if (option.value) updateFilters({ page: 1, limit: option.value });
+    if (option.value) updateFilters({ page: 1, limit: Number(option.value) });
   };
 
   const onTabChange = (selectedValue: string) => {
@@ -135,7 +135,9 @@ function PaymentHeader({ onTabUpdate }: Props) {
             {activeTab === "Transactions" ? (
               <>
                 <CustomSelect
-                  onChange={({ value: filter }) => updateFilters({ filter })}
+                  onChange={({ value: filter }: { value: string }) =>
+                    updateFilters({ filter })
+                  }
                   options={TIME_OPTIONS}
                   title={
                     TIME_OPTIONS.find(({ value }) => filters?.filter === value)
@@ -148,7 +150,7 @@ function PaymentHeader({ onTabUpdate }: Props) {
                 />
                 <ProjectFilter
                   value={filters?.job_post_id}
-                  onChange={(id) =>
+                  onChange={(id: string) =>
                     updateFilters({
                       job_post_id: id,
                     })

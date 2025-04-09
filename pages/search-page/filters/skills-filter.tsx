@@ -1,21 +1,31 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import Checkbox from '@/components/forms/FilterCheckBox2';
-import { getSkillsApi } from '@/helpers/http/common';
-import { useSearchFilters } from '@/helpers/contexts/search-filter-context';
-import { TJobDetails } from '@/helpers/types/job.type';
-import toast from 'react-hot-toast';
-import { getRelevantSkillsBasedOnCategory } from '@/helpers/utils/helper';
-import { Form, Spinner } from 'react-bootstrap';
-import useOnClickOutside from '@/helpers/hooks/useClickOutside';
-import { SkillAndCategoryFilterWrapper } from './skillAndCategoryStyled';
-import { IoMdClose } from 'react-icons/io';
+import { useEffect, useMemo, useRef, useState } from "react";
+import Checkbox from "@/components/forms/FilterCheckBox2";
+import { getSkillsApi } from "@/helpers/http/common";
+import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
+import { TJobDetails } from "@/helpers/types/job.type";
+import toast from "react-hot-toast";
+import { getRelevantSkillsBasedOnCategory } from "@/helpers/utils/helper";
+import { Form, Spinner } from "react-bootstrap";
+import useOnClickOutside from "@/helpers/hooks/useClickOutside";
+import { SkillAndCategoryFilterWrapper } from "./skillAndCategoryStyled";
+import { IoMdClose } from "react-icons/io";
 
-type TSkills = (TJobDetails['skills'][0] & { skills: TJobDetails['skills'] })[];
+type TSkills = (TJobDetails["skills"][0] & { skills: TJobDetails["skills"] })[];
 
-const generateKey = (item) => `${item.skill_name}#${item.skill_id}#${item.category_id}`;
+type SkillItem = {
+  skill_id?: number;
+  skill_name?: string;
+  category_id: number;
+  category_name: string;
+  [key: string]: any;
+};
+
+const generateKey = (item: SkillItem): string =>
+  `${item.skill_name || ""}#${item.skill_id || ""}#${item.category_id}`;
 
 export const SkillFilter = () => {
-  const { filters, updateFilterHandler, modalOpen, setModalOpen } = useSearchFilters();
+  const { filters, updateFilterHandler, modalOpen, setModalOpen } =
+    useSearchFilters();
 
   const [allSkills, setAllSkills] = useState<
     {
@@ -31,19 +41,19 @@ export const SkillFilter = () => {
       skills: TSkills;
     }[]
   >([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const modalRef = useRef<HTMLDivElement>();
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useOnClickOutside(modalRef, () => {
-    if (modalOpen === 'SKILLS') setModalOpen('');
+    if (modalOpen === "SKILLS") setModalOpen("");
   });
 
-  const getAllSkillsFromAllCategories = (skills) =>
+  const getAllSkillsFromAllCategories = (skills: any[]) =>
     getRelevantSkillsBasedOnCategory([
       ...skills,
-      ...allSkills.reduce((acc, x) => {
+      ...allSkills.reduce((acc: any[], x) => {
         acc.push(
           ...x.categories
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,11 +61,19 @@ export const SkillFilter = () => {
               category_id: y.id,
               category_name: y.name,
             }))
-            .filter((item) => acc.findIndex((item2) => item2.category_id === item.category_id) === -1)
+            .filter(
+              (item: { category_id: number }) =>
+                acc.findIndex(
+                  (item2: { category_id: number }) =>
+                    item2.category_id === item.category_id
+                ) === -1
+            )
         );
         return acc;
-      }, []),
-    ]).sort((a, b) => a.category_name.localeCompare(b.category_name));
+      }, [] as any[]),
+    ]).sort((a, b) =>
+      (a.category_name || "").localeCompare(b.category_name || "")
+    );
 
   const getSkills = async () => {
     try {
@@ -64,38 +82,48 @@ export const SkillFilter = () => {
       setIsLoading(false);
 
       if (Array.isArray(data)) setAllSkills(data);
-    } catch (error) {
-      let errorMessage = 'Failed to load skills';
-      if (error?.response?.data?.message && typeof error?.response?.data?.message === 'string')
+    } catch (error: any) {
+      let errorMessage = "Failed to load skills";
+      if (
+        error?.response?.data?.message &&
+        typeof error?.response?.data?.message === "string"
+      )
         errorMessage = error.response.data.message;
-      else if (error?.message && typeof error.message === 'string') errorMessage = error.message;
-      else if (error && typeof error === 'string') errorMessage = error;
+      else if (error?.message && typeof error.message === "string")
+        errorMessage = error.message;
+      else if (error && typeof error === "string") errorMessage = error;
       toast.error(errorMessage);
       setIsLoading(false);
     }
   };
 
-  const loadAllSkills = async (keyword = '') => {
+  const loadAllSkills = async (keyword = "") => {
     const skills = allSkills
-      .filter((item) => item?.name?.toLowerCase()?.includes(keyword?.toLowerCase()))
+      .filter((item) =>
+        item?.name?.toLowerCase()?.includes(keyword?.toLowerCase())
+      )
       .map((item) => ({
         skill_id: item.id,
         skill_name: item.name,
         categories: item.categories.map((x) => x.id),
       }));
-    const relevantSkills: typeof allItems = getRelevantSkillsBasedOnCategory([
+    const relevantSkills = getRelevantSkillsBasedOnCategory([
       ...skills,
-      ...filters.categories.map((category) => ({
-        category_id: Number(category.split('#')[1]),
-        category_name: category.split('#')[0],
+      ...filters.categories.map((category: string) => ({
+        category_id: Number(category.split("#")[1]),
+        category_name: category.split("#")[0],
       })),
     ]);
-    setAllItems(filters?.categories?.length > 0 ? relevantSkills : getAllSkillsFromAllCategories(skills));
+    setAllItems(
+      filters?.categories?.length > 0
+        ? (relevantSkills as any)
+        : (getAllSkillsFromAllCategories(skills) as any)
+    );
   };
 
   useEffect(() => {
     getSkills();
-    return () => setModalOpen('');
+    return () => setModalOpen("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -105,11 +133,11 @@ export const SkillFilter = () => {
   }, [search, allSkills, filters.categories]);
 
   useEffect(() => {
-    if (modalOpen === 'SKILLS' && modalRef.current) {
+    if (modalOpen === "SKILLS" && modalRef.current) {
       modalRef.current.scrollIntoView({
-        behavior: 'smooth',
-        inline: 'center',
-        block: 'center',
+        behavior: "smooth",
+        inline: "center",
+        block: "center",
       });
     }
   }, [modalOpen]);
@@ -127,7 +155,7 @@ export const SkillFilter = () => {
     );
   };
 
-  const checkboxUI = (item) => {
+  const checkboxUI = (item: SkillItem) => {
     const key = generateKey(item);
     return (
       <Checkbox
@@ -135,14 +163,16 @@ export const SkillFilter = () => {
         checked={filters.skills.includes(key)}
         toggle={() => {
           const skills = [...filters.skills];
-          const existIndex = skills.findIndex((prevCategory) => prevCategory === key);
+          const existIndex = skills.findIndex(
+            (prevCategory) => prevCategory === key
+          );
           if (existIndex >= 0) {
             skills.splice(existIndex, 1);
           } else {
             const objectToPush = key;
             skills.push(objectToPush);
           }
-          updateFilterHandler('skills', skills);
+          updateFilterHandler("skills", skills);
         }}
         label={item.skill_name}
       />
@@ -150,19 +180,23 @@ export const SkillFilter = () => {
   };
 
   const modalUI = () => {
-    const dataToDisplay = allItems.reduce((acc, item) => {
-      if (item.category_name && item?.skills?.length > 0) acc.push(item.category_name);
-      if (item.skills?.length > 0) {
-        acc.push(
-          ...item.skills.map((x) => ({
-            ...x,
-            category_id: item.category_id,
-            category_name: item.category_name,
-          }))
-        );
-      }
-      return acc;
-    }, []);
+    const dataToDisplay = allItems.reduce<Array<string | SkillItem>>(
+      (acc, item) => {
+        if (item.category_name && item?.skills?.length > 0)
+          acc.push(item.category_name);
+        if (item.skills?.length > 0) {
+          acc.push(
+            ...item.skills.map((x) => ({
+              ...x,
+              category_id: item.category_id,
+              category_name: item.category_name,
+            }))
+          );
+        }
+        return acc;
+      },
+      []
+    );
 
     return (
       <div ref={modalRef} className="modal-wrapper shadow">
@@ -172,7 +206,7 @@ export const SkillFilter = () => {
           <IoMdClose
             className="pointer ms-2"
             onClick={() => {
-              setModalOpen('');
+              setModalOpen("");
             }}
           />
         </div>
@@ -181,13 +215,16 @@ export const SkillFilter = () => {
         {/* START ----------------------------------------- Data to display */}
         <div className="items-ui">
           {dataToDisplay.map((item) => {
-            if (typeof item === 'string')
+            if (typeof item === "string")
               return (
-                <p key={item} className="m-0 my-2 mt-3 font-weight-bold text-capitalize">
+                <p
+                  key={item}
+                  className="m-0 my-2 mt-3 font-weight-bold text-capitalize"
+                >
                   {item}
                 </p>
               );
-            return checkboxUI(item);
+            return checkboxUI(item as SkillItem);
           })}
         </div>
         {/* END ------------------------------------------- Data to display */}
@@ -197,8 +234,8 @@ export const SkillFilter = () => {
           <p
             className="text-primary pointer mx-2"
             onClick={() => {
-              updateFilterHandler('skills', []);
-              setModalOpen('');
+              updateFilterHandler("skills", []);
+              setModalOpen("");
             }}
           >
             Clear all
@@ -221,14 +258,19 @@ export const SkillFilter = () => {
 
   const dataToDisplay = useMemo(() => {
     if (filters?.skills?.length > 0) {
-      return items.sort((a) => (filters.skills.includes(generateKey(a)) ? -1 : 0));
+      return items.sort((a) =>
+        filters.skills.includes(generateKey(a as SkillItem)) ? -1 : 0
+      );
     }
     return items;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allItems, filters.skills, filters.categories]);
 
   return (
-    <SkillAndCategoryFilterWrapper $isModalOpen={modalOpen === 'SKILLS'} $type="SKILLS">
+    <SkillAndCategoryFilterWrapper
+      $isModalOpen={modalOpen === "SKILLS"}
+      $type="SKILLS"
+    >
       {searchUI()}
       {isLoading ? (
         <div>
@@ -238,15 +280,18 @@ export const SkillFilter = () => {
         <>
           <div>
             {dataToDisplay.slice(0, 5).map((item) => {
-              return checkboxUI(item);
+              return checkboxUI(item as SkillItem);
             })}
-            <p className="pointer text-primary m-0 mt-2" onClick={() => setModalOpen('SKILLS')}>
+            <p
+              className="pointer text-primary m-0 mt-2"
+              onClick={() => setModalOpen("SKILLS")}
+            >
               {
                 allItems
                   .map((item) => item.skills)
                   .flat()
                   .slice(5).length
-              }{' '}
+              }{" "}
               More
             </p>
           </div>

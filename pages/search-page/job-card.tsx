@@ -95,7 +95,7 @@ const JobCard = ({
     closed: { label: "Closed", color: "red" },
   };
 
-  const onBookmarkClick = (e) => {
+  const onBookmarkClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
     if (user && user?.is_account_approved) {
@@ -109,7 +109,7 @@ const JobCard = ({
     }
   };
 
-  const goToDetailsPage = (e) => {
+  const goToDetailsPage = (e: React.MouseEvent) => {
     if (!user?.is_account_approved) {
       e.preventDefault();
       return false;
@@ -241,8 +241,16 @@ const JobCard = ({
         </div>
       </div>
       <div className="mt-2">
-        <StatusBadge color={jobFilterStatus[workDetails.status].color}>
-          {jobFilterStatus[workDetails.status].label}
+        <StatusBadge
+          color={
+            jobFilterStatus[workDetails.status as keyof typeof jobFilterStatus]
+              .color
+          }
+        >
+          {
+            jobFilterStatus[workDetails.status as keyof typeof jobFilterStatus]
+              .label
+          }
         </StatusBadge>
       </div>
       <Tooltip

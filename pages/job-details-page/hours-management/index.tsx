@@ -26,7 +26,22 @@ import classNames from "classnames";
 import { paymentProcessingStatusHandler } from "@/helpers/validation/common";
 import { Link } from "react-router-dom";
 
-const STATUS = {
+interface HourlyStatus {
+  color: string;
+}
+
+interface StatusMap {
+  paid: HourlyStatus;
+  under_dispute: HourlyStatus;
+  decline: HourlyStatus;
+  declined: HourlyStatus;
+  payment_processing: HourlyStatus;
+  cancelled: HourlyStatus;
+  decline_dispute: HourlyStatus;
+  [key: string]: HourlyStatus | undefined;
+}
+
+const STATUS: StatusMap = {
   paid: {
     color: "green",
   },
@@ -50,17 +65,36 @@ const STATUS = {
   },
 };
 
+interface Milestone {
+  milestone_id: string | number;
+  hourly_status: string;
+  is_final_milestone: boolean;
+  title: string;
+  hourly_id: string;
+  dispute_submitted_by?: "CLIENT" | "FREELANCER";
+  is_paid?: number;
+  payment_method?: "ACH" | "OTHER" | string;
+  date_created?: string;
+  cancelled_date?: string;
+  paid_date?: string;
+  description: string;
+  attachments?: string;
+  total_amount: number;
+}
+
+interface HoursManagementProps {
+  milestone: Milestone[];
+  refetch: () => void;
+  jobPostId: string;
+  hourlyRate: number;
+}
+
 const HoursManagement = ({
   milestone,
   refetch,
   jobPostId,
   hourlyRate,
-}: {
-  milestone: any;
-  refetch: () => void;
-  jobPostId: string;
-  hourlyRate: any;
-}) => {
+}: HoursManagementProps) => {
   const [showMilestoneForm, setShowMilestoneForm] = useState<boolean>(false);
   const [selectedMilestone, setSelectedMilestone] = useState<any>(null);
   const toggleMilestoneForm = () => {
@@ -125,7 +159,7 @@ const HoursManagement = ({
         </div>
       )}
       {milestone?.length > 0 &&
-        milestone?.map((item: any, index: number) => (
+        milestone?.map((item: Milestone, index: number) => (
           <MileStoneListItem
             key={item.milestone_id}
             className="flex flex-col gap-2 milestone-item"
@@ -162,16 +196,21 @@ const HoursManagement = ({
                       item?.dispute_submitted_by === "CLIENT"
                         ? "Closed by Client"
                         : ["decline_dispute"].includes(item.hourly_status) &&
-                          item?.dispute_submitted_by === "FREELANCER"
-                        ? "Canceled"
-                        : ["decline", "declined"].includes(item.hourly_status)
-                        ? "Declined"
-                        : ["cancelled"].includes(item.hourly_status) &&
-                          item?.is_paid === 0
-                        ? "Canceled by Freelancer"
-                        : item.hourly_status === "payment_processing"
-                        ? paymentProcessingStatusHandler(item?.payment_method)
-                        : changeStatusDisplayFormat(item.hourly_status, "_")}
+                            item?.dispute_submitted_by === "FREELANCER"
+                          ? "Canceled"
+                          : ["decline", "declined"].includes(item.hourly_status)
+                            ? "Declined"
+                            : ["cancelled"].includes(item.hourly_status) &&
+                                item?.is_paid === 0
+                              ? "Canceled by Freelancer"
+                              : item.hourly_status === "payment_processing"
+                                ? paymentProcessingStatusHandler(
+                                    item?.payment_method as "ACH" | "OTHER"
+                                  )
+                                : changeStatusDisplayFormat(
+                                    item.hourly_status,
+                                    "_"
+                                  )}
                     </StatusBadge>
                   </div>
                 )}
@@ -226,15 +265,17 @@ const HoursManagement = ({
 
                 {item?.attachments ? (
                   <div className="flex items-center justify-content-start gap-3">
-                    {item?.attachments?.split(",").map((att, index) => (
-                      <div className="mt-3" key={`attachments-${index}`}>
-                        <AttachmentPreview
-                          uploadedFile={att}
-                          removable={false}
-                          shouldShowFileNameAndExtension={false}
-                        />
-                      </div>
-                    ))}
+                    {item.attachments
+                      .split(",")
+                      .map((att: string, index: number) => (
+                        <div className="mt-3" key={`attachments-${index}`}>
+                          <AttachmentPreview
+                            uploadedFile={att}
+                            removable={false}
+                            shouldShowFileNameAndExtension={false}
+                          />
+                        </div>
+                      ))}
                   </div>
                 ) : null}
               </div>

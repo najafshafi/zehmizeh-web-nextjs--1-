@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import dynamic from "next/dynamic";
 import Spinner from "@/components/forms/Spin/Spinner";
 import toast from "react-hot-toast";
 import classNames from "classnames";
@@ -10,39 +11,107 @@ import BackButton from "@/components/ui/BackButton";
 import DetailsBanner from "@/pages/client-job-details-page/partials/DetailsBanner";
 import { StyledButton } from "@/components/forms/Buttons";
 import Tabs from "@/components/ui/Tabs";
-import GeneralDetails from "@/pages/client-job-details-page/partials/GeneralDetails";
-import Feedback from "@/pages/client-job-details-page/partials/feedback";
-import Milestones from "@/pages/client-job-details-page/partials/milestones";
-import HoursManagement from "@/pages/client-job-details-page/partials/hours-management";
-import Applicants from "@/pages/client-job-details-page/partials/applicants";
-import SubmitEndJobModal from "@/pages/client-job-details-page/modals/SubmitEndJobModal";
-import QuickOptions from "@/pages/client-job-details-page/quick-options/QuickOptions";
-import DeletePropmpt from "@/components/ui/DeletePropmpt";
-import JobEndRequestByFreelancer from "@/pages/client-job-details-page/partials/JobEndRequestByFreelancer";
-import ConfirmEndRequestPrompt from "@/pages/client-job-details-page/partials/ConfirmEndRequestPrompt";
-import FinalMilestoneModal from "@/pages/client-job-details-page/quick-options/FinalMilestoneModal";
-import { Wrapper } from "@/pages/client-job-details-page/client-job-details.styled";
 import useStartPageFromTop from "@/helpers/hooks/useStartPageFromTop";
 import useResponsive from "@/helpers/hooks/useResponsive";
 import useJobDetails from "@/pages/client-job-details-page/useJobDetails";
 import TrashIcon from "@/public/icons/trash-orange.svg";
 import EditIcon from "@/public/icons/edit-blue.svg";
-import SingleMessaging from "@/pages/messaging-page/SingleMessaging";
 import { deleteJob } from "@/helpers/http/client";
 import { PaymentProvider } from "@/pages/client-job-details-page/controllers/usePayments";
 import { JobCloseMessageWrapper } from "@/pages/client-job-details-page/partials/hours-management/hours-management.styled";
 import { cancelClosureRequest } from "@/helpers/http/jobs";
-import { Invitees } from "@/pages/client-job-details-page/partials/invitees";
 import NoDataFound from "@/components/ui/NoDataFound";
-import { ChangeBudgetRequestModal } from "@/components/changeBudget/ChangeBudgetRequestModal";
-import { ChangeBudgetDeniedModal } from "@/components/changeBudget/ChangeBudgetDeniedModal";
-import { PostVisibilityConfirmationModal } from "@/pages/client-job-details-page/modals/PostVisibilityConfirmationModal";
-import { postAJob } from "@/helpers/http/post-job";
 import { editUser } from "@/helpers/http/auth";
 import useClientProfile from "@/controllers/useClientProfile";
 import { USER_PROFILE_SETTINGS_KEY } from "@/helpers/const/constants";
 import { StatusBadge } from "@/components/styled/Badges";
 import { TJOB_STATUS } from "@/helpers/types/job.type";
+import { Wrapper } from "@/pages/client-job-details-page/client-job-details.styled";
+import { postAJob } from "@/helpers/http/post-job";
+
+// Dynamically import components that might use browser APIs
+const GeneralDetails = dynamic(
+  () => import("@/pages/client-job-details-page/partials/GeneralDetails"),
+  { ssr: false }
+);
+const Feedback = dynamic(
+  () => import("@/pages/client-job-details-page/partials/feedback"),
+  { ssr: false }
+);
+const Milestones = dynamic(
+  () => import("@/pages/client-job-details-page/partials/milestones"),
+  { ssr: false }
+);
+const HoursManagement = dynamic(
+  () => import("@/pages/client-job-details-page/partials/hours-management"),
+  { ssr: false }
+);
+const Applicants = dynamic(
+  () => import("@/pages/client-job-details-page/partials/applicants"),
+  { ssr: false }
+);
+const SubmitEndJobModal = dynamic(
+  () => import("@/pages/client-job-details-page/modals/SubmitEndJobModal"),
+  { ssr: false }
+);
+const QuickOptions = dynamic(
+  () => import("@/pages/client-job-details-page/quick-options/QuickOptions"),
+  { ssr: false }
+);
+const DeletePropmpt = dynamic(() => import("@/components/ui/DeletePropmpt"), {
+  ssr: false,
+});
+const JobEndRequestByFreelancer = dynamic(
+  () =>
+    import(
+      "@/pages/client-job-details-page/partials/JobEndRequestByFreelancer"
+    ),
+  { ssr: false }
+);
+const ConfirmEndRequestPrompt = dynamic(
+  () =>
+    import("@/pages/client-job-details-page/partials/ConfirmEndRequestPrompt"),
+  { ssr: false }
+);
+const FinalMilestoneModal = dynamic(
+  () =>
+    import("@/pages/client-job-details-page/quick-options/FinalMilestoneModal"),
+  { ssr: false }
+);
+const SingleMessaging = dynamic(
+  () => import("@/pages/messaging-page/SingleMessaging"),
+  { ssr: false }
+);
+const Invitees = dynamic(
+  () =>
+    import("@/pages/client-job-details-page/partials/invitees").then(
+      (mod) => mod.Invitees
+    ),
+  { ssr: false }
+);
+
+// Named export components need special handling
+const ChangeBudgetRequestModal = dynamic(
+  () =>
+    import("@/components/changeBudget/ChangeBudgetRequestModal").then(
+      (mod) => mod.ChangeBudgetRequestModal
+    ),
+  { ssr: false }
+);
+const ChangeBudgetDeniedModal = dynamic(
+  () =>
+    import("@/components/changeBudget/ChangeBudgetDeniedModal").then(
+      (mod) => mod.ChangeBudgetDeniedModal
+    ),
+  { ssr: false }
+);
+const PostVisibilityConfirmationModal = dynamic(
+  () =>
+    import(
+      "@/pages/client-job-details-page/modals/PostVisibilityConfirmationModal"
+    ).then((mod) => mod.PostVisibilityConfirmationModal),
+  { ssr: false }
+);
 
 export type TcomponentConnectorRef = React.MutableRefObject<{
   openMilestoneListModal: () => void;
@@ -52,6 +121,16 @@ interface ClientJobDetailsProps {
   initialTab?: string;
   jobId: string;
 }
+
+// Client-side only wrapper component
+const ClientJobDetailsWrapper = (props: ClientJobDetailsProps) => {
+  // Return null during server-side rendering
+  if (typeof window === "undefined") {
+    return <div>Loading job details...</div>;
+  }
+
+  return <ClientJobDetails {...props} />;
+};
 
 const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
   useStartPageFromTop();
@@ -98,7 +177,7 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
 
   const { profileData, refetchData } = useClientProfile();
 
-  // Ref that connects function and variable across different chilren of this component
+  // Ref that connects function and variable across different children of this component
   const componentConnectorRef = useRef<TcomponentConnectorRef["current"]>({
     openMilestoneListModal: () => {
       //
@@ -246,18 +325,28 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
    * we will be on the same tab
    */
   const makeTabPersistent = () => {
-    const url = new URL(window.location.href);
-    url.searchParams.set("applicants", "true");
+    if (typeof window === "undefined") return;
 
-    window.history.replaceState({ path: url.toString() }, "", url.toString());
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("applicants", "true");
+      window.history.replaceState({ path: url.toString() }, "", url.toString());
+    } catch (error) {
+      console.error("Error making tab persistent:", error);
+    }
   };
 
   /** @function This will remove the persisted tab */
   const removePersistedTab = () => {
-    const url = new URL(window.location.href);
-    url.searchParams.delete("applicants");
+    if (typeof window === "undefined") return;
 
-    window.history.replaceState({ path: url.toString() }, "", url.toString());
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("applicants");
+      window.history.replaceState({ path: url.toString() }, "", url.toString());
+    } catch (error) {
+      console.error("Error removing persisted tab:", error);
+    }
   };
 
   const goToMileStoneTab = () => {
@@ -477,69 +566,69 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
   }
 
   return (
-    <div className="px-4 lg:px-0 w-full max-w-[970px] mx-auto">
+    <PaymentProvider>
       <Wrapper>
-        {/* Back button header */}
-        <div className="flex justify-between items-center">
-          <BackButton onBack={onBack}>
-            {isRefetching ? <Spinner className="ms-1" /> : null}
-          </BackButton>
-          {/* START ----------------------------------------- Post visibility switch */}
-          {jobdetails?.status === "prospects" &&
-            !isRefetching &&
-            !isLoading && (
-              <div className="post-visibility-switch">
-                <div
-                  className={classNames({
-                    "active user-select-none": !isHidden,
-                  })}
-                  onClick={() => handlePostVisibilityButtonClick("PUBLIC")}
-                >
-                  Public
+        <div className="max-w-[1170px] mx-auto">
+          {/* Back button header */}
+          <div className="flex justify-between items-center">
+            <BackButton onBack={onBack}>
+              {isRefetching ? <Spinner className="ms-1" /> : null}
+            </BackButton>
+            {/* START ----------------------------------------- Post visibility switch */}
+            {jobdetails?.status === "prospects" &&
+              !isRefetching &&
+              !isLoading && (
+                <div className="post-visibility-switch">
+                  <div
+                    className={classNames({
+                      "active user-select-none": !isHidden,
+                    })}
+                    onClick={() => handlePostVisibilityButtonClick("PUBLIC")}
+                  >
+                    Public
+                  </div>
+                  <div
+                    className={classNames({
+                      "active user-select-none": isHidden,
+                    })}
+                    onClick={() => handlePostVisibilityButtonClick("HIDDEN")}
+                  >
+                    Hidden
+                  </div>
                 </div>
-                <div
-                  className={classNames({
-                    "active user-select-none": isHidden,
-                  })}
-                  onClick={() => handlePostVisibilityButtonClick("HIDDEN")}
-                >
-                  Hidden
-                </div>
-              </div>
-            )}
-          {/* END ------------------------------------------- Post visibility switch */}
-        </div>
-
-        {(isLoading || isRefetching) && <Loader />}
-
-        {!isLoading && !isRefetching && jobdetails ? (
-          <DetailsBanner data={jobdetails as any} refetch={refetch} />
-        ) : null}
-
-        {!isLoading && !isRefetching && jobdetails && (
-          <>
-            {/* Tabs */}
-            <div className="tabs-quick-options flex items-center justify-between flex-wrap">
-              {jobdetails?.status !== "draft" ? (
-                <Tabs
-                  tabs={tabItems}
-                  activeTab={activeTab}
-                  onTabChange={onTabChange}
-                  counts={{
-                    applicants: totalProposals,
-                    invitees: totalInvitees,
-                  }}
-                  breakPoint="576px"
-                  fontSize="1rem"
-                />
-              ) : (
-                <div className="tabs empty" />
               )}
+            {/* END ------------------------------------------- Post visibility switch */}
+          </div>
 
-              {/* Quick options */}
+          {(isLoading || isRefetching) && <Loader />}
 
-              <div>
-                <PaymentProvider>
+          {!isLoading && !isRefetching && jobdetails ? (
+            <DetailsBanner data={jobdetails as any} refetch={refetch} />
+          ) : null}
+
+          {!isLoading && !isRefetching && jobdetails && (
+            <>
+              {/* Tabs */}
+              <div className="tabs-quick-options flex items-center justify-between flex-wrap">
+                {jobdetails?.status !== "draft" ? (
+                  <Tabs
+                    tabs={tabItems}
+                    activeTab={activeTab}
+                    onTabChange={onTabChange}
+                    counts={{
+                      applicants: totalProposals,
+                      invitees: totalInvitees,
+                    }}
+                    breakPoint="576px"
+                    fontSize="1rem"
+                  />
+                ) : (
+                  <div className="tabs empty" />
+                )}
+
+                {/* Quick options */}
+
+                <div>
                   <QuickOptions
                     payAllBtn
                     jobData={{
@@ -568,228 +657,174 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
                     onEndJobModal={onEndJobModal}
                     componentConnectorRef={componentConnectorRef}
                   />
-                </PaymentProvider>
-
-                {/* Moving Draft/Prospects options out of QuickOptions to show independent of desktop/mobile */}
-                {jobdetails?.status === "draft" && (
-                  <div className="flex items-center justify-between">
-                    <StyledButton
-                      className="align-left"
-                      padding="1rem 2rem"
-                      onClick={onEdit}
-                    >
-                      Continue Posting
-                    </StyledButton>
-                    <div
-                      className="round-button flex justify-center items-center cursor-pointer"
-                      onClick={() => !loading && toggleDeleteJobModal()}
-                    >
-                      <TrashIcon />
-                    </div>
-                  </div>
-                )}
-
-                {jobdetails?.status === "prospects" && (
-                  <div className="proposal-actions flex items-center flex-wrap gap-3 justify-center w-100">
-                    <div
-                      className="edit-btn flex justify-center items-center cursor-pointer"
-                      onClick={() => !loading && onEdit()}
-                    >
-                      <EditIcon stroke="#0067FF" fill="#0067FF" />
-                      <span>Edit</span>
-                    </div>
-                    <div
-                      className="delete-btn p-2 cursor-pointer flex items-center"
-                      onClick={() => !loading && toggleDeleteJobModal()}
-                    >
-                      <TrashIcon />
-                      <span>Delete</span>
-                    </div>
-                  </div>
-                )}
-                {/* Moving Job status out of QuickOptions to show independent of desktop/mobile */}
-                {jobdetails?.status === "active" &&
-                jobdetails?.is_closure_request &&
-                jobdetails?.closure_req_submitted_by === "CLIENT" &&
-                !showEndJobButton ? (
-                  <StatusBadge
-                    color="darkPink"
-                    className={classNames(
-                      { "mt-4": isMobile },
-                      "closure-request-status-badge"
-                    )}
-                  >
-                    {jobdetails?.milestone.filter((x) => x.is_final_milestone)
-                      .length > 0
-                      ? "Final Hours Submitted by Freelancer"
-                      : "Closure Requested - Waiting for Freelancer Response"}
-                  </StatusBadge>
-                ) : null}
+                </div>
               </div>
-            </div>
 
-            {activeTab == "gen_details" && <GeneralDetails data={jobdetails} />}
+              {activeTab == "gen_details" && (
+                <GeneralDetails data={jobdetails} />
+              )}
 
-            {activeTab === "invitees" && (
-              <Invitees
-                jobPostId={jobdetails?.job_post_id}
-                refetch={refreshOnStatusChange("invitees")}
-                jobStatus={jobdetails?.status as TJOB_STATUS}
-              />
-            )}
+              {activeTab === "invitees" && (
+                <Invitees
+                  jobPostId={jobdetails?.job_post_id}
+                  refetch={refreshOnStatusChange("invitees")}
+                  jobStatus={jobdetails?.status as TJOB_STATUS}
+                />
+              )}
 
-            {activeTab == "messages" && <SingleMessaging id={jobId} />}
+              {activeTab == "messages" && <SingleMessaging id={jobId} />}
 
-            {activeTab == "feedback" && jobdetails?.is_completed === 0 && (
-              <NoDataFound
-                className="py-5"
-                title="You can't submit review to freelancer."
-              />
-            )}
+              {activeTab == "feedback" && jobdetails?.is_completed === 0 && (
+                <NoDataFound
+                  className="py-5"
+                  title="You can't submit review to freelancer."
+                />
+              )}
 
-            {activeTab == "feedback" && jobdetails?.is_completed === 1 && (
-              <Feedback
-                feedbackData={jobdetails?.feedback}
-                freelancerDetails={jobdetails?.userdata}
-                jobPostId={jobdetails?.job_post_id}
-                clientUserId={jobdetails?._client_user_id}
-                freelancerUserId={jobdetails?._freelancer_user_id}
-                onSubmitFeedback={refetch}
-              />
-            )}
+              {activeTab == "feedback" && jobdetails?.is_completed === 1 && (
+                <Feedback
+                  feedbackData={jobdetails?.feedback}
+                  freelancerDetails={jobdetails?.userdata}
+                  jobPostId={jobdetails?.job_post_id}
+                  clientUserId={jobdetails?._client_user_id}
+                  freelancerUserId={jobdetails?._freelancer_user_id}
+                  onSubmitFeedback={refetch}
+                />
+              )}
 
-            {activeTab === "m_stone" && (
-              <PaymentProvider>
-                {jobdetails.proposal?.approved_budget?.type == "fixed" && (
-                  <Milestones
-                    milestone={jobdetails?.milestone}
-                    refetch={refetch}
-                    isRefetching={isRefetching}
-                    jobstatus={jobdetails?.status}
-                    componentConnectorRef={componentConnectorRef}
-                  />
-                )}
-                {jobdetails.proposal?.approved_budget?.type == "hourly" && (
-                  <>
-                    {jobdetails.is_closure_request &&
-                    jobdetails.closure_req_submitted_by == "FREELANCER" &&
-                    jobdetails.status === "active" &&
-                    isFinalHourSubmitted() === false ? (
-                      <JobCloseMessageWrapper>
-                        <h3>Freelancer requested to close the project</h3>
-                        <div className="mt-4 btn-wrappers">
-                          <StyledButton
-                            padding="1rem 2rem"
-                            className={isMobile ? "mt-4 w-100" : ""}
-                            onClick={handleCloseJob}
-                          >
-                            Accept - I&apos;ll Close
-                          </StyledButton>
-                          <StyledButton
-                            onClick={onCancelClosureRequest}
-                            padding="1rem 2rem"
-                            className={isMobile ? "mt-4 w-100" : ""}
-                            variant="outline-dark"
-                          >
-                            Decline - I Want to Continue
-                          </StyledButton>
-                        </div>
-                      </JobCloseMessageWrapper>
-                    ) : null}
-
-                    <HoursManagement
+              {activeTab === "m_stone" && (
+                <PaymentProvider>
+                  {jobdetails.proposal?.approved_budget?.type == "fixed" && (
+                    <Milestones
                       milestone={jobdetails?.milestone}
                       refetch={refetch}
-                      setEndJobModal={enableEnbJobModal}
-                      onUpdateDecline={onUpdateDecline}
+                      isRefetching={isRefetching}
+                      jobstatus={jobdetails?.status}
                       componentConnectorRef={componentConnectorRef}
                     />
-                  </>
-                )}
-              </PaymentProvider>
-            )}
+                  )}
+                  {jobdetails.proposal?.approved_budget?.type == "hourly" && (
+                    <>
+                      {jobdetails.is_closure_request &&
+                      jobdetails.closure_req_submitted_by == "FREELANCER" &&
+                      jobdetails.status === "active" &&
+                      isFinalHourSubmitted() === false ? (
+                        <JobCloseMessageWrapper>
+                          <h3>Freelancer requested to close the project</h3>
+                          <div className="mt-4 btn-wrappers">
+                            <StyledButton
+                              padding="1rem 2rem"
+                              className={isMobile ? "mt-4 w-100" : ""}
+                              onClick={handleCloseJob}
+                            >
+                              Accept - I&apos;ll Close
+                            </StyledButton>
+                            <StyledButton
+                              onClick={onCancelClosureRequest}
+                              padding="1rem 2rem"
+                              className={isMobile ? "mt-4 w-100" : ""}
+                              variant="outline-dark"
+                            >
+                              Decline - I Want to Continue
+                            </StyledButton>
+                          </div>
+                        </JobCloseMessageWrapper>
+                      ) : null}
 
-            {activeTab === "applicants" && (
-              <Applicants
-                jobTitle={jobdetails?.job_title}
-                jobPostId={jobdetails?.job_post_id}
-                refetch={refreshOnStatusChange("applicants")}
-                jobStatus={jobdetails?.status as TJOB_STATUS}
-              />
-            )}
+                      <HoursManagement
+                        milestone={jobdetails?.milestone}
+                        refetch={refetch}
+                        setEndJobModal={enableEnbJobModal}
+                        onUpdateDecline={onUpdateDecline}
+                        componentConnectorRef={componentConnectorRef}
+                      />
+                    </>
+                  )}
+                </PaymentProvider>
+              )}
 
-            <SubmitEndJobModal
-              show={showSubmitEndJobModal}
-              onConfirm={onConfirm}
-              loading={loading}
-            />
-
-            {jobdetails?.budget?.type !== "hourly" && (
-              <JobEndRequestByFreelancer
-                jobPostId={jobId}
-                refetch={refetch}
-                show={showFreelancerEndRequestModal}
-                toggle={toggleRequestEndJobModal}
-                onConfirmEndJob={openEndJobRequestConfirmPrompt}
-              />
-            )}
-
-            <ConfirmEndRequestPrompt
-              jobPostId={jobId}
-              onEndJob={onEndJob}
-              show={showConfirmEndRequestPromptModal.show}
-              toggle={closeEndJobRequestConfirmPrompt}
-              completionStatus={
-                showConfirmEndRequestPromptModal.completionStatus || ""
-              }
-            />
-
-            <FinalMilestoneModal
-              show={finalMilestoneModal}
-              toggle={toggleFinalMilestoneModal}
-              onConfirm={toggleFinalMilestoneModal}
-              loading={loading}
-            />
-
-            <DeletePropmpt
-              show={showDeleteJobModal}
-              toggle={toggleDeleteJobModal}
-              onDelete={onDelete}
-              loading={loading}
-              text={
-                jobdetails?.status === "draft"
-                  ? "Are you sure you want to delete this draft? This cannot be undone."
-                  : "Are you sure you want to delete this project posting? This cannot be undone."
-              }
-            />
-            <PostVisibilityConfirmationModal
-              isLoading={isLoadingPostVisibilityModal}
-              handleConfirm={handlePostVisibilityConfirm}
-              handleReject={() => {
-                setIsPostVisibilityConfirmationModalOpen(false);
-              }}
-              isHidden={!isHidden}
-              setShow={setIsPostVisibilityConfirmationModalOpen}
-              show={isPostVisibilityConfirmationModalOpen}
-            />
-            {jobdetails?.proposal?.approved_budget && (
-              <>
-                <ChangeBudgetRequestModal
-                  jobDetails={jobdetails as any}
-                  userType="client"
+              {activeTab === "applicants" && (
+                <Applicants
+                  jobTitle={jobdetails?.job_title}
+                  jobPostId={jobdetails?.job_post_id}
+                  refetch={refreshOnStatusChange("applicants")}
+                  jobStatus={jobdetails?.status as TJOB_STATUS}
                 />
-                <ChangeBudgetDeniedModal
-                  jobDetails={jobdetails as any}
+              )}
+
+              <SubmitEndJobModal
+                show={showSubmitEndJobModal}
+                onConfirm={onConfirm}
+                loading={loading}
+              />
+
+              {jobdetails?.budget?.type !== "hourly" && (
+                <JobEndRequestByFreelancer
+                  jobPostId={jobId}
                   refetch={refetch}
-                  userType="client"
+                  show={showFreelancerEndRequestModal}
+                  toggle={toggleRequestEndJobModal}
+                  onConfirmEndJob={openEndJobRequestConfirmPrompt}
                 />
-              </>
-            )}
-          </>
-        )}
+              )}
+
+              <ConfirmEndRequestPrompt
+                jobPostId={jobId}
+                onEndJob={onEndJob}
+                show={showConfirmEndRequestPromptModal.show}
+                toggle={closeEndJobRequestConfirmPrompt}
+                completionStatus={
+                  showConfirmEndRequestPromptModal.completionStatus || ""
+                }
+              />
+
+              <FinalMilestoneModal
+                show={finalMilestoneModal}
+                toggle={toggleFinalMilestoneModal}
+                onConfirm={toggleFinalMilestoneModal}
+                loading={loading}
+              />
+
+              <DeletePropmpt
+                show={showDeleteJobModal}
+                toggle={toggleDeleteJobModal}
+                onDelete={onDelete}
+                loading={loading}
+                text={
+                  jobdetails?.status === "draft"
+                    ? "Are you sure you want to delete this draft? This cannot be undone."
+                    : "Are you sure you want to delete this project posting? This cannot be undone."
+                }
+              />
+              <PostVisibilityConfirmationModal
+                isLoading={isLoadingPostVisibilityModal}
+                handleConfirm={handlePostVisibilityConfirm}
+                handleReject={() => {
+                  setIsPostVisibilityConfirmationModalOpen(false);
+                }}
+                isHidden={!isHidden}
+                setShow={setIsPostVisibilityConfirmationModalOpen}
+                show={isPostVisibilityConfirmationModalOpen}
+              />
+              {jobdetails?.proposal?.approved_budget && (
+                <>
+                  <ChangeBudgetRequestModal
+                    jobDetails={jobdetails as any}
+                    userType="client"
+                  />
+                  <ChangeBudgetDeniedModal
+                    jobDetails={jobdetails as any}
+                    refetch={refetch}
+                    userType="client"
+                  />
+                </>
+              )}
+            </>
+          )}
+        </div>
       </Wrapper>
-    </div>
+    </PaymentProvider>
   );
 };
 
-export default ClientJobDetails;
+export default ClientJobDetailsWrapper;

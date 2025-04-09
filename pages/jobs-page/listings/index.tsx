@@ -33,9 +33,13 @@ interface JobItem {
   job_description: string;
   status?: string;
   proposal?: JobProposal;
-  is_hidden?: {
-    date: string;
-  };
+  is_hidden?:
+    | {
+        value: number;
+        date: string;
+      }
+    | 0
+    | 1;
   budget?: { type?: string; amount?: number; max_amount?: number };
   preferred_location?: string[];
   due_date?: string | Date;
@@ -159,10 +163,10 @@ const Listings = ({
           item?.proposal?.status === "pending"
             ? `/job-details/${item.job_post_id}/proposal_sent`
             : item?.status === "prospects"
-            ? `/job-details/${item.job_post_id}/gen_details`
-            : `/job-details/${item.job_post_id}`;
+              ? `/job-details/${item.job_post_id}/gen_details`
+              : `/job-details/${item.job_post_id}`;
 
-        const isHidden = isProjectHiddenForFreelancer(item);
+        const isHidden = isProjectHiddenForFreelancer(item as any);
 
         return (
           <Link
@@ -187,7 +191,9 @@ const Listings = ({
               {isHidden && (
                 <span className="client-hidden-post-banner">
                   Client has hidden this post -{" "}
-                  {moment(item?.is_hidden?.date).format("MMM DD, YYYY")}
+                  {typeof item?.is_hidden === "object" && item?.is_hidden?.date
+                    ? moment(item.is_hidden.date).format("MMM DD, YYYY")
+                    : ""}
                 </span>
               )}
               {/* Left section */}

@@ -1,10 +1,10 @@
-import { useEffect, useMemo } from 'react';
-import { useQuery } from 'react-query'; // Changed back to react-query
-import { getJobDetails } from '@/helpers/http/jobs';
-import { isNotAllowedToSubmitReview } from '@/helpers/utils/helper';
-import { queryKeys } from '@/helpers/const/queryKeys';
-import { useAuth } from '@/helpers/contexts/auth-context';
-import { useRouter, useSearchParams } from 'next/navigation'; // Replaced react-router-dom with Next.js router and useSearchParams
+import { useEffect, useMemo } from "react";
+import { useQuery } from "react-query"; // Changed back to react-query
+import { getJobDetails } from "@/helpers/http/jobs";
+import { isNotAllowedToSubmitReview } from "@/helpers/utils/helper";
+import { queryKeys } from "@/helpers/const/queryKeys";
+import { useAuth } from "@/helpers/contexts/auth-context";
+import { useRouter, useSearchParams } from "next/navigation"; // Replaced react-router-dom with Next.js router and useSearchParams
 
 // Define TypeScript types
 interface TabItem {
@@ -29,40 +29,40 @@ interface JobDetailsResponse {
 
 // Job status enum
 const JOB_STATUS = {
-  DRAFT: 'draft',
-  PROSPECTS: 'prospects',
-  ACTIVE: 'active',
+  DRAFT: "draft",
+  PROSPECTS: "prospects",
+  ACTIVE: "active",
 } as const;
 
 // Tabs configuration
 const TABS_BY_STATUS: Record<string, TabItem[]> = {
   [JOB_STATUS.PROSPECTS]: [
-    { id: 0, label: 'Proposal Sent', key: 'proposal_sent' },
-    { id: 1, label: 'Project Details', key: 'gen_details' },
+    { id: 0, label: "Proposal Sent", key: "proposal_sent" },
+    { id: 1, label: "Project Details", key: "gen_details" },
   ],
   active_hourly: [
-    { id: 0, label: 'Milestones', key: 'm_stone' },
-    { id: 1, label: 'Messages', key: 'messages' },
-    { id: 2, label: 'Project Details', key: 'gen_details' },
+    { id: 0, label: "Milestones", key: "m_stone" },
+    { id: 1, label: "Messages", key: "messages" },
+    { id: 2, label: "Project Details", key: "gen_details" },
   ],
   active_fixed: [
-    { id: 0, label: 'Milestones', key: 'm_stone' },
-    { id: 1, label: 'Messages', key: 'messages' },
-    { id: 2, label: 'Project Details', key: 'gen_details' },
+    { id: 0, label: "Milestones", key: "m_stone" },
+    { id: 1, label: "Messages", key: "messages" },
+    { id: 2, label: "Project Details", key: "gen_details" },
   ],
   closed_hourly: [
-    { id: 0, label: 'Milestones', key: 'm_stone' },
-    { id: 1, label: 'Messages', key: 'messages' },
-    { id: 2, label: 'Project Details', key: 'gen_details' },
-    { id: 3, label: 'Reviews', key: 'feedback' },
+    { id: 0, label: "Milestones", key: "m_stone" },
+    { id: 1, label: "Messages", key: "messages" },
+    { id: 2, label: "Project Details", key: "gen_details" },
+    { id: 3, label: "Reviews", key: "feedback" },
   ],
   closed_fixed: [
-    { id: 0, label: 'Milestones', key: 'm_stone' },
-    { id: 1, label: 'Messages', key: 'messages' },
-    { id: 2, label: 'Project Details', key: 'gen_details' },
-    { id: 3, label: 'Reviews', key: 'feedback' },
+    { id: 0, label: "Milestones", key: "m_stone" },
+    { id: 1, label: "Messages", key: "messages" },
+    { id: 2, label: "Project Details", key: "gen_details" },
+    { id: 3, label: "Reviews", key: "feedback" },
   ],
-  default: [{ id: 0, label: 'Project Details', key: 'gen_details' }],
+  default: [{ id: 0, label: "Project Details", key: "gen_details" }],
 };
 
 function useJobDetails(id: string | undefined) {
@@ -71,10 +71,10 @@ function useJobDetails(id: string | undefined) {
   const { user } = useAuth();
 
   const { data, isLoading, refetch, isRefetching } = useQuery(
-    queryKeys.jobDetails(id), 
+    id ? queryKeys.jobDetails(id) : ["jobdetails"],
     () => getJobDetails(id as string),
     {
-      enabled: !!id
+      enabled: !!id,
     }
   );
 
@@ -85,7 +85,7 @@ function useJobDetails(id: string | undefined) {
     if (
       jobData?._freelancer_user_id !== user?.user_id &&
       jobData?.next_job_id &&
-      searchParams?.get('user_source') === 'email'
+      searchParams?.get("user_source") === "email"
     ) {
       router.push(`/job-details/${jobData.next_job_id}`);
     }
@@ -99,16 +99,16 @@ function useJobDetails(id: string | undefined) {
   const tabItems = useMemo(() => {
     if (proposalStatus) {
       if (approvedBudgetType) {
-        if (jobStatus === 'closed' && dontAllowToSubmitReview) {
+        if (jobStatus === "closed" && dontAllowToSubmitReview) {
           return TABS_BY_STATUS[`${jobStatus}_${approvedBudgetType}`].filter(
-            (tabs) => tabs.key !== 'feedback'
+            (tabs) => tabs.key !== "feedback"
           );
         }
         return TABS_BY_STATUS[`${jobStatus}_${approvedBudgetType}`];
       }
       return TABS_BY_STATUS[JOB_STATUS.PROSPECTS];
     }
-    return TABS_BY_STATUS['default'];
+    return TABS_BY_STATUS["default"];
   }, [proposalStatus, approvedBudgetType, jobStatus, dontAllowToSubmitReview]);
 
   return {

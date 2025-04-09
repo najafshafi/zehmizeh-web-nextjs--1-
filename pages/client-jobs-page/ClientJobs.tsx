@@ -7,14 +7,13 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import cns from "classnames";
+import dynamic from "next/dynamic";
 import Loader from "@/components/Loader";
 import Tabs from "@/components/ui/Tabs";
 import NoDataFound from "@/components/ui/NoDataFound";
 import Tooltip from "@/components/ui/Tooltip";
-import Listings from "./listings";
 import { StyledButton } from "@/components/forms/Buttons";
 import PaginationComponent from "@/components/ui/Pagination";
-import JobAutoCompleteSearch from "@/components/jobs/JobAutoCompleteSearch";
 import PageTitle from "@/components/styled/PageTitle";
 import useOnClickOutside from "@/helpers/hooks/useClickOutside";
 import useDebounce from "@/helpers/hooks/useDebounce";
@@ -27,7 +26,24 @@ import { TABS } from "./consts";
 import { useIsAllowedToPostProject } from "@/helpers/hooks/useIsAllowedToPostProject";
 import CustomButton from "@/components/custombutton/CustomButton";
 
+// Dynamically import components that might use browser APIs
+const Listings = dynamic(() => import("./listings"), { ssr: false });
+const JobAutoCompleteSearch = dynamic(
+  () => import("@/components/jobs/JobAutoCompleteSearch"),
+  { ssr: false }
+);
+
 const RECORDS_PER_PAGE = 10;
+
+// Create a client-side only wrapper component
+const ClientJobsWrapper = () => {
+  // Return early during server-side rendering
+  if (typeof window === "undefined") {
+    return <div>Loading client jobs...</div>;
+  }
+
+  return <ClientJobs />;
+};
 
 const ClientJobs = () => {
   useStartPageFromTop();
@@ -300,4 +316,4 @@ const ClientJobs = () => {
   );
 };
 
-export default ClientJobs;
+export default ClientJobsWrapper;

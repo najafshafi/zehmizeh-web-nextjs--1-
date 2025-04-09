@@ -23,8 +23,8 @@ import { Toaster } from "react-hot-toast";
 import AppLayout from "../layout/AppLayout";
 
 // Constants
-const INTERCOM_APP_ID = process.env.REACT_APP_INTERCOM_APP_ID || "";
-const GA_TRACKING_CODE = process.env.REACT_APP_GA_TRACKING_CODE;
+const INTERCOM_APP_ID = process.env.NEXT_PUBLIC_INTERCOM_APP_ID || "";
+const GA_TRACKING_CODE = process.env.NEXT_PUBLIC_GA_TRACKING_CODE;
 
 // Types for AOS
 type AnchorPlacement =

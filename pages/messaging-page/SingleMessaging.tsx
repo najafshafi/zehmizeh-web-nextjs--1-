@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { MessageContainer } from "./messaging.styled";
 import ChatPanel from "./partials/ChatPanel";
 import { useAuth } from "@/helpers/contexts/auth-context";
-import { AppDispatch, RootState } from "@/store/redux/store";
+import { AppDispatch } from "@/store/redux/store";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
@@ -16,14 +16,14 @@ import { talkJsFetchSingleConversation } from "@/helpers/http/common";
 import TalkJS from "@/pages/talk-js";
 
 function SingleMessaging({ id }: { id: string }) {
-  const { chatList, loading } = useSelector((state: RootState) => state.chat);
+  const { chatList, loading } = useSelector((state: any) => state.chat || {});
 
   // checking for the chat thred  in talkjs
   const [newChatLoading, setNewChatLoading] = useState<boolean>(true);
   const [isChatExist, setIsChatExist] = useState<boolean>(false);
 
   const dispatch: AppDispatch = useDispatch();
-  const cancelTokenRef = useRef<CancelTokenSource>();
+  const cancelTokenRef = useRef<CancelTokenSource | undefined>(undefined);
   const { user } = useAuth();
 
   const onSelectChat = (
@@ -47,7 +47,7 @@ function SingleMessaging({ id }: { id: string }) {
     // if (!chatItem) return null;
 
     // dispatch(selectChatHandler({ chatItem, index }));
-    chatList["jobs"].map(
+    chatList?.["jobs"]?.map(
       (chatItem: I.Invite & I.Proposal & I.Job, index: number) => {
         if (chatItem._job_post_id === id) onSelectChat(chatItem, index);
       }
@@ -56,7 +56,7 @@ function SingleMessaging({ id }: { id: string }) {
 
   useEffect(() => {
     if (newChatLoading === false) {
-      if (user.user_id) {
+      if (user?.user_id) {
         cancelTokenRef.current = axios.CancelToken.source();
         dispatch(fetchChatList({ cancelToken: cancelTokenRef.current.token }));
       }
@@ -79,7 +79,7 @@ function SingleMessaging({ id }: { id: string }) {
   };
 
   useEffect(() => {
-    if (chatList.jobs.length > 0 && newChatLoading === false)
+    if (chatList?.jobs?.length > 0 && newChatLoading === false)
       handleChatToActive();
   }, [chatList, user, newChatLoading]);
 
@@ -97,7 +97,7 @@ function SingleMessaging({ id }: { id: string }) {
   return (
     <MessageContainer>
       <>
-        {loading.list || loading.message || newChatLoading ? (
+        {loading?.list || loading?.message || newChatLoading ? (
           <div
             className="text-center py-5"
             style={{

@@ -1,21 +1,33 @@
+"use client";
 /*
  * This is the main component that lists all the components of jobs list - client side
  */
 import { useMemo, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import ListingFooter from "./ListingFooter";
 import ChevronUp from "@/public/icons/chevronUp.svg";
 import ChevronDown from "@/public/icons/chevronDown.svg";
-import SelectJobModal from "@/components/invite-flow-modals/SelectJobModal";
-import InviteFreelancerMessageModal from "@/components/invite-flow-modals/InviteFreelancerMessageModal";
 import NoDataFound from "@/components/ui/NoDataFound";
 import StatusAndDateSection from "./StatusAndDateSection";
 import { inviteFreelancer } from "@/helpers/http/jobs";
 import { convertToTitleCase } from "@/helpers/utils/misc";
-
-import ProposalExistsModal from "@/components/invite-flow-modals/ProposalExistsModa";
 import { getJobExpirationInDays } from "@/helpers/utils/helper";
+
+// Dynamically import modals to avoid SSR issues
+const SelectJobModal = dynamic(
+  () => import("@/components/invite-flow-modals/SelectJobModal"),
+  { ssr: false }
+);
+const InviteFreelancerMessageModal = dynamic(
+  () => import("@/components/invite-flow-modals/InviteFreelancerMessageModal"),
+  { ssr: false }
+);
+const ProposalExistsModal = dynamic(
+  () => import("@/components/invite-flow-modals/ProposalExistsModa"),
+  { ssr: false }
+);
 
 // Define types for better type safety
 interface JobItem {
@@ -50,6 +62,16 @@ const closeStatuses = {
 } as const;
 
 type CloseStatusKey = keyof typeof closeStatuses;
+
+// Create a client-side only wrapper component
+const ListingsWrapper = (props: Props) => {
+  // Return null during server-side rendering
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  return <Listings {...props} />;
+};
 
 const Listings = ({ data, listingType, sortFilter, toggleReset }: Props) => {
   const [selectedFreelancer, setSelectedFreelancer] =
@@ -146,8 +168,10 @@ const Listings = ({ data, listingType, sortFilter, toggleReset }: Props) => {
     setIsDropdownOpen(false);
   };
 
-  // Close dropdown when clicking outside
+  // Client-side only code to handle click outside
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const handleClickOutside = (event: MouseEvent) => {
       const dropdown = document.getElementById("dropdown-menu");
       const button = document.getElementById("dropdown-button");
@@ -256,42 +280,41 @@ const Listings = ({ data, listingType, sortFilter, toggleReset }: Props) => {
           );
         })
       ) : (
-        <NoDataFound className="py-5" />
+        <div className="flex gap-4 w-full mt-5">
+          <NoDataFound title="No jobs found" />
+        </div>
       )}
 
-      {/* Select Job modal */}
-      <SelectJobModal
-        show={showJobsModal}
-        toggle={toggleJobsModal}
-        onNext={onSelectJobAndContinue}
-        freelancerName={
-          selectedFreelancer?.first_name + " " + selectedFreelancer?.last_name
-        }
-        freelancerId={selectedFreelancer?.user_id}
-      />
+      {/* Modals */}
+      {showJobsModal && (
+        <SelectJobModal
+          show={showJobsModal}
+          toggle={toggleJobsModal}
+          onNext={onSelectJobAndContinue}
+          freelancerName={`${selectedFreelancer?.first_name || ""} ${selectedFreelancer?.last_name || ""}`}
+          freelancerId={selectedFreelancer?.user_id}
+        />
+      )}
 
-      {/* Invite message modal */}
-      <InviteFreelancerMessageModal
-        show={showInviteMessageModal}
-        toggle={toggleInviteMessageModal}
-        freelancerName={
-          selectedFreelancer?.first_name + " " + selectedFreelancer?.last_name
-        }
-        onInvite={onInvite}
-        loading={sendingInvite}
-      />
+      {showInviteMessageModal && (
+        <InviteFreelancerMessageModal
+          show={showInviteMessageModal}
+          toggle={toggleInviteMessageModal}
+          onInvite={onInvite}
+          loading={sendingInvite}
+          freelancerName={`${selectedFreelancer?.first_name} ${selectedFreelancer?.last_name}`}
+        />
+      )}
 
-      {/* Proposal Exists Modal */}
-      <ProposalExistsModal
-        job_post_id={selectedJobId}
-        show={proposalExistModal}
-        toggle={() => {
-          setSelectedJobId("");
-          setProposalExistModal((prev) => !prev);
-        }}
-      />
+      {proposalExistModal && (
+        <ProposalExistsModal
+          show={proposalExistModal}
+          toggle={() => setProposalExistModal(false)}
+          job_post_id={selectedJobId}
+        />
+      )}
     </div>
   );
 };
 
-export default Listings;
+export default ListingsWrapper;

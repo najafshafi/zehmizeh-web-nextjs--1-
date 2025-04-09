@@ -5,9 +5,9 @@
 import { useState } from "react";
 import { Form } from "react-bootstrap";
 import toast from "react-hot-toast";
-import { StyledButton } from "@/components/forms/Buttons";
 import AnimatedStar from "@/components/ui/AnimatedStar";
 import { manageFeedback } from "@/helpers/http/jobs";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 const AddReviewForm = ({
   jobPostId,
@@ -96,7 +96,7 @@ const AddReviewForm = ({
         maxLength={500}
       />
       <div className="text-end">
-        <StyledButton
+        {/* <StyledButton
           padding="0.75rem 2rem"
           variant="outline"
           className="button"
@@ -104,7 +104,14 @@ const AddReviewForm = ({
           onClick={addFeedback}
         >
           Submit Review
-        </StyledButton>
+        </StyledButton> */}
+
+        <CustomButton
+          text={"Submit Review"}
+          className={`px-[2rem] py-[0.75rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white hover:border-none`}
+          disabled={loading}
+          onClick={addFeedback}
+        />
       </div>
     </div>
   );

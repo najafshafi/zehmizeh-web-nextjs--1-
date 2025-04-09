@@ -122,7 +122,7 @@ const SearchMessagesModal = ({
     return message._from_user_id !== user.user_id;
   };
 
-  const onSelect = (chat) => () => {
+  const onSelect = (chat: MessageProps) => () => {
     onSelectMessage(chat);
     toggle();
   };
@@ -254,7 +254,7 @@ const MessageText = ({
   useEffect(() => {
     const result = msg.message_text;
     const reg = new RegExp(searchTerm, "gi");
-    const final_str = result.replace(reg, function (str) {
+    const final_str = result.replace(reg, function (str: string) {
       return "<b>" + str + "</b>";
     });
     const msgElem = document.getElementById(`search_msg_item_${msg.chat_id}`);

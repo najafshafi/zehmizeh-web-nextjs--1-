@@ -56,11 +56,12 @@ const ConfirmPaymentModal: React.FC<Props> = ({
     };
   }, [show]);
 
-  // Add null check and default empty array for milestones
-  const clientAcceptedMilestoneAmount = (data?.milestone || []).reduce(
-    (sum: number, item: Milestone) => {
-      if (item?.status === "paid" || item?.status === "released") {
-        return sum + (item?.amount || 0);
+
+  const clientAcceptedMilestoneAmount =
+    data?.milestone?.reduce((sum: number, item: Milestone) => {
+      if (item.status === "paid" || item.status === "released") {
+        return sum + item.amount;
+
       }
       return sum;
     },

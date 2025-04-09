@@ -1,7 +1,7 @@
 /*
  * This is the Invite freelacner modal - This will list some recommended freelancers in the modal
  */
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { useQuery } from "react-query";
@@ -57,6 +57,8 @@ const Wrapper = styled.div`
 const InviteFreelancer = ({ show, jobPostId, toggle, onNext }: Props) => {
   const [selectedFreelancers, setSelectedFreelancers] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [loadingMore, setLoadingMore] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
 
   const onContinue = () => {
     if (selectedFreelancers.length == 0) {
@@ -101,6 +103,25 @@ const InviteFreelancer = ({ show, jobPostId, toggle, onNext }: Props) => {
     setCurrentPage(page?.selected + 1);
   };
 
+  const listContainerRef = useRef<HTMLDivElement>(null);
+
+  const onScroll = () => {
+    if (typeof window === "undefined") return;
+
+    const listContainer = listContainerRef.current;
+    if (
+      listContainer &&
+      Math.ceil(listContainer.scrollTop + listContainer.clientHeight) >=
+        listContainer.scrollHeight - 100 &&
+      !isLoading &&
+      data?.total > page * RECORDS_PER_PAGE &&
+      !loadingMore
+    ) {
+      setLoadingMore(true);
+      setPage(page + 1);
+    }
+  };
+
   return (
     <StyledModal show={show} size="lg" onHide={toggle} centered>
       <Modal.Body>
@@ -111,7 +132,12 @@ const InviteFreelancer = ({ show, jobPostId, toggle, onNext }: Props) => {
           <div className="my-jobs">
             <h3 className="fs-36 fw-700">Recommended Freelancers</h3>
             {isLoading && <Loader />}
-            <div className="list" id="list">
+            <div
+              ref={listContainerRef}
+              id="list"
+              className="list"
+              onScroll={onScroll}
+            >
               {data?.data?.length
                 ? data?.data?.map((item: any) => (
                     <TalentComponent

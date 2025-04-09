@@ -2,10 +2,10 @@
  * This is the Hourly per week filter
  */
 
-import React from 'react';
-import TooltipSlider from '@/components/ui/TooltipSlider';
-import { useSearchFilters } from '@/helpers/contexts/search-filter-context';
-import { SliderWrapper } from '../Search.styled';
+import React from "react";
+import TooltipSlider from "@/components/ui/TooltipSlider";
+import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
+import { SliderWrapper } from "../Search.styled";
 
 const HoursPerWeekFilter = () => {
   const { filters, updateFilters } = useSearchFilters();
@@ -15,12 +15,14 @@ const HoursPerWeekFilter = () => {
     max: 10,
   });
 
-  const afterChangeSliderValues = (e) => {
+  const afterChangeSliderValues = (e: number | number[]) => {
+    // If e is an array, use it directly, otherwise create a default
+    const values = Array.isArray(e) ? e : [1, 1];
     const newHourlyRate = {
-      min: e[0],
-      max: e[1],
+      min: values[0],
+      max: values[1],
     };
-    updateFilters('hours_per_week', newHourlyRate);
+    updateFilters("hours_per_week", newHourlyRate);
   };
 
   React.useEffect(() => {
@@ -34,10 +36,10 @@ const HoursPerWeekFilter = () => {
     <SliderWrapper>
       <TooltipSlider
         tipProps={{
-          placement: 'bottom',
-          prefixCls: 'rc-slider-tooltip',
-          overlayClassName: 'budget-tooltip',
-          parentId: 'hpw-filter',
+          placement: "bottom",
+          prefixCls: "rc-slider-tooltip",
+          overlayClassName: "budget-tooltip",
+          parentId: "hpw-filter",
         }}
         tipFormatter={(value) => {
           return value;
@@ -45,9 +47,11 @@ const HoursPerWeekFilter = () => {
         range
         className="gradiant-slider"
         value={[hoursPerWeek.min, hoursPerWeek.max]}
-        onChange={(e) =>
-          setHoursPerWeek({ ...hoursPerWeek, min: e[0], max: e[1] })
-        }
+        onChange={(e: number | number[]) => {
+          // Handle both cases: single value or array
+          const values = Array.isArray(e) ? e : [e, e];
+          setHoursPerWeek({ ...hoursPerWeek, min: values[0], max: values[1] });
+        }}
         onAfterChange={afterChangeSliderValues}
         min={1}
         max={100}

@@ -66,10 +66,12 @@ const LanguageFilter = () => {
         setSearchQuery={setSearchQuery}
         fetching={fetching}
         searchResults={searchResults}
-        onSelectItem={(item) => onSelectItem(item)}
+        onSelectItem={(item: { label: string; value: string }) =>
+          onSelectItem(item)
+        }
       />
       {filters?.languages?.length > 0 &&
-        filters?.languages?.map((item: any, index) => (
+        filters?.languages?.map((item: any, index: number) => (
           <div
             className="filter__checkbox__row flex items-center"
             key={`skill-key-${index}`}

@@ -61,11 +61,39 @@ interface EditModalType {
   data?: EditModalData | null;
 }
 
+interface Skill {
+  category_name?: string;
+  skill_id?: number;
+  skill_name?: string;
+}
+
+interface Language {
+  id: number;
+  name: string;
+}
+
+interface EducationItem {
+  education_id: number;
+  course_name: string;
+  school_name: string;
+  education_year?: string;
+}
+
+interface CourseItem {
+  course_id: number;
+  course_name: string;
+  school_name: string;
+  certificate_link?: string;
+}
+
+interface QueryResult {
+  data: IFreelancerDetails;
+}
+
 export const Profile = () => {
-  const { data } = useQueryData<IFreelancerDetails>(
-    queryKeys.getFreelancerProfile
-  );
+  const result = useQueryData<QueryResult>(queryKeys.getFreelancerProfile);
   const { refetch } = useRefetch(queryKeys.getFreelancerProfile);
+  const data = result?.data;
 
   const [selectedCourseId, setSelectedCourseId] = useState<string>("");
   const [selectedEducationId, setSelectedEducationId] = useState<string>("");
@@ -136,17 +164,17 @@ export const Profile = () => {
   const getCategoryHandler = () => {
     let categories: Category[] = [];
 
-    data?.skills?.forEach(({ category_name }) => {
+    data?.skills?.forEach((skill) => {
       if (
-        category_name &&
-        !categories.some((cat) => cat.category_name === category_name)
+        skill?.category_name &&
+        !categories.some((cat) => cat.category_name === skill.category_name)
       )
-        categories.push({ category_name });
+        categories.push({ category_name: skill.category_name });
     });
 
     categories = categories.map((cat) => {
       const catObj = data?.skills?.filter(
-        (skill) => skill.category_name === cat.category_name
+        (skill) => skill?.category_name === cat.category_name
       )[0];
       return { ...cat, ...catObj };
     });
@@ -292,7 +320,7 @@ export const Profile = () => {
 
                   {data?.skills?.map(
                     (skill) =>
-                      skill.skill_id && (
+                      skill?.skill_id && (
                         <SkillItem key={skill.skill_id}>
                           <div>{skill.skill_name}</div>
                         </SkillItem>
@@ -324,7 +352,7 @@ export const Profile = () => {
               onEdit={() => setEditModalType({ modal: "languages" })}
               details={
                 <div className="flex flex-wrap items-center gap-2.5">
-                  {data?.languages?.map((language) => (
+                  {data?.languages?.map((language: Language) => (
                     <SkillItem key={`key-${language.id}`}>
                       <div>{language.name}</div>
                     </SkillItem>
@@ -348,7 +376,7 @@ export const Profile = () => {
                 details={
                   data?.education?.length > 0 && (
                     <div className="flex flex-col gap-3 max-h-[300px] overflow-y-auto">
-                      {data?.education?.map((eduItem) => (
+                      {data?.education?.map((eduItem: EducationItem) => (
                         <EducationItem
                           className="flex p-3 gap-2"
                           key={eduItem?.education_id}
@@ -421,57 +449,60 @@ export const Profile = () => {
                 details={
                   data?.certificate_course?.length > 0 && (
                     <div className="flex flex-col gap-3 max-h-[300px] overflow-y-auto">
-                      {data?.certificate_course?.map((courseItem) => (
-                        <EducationItem
-                          className={cns(
-                            "p-4 flex justify-between items-center gap-2",
-                            { "cursor-pointer": courseItem?.certificate_link }
-                          )}
-                          key={courseItem?.course_id}
-                          onClick={() =>
-                            openCertificate(courseItem?.certificate_link)
-                          }
-                        >
-                          <div className="flex-1">
-                            <div className="text-xl font-normal capitalize">
-                              {convertToTitleCase(courseItem?.course_name)}
+                      {data?.certificate_course?.map(
+                        (courseItem: CourseItem) => (
+                          <EducationItem
+                            className={cns(
+                              "p-4 flex justify-between items-center gap-2",
+                              { "cursor-pointer": courseItem?.certificate_link }
+                            )}
+                            key={courseItem?.course_id}
+                            onClick={() =>
+                              courseItem?.certificate_link &&
+                              openCertificate(courseItem.certificate_link)
+                            }
+                          >
+                            <div className="flex-1">
+                              <div className="text-xl font-normal capitalize">
+                                {convertToTitleCase(courseItem?.course_name)}
+                              </div>
+                              <div className="opacity-70 mt-2 font-normal capitalize">
+                                {convertToTitleCase(courseItem?.school_name)}
+                              </div>
                             </div>
-                            <div className="opacity-70 mt-2 font-normal capitalize">
-                              {convertToTitleCase(courseItem?.school_name)}
+                            <div className="flex flex-col gap-2">
+                              <button
+                                className="p-2 hover:-translate-y-0.5 transition-transform"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setEditModalType({
+                                    modal: "course",
+                                    data: courseItem,
+                                  });
+                                }}
+                              >
+                                <EditIcon className="w-5 h-5" />
+                              </button>
+                              <button
+                                className="p-2 hover:-translate-y-0.5 transition-transform"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onDeleteCourse(
+                                    courseItem?.course_id.toString()
+                                  );
+                                }}
+                              >
+                                {selectedCourseId ===
+                                courseItem?.course_id.toString() ? (
+                                  <div className="w-5 h-5 border-2 border-gray-600 border-t-transparent rounded-full animate-spin" />
+                                ) : (
+                                  <DeleteIcon className="w-5 h-5" />
+                                )}
+                              </button>
                             </div>
-                          </div>
-                          <div className="flex flex-col gap-2">
-                            <button
-                              className="p-2 hover:-translate-y-0.5 transition-transform"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setEditModalType({
-                                  modal: "course",
-                                  data: courseItem,
-                                });
-                              }}
-                            >
-                              <EditIcon className="w-5 h-5" />
-                            </button>
-                            <button
-                              className="p-2 hover:-translate-y-0.5 transition-transform"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onDeleteCourse(
-                                  courseItem?.course_id.toString()
-                                );
-                              }}
-                            >
-                              {selectedCourseId ===
-                              courseItem?.course_id.toString() ? (
-                                <div className="w-5 h-5 border-2 border-gray-600 border-t-transparent rounded-full animate-spin" />
-                              ) : (
-                                <DeleteIcon className="w-5 h-5" />
-                              )}
-                            </button>
-                          </div>
-                        </EducationItem>
-                      ))}
+                          </EducationItem>
+                        )
+                      )}
                     </div>
                   )
                 }
@@ -514,13 +545,27 @@ export const Profile = () => {
         <EducationEditModal
           show={editModalType?.modal === "education"}
           onClose={() => setEditModalType({ modal: "" })}
-          data={editModalType?.data}
+          data={
+            editModalType?.data
+              ? {
+                  ...editModalType.data,
+                  education_id: editModalType.data.education_id?.toString(),
+                }
+              : null
+          }
           onUpdate={onUpdate}
         />
         <CourseEditModal
           show={editModalType?.modal === "course"}
           onClose={() => setEditModalType({ modal: "" })}
-          data={editModalType?.data}
+          data={
+            editModalType?.data
+              ? {
+                  ...editModalType.data,
+                  course_id: editModalType.data.course_id?.toString(),
+                }
+              : null
+          }
           onUpdate={onUpdate}
         />
       </div>

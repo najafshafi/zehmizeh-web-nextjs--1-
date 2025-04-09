@@ -6,7 +6,6 @@ import Clock from "@/public/icons/clock.svg";
 import { UserData } from "@/store/redux/slices/chat.interface";
 import { ChatHeaderButton, ChatUserTimeZoneWrapper } from "../messaging.styled";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/redux/store";
 import { chatTypeSolidColor } from "@/helpers/http/common";
 
 type Props = {
@@ -16,7 +15,7 @@ type Props = {
 
 export const TimezoneUI = ({ isFromSingleMessaging, remoteUser }: Props) => {
   const { selectedConversation } = useSelector(
-    (state: RootState) => state.talkJsChat
+    (state: any) => state.talkJsChat || {}
   );
 
   if (!selectedConversation) return <></>;
@@ -26,7 +25,7 @@ export const TimezoneUI = ({ isFromSingleMessaging, remoteUser }: Props) => {
         <ChatHeaderButton
           className="flex items-center gap-1"
           variantType="secondary"
-          $variantColor={selectedConversation.custom.type}
+          variantColor={selectedConversation.custom.type}
         >
           <Clock
             stroke={chatTypeSolidColor(selectedConversation.custom.type)}
@@ -35,7 +34,8 @@ export const TimezoneUI = ({ isFromSingleMessaging, remoteUser }: Props) => {
           />
           <span>
             {remoteUser.user_type === "freelancer" ? "Freelancer" : "Client"}
-            &apos;s timezone: {moment().tz(remoteUser?.timezone).format("hh:mm A")}
+            &apos;s timezone:{" "}
+            {moment().tz(remoteUser?.timezone).format("hh:mm A")}
           </span>
         </ChatHeaderButton>
       )}

@@ -8,12 +8,12 @@ import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
 const HourlyRateFilter = () => {
   const { filters, updateFilterHandler } = useSearchFilters();
 
-  const onSelectItem = (value) => {
+  const onSelectItem = (value: string) => {
     let updatedHourlyFilter;
 
     if (filters.hourly_rate.includes(value)) {
       updatedHourlyFilter = filters.hourly_rate.filter(
-        (rate) => rate !== value
+        (rate: string) => rate !== value
       );
     } else {
       updatedHourlyFilter = [...filters.hourly_rate, value];

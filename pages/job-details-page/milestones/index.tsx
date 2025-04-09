@@ -24,7 +24,7 @@ import { getUser } from "@/helpers/http/auth";
 import AttachmentSubmitModal, {
   FileAttachment,
 } from "../modals/AttachmentSubmitModal";
-import { MilestoneTypes } from "@/helpers/types/milestone.type";
+import { MilestoneTypes as ImportedMilestoneTypes } from "@/helpers/types/milestone.type";
 import Info from "@/public/icons/info-octashape.svg";
 import { paymentProcessingStatusHandler } from "@/helpers/validation/common";
 import Link from "next/link";
@@ -90,19 +90,28 @@ const PAYMENT_STATUS: PaymentStatusType = {
   },
 };
 
+interface MilestoneTypesWithStringAmount
+  extends Omit<ImportedMilestoneTypes, "amount" | "due_date"> {
+  amount: string;
+  due_date: string;
+  hourly_id?: string;
+  total_amount?: string;
+  hourly_status?: string;
+}
+
 interface MilestoneProps {
-  milestone: MilestoneTypes[];
+  milestone: MilestoneTypesWithStringAmount[];
   jobStatus: string;
   refetch: () => void;
   clientUserId: string;
   jobPostId: string;
-  restrictPostingMilestone: boolean;
+  restrictPostingMilestone?: boolean;
   remainingBudget: number;
 }
 
 interface CancelMilestoneModalState {
   show: boolean;
-  milesotne?: MilestoneTypes;
+  milesotne?: MilestoneTypesWithStringAmount;
   canceling?: boolean;
 }
 
@@ -153,12 +162,13 @@ const Milestones = ({
     setShowMilestoneForm(!showMilestoneForm);
   };
 
-  const onDelete = (selectedMilestone: MilestoneTypes) => () => {
-    setCancelMilestoneModalState({
-      show: true,
-      milesotne: selectedMilestone,
-    });
-  };
+  const onDelete =
+    (selectedMilestone: MilestoneTypesWithStringAmount) => () => {
+      setCancelMilestoneModalState({
+        show: true,
+        milesotne: selectedMilestone,
+      });
+    };
 
   const [postedWork, setPostedWork] = useState<string>("");
 
@@ -324,7 +334,7 @@ const Milestones = ({
     return label;
   };
 
-  const getDate = (item: MilestoneTypes) => {
+  const getDate = (item: MilestoneTypesWithStringAmount) => {
     let date = "";
     const milestoneStatus = item.status;
     switch (milestoneStatus) {
@@ -391,7 +401,7 @@ const Milestones = ({
       )}
 
       {milestone?.length > 0 &&
-        milestone?.map((item: MilestoneTypes, index: number) =>
+        milestone?.map((item: MilestoneTypesWithStringAmount, index: number) =>
           editIndex !== index ? (
             <div
               key={item?.milestone_id}
@@ -438,11 +448,21 @@ const Milestones = ({
                       item?.dispute_submitted_by === "CLIENT"
                         ? "Closed by Client"
                         : ["decline_dispute"].includes(item.status) &&
-                          item?.dispute_submitted_by === "FREELANCER"
-                        ? "Canceled"
-                        : item?.status === "payment_processing"
-                        ? paymentProcessingStatusHandler(item?.payment_method)
-                        : PAYMENT_STATUS[item?.status]?.label}
+                            item?.dispute_submitted_by === "FREELANCER"
+                          ? "Canceled"
+                          : item?.status === "payment_processing"
+                            ? paymentProcessingStatusHandler(
+                                item?.payment_method as
+                                  | "ACH"
+                                  | "OTHER"
+                                  | undefined
+                              )
+                            : (
+                                PAYMENT_STATUS as Record<
+                                  string,
+                                  { color: string; label: string }
+                                >
+                              )[item?.status || ""]?.label || ""}
                     </StatusBadge>
 
                     {/* This will be hidden from here in mobile */}
@@ -590,11 +610,15 @@ const Milestones = ({
           ) : (
             /* Edit milestone form */
             <EditMilestoneForm
-              key={item?.milestone_id}
               onSubmit={onSubmit}
-              currentData={item}
-              milestoneId={item?.milestone_id}
               cancelEdit={() => setEditIndex(-1)}
+              milestoneId={item.milestone_id}
+              currentData={{
+                title: item.title,
+                amount: item.amount,
+                description: item.description,
+                due_date: item.due_date || "",
+              }}
               remainingBudget={remainingBudget}
             />
           )
@@ -630,7 +654,7 @@ const Milestones = ({
         cancelStateData={{
           show: cancelMilestoneModalState.show,
           loading: cancelMilestoneModalState.canceling,
-          milestoneStatus: cancelMilestoneModalState.milesotne?.status,
+          milestoneStatus: cancelMilestoneModalState.milesotne?.status || "",
         }}
       />
 

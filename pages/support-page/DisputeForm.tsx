@@ -18,6 +18,38 @@ import { Vaidations } from "./validations";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import CustomButton from "@/components/custombutton/CustomButton";
 
+type ValidationType = {
+  fixed: {
+    pending: string;
+    released: string;
+    under_dispute: string;
+  };
+  hourly: {
+    paid: string;
+    under_dispute: string;
+    decline: string;
+    declined: string;
+  };
+};
+
+type CKEditorInstance = {
+  editing: {
+    view: {
+      change: (callback: (writer: any) => void) => void;
+      document: {
+        getRoot: () => any;
+      };
+    };
+  };
+  getData: () => string;
+};
+
+type UploadFile = {
+  file: string;
+  fileName?: string;
+  fileUrl?: string;
+};
+
 const DisputeForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedProject, setSelectedProject] = useState<any>(null);
@@ -44,19 +76,17 @@ const DisputeForm = () => {
     setSelectedMilestone(item);
   };
 
-  const handleUploadImage = ({
-    file,
-    fileName,
-  }: {
-    file: string;
-    fileName?: string;
-  }) => {
-    setAttachments([
-      {
-        fileUrl: file,
-        fileName,
-      },
-    ]);
+  const handleUploadImage = (
+    file: Partial<{ file: string; fileName: string; fileUrl: string }>
+  ) => {
+    if (file.file) {
+      setAttachments([
+        {
+          fileUrl: file.file,
+          fileName: file.fileName,
+        },
+      ]);
+    }
   };
 
   const removeAttachment = () => {
@@ -100,7 +130,6 @@ const DisputeForm = () => {
     }
 
     // Submit dispute api call
-
     const body: {
       action?: string;
       admin_id: string;
@@ -122,10 +151,6 @@ const DisputeForm = () => {
       body.attachment_file = `${attachments[0].fileUrl}#docname=${attachments[0].fileName}`;
     }
 
-    /* If milestone_id is available that means it is a milestone,
-     * and if not there will be hourly_id, means it is an hourly submission
-     * based on that the below param need to be passed
-     */
     let jobType = "";
     if (selectedMilestone?.milestone_id) {
       body.milestone_id = selectedMilestone?.milestone_id;
@@ -142,33 +167,39 @@ const DisputeForm = () => {
 
     const userType = user?.user_type;
 
-    if (Vaidations[userType][jobType]) {
-      if (Vaidations[userType][jobType][milestoneStatus]) {
-        const error = Vaidations[userType][jobType][milestoneStatus];
-        if (error) {
-          toast.error(error);
+    if (userType && jobType && milestoneStatus) {
+      const validation = Vaidations[
+        userType as keyof typeof Vaidations
+      ] as ValidationType;
+      if (validation[jobType as keyof ValidationType]) {
+        const statusValidation =
+          validation[jobType as keyof ValidationType][
+            milestoneStatus as keyof (typeof validation)[keyof ValidationType]
+          ];
+        if (statusValidation) {
+          toast.error(statusValidation);
           return;
         }
-      } else {
-        const promise = manageDispute(body);
-        setLoading(true);
-        toast.promise(promise, {
-          loading: "Please wait...",
-          success: (res) => {
-            setLoading(false);
-            setSelectedProject(null);
-            setSelectedMilestone(null);
-            setDescription("");
-            setAttachments([]);
-            return res.message;
-          },
-          error: (err) => {
-            setLoading(false);
-            return err?.response?.data?.message || "error";
-          },
-        });
       }
     }
+
+    const promise = manageDispute(body);
+    setLoading(true);
+    toast.promise(promise, {
+      loading: "Please wait...",
+      success: (res) => {
+        setLoading(false);
+        setSelectedProject(null);
+        setSelectedMilestone(null);
+        setDescription("");
+        setAttachments([]);
+        return res.message;
+      },
+      error: (err) => {
+        setLoading(false);
+        return err?.response?.data?.message || "error";
+      },
+    });
   };
 
   const wordCount = useMemo(() => {
@@ -229,8 +260,8 @@ const DisputeForm = () => {
           config={{
             toolbar: ["bold", "italic", "numberedList", "bulletedList"],
           }}
-          onReady={(editor) => {
-            editor?.editing?.view.change((writer) => {
+          onReady={(editor: CKEditorInstance) => {
+            editor?.editing?.view.change((writer: any) => {
               writer.setStyle(
                 "max-height",
                 "200px",
@@ -238,7 +269,7 @@ const DisputeForm = () => {
               );
             });
           }}
-          onChange={(event, editor) => {
+          onChange={(event: any, editor: CKEditorInstance) => {
             const data = editor.getData();
             setDescription(data);
           }}

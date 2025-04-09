@@ -105,7 +105,6 @@ const Wrapper = styled.div`
   }
 `;
 
-// @ts-expect-error
 const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
   const router = useRouter();
   const params = useParams();
@@ -361,7 +360,11 @@ const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
 
                 <CustomButton
                   text={
-                    declineLoading ? <Spinner size="sm" /> : "Decline Invite"
+                    declineLoading ? (
+                      <Spinner className="w-4 h-4" />
+                    ) : (
+                      "Decline Invite"
+                    )
                   }
                   className="px-8 py-4 text-center w-full  md:max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-[#EE761C] mt-3 hover:bg-black hover:text-white hover:border-none"
                   onClick={onDeclinedProposal}

@@ -1,14 +1,21 @@
-"use client"
-import styled from 'styled-components';
-import useToggle from '@/helpers/hooks/useToggle';
-import Arrow from '@/public/icons/select-arrow.svg';
-import Cross from '@/public/icons/cross-black.svg';
-import cns from 'classnames';
-import { convertToTitleCase, pxToRem } from '@/helpers/utils/misc';
-import React from 'react';
-import useOnClickOutside from '@/helpers/hooks/useClickOutside';
-import SearchIcon from '@/public/icons/search.svg';
-import { useJobOptions } from '../PaymentController';
+"use client";
+import styled from "styled-components";
+import useToggle from "@/helpers/hooks/useToggle";
+import Arrow from "@/public/icons/select-arrow.svg";
+import Cross from "@/public/icons/cross-black.svg";
+import cns from "classnames";
+import { convertToTitleCase, pxToRem } from "@/helpers/utils/misc";
+import React from "react";
+import useOnClickOutside from "@/helpers/hooks/useClickOutside";
+import SearchIcon from "@/public/icons/search.svg";
+import { useJobOptions } from "../PaymentController";
+
+// Define the job option interface
+interface JobOption {
+  job_post_id: string;
+  job_title: string;
+}
+
 const Wrapper = styled.div`
   position: relative;
   z-index: 1;
@@ -82,45 +89,54 @@ const SearchResults = styled.ul`
 
 function ProjectFilter({ onChange, value }: any) {
   const { value: isOpen, toggle, close } = useToggle();
-  const [searchValue, setSearchValue] = React.useState('');
-  const jobs = useJobOptions();
+  const [searchValue, setSearchValue] = React.useState("");
+  const jobs = useJobOptions() as JobOption[];
   const ref = React.useRef(null);
   useOnClickOutside(ref, close);
   const onJobClick = (id: string) => () => {
     onChange(id);
-    const job = jobs.find((job) => job.job_post_id === id);
-    setSearchValue(job?.job_title || '');
+    const job = jobs.find((job: JobOption) => job.job_post_id === id);
+    setSearchValue(job?.job_title || "");
     close();
   };
   const onClear = () => {
-    setSearchValue('');
+    setSearchValue("");
   };
-  const selectedProject = jobs ? jobs.find((job) => job.job_post_id === value) : null;
+  const selectedProject = jobs
+    ? jobs.find((job: JobOption) => job.job_post_id === value)
+    : null;
   const filteredJobs = React.useMemo(() => {
     if (!searchValue) return jobs;
-    return jobs.filter((job) => {
+    return jobs.filter((job: JobOption) => {
       return job.job_title.toLowerCase().includes(searchValue.toLowerCase());
     });
   }, [jobs, searchValue]);
   return (
     <Wrapper ref={ref}>
       <div
-        className={cns('project-filter__label flex items-center justify-between', {
-          open: isOpen,
-        })}
+        className={cns(
+          "project-filter__label flex items-center justify-between",
+          {
+            open: isOpen,
+          }
+        )}
         onClick={toggle}
       >
         <span className="capital-first-ltr text-truncate">
-          {selectedProject?.job_title ? convertToTitleCase(selectedProject?.job_title) : 'Filter by Project'}
+          {selectedProject?.job_title
+            ? convertToTitleCase(selectedProject?.job_title)
+            : "Filter by Project"}
         </span>
         <div className="flex">
           <Arrow />
-          {!!selectedProject && <Cross className="ms-2 pointer" onClick={onJobClick('')} />}
+          {!!selectedProject && (
+            <Cross className="ms-2 pointer" onClick={onJobClick("")} />
+          )}
         </div>
       </div>
       {isOpen && (
         <div className="project-filter__body">
-            <SearchInput className="px-2 flex gap-1 items-center">
+          <SearchInput className="px-2 flex gap-1 items-center">
             <SearchIcon />
             <input
               type="text"
@@ -134,8 +150,12 @@ function ProjectFilter({ onChange, value }: any) {
           </SearchInput>
           {jobs && jobs.length > 0 && (
             <SearchResults>
-              {filteredJobs.map((opt) => (
-                <li key={opt?.job_post_id} onClick={onJobClick(opt?.job_post_id)} className="capital-first-ltr">
+              {filteredJobs.map((opt: JobOption) => (
+                <li
+                  key={opt?.job_post_id}
+                  onClick={onJobClick(opt?.job_post_id)}
+                  className="capital-first-ltr"
+                >
                   {convertToTitleCase(opt?.job_title)}
                 </li>
               ))}

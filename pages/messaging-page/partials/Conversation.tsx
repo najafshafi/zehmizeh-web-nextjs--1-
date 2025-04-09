@@ -59,7 +59,7 @@ const Conversation = ({
     activeChat,
     messages,
     showImg,
-  } = useSelector((state: RootState) => state.chat);
+  } = useSelector((state: any) => state.chat);
   const [blurFlag, setBlurFlag] = useState<boolean>(showImg);
 
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -103,13 +103,22 @@ const Conversation = ({
   /** @function This will call an api to delete the message (Attchament) */
   const onDeleteAttachment = () => {
     setLoading(true);
+    if (deletePromptState.chatId === undefined) {
+      setLoading(false);
+      return;
+    }
+
     const promise = messageService.deleteMessage(deletePromptState.chatId);
     toast.promise(promise, {
       loading: "Please wait...",
       success: (res) => {
         closeDeletePrompt();
         setLoading(false);
-        dispatch(deleteChatFromMessages({ chat_id: deletePromptState.chatId }));
+        dispatch(
+          deleteChatFromMessages({
+            chat_id: deletePromptState.chatId as number,
+          })
+        );
         return res.response;
       },
       error: (err) => {
@@ -148,21 +157,28 @@ const Conversation = ({
     // }
   }, [searchedChat]);
 
+  interface MessagesByDateAccumulator {
+    [date: string]: MessageProps[];
+  }
+
   const messagesByDate = useMemo(() => {
     if (messages) {
-      return messages.reduce((acc, item) => {
-        let currentDate = moment(item?.date_created).format("MMM Do YYYY");
-        if (currentDate === "Invalid date")
-          currentDate = moment().format("MMM Do YYYY");
-        if (currentDate in acc) {
-          acc[currentDate].push(item);
-        } else {
-          acc[currentDate] = [item];
-        }
-        return acc;
-      }, {});
+      return messages.reduce(
+        (acc: MessagesByDateAccumulator, item: MessageProps) => {
+          let currentDate = moment(item?.date_created).format("MMM Do YYYY");
+          if (currentDate === "Invalid date")
+            currentDate = moment().format("MMM Do YYYY");
+          if (currentDate in acc) {
+            acc[currentDate].push(item);
+          } else {
+            acc[currentDate] = [item];
+          }
+          return acc;
+        },
+        {} as MessagesByDateAccumulator
+      );
     }
-    return {};
+    return {} as MessagesByDateAccumulator;
   }, [messages]);
 
   /* START ----------------------------------------- IF it receives message proposal is opened then showing yellow scrollable line below message */
@@ -225,10 +241,10 @@ const Conversation = ({
         <div className="text-center text-sm"> Loading...</div>
       ) : null}
 
-      {Object.entries(messagesByDate).map(
-        ([key, value]: [string, MessageProps[]]) => {
+      {Object.entries(messagesByDate as MessagesByDateAccumulator).map(
+        ([key, value]) => {
           return (
-            <>
+            <React.Fragment key={key}>
               {value?.length > 0 && (
                 <MessageDate
                   className="text-center my-4"
@@ -242,7 +258,7 @@ const Conversation = ({
                   // Blur image id for chatProvider context state
 
                   return (
-                    <>
+                    <React.Fragment key={`message-${message.chat_id}-${index}`}>
                       <MessageBubble
                         key={`chat-key-${message.chat_id}`}
                         author={isRemote(message) ? "remote" : "self"}
@@ -263,10 +279,10 @@ const Conversation = ({
                           </div>
                         )}
                       {/* END ------------------------------------------- Checking message "Proposal has beed reopened" from admin then showing yellow line */}
-                    </>
+                    </React.Fragment>
                   );
                 })}
-            </>
+            </React.Fragment>
           );
         }
       )}

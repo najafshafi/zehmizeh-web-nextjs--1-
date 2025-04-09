@@ -27,28 +27,42 @@ const HourlyRateFilter = () => {
     }
   };
 
-  const onChange = (data, key) => {
-    if (["min", "max"].includes(key) && !isValidNumber(data)) {
-      data.target.value = "";
-      return data;
+  type InputChangeEvent = {
+    target: {
+      value: string;
+    };
+  };
+
+  type FilterKey = "min" | "max" | "isNAChecked";
+
+  const onChange = (data: InputChangeEvent | boolean, key: FilterKey) => {
+    if (["min", "max"].includes(key) && typeof data !== "boolean") {
+      if (!isValidNumber(data)) {
+        data.target.value = "";
+        return data;
+      }
     }
 
     const payload = { ...filters.hourly_rate };
 
     if (key === "isNAChecked") {
-      if (data) payload[key] = data;
+      if (data) payload[key] = data as boolean;
       else delete payload[key];
     } else {
-      if (isValidNumber(data) && data.target.value !== "")
+      if (
+        typeof data !== "boolean" &&
+        isValidNumber(data) &&
+        data.target.value !== ""
+      )
         payload[key] = data.target.value;
       else delete payload[key];
     }
     updateFilterHandler("hourly_rate", payload);
   };
 
-  const hourlyRateCheckHandler = (flag: string, value: boolean) => {
+  const hourlyRateCheckHandler = (flag: "min" | "max", value: boolean) => {
     setHourtlyCheck({ ...hourlyRateCheck, [flag]: value });
-    if (!value) onChange({ target: { value: "" } }, flag);
+    if (!value) onChange({ target: { value: "" } }, flag as FilterKey);
   };
 
   return (

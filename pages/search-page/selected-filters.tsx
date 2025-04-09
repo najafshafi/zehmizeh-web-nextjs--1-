@@ -35,7 +35,7 @@ export default function SelectedFilters() {
     updateFilterHandler(field, selected);
 
     if (field === "job_type" && !selected.includes("hourly")) {
-      filters?.hourly_rate?.forEach((hourly_rate, index) => {
+      filters?.hourly_rate?.forEach((hourly_rate: string, index: number) => {
         setTimeout(() => {
           filterResults(hourly_rate, "hourly_rate")();
         }, 1 + index);
@@ -43,7 +43,7 @@ export default function SelectedFilters() {
     }
   };
 
-  const hourlyRateHandler = (flag) => {
+  const hourlyRateHandler = (flag: boolean) => {
     const payload: any = {};
     if (flag) payload.isNAChecked = true;
     updateFilterHandler("hourly_rate", payload);
@@ -170,7 +170,7 @@ export default function SelectedFilters() {
           </FilterChip>
         ))}
       {filters?.rating &&
-        filters?.rating?.map((rating: string) => (
+        filters?.rating?.map((rating: keyof typeof RATINGS_FILTER_ENUM) => (
           <FilterChip className="filter-chip flex items-center" key={rating}>
             Rating: {RATINGS_FILTER_ENUM[rating]}
             <CrossIcon
