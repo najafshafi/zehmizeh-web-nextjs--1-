@@ -1,5 +1,5 @@
 import React from "react";
-import OfferDetails from "@/pages/offer-details-page/OfferDetails";
+import OfferDetails from "../OfferDetails";
 
 const OfferDetailsPage = () => {
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import ClientJobDetails from "@/pages/client-job-details-page/ClientJobDetails";
+import ClientJobDetails from "../../ClientJobDetails";
 
 export default function GenDetailsPage() {
   const params = useParams();

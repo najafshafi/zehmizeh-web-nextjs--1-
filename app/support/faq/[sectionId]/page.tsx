@@ -1,4 +1,4 @@
-import Support from "@/pages/support-page/Support";
+import Support from "../../Support";
 
 export default function SupportFaqSection() {
   return (

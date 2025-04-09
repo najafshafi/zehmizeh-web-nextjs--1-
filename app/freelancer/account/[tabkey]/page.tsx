@@ -2,7 +2,7 @@
 
 import React from "react";
 // import Navbar from "@/components/navbar/Navbar";
-import FreelancerProfileSettings from "../../../../pages/freelancer-profile-settings/FreelancerProfileSettings";
+import FreelancerProfileSettings from "./FreelancerProfileSettings";
 
 // This is a client component that handles the dynamic routing
 export default function Page() {

@@ -12,7 +12,7 @@
 // }
 
 import React from "react";
-import TalkJS from "@/pages/talk-js";
+import TalkJS from "@/components/talkjs/talk-js";
 
 const page = () => {
   return (

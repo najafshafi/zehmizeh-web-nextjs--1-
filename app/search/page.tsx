@@ -1,6 +1,6 @@
 import React from "react";
 import { SearchFilterProvider } from "@/helpers/contexts/search-filter-context";
-import Search from "@/pages/search-page/Search";
+import Search from "./Search";
 
 const page = () => {
   return (
