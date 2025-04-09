@@ -69,12 +69,12 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
     }
 
     if (files && files[0]) {
-      setSelectedFile(files[0]);
-      const reader = new FileReader();
-      reader.onload = () => {
+    setSelectedFile(files[0]);
+    const reader = new FileReader();
+    reader.onload = () => {
         setCurrentImage(reader.result as string);
-      };
-      reader.readAsDataURL(files[0]);
+    };
+    reader.readAsDataURL(files[0]);
     }
   };
 
@@ -139,7 +139,7 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
     }
 
     try {
-      setUploading(true);
+    setUploading(true);
 
       const croppedCanvas = cropperRef.current.getCroppedCanvas();
       if (!croppedCanvas) {
@@ -147,34 +147,34 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
       }
 
       const roundedCanvas = getRoundedCanvas(croppedCanvas);
-      const dataUrl = await roundedCanvas.toDataURL();
-      const base64Data = dataUrl.replace(/^data:image\/(png|jpg);base64,/, "");
+    const dataUrl = await roundedCanvas.toDataURL();
+    const base64Data = dataUrl.replace(/^data:image\/(png|jpg);base64,/, "");
 
-      const file = await dataUrlToFileUsingFetch(
-        "data:image/jpeg;base64," + base64Data,
-        fileName,
-        `image/${extension}`
-      );
+    const file = await dataUrlToFileUsingFetch(
+      "data:image/jpeg;base64," + base64Data,
+      fileName,
+      `image/${extension}`
+    );
 
       const res = await generateAwsUrl({
-        folder: "job-documents",
-        file_name: file.name,
-        content_type: file.type,
+      folder: "job-documents",
+      file_name: file.name,
+      content_type: file.type,
       });
 
       const { uploadURL } = res;
       const contentType = file.type;
 
       await axios.put(uploadURL, file, {
-        headers: { "Content-Type": contentType },
+          headers: { "Content-Type": contentType },
       });
 
-      const uploadedUrl = uploadURL.split("?")[0];
+          const uploadedUrl = uploadURL.split("?")[0];
       onUpdate?.(uploadedUrl);
       onClose();
     } catch (err) {
       console.error("Error uploading image:", err);
-      setUploading(false);
+          setUploading(false);
       toast.error("Error uploading image. Please try again.");
     }
   };
@@ -226,8 +226,8 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
             {!currentImage && (
               <div className="relative h-[400px] w-[400px]">
                 <Image
-                  src="/images/default_avatar.png"
-                  alt="default-avatar"
+                src="/images/default_avatar.png"
+                alt="default-avatar"
                   fill
                   width={400}
                   height={400}

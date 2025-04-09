@@ -67,7 +67,7 @@ const AddBankAccount = ({ show, onClose, onUpdate }: Props) => {
   const customStyles = {
     control: (base: any, state: any) => ({
       ...base,
-      padding: "0.75rem 0.5rem", 
+      padding: "0.75rem 0.5rem",
       borderRadius: "0.4rem", // rounded-lg
       borderColor: state.isFocused ? "#3B82F6" : "#000000", // focus:ring-blue-500, border-gray-300
       boxShadow: state.isFocused ? "0 0 0 2px rgba(59, 130, 246, 0.5)" : "none", // focus:ring-2
@@ -78,7 +78,7 @@ const AddBankAccount = ({ show, onClose, onUpdate }: Props) => {
     }),
     placeholder: (base: any) => ({
       ...base,
-      color: "#9CA3AF", 
+      color: "#9CA3AF",
     }),
     menu: (base: any) => ({
       ...base,
