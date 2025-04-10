@@ -1,10 +1,9 @@
 "use client";
-import { StyledButton } from "@/components/forms/Buttons";
 import React, { useCallback, useEffect } from "react";
 import styled from "styled-components";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import { useRouter } from "next/router";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "react-query";
 import { getInvoice } from "@/helpers/http/invoice";
 import {
@@ -18,7 +17,7 @@ import useResponsive from "@/helpers/hooks/useResponsive";
 import useStartPageFromTop from "@/helpers/hooks/useStartPageFromTop";
 import toast from "react-hot-toast";
 import Image from "next/image";
-
+import CustomButton from "@/components/custombutton/CustomButton";
 const Wrapper = styled.div`
   margin: 20px auto;
   width: 800px;
@@ -68,7 +67,8 @@ type Milestone = {
 function InvoiceGenerater() {
   useStartPageFromTop();
   const router = useRouter();
-  const { id } = router.query;
+  const params = useParams();
+  const id = params?.id as string;
   const { isMobile } = useResponsive();
 
   const exportPdf = useCallback(() => {
@@ -134,7 +134,7 @@ function InvoiceGenerater() {
 
   const { data, isLoading, isRefetching } = useQuery(
     ["invoice", id],
-    () => getInvoice(id as string),
+    () => getInvoice(id),
     {
       enabled: !!id,
     }
@@ -150,8 +150,8 @@ function InvoiceGenerater() {
         invoice?.fee_percentage == 4.9
           ? "4.9%"
           : invoice?.fee_percentage == 2.9
-          ? "2.9%"
-          : `${invoice?.fee_percentage}%`,
+            ? "2.9%"
+            : `${invoice?.fee_percentage}%`,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invoice]);
@@ -166,9 +166,9 @@ function InvoiceGenerater() {
 
   return (
     <Wrapper>
-      <BackButton className="mt-4 d-print-none" />
+      <BackButton className="mt-2  print:hidden" />
       <InvoiceBody id="invoice">
-        <header className="flex justify-between mt-4">
+        <header className="flex justify-between mt-6">
           <div>
             <span className="capitalize">
               {[invoice?.userData.first_name, invoice?.userData.last_name].join(
@@ -192,18 +192,18 @@ function InvoiceGenerater() {
             className="object-contain"
           />
         </header>
-        <section className="flex justify-between mt-5">
+        <section className="flex justify-between mt-10">
           <div>
-            <b className="fs-14">Bill to:</b> <br />
+            <b className="text-sm">Bill to:</b> <br />
             ZehMizeh
           </div>
           <div>
             <div>
-              <b className="fs-14">Invoice Number:</b> <br />
+              <b className="text-sm">Invoice Number:</b> <br />
               0000{id}
             </div>
-            <div className="mt-4">
-              <span className="fs-14">
+            <div className="mt-6">
+              <span className="text-sm">
                 <b>Date:</b>
               </span>{" "}
               <br />
@@ -211,18 +211,18 @@ function InvoiceGenerater() {
             </div>
           </div>
           <div className="text-end">
-            <span className="fs-14">
+            <span className="text-sm">
               <b>Amount Due:</b>
             </span>{" "}
             <br />
-            <h2 className="fs-20">
-              {/* <span className="text-uppercase">{invoice?.currency}</span>{' '} */}
+            <h2 className="text-xl">
+              {/* <span className="uppercase">{invoice?.currency}</span>{' '} */}
               {numberWithCommas(invoice?.amount, "USD")}
             </h2>
           </div>
         </section>
-        <div className="summary mt-4">
-          <table className="w-100">
+        <div className="summary mt-6">
+          <table className="w-full">
             <thead className="summary-header">
               <tr>
                 <td>Description</td>
@@ -271,7 +271,7 @@ function InvoiceGenerater() {
               <tr className="total-content">
                 <td colSpan={2}></td>
                 <td colSpan={2}>
-                  <table className="mt-4 w-100 text-end total-inner">
+                  <table className="mt-6 w-full text-end total-inner">
                     <tbody>
                       <tr>
                         <td width={180}>
@@ -281,7 +281,7 @@ function InvoiceGenerater() {
                           :
                         </td>
                         <td>
-                          {/* <span className="text-uppercase">
+                          {/* <span className="uppercase">
                             {invoice?.currency}
                           </span>{' '} */}
                           {numberWithCommas(feeBreakup.subtotal, "USD")}
@@ -310,11 +310,11 @@ function InvoiceGenerater() {
               >
                 <td colSpan={2}></td>
                 <td colSpan={2}>
-                  <table className="w-100 text-end total-inner">
+                  <table className="w-full text-end total-inner">
                     <tbody>
                       <tr>
                         <td width={130}>Total:</td>
-                        <td className="fs-1rem">
+                        <td className="text-base">
                           <b>{numberWithCommas(invoice?.amount, "USD")}</b>
                         </td>
                       </tr>
@@ -326,17 +326,22 @@ function InvoiceGenerater() {
           </table>
         </div>
       </InvoiceBody>
-      <div className="text-center flex gap-2 justify-center mt-5 d-print-none">
-        <StyledButton size="sm" onClick={exportPdf}>
+      <div className="text-center flex gap-2 justify-center mt-10 print:hidden">
+        {/* <StyledButton size="sm" onClick={exportPdf}>
           Download
-        </StyledButton>
-        <StyledButton
-          size="sm"
-          variant="outline-primary"
+        </StyledButton> */}
+
+        <CustomButton
+          text={"Download"}
+          className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[16px] mx-2"
+          onClick={exportPdf}
+        />
+
+        <CustomButton
+          text={"Print"}
+          className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[16px] border-2 hover:border-black hover:text-white hover:bg-black"
           onClick={() => window.print()}
-        >
-          Print
-        </StyledButton>
+        />
       </div>
     </Wrapper>
   );
