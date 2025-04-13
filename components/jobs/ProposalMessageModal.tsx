@@ -1,20 +1,18 @@
+"use client";
+
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Modal, Button, Form } from "react-bootstrap";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { StyledButton } from "@/components/forms/Buttons";
 import { useForm } from "react-hook-form";
-import ErrorMessage from "@/components/ui/ErrorMessage";
-import * as yup from "yup";
-import useResponsive from "@/helpers/hooks/useResponsive";
-// import messageService from "@/helpers/http/message";
+import { useRouter } from "next/navigation";
+import { VscClose } from "react-icons/vsc";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-// import { postAJob } from "@/helpers/http/post-job";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/redux/store";
-import { AddMessagePayload } from "@/store/redux/slices/chat.interface";
+import * as yup from "yup";
+import ErrorMessage from "@/components/ui/ErrorMessage";
+import useResponsive from "@/helpers/hooks/useResponsive";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import { addNewMessage } from "@/store/redux/slices/talkjsSlice";
+import { AppDispatch } from "@/store/redux/store";
+import { AddMessagePayload } from "@/store/redux/slices/chat.interface";
 
 interface FormProp {
   message: string;
@@ -27,14 +25,14 @@ interface ProposalData {
   proposal_id?: string;
 }
 
-type Props = {
+interface Props {
   show: boolean;
   setShow: (value: boolean) => void;
   freelancerName: string;
   proposal: ProposalData;
   jobId: string;
   messagePopupCount: number;
-};
+}
 
 const ProposalMessageModal = ({
   show,
@@ -42,16 +40,17 @@ const ProposalMessageModal = ({
   freelancerName,
   proposal,
   jobId,
-}: //messagePopupCount,
-Props) => {
-  const navigate = useNavigate();
+}: Props) => {
+  const router = useRouter();
   const closeModal = () => setShow(false);
   const dispatch: AppDispatch = useDispatch();
+  const { isMobile } = useResponsive();
+  const { user } = useAuth();
+
   const schema = yup.object({
     message: yup.string().required("Message is required"),
   });
 
-  const { user } = useAuth();
   const { formState, handleSubmit, setValue } = useForm({
     resolver: yupResolver(schema),
   });
@@ -59,7 +58,6 @@ Props) => {
   const { errors } = formState;
 
   const onSubmit = async ({ message }: FormProp) => {
-    // on invite send client ID and on proposal sent the user_id (user_id = freelancer user id)
     const message_text = message.replaceAll("\n", " <br>");
     const payload: AddMessagePayload = {
       job_post_id: jobId,
@@ -72,6 +70,7 @@ Props) => {
       tab: "invities",
       custom_chat_id: new Date().getTime(),
     };
+
     if (proposal.invite_id) {
       payload.invite_id = Number(proposal.invite_id);
     } else if (proposal.proposal_id) {
@@ -83,86 +82,75 @@ Props) => {
     dispatch(addNewMessage({ message: payload })).then(() => {
       toast.remove();
       if (proposal?.invite_id) {
-        navigate(`/messages-new/invite_${proposal?.invite_id}`);
+        router.push(`/messages-new/invite_${proposal?.invite_id}`);
         return "Message sent successfully.";
       } else if (proposal?.proposal_id) {
-        navigate(`/messages-new/proposal_${proposal?.proposal_id}`);
+        router.push(`/messages-new/proposal_${proposal?.proposal_id}`);
         return "Message sent successfully.";
       }
       return "Message sent successfully.";
     });
-
-    // const promise = messageService.sendMessage(payload);
-    // const promiseArray = [promise];
-    // if (messagePopupCount < 3 && proposal?.proposal_id) {
-    //   const postJobPromise = postAJob({
-    //     job_post_id: jobId,
-    //     message_freelancer_popup_count: messagePopupCount + 1,
-    //   });
-    //   promiseArray.push(postJobPromise);
-    // }
-    // toast.promise(Promise.all(promiseArray), {
-    //   loading: 'Sending message...',
-    //   success: () => {
-
-    //   },
-    //   error: (err) => {
-    //     console.log(err.message);
-    //     return err?.response?.data?.message || 'error';
-    //   },
-    // });
   };
 
-  const { isMobile } = useResponsive();
+  if (!show) return null;
 
   return (
-    <StyledModal
-      maxwidth={767}
-      show={show}
-      size="sm"
-      onHide={closeModal}
-      centered
-    >
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={closeModal}>
-          &times;
-        </Button>
-        <div>
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            <div className="fs-24 font-normal">
-              Write <span className="capitalize">{freelancerName}</span> a
-              message
-            </div>
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div
+        className="fixed inset-0 bg-black/50 transition-opacity"
+        onClick={closeModal}
+      />
+      <div className="fixed inset-0 z-10 overflow-y-auto">
+        <div className="flex min-h-full items-center justify-center p-4 text-center">
+          <div className="relative w-full max-w-[767px] transform overflow-hidden rounded-2xl bg-white px-4 py-8 md:p-12 text-left align-middle shadow-xl transition-all">
+            <button
+              onClick={closeModal}
+              className="absolute right-4 top-4 md:top-0 md:-right-8 md:text-white text-gray-400 hover:text-gray-500 focus:outline-none"
+            >
+              <VscClose className="h-6 w-6" />
+            </button>
 
-            <div className="mt-4">
-              <textarea
-                className={`form-control p-3 ${
-                  errors?.message?.message
-                    ? "border border-danger shadow-none"
-                    : ""
-                }`}
-                placeholder="Write here..."
-                rows={5}
-                onChange={(e) =>
-                  setValue("message", e.target.value, { shouldValidate: true })
-                }
-              ></textarea>
-              <ErrorMessage>{errors?.message?.message}</ErrorMessage>
-            </div>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div className="text-2xl font-normal">
+                Write <span className="capitalize">{freelancerName}</span> a
+                message
+              </div>
 
-            <div className="flex justify-center mt-4">
-              <StyledButton
-                style={{ padding: "1rem 4rem" }}
-                className={isMobile ? "w-100" : undefined}
-                type="submit"
-              >
-                Send
-              </StyledButton>
-            </div>
-          </Form>
+              <div className="mt-4">
+                <textarea
+                  className={`w-full p-3 rounded-lg border ${
+                    errors?.message?.message
+                      ? "border-red-500 focus:ring-red-500"
+                      : "border-gray-300 focus:ring-amber-500"
+                  } focus:outline-none focus:ring-2 focus:border-transparent transition-colors duration-200`}
+                  placeholder="Write here..."
+                  rows={5}
+                  onChange={(e) =>
+                    setValue("message", e.target.value, {
+                      shouldValidate: true,
+                    })
+                  }
+                />
+                {errors?.message?.message && (
+                  <ErrorMessage>{errors.message.message}</ErrorMessage>
+                )}
+              </div>
+
+              <div className="flex justify-center">
+                <button
+                  type="submit"
+                  className={`px-8 py-4 text-white bg-amber-500 rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200 ${
+                    isMobile ? "w-full" : ""
+                  }`}
+                >
+                  Send
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </Modal.Body>
-    </StyledModal>
+      </div>
+    </div>
   );
 };
 

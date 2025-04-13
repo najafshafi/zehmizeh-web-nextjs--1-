@@ -1,14 +1,13 @@
+"use client";
+
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import styled from "styled-components";
+import { VscClose } from "react-icons/vsc";
 import toast from "react-hot-toast";
 import moment from "moment";
-import { Modal, Button } from "react-bootstrap";
 import Tooltip from "@/components/ui/Tooltip";
 import Loader from "@/components/Loader";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { StyledButton } from "@/components/forms/Buttons";
 import { StatusBadge } from "@/components/styled/Badges";
 import {
   getProposalDetails,
@@ -37,7 +36,6 @@ import InviteFreelancerMessageModal from "@/components/invite-flow-modals/Invite
 import { updateInvitationStatus, editInvitation } from "@/helpers/http/jobs";
 import { TInviteSentDetails } from "@/helpers/types/invite.type";
 import { HiringMoreFreelancerModal } from "./HiringMoreFreelancerModal";
-import classNames from "classnames";
 import {
   talkJsCreateNewThread,
   talkJsFetchSingleConversation,
@@ -46,104 +44,14 @@ import { useAuth } from "@/helpers/contexts/auth-context";
 import ChatModal from "@/components/talkjs/chat-modal";
 import PaymentTermsPopup from "@/components/PaymentTermsPopup";
 
-type Props = {
+interface Props {
   show: boolean;
   toggle: () => void;
   selectedProposalId: string;
   refetch: (shouldToggleModal?: boolean) => void;
   replyOnProjectPageBtn?: boolean;
   type?: "proposal" | "invite";
-};
-
-export const DetailsWrapper = styled.div<{
-  isMobile: boolean;
-  isShowingDeclinedHeadline?: boolean;
-}>`
-  margin-top: 10px;
-  .declined-headline {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    overflow: hidden;
-    width: 100%;
-    background-color: ${(props) => props.theme.statusColors.orange.bg};
-    text-align: center;
-    border-radius: 0.8rem 0.8rem 0px 0px;
-    padding: 6px;
-  }
-  .view-profile-link {
-    position: ${(props) => (props.isMobile ? "relative" : "absolute")};
-    font-size: 18px;
-    right: ${(props) => (!props.isMobile ? "2rem" : "unset")};
-    top: ${(props) =>
-      !props.isMobile && props.isShowingDeclinedHeadline
-        ? "3.5rem"
-        : !props.isMobile
-          ? "1.5rem"
-          : "unset"};
-    color: #f2b420;
-    margin: ${(props) => (props.isMobile ? "1rem 0" : 0)};
-    width: ${(props) => (props.isMobile ? "100%" : "unset")};
-    display: inline-block;
-  }
-
-  .content {
-    gap: 2.25rem;
-  }
-  .freelancer-details {
-    gap: 2rem;
-  }
-  .freelancer-details__content {
-    width: 100%;
-    gap: 10px;
-  }
-  .proposal-attributes {
-    gap: 0.875rem;
-  }
-  .description-text {
-    opacity: 0.7;
-    line-height: 1.6em;
-  }
-  .light-text {
-    opacity: 0.5;
-  }
-  .proposal-details-item {
-    gap: 0.875rem;
-    .row-item {
-      gap: 10px;
-    }
-  }
-  .attachments {
-    background-color: #f8f8f8;
-    border: 1px solid #dedede;
-    padding: 0.75rem 1.25rem;
-    border-radius: 0.5rem;
-    gap: 10px;
-  }
-  .divider {
-    margin: 2rem 0rem;
-    height: 1px;
-    background: ${(props) => props.theme.colors.black};
-    opacity: 0.1;
-  }
-  .freelancer-name-wrapper {
-    width: calc(100% - 266px - 3rem);
-    font-size: 1.5rem;
-    font-weight: 400;
-    text-transform: capitalize;
-    .navigation-link {
-      color: ${(props) => props.theme.colors.primary};
-      text-decoration: underline;
-    }
-    & > div {
-      display: inline-block;
-      margin-left: 4px;
-    }
-    @media (max-width: 767px) {
-      width: 100%;
-    }
-  }
-`;
+}
 
 const ProposalDetailsModal = ({
   show,
@@ -171,14 +79,11 @@ const ProposalDetailsModal = ({
     setIsShowingHiringMoreFreelancerModal,
   ] = useState(false);
   const [warningPopupCount, setWarningPopupCount] = useState(0);
-  // const [sendingEditInvite, setSendingEditInvite] = useState<boolean>(false);
-
   const [threadLoading, setThreadLoading] = useState<boolean>(false);
   const [conversationId, setConversationId] = useState<string>();
   const [freelancerName, setFreelancerName] = useState<string>();
   const [openChatModal, setOpenChatModal] = useState<boolean>(false);
   const { user } = useAuth();
-
   const queryClient = useQueryClient();
 
   const closeChatModal = () => {
@@ -284,10 +189,8 @@ const ProposalDetailsModal = ({
       invite_id: proposalDetails?.invite_id,
       invite_message: msg,
     };
-    // setSendingEditInvite(true);
     editInvitation(body)
       .then((res) => {
-        // setSendingEditInvite(false);
         if (res.status) {
           toast.success(res.message);
           toggleInviteMessageModal();
@@ -300,9 +203,7 @@ const ProposalDetailsModal = ({
           );
         }
       })
-      .catch(() => {
-        // setSendingEditInvite(false);
-      });
+      .catch(() => {});
   };
 
   const updateStatus = (
@@ -325,8 +226,6 @@ const ProposalDetailsModal = ({
     });
   };
 
-  // Getting job details from react-query cache so dont need to prop drill job status from parent
-  // when looking at job details and open proposal then it'll fetch status from cache because job details cache is already there
   const jobDetails = useMemo(() => {
     if (!proposalDetails?._job_post_id) return;
     const proposals: any = queryClient.getQueryData(["get-received-proposals"]);
@@ -369,8 +268,7 @@ const ProposalDetailsModal = ({
         );
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getMessageFreelancerPopupCount, selectedProposalId]);
+  }, [getMessageFreelancerPopupCount, selectedProposalId, type]);
 
   const onAcceptDecline =
     (
@@ -390,8 +288,6 @@ const ProposalDetailsModal = ({
         can_hire_more_freelancers: false,
       };
 
-      // If client wants to make another version of same project then passing
-      // can_hire_more_freelancers flag which will create copy of this project and move data to new project
       if (status === "accept") {
         body.can_hire_more_freelancers =
           canHireMoreFreelancers === "ACCEPT_AND_LEAVE_OPEN";
@@ -399,13 +295,7 @@ const ProposalDetailsModal = ({
 
       const promise = acceptProposal(body);
       toast.promise(promise, {
-        loading: `${
-          status == "accept"
-            ? "Accepting"
-            : status == "pending"
-              ? "Reopening"
-              : "Declining"
-        } the proposal...`,
+        loading: `${status == "accept" ? "Accepting" : status == "pending" ? "Reopening" : "Declining"} the proposal...`,
         success: (res) => {
           setLoading(false);
           refetch(status === "accept" ? false : true);
@@ -458,57 +348,7 @@ const ProposalDetailsModal = ({
       type === "invite",
   };
 
-  const buttonsUI = {
-    acceptProposal: (
-      <StyledButton
-        padding="1rem 2rem"
-        className={isMobile ? "w-100" : undefined}
-        variant="primary"
-        onClick={handleAcceptFreelancer}
-        disabled={loading}
-      >
-        Accept Proposal
-      </StyledButton>
-    ),
-    declineProposal: (
-      <StyledButton
-        padding="1rem 2rem"
-        className={isMobile ? "w-100" : undefined}
-        variant="outline-dark"
-        onClick={onAcceptDecline("denied")}
-        disabled={loading}
-      >
-        Decline Proposal
-      </StyledButton>
-    ),
-    messageFreelancerOrGotoChat: (
-      <StyledButton
-        padding="1rem 2rem"
-        className={isMobile ? "w-100" : undefined}
-        variant="outline-dark"
-        disabled={loading}
-        onClick={() => conversationHandler()}
-      >
-        {/* {proposalDetails?.threadExists ? 'Go To Chat' : 'Message Freelancer'} */}
-        Message Freelancer
-      </StyledButton>
-    ),
-    seeProjectPost: (
-      <StyledButton
-        padding="1rem 2rem"
-        className={isMobile ? "w-100" : undefined}
-        variant="primary"
-        onClick={() =>
-          router.push(
-            `/client-job-details/${proposalDetails._job_post_id}/applicants`
-          )
-        }
-        disabled={loading}
-      >
-        See Project Post
-      </StyledButton>
-    ),
-  };
+  if (!show) return null;
 
   return (
     <>
@@ -550,446 +390,428 @@ const ProposalDetailsModal = ({
         onAccept={handlePaymentTermsAccept}
       />
 
-      <StyledModal
-        maxwidth={767}
-        show={show}
-        size="sm"
-        onHide={closeModal}
-        centered
-      >
-        <Modal.Body>
-          <Button variant="transparent" className="close" onClick={closeModal}>
-            &times;
-          </Button>
-          {fetching ? (
-            <Loader />
-          ) : (
-            <DetailsWrapper
-              isMobile={isMobile}
-              isShowingDeclinedHeadline={
-                proposalStatus.denied || inviteStatus.canceled
-              }
-            >
-              {/* START ----------------------------------------- Showing notice if proposal is denied */}
-              {proposalStatus.denied &&
-                proposalDetails?.status_change_timestamp?.denied_date && (
-                  <div className="declined-headline">
-                    <span>
-                      You declined this proposal -{" "}
-                      {moment(
-                        proposalDetails.status_change_timestamp.denied_date
-                      ).format("MMM DD, YYYY")}
-                    </span>
-                  </div>
-                )}
-              {/* END ------------------------------------------- Showing notice if proposal is denied */}
+      <div className="fixed inset-0 z-50 overflow-y-auto">
+        <div
+          className="fixed inset-0 bg-black/50 transition-opacity"
+          onClick={closeModal}
+        />
+        <div className="fixed inset-0 z-10 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <div className="relative w-full max-w-[767px] transform overflow-hidden rounded-2xl bg-white px-4 py-8 md:p-12 text-left align-middle shadow-xl transition-all">
+              <button
+                onClick={closeModal}
+                className="absolute right-4 top-4 md:top-0 md:-right-8 md:text-white text-gray-400 hover:text-gray-500 focus:outline-none"
+              >
+                <VscClose className="h-6 w-6" />
+              </button>
 
-              {/* START ----------------------------------------- Showing notice if invite is canceled */}
-              {inviteStatus.canceled &&
-                proposalDetails?.status_change_timestamp?.canceled_date && (
-                  <div className="declined-headline">
-                    <span>
-                      You canceled this invite -{" "}
-                      {moment(
-                        proposalDetails.status_change_timestamp.canceled_date
-                      ).format("MMM DD, YYYY")}
-                    </span>
-                  </div>
-                )}
-              {/* END ------------------------------------------- Showing notice if invite is canceled */}
+              {fetching ? (
+                <Loader />
+              ) : (
+                <div className={`mt-10 ${isMobile ? "relative" : ""}`}>
+                  {/* Declined Headline */}
+                  {(proposalStatus.denied || inviteStatus.canceled) && (
+                    <div className="absolute top-0 left-0 w-full overflow-hidden bg-orange-100 text-center rounded-t-xl py-1.5">
+                      <span className="text-sm">
+                        {proposalStatus.denied
+                          ? `You declined this proposal - ${moment(
+                              proposalDetails.status_change_timestamp
+                                ?.denied_date
+                            ).format("MMM DD, YYYY")}`
+                          : `You canceled this invite - ${moment(
+                              proposalDetails.status_change_timestamp
+                                ?.canceled_date
+                            ).format("MMM DD, YYYY")}`}
+                      </span>
+                    </div>
+                  )}
 
-              {replyOnProjectPageBtn && (
-                <div className="view-profile-link">
-                  {buttonsUI.seeProjectPost}
-                </div>
-              )}
-              {!replyOnProjectPageBtn && proposalDetails?.user_id && (
-                <Link
-                  className="view-profile-link"
-                  href={`/freelancer/${proposalDetails?.user_id}`}
-                >
-                  <StyledButton
-                    padding="1rem 2rem"
-                    className={isMobile ? "w-100" : undefined}
-                    variant="primary"
-                    disabled={loading}
-                  >
-                    See Freelancer Profile
-                  </StyledButton>
-                </Link>
-              )}
-
-              <div className="content flex flex-col">
-                {/* Freelancer details */}
-
-                <div className="freelancer-details flex flex-wrap">
-                  <div className="freelancer-details__content flex flex-col">
-                    {/* START ----------------------------------------- Freelancer name */}
-                    <div className="flex items-center gap-2">
-                      {/* START ----------------------------------------- Freelancer image */}
-                      <BlurredImage
-                        src={
-                          proposalDetails?.user_image ||
-                          "/images/default_avatar.png"
+                  {/* View Profile Link */}
+                  {replyOnProjectPageBtn ? (
+                    <div
+                      className={`${isMobile ? "relative" : "absolute right-8 top-4"}`}
+                    >
+                      <button
+                        onClick={() =>
+                          router.push(
+                            `/client-job-details/${proposalDetails._job_post_id}/applicants`
+                          )
                         }
-                        height="80px"
-                        width="80px"
-                      />
-                      {/* END ------------------------------------------- Freelancer image */}
-                      <div className="freelancer-name-wrapper">
-                        <Link
-                          className={classNames(
-                            { "navigation-link": replyOnProjectPageBtn },
-                            "mr-2"
-                          )}
-                          href={`/freelancer/${proposalDetails?.user_id}`}
-                        >
-                          {proposalDetails?.first_name}{" "}
-                          {proposalDetails?.last_name}
-                        </Link>
-                        <div>
-                          {type === "proposal" && proposalDetails?.is_agency ? (
-                            <StatusBadge color="blue">Agency</StatusBadge>
-                          ) : null}
-                          {type === "invite" && (
-                            <StatusBadge
-                              className="width-fit-content"
-                              color={
-                                proposalDetails?.status &&
-                                typeof proposalDetails.status === "string" &&
-                                proposalDetails.status in JOBS_STATUS
-                                  ? JOBS_STATUS[
-                                      proposalDetails.status as keyof typeof JOBS_STATUS
-                                    ]?.color
-                                  : "gray"
-                              }
+                        className="w-full md:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200"
+                        disabled={loading}
+                      >
+                        See Project Post
+                      </button>
+                    </div>
+                  ) : proposalDetails?.user_id ? (
+                    <Link
+                      href={`/freelancer/${proposalDetails?.user_id}`}
+                      className={`${isMobile ? "relative" : "absolute right-8 top-4"}`}
+                    >
+                      <button
+                        className="w-full md:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200"
+                        disabled={loading}
+                      >
+                        See Freelancer Profile
+                      </button>
+                    </Link>
+                  ) : null}
+
+                  <div className="space-y-9">
+                    {/* Freelancer Details */}
+                    <div className="flex flex-wrap gap-8">
+                      <div className="w-full space-y-2.5">
+                        <div className="flex items-center gap-2">
+                          <BlurredImage
+                            src={
+                              proposalDetails?.user_image ||
+                              "/images/default_avatar.png"
+                            }
+                            height="80px"
+                            width="80px"
+                          />
+                          <div
+                            className={`${isMobile ? "w-full" : "w-[calc(100%-266px-3rem)]"}`}
+                          >
+                            <Link
+                              href={`/freelancer/${proposalDetails?.user_id}`}
+                              className={`text-xl font-normal capitalize mr-2 ${
+                                replyOnProjectPageBtn
+                                  ? "text-amber-500 underline"
+                                  : ""
+                              }`}
                             >
-                              {proposalDetails?.status == "pending"
-                                ? "Unread"
-                                : proposalDetails?.status}
-                            </StatusBadge>
-                          )}
+                              {proposalDetails?.first_name}{" "}
+                              {proposalDetails?.last_name}
+                            </Link>
+                            <div className="inline-block">
+                              {type === "proposal" &&
+                              proposalDetails?.is_agency ? (
+                                <StatusBadge color="blue">Agency</StatusBadge>
+                              ) : null}
+                              {type === "invite" && (
+                                <StatusBadge
+                                  className="w-fit"
+                                  color={
+                                    proposalDetails?.status &&
+                                    typeof proposalDetails.status ===
+                                      "string" &&
+                                    proposalDetails.status in JOBS_STATUS
+                                      ? JOBS_STATUS[
+                                          proposalDetails.status as keyof typeof JOBS_STATUS
+                                        ]?.color
+                                      : "gray"
+                                  }
+                                >
+                                  {proposalDetails?.status == "pending"
+                                    ? "Unread"
+                                    : proposalDetails?.status}
+                                </StatusBadge>
+                              )}
+                            </div>
+                          </div>
                         </div>
+                        <div className="text-lg font-normal text-gray-500 capitalize">
+                          {proposalDetails?.job_title}
+                        </div>
+                        {proposalDetails?.invite_message && (
+                          <div className="space-y-2">
+                            <span className="text-lg font-bold">
+                              Invite Message
+                            </span>
+                            <div className="text-lg font-normal text-gray-500">
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: proposalDetails?.invite_message,
+                                }}
+                              />
+                            </div>
+                          </div>
+                        )}
+                        {type === "proposal" &&
+                          (proposalDetails?.location?.state ||
+                            proposalDetails?.location?.country_name) && (
+                            <div className="flex items-center gap-2">
+                              <LocationIcon />
+                              <div className="text-lg font-normal text-gray-500">
+                                {separateValuesWithComma([
+                                  proposalDetails?.location?.state,
+                                  proposalDetails?.location?.country_name,
+                                ])}
+                              </div>
+                            </div>
+                          )}
                       </div>
                     </div>
-                    {/* END ------------------------------------------- Freelancer name */}
-                    {/* START ----------------------------------------- Designation */}
-                    <div className="text-lg font-normal light-text capital-first-ltr">
-                      {proposalDetails?.job_title}
+
+                    {/* Proposal Details */}
+                    <div className="space-y-4">
+                      <div className="space-y-1">
+                        <div className="text-lg font-bold">
+                          {type === "proposal" ? "Proposal" : "Invite"}
+                        </div>
+                        {proposalDetails?.date_created && (
+                          <div className="text-base font-light">
+                            {type === "proposal" ? "Submitted" : "Sent"}:{" "}
+                            {moment(proposalDetails.date_created).format(
+                              "MMM DD, YYYY"
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      <div className="text-lg font-normal text-gray-500 leading-relaxed">
+                        <StyledHtmlText
+                          htmlString={proposalDetails?.description || ""}
+                          id={`proposal_${selectedProposalId}`}
+                        />
+                      </div>
                     </div>
-                    {proposalDetails?.invite_message && (
-                      <div className="text-lg font-bold">
-                        <span>Invite Message</span>
-                        <div className="text-lg font-normal light-text capital-first-ltr">
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html: proposalDetails?.invite_message,
-                            }}
+
+                    {/* Price and Time Estimation */}
+                    <div className="space-y-4">
+                      {type === "proposal" && (
+                        <div className="flex flex-wrap gap-4">
+                          <div className="flex items-center gap-2">
+                            <div className="text-base font-bold">Price:</div>
+                            <div className="text-base font-light">
+                              {numberWithCommas(
+                                proposalDetails?.proposed_budget?.amount || 0,
+                                "USD"
+                              )}
+                              {proposalDetails?.proposed_budget?.type ==
+                              "hourly"
+                                ? `/hr`
+                                : ``}
+                            </div>
+                          </div>
+                          <Tooltip>
+                            <div>Price With Fees:</div>
+                            <div>
+                              {numberWithCommas(
+                                getValueByPercentage(
+                                  Number(
+                                    proposalDetails?.proposed_budget?.amount ||
+                                      0
+                                  ),
+                                  102.9
+                                ),
+                                "USD"
+                              )}
+                              {proposalDetails?.proposed_budget?.type ==
+                              "hourly"
+                                ? `/hr`
+                                : ``}{" "}
+                              -{" "}
+                              {numberWithCommas(
+                                getValueByPercentage(
+                                  Number(
+                                    proposalDetails?.proposed_budget?.amount ||
+                                      0
+                                  ),
+                                  104.9
+                                ),
+                                "USD"
+                              )}
+                              {proposalDetails?.proposed_budget?.type ==
+                              "hourly"
+                                ? `/hr`
+                                : ``}
+                            </div>
+                          </Tooltip>
+                        </div>
+                      )}
+
+                      {proposalDetails?.proposed_budget?.time_estimation && (
+                        <div className="flex items-center gap-2">
+                          <div className="text-base font-bold">
+                            Time Estimation:
+                          </div>
+                          <div className="text-base font-light">
+                            {getTimeEstimation(
+                              proposalDetails?.proposed_budget?.time_estimation,
+                              proposalDetails?.proposed_budget?.type == "hourly"
+                                ? "hours"
+                                : "weeks"
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Terms and Conditions */}
+                    {proposalDetails?.terms_and_conditions && (
+                      <div className="space-y-2">
+                        <div className="text-base font-bold">
+                          Special Terms & Conditions:
+                        </div>
+                        <div className="text-lg font-light text-gray-500">
+                          <StyledHtmlText
+                            id="termsAndConditions"
+                            htmlString={proposalDetails.terms_and_conditions}
+                            needToBeShorten={true}
                           />
                         </div>
                       </div>
                     )}
 
-                    {/* END ------------------------------------------- Designation */}
+                    {/* Questions */}
+                    {proposalDetails?.questions && (
+                      <div className="space-y-2">
+                        <div className="text-base font-bold">Questions:</div>
+                        <div className="text-lg font-light text-gray-500">
+                          <StyledHtmlText
+                            id="questions"
+                            htmlString={proposalDetails.questions}
+                            needToBeShorten={true}
+                          />
+                        </div>
+                      </div>
+                    )}
 
-                    {/* START ----------------------------------------- Location */}
-                    {type === "proposal" &&
-                      (proposalDetails?.location?.state ||
-                        proposalDetails?.location?.country_name) && (
-                        <div className="flex items-center gap-2">
-                          <LocationIcon />
-                          <div className="text-lg font-normal light-text">
-                            {separateValuesWithComma([
-                              proposalDetails?.location?.state,
-                              proposalDetails?.location?.country_name,
-                            ])}
+                    {/* Attachments */}
+                    {proposalDetails?.attachments &&
+                      proposalDetails?.attachments?.length > 0 && (
+                        <div className="space-y-2">
+                          <div className="text-base font-bold">
+                            Attachments:
+                          </div>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {proposalDetails.attachments.map((attachment) => (
+                              <div key={attachment}>
+                                <AttachmentPreview
+                                  uploadedFile={attachment}
+                                  removable={false}
+                                  shouldShowFileNameAndExtension={false}
+                                />
+                              </div>
+                            ))}
                           </div>
                         </div>
                       )}
-                    {/* END ------------------------------------------- Location */}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="mt-8 space-y-4">
+                    <div className="h-px bg-black/10" />
+                    <div className="flex flex-wrap gap-3">
+                      {replyOnProjectPageBtn &&
+                        type === "proposal" &&
+                        proposalDetails?._job_post_id && (
+                          <>
+                            <button
+                              onClick={() => conversationHandler()}
+                              className="w-full md:w-auto px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
+                              disabled={loading}
+                            >
+                              Message Freelancer
+                            </button>
+                            <button
+                              onClick={onAcceptDecline("denied")}
+                              className="w-full md:w-auto px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
+                              disabled={loading}
+                            >
+                              Decline Proposal
+                            </button>
+                            <button
+                              onClick={handleAcceptFreelancer}
+                              className="w-full md:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200"
+                              disabled={loading}
+                            >
+                              Accept Proposal
+                            </button>
+                          </>
+                        )}
+
+                      {proposalStatus.pending && (
+                        <>
+                          <button
+                            onClick={() => conversationHandler()}
+                            className="w-full md:w-auto px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
+                            disabled={loading}
+                          >
+                            Message Freelancer
+                          </button>
+                          <button
+                            onClick={onAcceptDecline("denied")}
+                            className="w-full md:w-auto px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
+                            disabled={loading}
+                          >
+                            Decline Proposal
+                          </button>
+                          <button
+                            onClick={handleAcceptFreelancer}
+                            className="w-full md:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200"
+                            disabled={loading}
+                          >
+                            Accept Proposal
+                          </button>
+                        </>
+                      )}
+
+                      {proposalStatus.denied && (
+                        <button
+                          onClick={onAcceptDecline("pending")}
+                          className="w-full md:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200"
+                          disabled={loading}
+                        >
+                          Reopen Proposal
+                        </button>
+                      )}
+
+                      {inviteStatus.pending && (
+                        <>
+                          <button
+                            onClick={() => {
+                              closeModal();
+                              setShowInviteMessageModal(true);
+                            }}
+                            className="w-full md:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200"
+                            disabled={loading}
+                          >
+                            Edit Invitation
+                          </button>
+                          <button
+                            onClick={() => updateStatus("canceled")}
+                            className="w-full md:w-auto px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
+                            disabled={loading}
+                          >
+                            Cancel Invitation
+                          </button>
+                        </>
+                      )}
+
+                      {inviteStatus.canceled && (
+                        <button
+                          onClick={() => updateStatus("pending")}
+                          className="w-full md:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200"
+                          disabled={loading}
+                        >
+                          Reopen Invitation
+                        </button>
+                      )}
+
+                      {inviteStatus.read && proposalDetails?.threadExists && (
+                        <button
+                          onClick={() =>
+                            router.push(
+                              `/messages-new/invite_${proposalDetails.invite_id}`
+                            )
+                          }
+                          className="w-full md:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200"
+                          disabled={loading}
+                        >
+                          Go To Chat
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-
-                {/* START ----------------------------------------- Description */}
-                <div className="proposal-details-item flex flex-col">
-                  <div className="text-lg font-bold">
-                    {type === "proposal" && <span>Proposal</span>}
-                    {proposalDetails?.date_created && type === "proposal" && (
-                      <div className="text-base font-light">
-                        Submitted:{" "}
-                        {moment(proposalDetails.date_created).format(
-                          "MMM DD, YYYY"
-                        )}
-                      </div>
-                    )}
-                    {type === "invite" && <span>Invite</span>}
-                    {proposalDetails?.date_created && type === "invite" && (
-                      <div className="text-base font-light">
-                        Sent:{" "}
-                        {moment(proposalDetails.date_created).format(
-                          "MMM DD, YYYY"
-                        )}
-                      </div>
-                    )}
-                  </div>
-                  <div className="description-text text-lg font-normal">
-                    <StyledHtmlText
-                      htmlString={proposalDetails?.description || ""}
-                      id={`proposal_${selectedProposalId}`}
-                    />
-                  </div>
-                </div>
-                {/* END ------------------------------------------- Description */}
-
-                <div className="proposal-details-item flex flex-col">
-                  <div className="flex gap-2 items-center">
-                    {/* START ----------------------------------------- Price */}
-                    {type === "proposal" && (
-                      <div className="row-item flex items-center">
-                        <div className="text-base font-bold">Price:</div>
-                        <div className="text-base font-light">
-                          {numberWithCommas(
-                            proposalDetails?.proposed_budget?.amount || 0,
-                            "USD"
-                          )}
-                          {proposalDetails?.proposed_budget?.type == "hourly"
-                            ? `/hr`
-                            : ``}
-                        </div>
-                      </div>
-                    )}
-                    {/* END ------------------------------------------- Price */}
-
-                    {/* START ----------------------------------------- Price */}
-                    {type === "proposal" && (
-                      <Tooltip>
-                        <div>Price With Fees:</div>
-                        <div>
-                          {numberWithCommas(
-                            getValueByPercentage(
-                              Number(
-                                proposalDetails?.proposed_budget?.amount || 0
-                              ),
-                              102.9
-                            ),
-                            "USD"
-                          )}
-                          {proposalDetails?.proposed_budget?.type == "hourly"
-                            ? `/hr`
-                            : ``}{" "}
-                          -{" "}
-                          {numberWithCommas(
-                            getValueByPercentage(
-                              Number(
-                                proposalDetails?.proposed_budget?.amount || 0
-                              ),
-                              104.9
-                            ),
-                            "USD"
-                          )}
-                          {proposalDetails?.proposed_budget?.type == "hourly"
-                            ? `/hr`
-                            : ``}
-                        </div>
-                      </Tooltip>
-                    )}
-                  </div>
-                  {/* END ------------------------------------------- Price */}
-
-                  {/* START ----------------------------------------- Time estimation */}
-                  {proposalDetails?.proposed_budget?.time_estimation && (
-                    <div className="row-item flex items-center">
-                      <div className="text-base font-bold">
-                        Time Estimation:{" "}
-                      </div>
-                      <div className="text-base font-light">
-                        {getTimeEstimation(
-                          proposalDetails?.proposed_budget?.time_estimation,
-                          proposalDetails?.proposed_budget?.type == "hourly"
-                            ? "hours"
-                            : "weeks"
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  {/* END ------------------------------------------- Time estimation */}
-
-                  {/* START ----------------------------------------- Terms and conditions */}
-                  {proposalDetails?.terms_and_conditions && (
-                    <div className="flex flex-col">
-                      <div className="text-base font-bold">
-                        Special Terms & Conditions:
-                      </div>
-                      <div className="description-text text-lg font-light">
-                        <StyledHtmlText
-                          id="termsAndConditions"
-                          htmlString={proposalDetails.terms_and_conditions}
-                          needToBeShorten={true}
-                        />
-                      </div>
-                    </div>
-                  )}
-                  {/* END ------------------------------------------- Terms and conditions */}
-
-                  {/* START ----------------------------------------- Questions */}
-                  {proposalDetails?.questions && (
-                    <div className="flex flex-col">
-                      <div className="text-base font-bold">Questions:</div>
-                      <div className="description-text text-lg font-light">
-                        <StyledHtmlText
-                          id="questions"
-                          htmlString={proposalDetails.questions}
-                          needToBeShorten={true}
-                        />
-                      </div>
-                    </div>
-                  )}
-                  {/* END ------------------------------------------- Questions */}
-
-                  {/* START ----------------------------------------- Attachments */}
-                  {proposalDetails?.attachments &&
-                    proposalDetails?.attachments?.length > 0 && (
-                      <div className="row-item">
-                        <div className="text-base font-bold">Attachments:</div>
-                        <div className="flex flex-wrap mt-2">
-                          {proposalDetails.attachments.map((attachment) => (
-                            <div className="m-1" key={attachment}>
-                              <AttachmentPreview
-                                uploadedFile={attachment}
-                                removable={false}
-                                shouldShowFileNameAndExtension={false}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  {/* END ------------------------------------------- Attachments */}
-                </div>
-              </div>
-              {/* If user opened proposal modal from somewhere else except job details page then */}
-              {/* showing reply on project page button to navigate to project details page */}
-              {replyOnProjectPageBtn &&
-                type === "proposal" &&
-                proposalDetails?._job_post_id && (
-                  <>
-                    <div className="divider" />
-                    <div className="bottom-buttons flex flex-wrap gap-3">
-                      {buttonsUI.messageFreelancerOrGotoChat}
-                      {buttonsUI.declineProposal}
-                      {buttonsUI.acceptProposal}
-                    </div>
-                  </>
-                )}
-              {/* START ----------------------------------------- Proposal accept and decline if job and proposal is prospects */}
-              {proposalStatus.pending && (
-                <>
-                  <div className="divider" />
-                  <div className="bottom-buttons flex flex-wrap gap-3">
-                    {buttonsUI.messageFreelancerOrGotoChat}
-                    {buttonsUI.declineProposal}
-                    {buttonsUI.acceptProposal}
-                  </div>
-                </>
               )}
-              {/* END ------------------------------------------- Proposal accept and decline if job and proposal is prospects */}
+            </div>
+          </div>
+        </div>
+      </div>
 
-              {/* START ----------------------------------------- Reopen Proposal if proposal is denied */}
-              {proposalStatus.denied && (
-                <>
-                  <div className="divider" />
-                  <div className="bottom-buttons flex flex-wrap gap-3">
-                    <StyledButton
-                      padding="1rem 2rem"
-                      className={isMobile ? "w-full" : undefined}
-                      variant="primary"
-                      onClick={onAcceptDecline("pending")}
-                      disabled={loading}
-                    >
-                      Reopen Proposal
-                    </StyledButton>
-                  </div>
-                </>
-              )}
-              {/* END ------------------------------------------- Reopen Proposal if proposal is denied */}
-
-              {/* showing this buttons when invite popup opens only */}
-              {/* START ----------------------------------------- If invite is still pending then show edit and cancel invitation */}
-              {inviteStatus.pending && (
-                <>
-                  <div className="divider" />
-                  <div className="bottom-buttons flex flex-wrap gap-3">
-                    <StyledButton
-                      padding="1rem 2rem"
-                      className={isMobile ? "w-full" : undefined}
-                      variant="primary"
-                      disabled={loading}
-                      onClick={() => {
-                        closeModal();
-                        setShowInviteMessageModal(true);
-                      }}
-                    >
-                      Edit Invitation
-                    </StyledButton>
-                    <StyledButton
-                      padding="1rem 2rem"
-                      className={isMobile ? "w-full" : undefined}
-                      variant="outline-dark"
-                      onClick={() => updateStatus("canceled")}
-                      disabled={loading}
-                    >
-                      Cancel Invitation
-                    </StyledButton>
-                  </div>
-                </>
-              )}
-              {/* END ------------------------------------------- If invite is still pending then show edit and cancel invitation */}
-              {/* START ----------------------------------------- If invite is cancelled then show reopen button */}
-              {inviteStatus.canceled && (
-                <>
-                  <div className="divider" />
-                  <div className="bottom-buttons flex flex-wrap gap-3">
-                    <StyledButton
-                      padding="1rem 2rem"
-                      className={isMobile ? "w-full" : undefined}
-                      variant="primary"
-                      disabled={loading}
-                      onClick={() => updateStatus("pending")}
-                    >
-                      Reopen Invitation
-                    </StyledButton>
-                  </div>
-                </>
-              )}
-              {/* END ------------------------------------------- If invite is cancelled then show reopen button */}
-              {/* START ----------------------------------------- If invite status is read */}
-              {inviteStatus.read && proposalDetails?.threadExists && (
-                <>
-                  <div className="divider" />
-                  <div className="bottom-buttons flex flex-wrap gap-3">
-                    <StyledButton
-                      padding="1rem 2rem"
-                      className={isMobile ? "w-full" : undefined}
-                      variant="primary"
-                      disabled={loading}
-                      onClick={() => {
-                        return router.push(
-                          `/messages-new/invite_${proposalDetails.invite_id}`
-                        );
-                      }}
-                    >
-                      Go To Chat
-                    </StyledButton>
-                  </div>
-                </>
-              )}
-              {/* END ------------------------------------------- If invite status is read */}
-            </DetailsWrapper>
-          )}
-        </Modal.Body>
-      </StyledModal>
-
-      {/* START ----------------------------------------- Hire more freelancer after accepting proposal */}
       <HiringMoreFreelancerModal
         loading={loading}
         handleClick={(value) => {
@@ -998,7 +820,6 @@ const ProposalDetailsModal = ({
         show={isShowingHiringMoreFreelancerModal}
         toggle={() => setIsShowingHiringMoreFreelancerModal((prev) => !prev)}
       />
-      {/* END ------------------------------------------- Hire more freelancer after accepting proposal */}
 
       <ChatModal
         theme="proposal"

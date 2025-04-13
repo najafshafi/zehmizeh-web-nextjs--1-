@@ -1,35 +1,15 @@
-import { StyledButton } from "@/components/forms/Buttons";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { breakpoints } from "@/helpers/hooks/useResponsive";
-import { Button, Modal } from "react-bootstrap";
-import styled from "styled-components";
+"use client";
 
-type Props = {
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+
+interface Props {
   show: boolean;
   onCloseModal: () => void;
   isLoading: boolean;
   handleClick: (type: "public" | "hidden") => void;
-};
-
-const Wrapper = styled.div`
-  text-align: center;
-  h4 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-  .buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 2rem;
-    @media ${breakpoints.mobile} {
-      flex-direction: column;
-      width: 100%;
-      gap: 20px;
-    }
-  }
-`;
+}
 
 export const PostVisibilityModal = ({
   show,
@@ -38,53 +18,85 @@ export const PostVisibilityModal = ({
   handleClick,
 }: Props) => {
   return (
-    <StyledModal maxwidth={767} show={show} size="sm" centered>
-      <Modal.Body>
-        {!isLoading && (
-          <Button
-            variant="transparent"
-            className="close"
-            onClick={onCloseModal}
-          >
-            &times;
-          </Button>
-        )}
-        <Wrapper>
-          <h4>Who should see the project?</h4>
-          <span className="fs-18">
-            <p className="mb-2">
-              If you&apos;d like to post so all ZMZ freelancers can see it,
-              click <b>&quot;Post Publicly.&quot;</b>
-            </p>
-            <p>
-              If you&apos;d like only freelancers you invite to have access,
-              click <b>&quot;Post Hidden.&quot;</b>
-            </p>
-          </span>
-          <div className="buttons">
-            <StyledButton
-              className="fs-16 fw-400"
-              variant="primary"
-              padding="0.8125rem 2rem"
-              type="submit"
-              disabled={isLoading}
-              onClick={() => handleClick("public")}
+    <Transition appear show={show} as={Fragment}>
+      <Dialog as="div" className="relative z-50" onClose={onCloseModal}>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-black/25" aria-hidden="true" />
+        </Transition.Child>
+
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
             >
-              Post Publicly
-            </StyledButton>
-            <StyledButton
-              className="fs-16 fw-400"
-              variant="primary"
-              padding="0.8125rem 2rem"
-              type="submit"
-              disabled={isLoading}
-              onClick={() => handleClick("hidden")}
-            >
-              Post Hidden
-            </StyledButton>
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white px-4 py-8 md:p-12 text-left align-middle shadow-xl transition-all">
+                {!isLoading && (
+                  <button
+                    type="button"
+                    className="absolute top-4 right-4 md:top-0 md:-right-8 md:text-white text-gray-400 hover:text-gray-500"
+                    onClick={onCloseModal}
+                  >
+                    <XMarkIcon className="h-6 w-6" />
+                  </button>
+                )}
+
+                <div className="text-center">
+                  <Dialog.Title
+                    as="h4"
+                    className="text-xl font-semibold text-gray-900 mb-6"
+                  >
+                    Who should see the project?
+                  </Dialog.Title>
+
+                  <div className="text-lg text-gray-600 space-y-2">
+                    <p>
+                      If you&apos;d like to post so all ZMZ freelancers can see
+                      it, click <b>&quot;Post Publicly.&quot;</b>
+                    </p>
+                    <p>
+                      If you&apos;d like only freelancers you invite to have
+                      access, click <b>&quot;Post Hidden.&quot;</b>
+                    </p>
+                  </div>
+
+                  <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4 sm:gap-8">
+                    <button
+                      type="button"
+                      className="px-6 py-[0.9rem] text-lg font-normal text-white bg-amber-500 border border-transparent rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                      disabled={isLoading}
+                      onClick={() => handleClick("public")}
+                    >
+                      Post Publicly
+                    </button>
+                    <button
+                      type="button"
+                      className="px-6 py-[0.9rem] text-lg font-normal text-white bg-amber-500 border border-transparent rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                      disabled={isLoading}
+                      onClick={() => handleClick("hidden")}
+                    >
+                      Post Hidden
+                    </button>
+                  </div>
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
           </div>
-        </Wrapper>
-      </Modal.Body>
-    </StyledModal>
+        </div>
+      </Dialog>
+    </Transition>
   );
 };

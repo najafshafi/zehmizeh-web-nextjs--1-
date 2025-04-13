@@ -1,18 +1,17 @@
 "use client";
-import { Modal, Button } from "react-bootstrap";
-import { StyledButton } from "@/components/forms/Buttons";
-import { StyledModal } from "@/components/styled/StyledModal";
+
 import { useEffect, useState } from "react";
+import { VscClose } from "react-icons/vsc";
 import moment from "moment";
 
-type Props = {
+interface Props {
   show: boolean;
   loading: boolean;
   toggle: () => void;
   handleClick: (
     data: "ACCEPT_AND_DECLINE_REST" | "ACCEPT_AND_LEAVE_OPEN"
   ) => void;
-};
+}
 
 export const HiringMoreFreelancerModal = ({
   show,
@@ -37,89 +36,85 @@ export const HiringMoreFreelancerModal = ({
     if (!loading) toggle();
   };
 
-  const ConfirmationPopup = (
-    <div className="text-center">
-      <div className="modal-title fs-24 fw-700">
-        Would you like to hire more freelancers?
-      </div>
-
-      <p className="my-4">
-        Would you like to accept this freelancer and decline the others?
-        <br />
-        Or would you like to keep the project post open so you can hire more
-        freelancers?
-      </p>
-
-      <div className="flex gap-3 items-center justify-center">
-        <StyledButton
-          onClick={() => {
-            setShowInformationModal(true);
-          }}
-          className="flex items-center gap-3 capitalize"
-          disabled={loading}
-        >
-          Accept & Leave Open
-        </StyledButton>
-        <StyledButton
-          variant="outline-dark"
-          onClick={() => handleClick("ACCEPT_AND_DECLINE_REST")}
-          disabled={loading}
-        >
-          Accept & Decline the Rest
-        </StyledButton>
-      </div>
-    </div>
-  );
-
-  const InformationPopup = (
-    <div className="text-center">
-      <div className="modal-title fs-24 fw-700">
-        You can continue accepting proposals and inviting more freelancers to
-        this project.
-      </div>
-
-      <p className="my-4">
-        In 65 Days ({moment().add("65", "days").format("MMM DD, YYYY")}), your
-        project post will close. Every time you accept a freelancer, the time
-        will be extended again.
-      </p>
-
-      <div className="flex gap-3 items-center justify-center">
-        <StyledButton
-          onClick={() => {
-            handleClick("ACCEPT_AND_LEAVE_OPEN");
-          }}
-          disabled={loading}
-          className="flex items-center gap-3 capitalize"
-        >
-          Close
-        </StyledButton>
-      </div>
-    </div>
-  );
+  if (!show) return null;
 
   return (
-    <StyledModal
-      maxwidth={678}
-      show={show}
-      size="lg"
-      onHide={toggleWrapper}
-      centered
-    >
-      <Modal.Body>
-        {!loading && (
-          <>
-            <Button
-              variant="transparent"
-              className="close"
-              onClick={toggleWrapper}
-            >
-              &times;
-            </Button>
-          </>
-        )}
-        {!showInformationModal ? ConfirmationPopup : InformationPopup}
-      </Modal.Body>
-    </StyledModal>
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div
+        className="fixed inset-0 bg-black/50 transition-opacity"
+        onClick={toggleWrapper}
+      />
+      <div className="fixed inset-0 z-10 overflow-y-auto">
+        <div className="flex min-h-full items-center justify-center p-4 text-center">
+          <div className="relative w-full max-w-[678px] transform overflow-hidden rounded-2xl bg-white px-4 py-8 md:p-12 text-left align-middle shadow-xl transition-all">
+            {!loading && (
+              <button
+                onClick={toggleWrapper}
+                className="absolute right-4 top-4 md:top-0 md:-right-8 md:text-white text-gray-400 hover:text-gray-500 focus:outline-none"
+              >
+                <VscClose className="h-6 w-6" />
+              </button>
+            )}
+
+            {!showInformationModal ? (
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-gray-900">
+                  Would you like to hire more freelancers?
+                </h3>
+
+                <p className="mt-4 text-gray-600">
+                  Would you like to accept this freelancer and decline the
+                  others?
+                  <br />
+                  Or would you like to keep the project post open so you can
+                  hire more freelancers?
+                </p>
+
+                <div className="mt-6 flex flex-col sm:flex-row gap-3 items-center justify-center">
+                  <button
+                    onClick={() => setShowInformationModal(true)}
+                    className="w-full sm:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={loading}
+                  >
+                    Accept & Leave Open
+                  </button>
+                  <button
+                    onClick={() => handleClick("ACCEPT_AND_DECLINE_REST")}
+                    className="w-full sm:w-auto px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={loading}
+                  >
+                    Accept & Decline the Rest
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-gray-900">
+                  You can continue accepting proposals and inviting more
+                  freelancers to this project.
+                </h3>
+
+                <p className="mt-4 text-gray-600">
+                  In 65 Days (
+                  {moment().add("65", "days").format("MMM DD, YYYY")}), your
+                  project post will close. Every time you accept a freelancer,
+                  the time will be extended again.
+                </p>
+
+                <div className="mt-6 flex justify-center">
+                  <button
+                    onClick={() => handleClick("ACCEPT_AND_LEAVE_OPEN")}
+                    className="w-full sm:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={loading}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
