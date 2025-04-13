@@ -196,11 +196,7 @@ function PaymentRecords() {
           />
         </div>
       )}
-      <InvoiceModal
-        show={invoiceModal.show}
-        onClose={onInvoiceModalClose}
-        data={invoiceModal.data}
-      />
+      <InvoiceModal show={invoiceModal.show} onClose={onInvoiceModalClose} />
     </div>
   );
 }
