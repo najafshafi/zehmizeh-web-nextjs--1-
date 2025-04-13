@@ -65,7 +65,8 @@ declare global {
 
 const INTERCOM_APP_ID = process.env.NEXT_PUBLIC_INTERCOM_APP_ID;
 
-const myWindow: Window = window;
+// Only access window in browser environment
+const myWindow = typeof window !== "undefined" ? window : undefined;
 
 type TInputFieldLoading =
   | "phone number"
@@ -242,7 +243,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
   useEffect(() => {
     if (!isMounted) return;
 
-    if (user) {
+    if (user && myWindow) {
       myWindow.intercomSettings = {
         appId: INTERCOM_APP_ID,
         email: user?.u_email_id,
@@ -257,6 +258,17 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
   }, [user, isMounted]);
 
   const onBack = () => {
+    /* If we come here through search params then restore back to initial url */
+    if (
+      searchParams &&
+      (searchParams.get("requestId") || searchParams.get("cancel"))
+    ) {
+      if (typeof window !== "undefined") {
+        const currentLocation = window.location.href;
+        // Process the location as needed
+      }
+    }
+
     if (!isMounted) return;
 
     const fromRegister = searchParams?.get("fromRegister") === "true";
@@ -293,15 +305,18 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
     if (!isMounted) return;
 
     if (!isLoading) {
-      const currentLocation = window.location.href;
-      const hasCommentAnchor = currentLocation.includes("/#");
-      if (hasCommentAnchor) {
-        const anchorCommentId = `${currentLocation.substring(
-          currentLocation.indexOf("#") + 1
-        )}`;
-        const anchorComment = document.getElementById(anchorCommentId);
-        if (anchorComment) {
-          anchorComment.scrollIntoView({ behavior: "smooth" });
+      // Safely access window and document in browser environment only
+      if (typeof window !== "undefined" && typeof document !== "undefined") {
+        const currentLocation = window.location.href;
+        const hasCommentAnchor = currentLocation.includes("/#");
+        if (hasCommentAnchor) {
+          const anchorCommentId = `${currentLocation.substring(
+            currentLocation.indexOf("#") + 1
+          )}`;
+          const anchorComment = document.getElementById(anchorCommentId);
+          if (anchorComment) {
+            anchorComment.scrollIntoView({ behavior: "smooth" });
+          }
         }
       }
     }
@@ -470,6 +485,20 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
       </div>
     );
   };
+
+  useEffect(() => {
+    // Scroll to anchor comment if available
+    if (isMounted && searchParams && searchParams.get("commentId")) {
+      const anchorCommentId = searchParams.get("commentId") || "";
+      // Only access document in browser environment
+      if (typeof document !== "undefined") {
+        const anchorComment = document.getElementById(anchorCommentId);
+        if (anchorComment) {
+          anchorComment.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    }
+  }, [searchParams, isMounted]);
 
   return (
     <C.ClientProfileWrapper>

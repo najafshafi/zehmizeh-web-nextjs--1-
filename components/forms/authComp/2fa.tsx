@@ -1,72 +1,22 @@
 "use client"; // Required for client-side components in Next.js App Router
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation"; // Replace useNavigate from react-router-dom
 import ReactOtpInput from "react-otp-input";
-import styled from "styled-components";
 import Image from "next/image"; // Use Next.js Image component for optimized images
 import logo from "@/public/icons/logo.svg"; // Adjust path if needed
-import { StyledButton } from "@/components/forms/Buttons"; // Adjust path if needed
-import AuthLayout from "@/components/layout/AuthLayout"; // Adjust path if needed
-import { LimitedH2 } from "@/components/styled/Auth.styled"; // Adjust path if needed
-import LoadingButtons from "@/components/LoadingButtons"; // Adjust path if needed
 import { useAuth } from "@/helpers/contexts/auth-context"; // Adjust path if needed
 import useResponsive from "@/helpers/hooks/useResponsive"; // Adjust path if needed
 import { showErr } from "@/helpers/utils/misc"; // Adjust path if needed
 import useStartPageFromTop from "@/helpers/hooks/useStartPageFromTop"; // Adjust path if needed
 import ChangeEmailModal from "./ChangeEmail"; // Adjust path if needed
+import LoadingButtons from "@/components/LoadingButtons"; // Adjust path if needed
 
-const MobileWrapper = styled.div`
-  display: flex;
-  background: white;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  .logo {
-    margin-top: 2rem;
-  }
-  .h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-top: 1.5rem;
-    text-align: center;
-  }
-  .h2 {
-    margin-top: 0.2rem;
-    font-weight: 300;
-    font-size: 1.5rem;
-    line-height: 140%;
-    opacity: 0.63;
-    text-align: center;
-  }
-  .h4 {
-    font-weight: 300;
-    font-size: 1.25rem;
-    line-height: 140%;
-    margin-bottom: 2rem;
-  }
-`;
+interface TwoFactorProps {
+  // Add any props if needed
+}
 
-const OtpInputWrapper = styled.div`
-  margin: 1rem;
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  @media (max-width: 767px) {
-    gap: 0rem;
-  }
-  .otp-input {
-    input {
-      border: 0 !important;
-      outline: 0 !important;
-      background: ${(props) => props.theme.colors.lightGray};
-      font-family: ${(props) => props.theme.font.primary};
-      font-size: 1.5rem;
-    }
-  }
-`;
-
-export default function TwoFactor() {
+export default function TwoFactor({}: TwoFactorProps) {
   useStartPageFromTop();
   const { isMobile } = useResponsive();
   const { twoFactor, isLoading, user } = useAuth();
@@ -76,7 +26,7 @@ export default function TwoFactor() {
   const [otp, setOtp] = useState("");
   const [showEditEmailModal, setShowEditEmailModal] = useState(false);
 
-  const timeOutCallback = React.useCallback(() => {
+  const timeOutCallback = useCallback(() => {
     setTimer((currTimer) => currTimer - 1);
   }, []);
 
@@ -143,168 +93,163 @@ export default function TwoFactor() {
   }
 
   return isMobile ? (
-    <div className="mt-4  p-2 ">
-      <MobileWrapper>
-        <Image
-          className="logo"
-          src={logo}
-          alt="logo"
-          width={70}
-          height={70} // Add height for Next.js Image component
-        />
-        <h1 className="h1">Two-Factor Authentication</h1>
-        <h2 className="h3">
+    <div className="min-h-screen bg-white p-4">
+      <div className="flex flex-col items-center gap-4">
+        <Image className="mt-8" src={logo} alt="logo" width={70} height={70} />
+        <h1 className="text-3xl font-bold mt-6 text-center text-gray-900">
+          Two-Factor Authentication
+        </h1>
+        <h2 className="text-xl font-light mt-1 text-center leading-relaxed text-gray-600">
           We&apos;ve sent a 6-digit code to{" "}
-          <strong>{user?.email_id || "your email address"}</strong>. If this
-          email address is incorrect, you can update it by clicking{" "}
-          <span
+          <strong className="text-gray-900">
+            {user?.email_id || "your email address"}
+          </strong>
+          . If this email address is incorrect, you can update it by clicking{" "}
+          <button
             onClick={toggleEditModal}
-            className="yellow-link pointer"
-            style={{ color: "#f2b420" }}
+            className="text-amber-500 hover:text-amber-600 font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 rounded"
           >
-            <strong>here.</strong>
-          </span>
+            here.
+          </button>
           <ChangeEmailModal
             show={showEditEmailModal}
             existingEmail={user?.email_id}
             onClose={toggleEditModal}
           />
         </h2>
-        <form className=" mt-4" onSubmit={handleOTP}>
-          <OtpInputWrapper>
+        <form className="w-full max-w-sm mt-4" onSubmit={handleOTP}>
+          <div className="mx-4 flex gap-4 justify-center">
             <ReactOtpInput
               value={otp}
               onChange={onChange}
-              renderSeparator={<span style={{ color: "#909090" }}>-</span>}
+              renderSeparator={<span className="text-gray-400">-</span>}
               numInputs={6}
-              containerStyle="otp-input"
+              containerStyle="flex gap-2"
               inputStyle={{
                 maxWidth: "3.5rem",
                 width: "100%",
                 height: "3.5rem",
-                borderRadius: 7,
-                margin: 8,
+                borderRadius: "0.5rem",
+                margin: "0.5rem",
+                backgroundColor: "#f3f4f6",
+                border: "none",
+                outline: "none",
+                fontSize: "1.5rem",
+                fontFamily: "inherit",
               }}
               shouldAutoFocus
               renderInput={(props) => <input {...props} />}
             />
-          </OtpInputWrapper>
+          </div>
 
-          <StyledButton
-            className="mt-10"
-            width={200}
-            height={56}
+          <button
             type="submit"
-            padding="0"
             disabled={isLoading}
-            background="#F2B420"
+            className="mt-10 w-full h-14 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? <LoadingButtons /> : "Verify"}
-          </StyledButton>
+          </button>
 
           {timer > 0 ? (
-            <h4 className="h4 mt-5 flex items-center justify-center">
+            <h4 className="text-xl font-light mt-5 flex items-center justify-center text-gray-600">
               You can resend a new OTP in{" "}
-              <span className="fw-700">
+              <span className="font-bold text-gray-900">
                 00:{timer > 9 ? timer : `0${timer}`}
               </span>
             </h4>
           ) : (
-            <h4 className="h4 mt-4 flex items-center justify-center g-1">
+            <h4 className="text-xl font-light mt-4 flex items-center justify-center gap-1 text-gray-600">
               Didn&apos;t receive your code?{" "}
-              <StyledButton
+              <button
                 onClick={onResend}
-                variant="link"
-                className="m-0 p-0"
-                padding="0rem"
                 disabled={isLoading}
+                className="text-amber-500 hover:text-amber-600 font-bold disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 rounded"
               >
-                <div className="yellow-link" style={{ color: "#f2b420" }}>
-                  Resend
-                </div>
-              </StyledButton>
+                Resend
+              </button>
             </h4>
           )}
         </form>
-      </MobileWrapper>
+      </div>
     </div>
   ) : (
-    <AuthLayout center>
-      <h1>Two-Factor Authentication</h1>
-      <LimitedH2>
-        We&apos;ve sent a 6-digit code to{" "}
-        <strong>{user?.email_id || "your email address"}</strong>. If this email
-        address is incorrect, you can update it by clicking{" "}
-        <span
-          onClick={toggleEditModal}
-          className="yellow-link pointer"
-          style={{ color: "#f2b420" }}
-        >
-          <strong className="cursor-pointer">here.</strong>
-        </span>
-        <ChangeEmailModal
-          show={showEditEmailModal}
-          existingEmail={user?.email_id}
-          onClose={toggleEditModal}
-        />
-      </LimitedH2>
-      <form className="  mt-4   " onSubmit={handleOTP}>
-        <OtpInputWrapper>
-          <ReactOtpInput
-            value={otp}
-            onChange={onChange}
-            renderSeparator={<span style={{ color: "#909090" }}>-</span>}
-            numInputs={6}
-            containerStyle="otp-input"
-            inputStyle={{
-              maxWidth: "3.5rem",
-              width: "100%",
-              height: "3.5rem",
-              borderRadius: 7,
-              margin: 8,
-            }}
-            shouldAutoFocus
-            renderInput={(props) => <input {...props} />}
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
+        <h1 className="text-3xl font-bold text-center text-gray-900">
+          Two-Factor Authentication
+        </h1>
+        <h2 className="text-xl font-light mt-4 text-center leading-relaxed text-gray-600">
+          We&apos;ve sent a 6-digit code to{" "}
+          <strong className="text-gray-900">
+            {user?.email_id || "your email address"}
+          </strong>
+          . If this email address is incorrect, you can update it by clicking{" "}
+          <button
+            onClick={toggleEditModal}
+            className="text-amber-500 hover:text-amber-600 font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 rounded"
+          >
+            here.
+          </button>
+          <ChangeEmailModal
+            show={showEditEmailModal}
+            existingEmail={user?.email_id}
+            onClose={toggleEditModal}
           />
-        </OtpInputWrapper>
+        </h2>
+        <form className="mt-8" onSubmit={handleOTP}>
+          <div className="flex gap-4 justify-center">
+            <ReactOtpInput
+              value={otp}
+              onChange={onChange}
+              renderSeparator={<span className="text-gray-400">-</span>}
+              numInputs={6}
+              containerStyle="flex gap-2"
+              inputStyle={{
+                maxWidth: "3.5rem",
+                width: "100%",
+                height: "3.5rem",
+                borderRadius: "0.5rem",
+                margin: "0.5rem",
+                backgroundColor: "#f3f4f6",
+                border: "none",
+                outline: "none",
+                fontSize: "1.5rem",
+                fontFamily: "inherit",
+              }}
+              shouldAutoFocus
+              renderInput={(props) => <input {...props} />}
+            />
+          </div>
 
-        <StyledButton
-          className="mt-2"
-          width={200}
-          height={56}
-          type="submit"
-          padding="0"
-          disabled={isLoading}
-          background="#F2B420"
-          style={{
-            marginTop: "0.5rem",
-            width: "200px",
-            height: "56px",
-          }}
-        >
-          {isLoading ? <LoadingButtons /> : "Verify"}
-        </StyledButton>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="mt-8 w-full h-14 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? <LoadingButtons /> : "Verify"}
+          </button>
 
-        {timer > 0 ? (
-          <h4 className="mt-5 flex items-center justify-center ">
-            You can resend a new OTP in{" "}
-            <span className="fw-700">00:{timer > 9 ? timer : `0${timer}`}</span>
-          </h4>
-        ) : (
-          <h4 className="mt-4 flex items-center justify-center g-1">
-            Didn&apos;t receive your code?{" "}
-            <StyledButton
-              onClick={onResend}
-              variant="link"
-              className="m-0 p-0"
-              padding="0rem"
-              disabled={isLoading}
-            >
-              <div className="yellow-link">Resend</div>
-            </StyledButton>
-          </h4>
-        )}
-      </form>
-    </AuthLayout>
+          {timer > 0 ? (
+            <h4 className="mt-6 flex items-center justify-center text-gray-600">
+              You can resend a new OTP in{" "}
+              <span className="font-bold text-gray-900">
+                00:{timer > 9 ? timer : `0${timer}`}
+              </span>
+            </h4>
+          ) : (
+            <h4 className="mt-6 flex items-center justify-center gap-1 text-gray-600">
+              Didn&apos;t receive your code?{" "}
+              <button
+                onClick={onResend}
+                disabled={isLoading}
+                className="text-amber-500 hover:text-amber-600 font-bold disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 rounded"
+              >
+                Resend
+              </button>
+            </h4>
+          )}
+        </form>
+      </div>
+    </div>
   );
 }

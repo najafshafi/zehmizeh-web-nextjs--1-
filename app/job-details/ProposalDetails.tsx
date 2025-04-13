@@ -1,56 +1,26 @@
+"use client";
+
 /*
  * This component displays the proposal sent for the job *
  */
 
 import { useCallback, useEffect, useState } from "react";
-import styled from "styled-components";
 import StyledHtmlText from "@/components/ui/StyledHtmlText";
 import AttachmentPreview from "@/components/ui/AttachmentPreview";
 import { numberWithCommas } from "@/helpers/utils/misc";
 import EditBlueIcon from "@/public/icons/edit-blue.svg";
 import DeleteIcon from "@/public/icons/trash.svg";
-import { transition } from "@/styles/transitions";
 import moment from "moment";
 import DeleteProposalModal from "./modals/DeleteProposalModal";
 import { getTimeEstimation } from "@/helpers/utils/helper";
 import SubmitProposalModal from "@/components/jobs/SubmitProposalModal";
-import { StyledButton } from "@/components/forms/Buttons";
 import { useRouter } from "next/navigation";
 import ProposalMessageModal from "@/components/jobs/ProposalMessageModal";
 import { WarningProposalMessageModal } from "@/components/jobs/WarningProposalMessageModal";
 import { useQueryClient } from "react-query";
 import toast from "react-hot-toast";
 import { reopenProposal } from "@/helpers/http/proposals";
-import { Spinner } from "react-bootstrap";
-
-// Keeping styled-components for buttons since they use transition
-const EditButton = styled.div`
-  background-color: rgba(209, 229, 255, 0.3);
-  border-radius: 0.5rem;
-  height: 44px;
-  gap: 0.5rem;
-  padding: 0 1rem;
-  ${() => transition()};
-  span {
-    color: #0067ff;
-  }
-`;
-
-const DeleteButton = styled.div`
-  background-color: #fbf5e8;
-  border-radius: 0.5rem;
-  margin-left: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 44px;
-  gap: 0.5rem;
-  padding: 0 1rem;
-  ${() => transition()}
-  span {
-    color: #f72b2b;
-  }
-`;
+import Image from "next/image";
 
 interface ProposalDetailsProps {
   data: any;
@@ -136,64 +106,71 @@ const ProposalDetails = ({
 
   useEffect(() => {
     setWarningPopupCount(getMessageInvitePopupCount(data.job_post_id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  });
+  }, [data.job_post_id, getMessageInvitePopupCount]);
 
-  console.log("data: ", data);
   return (
     <div className="flex flex-col gap-5 mt-8 p-11 relative bg-white/70 shadow-[0px_4px_54px_rgba(0,0,0,0.04)] rounded-3xl">
-      {/* START ----------------------------------------- Description */}
+      {/* Description */}
       <div className="flex flex-col gap-3.5">
         <div className="flex items-center justify-between">
           <div className="text-lg font-bold">
             <span>Proposal</span>
-            {/* START ----------------------------------------- Proposal Date */}
             {data?.date_created && (
               <div className="text-base font-normal">
                 Submitted: {moment(data.date_created).format("MMM DD, YYYY")}
               </div>
             )}
-            {/* END ------------------------------------------- Proposal Date */}
           </div>
-          {/* Edit icon */}
+
           {!isDeleted && (
             <div className="flex items-center">
               {data?.status === "pending" && data.is_proposal_deleted === 0 && (
                 <>
-                  <EditButton
-                    className="flex justify-center items-center cursor-pointer"
+                  <button
                     onClick={toggleEditProposalModal}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200"
                   >
-                    <EditBlueIcon stroke="#0067FF" fill="#0067FF" />
-                    <span>Edit</span>
-                  </EditButton>
+                    <Image
+                      src={EditBlueIcon}
+                      alt="Edit"
+                      width={20}
+                      height={20}
+                    />
+                    <span className="text-blue-600">Edit</span>
+                  </button>
 
-                  <DeleteButton
-                    className="cursor-pointer flex items-center"
+                  <button
                     onClick={toggleDeleteProposalModal}
+                    className="flex items-center gap-2 px-4 py-2 bg-amber-50 rounded-lg hover:bg-amber-100 transition-colors duration-200 ml-4"
                   >
-                    <DeleteIcon />
-                    <span>Delete</span>
-                  </DeleteButton>
+                    <Image
+                      src={DeleteIcon}
+                      alt="Delete"
+                      width={20}
+                      height={20}
+                    />
+                    <span className="text-red-500">Delete</span>
+                  </button>
                 </>
               )}
             </div>
           )}
 
           {data.is_proposal_deleted === 1 && (
-            <StyledButton
+            <button
               disabled={loading}
-              variant="outline-dark"
-              type="submit"
-              className="flex items-center gap-3"
               onClick={() => handleReOpenProposal(data)}
+              className="flex items-center gap-2 px-6 py-2 border border-gray-800 rounded-lg hover:bg-gray-800 hover:text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading && <Spinner size="sm" animation="border" />} Re-open
-            </StyledButton>
+              {loading && (
+                <div className="w-4 h-4 border-2 border-gray-800 border-t-transparent rounded-full animate-spin" />
+              )}
+              Re-open
+            </button>
           )}
         </div>
 
-        <div className="description-text text-lg font-normal opacity-70 leading-[160%]">
+        <div className="text-lg font-normal opacity-70 leading-[160%]">
           <StyledHtmlText
             id="description"
             htmlString={data?.description}
@@ -201,11 +178,10 @@ const ProposalDetails = ({
           />
         </div>
       </div>
-      {/* END ------------------------------------------- Description */}
 
       {/* Other details */}
       <div className="flex flex-col gap-3.5">
-        {/* START ----------------------------------------- Price */}
+        {/* Price */}
         <div className="flex items-center gap-2.5">
           <div className="text-base font-bold">Price:</div>
           <div className="text-base font-light">
@@ -213,9 +189,8 @@ const ProposalDetails = ({
             {data?.proposed_budget?.type == "hourly" ? `/hr` : ``}
           </div>
         </div>
-        {/* END ------------------------------------------- Price */}
 
-        {/* START ----------------------------------------- Time estimation */}
+        {/* Time estimation */}
         {data?.proposed_budget?.time_estimation && (
           <div className="flex items-center gap-2.5">
             <div className="text-base font-bold">Time Estimation: </div>
@@ -227,9 +202,8 @@ const ProposalDetails = ({
             </div>
           </div>
         )}
-        {/* END ------------------------------------------- Time estimation */}
 
-        {/* START ----------------------------------------- Terms and conditions */}
+        {/* Terms and conditions */}
         {data?.terms_and_conditions && (
           <div className="flex flex-col">
             <div className="text-base font-bold">
@@ -244,9 +218,8 @@ const ProposalDetails = ({
             </div>
           </div>
         )}
-        {/* END ------------------------------------------- Terms and conditions */}
 
-        {/* START ----------------------------------------- Questions */}
+        {/* Questions */}
         {data?.questions && (
           <div className="flex flex-col">
             <div className="text-base font-bold">Questions:</div>
@@ -259,9 +232,8 @@ const ProposalDetails = ({
             </div>
           </div>
         )}
-        {/* END ------------------------------------------- Questions */}
 
-        {/* START ----------------------------------------- Attachments */}
+        {/* Attachments */}
         {data?.attachments && data?.attachments?.length > 0 && (
           <div className="flex flex-col">
             <div className="text-base font-bold">Attachments:</div>
@@ -278,43 +250,40 @@ const ProposalDetails = ({
             </div>
           </div>
         )}
-        {/* END ------------------------------------------- Attachments */}
+
         {!data?.threadExists &&
           jobDetails?.invite_status === "accepted" &&
           jobDetails?.status === "prospects" &&
           jobDetails?.proposal?.status === "pending" && (
-            <div className="flex justify-end mt-3 gap-3 ">
-              <div className="border border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white rounded-full">
-                <StyledButton
-                  padding="1rem 2rem"
-                  variant="outline-dark"
-                  onClick={() => {
-                    if (warningPopupCount < 3) {
-                      setIsWarningModalOpen(true);
-                      return;
-                    } else {
-                      setProMessModal(true);
-                    }
-                  }}
-                >
-                  Message Client
-                </StyledButton>
-              </div>
+            <div className="flex justify-end mt-3 gap-3">
+              <button
+                onClick={() => {
+                  if (warningPopupCount < 3) {
+                    setIsWarningModalOpen(true);
+                    return;
+                  } else {
+                    setProMessModal(true);
+                  }
+                }}
+                className="px-8 py-4 border border-gray-800 text-gray-800 rounded-full hover:bg-gray-800 hover:text-white transition-colors duration-200"
+              >
+                Message Client
+              </button>
             </div>
           )}
+
         {data?.threadExists && (
           <div className="flex justify-end mt-3 gap-3">
-            <StyledButton
-              padding="1rem 2rem"
-              variant="primary"
+            <button
               onClick={() => {
                 return router.push(
                   `/messages-new/proposal_${data.proposal_id}`
                 );
               }}
+              className="px-8 py-4 bg-amber-500 text-white rounded-full hover:bg-amber-600 transition-colors duration-200"
             >
               Go To Chat
-            </StyledButton>
+            </button>
           </div>
         )}
       </div>
