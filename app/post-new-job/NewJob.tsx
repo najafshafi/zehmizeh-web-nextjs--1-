@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import PostJob from "./PostJob";
 import { PostJobContextProvider } from "./context";
 

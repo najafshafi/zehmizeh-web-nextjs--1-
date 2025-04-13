@@ -150,6 +150,8 @@ const PostJobContextProvider = ({
   children,
   params,
 }: PostJobContextProviderProps) => {
+  // Access params properties directly since they're not actually a Promise in this component
+  // In Next.js App Router, params might be a Promise in server components but not in client components
   const { id, type } = params;
 
   // Next.js doesn't have a useBlocker equivalent, we'll handle this differently
