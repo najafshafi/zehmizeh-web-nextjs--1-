@@ -1,18 +1,16 @@
+"use client";
+
 /*
  * This is the Add / Edit hours form - Freelancer side
  */
 
 import { useEffect, useMemo, useState, useCallback } from "react";
-import { Modal, Button, Form, FormLabel } from "react-bootstrap";
 import toast from "react-hot-toast";
 import * as yup from "yup";
 import { useQuery } from "react-query";
 import { convertToTitleCase, getYupErrors } from "@/helpers/utils/misc";
-import { StyledModal } from "@/components/styled/StyledModal";
 import TextEditor from "@/components/forms/TextEditor";
 import CustomUploader from "@/components/ui/CustomUploader";
-import { FormWrapper, StyledFormGroup } from "./hours-management.styled";
-import { StyledButton } from "@/components/forms/Buttons";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import { numberWithCommas } from "@/helpers/utils/misc";
 import { manageHours } from "@/helpers/http/jobs";
@@ -20,7 +18,9 @@ import useResponsive from "@/helpers/hooks/useResponsive";
 import { getPaymentFees } from "@/helpers/http/common";
 import { REGEX } from "@/helpers/const/regex";
 import { CONSTANTS } from "@/helpers/const/constants";
-// import { useAuth } from "@/helpers/contexts/auth-context";
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 type Props = {
   show: boolean;
@@ -300,193 +300,211 @@ const AddHoursForm = ({
   };
 
   return (
-    <StyledModal
-      maxwidth={570}
-      show={show}
-      size="sm"
-      onHide={closeModal}
-      centered
-    >
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={closeModal}>
-          &times;
-        </Button>
-        <FormWrapper onSubmit={validate}>
-          <div className="fs-24 font-normal">
-            {selectedMilestone
-              ? "Edit Hours"
-              : isFinalHours
-                ? "Submit Final Hours"
-                : "Add Hours"}
-          </div>
-          <StyledFormGroup>
-            <div className="fs-1rem fw-300">
-              Title<span className="mandatory">&nbsp;*</span>
-            </div>
-            <Form.Control
-              placeholder="Pick a title that describes what you did during these hours"
-              value={title}
-              onChange={(e) =>
-                setTitle(e.target.value.replace(REGEX.TITLE, ""))
-              }
-              className="form-input"
-              autoFocus
-              //disabled={jobTitle != ''}
-            />
-            {errors?.title && <ErrorMessage message={errors?.title.message} />}
-          </StyledFormGroup>
-          <StyledFormGroup>
-            <FormLabel className="fs-1rem fw-300">
-              Total Hours Worked<span className="mandatory">&nbsp;*</span>
-            </FormLabel>
-            <Form.Control
-              placeholder="Enter the number of hours worked (Ex. 30.5 or 0.85)"
-              value={hoursWorked}
-              onChange={(e) => changeHours(e.target.value)}
-              className="form-input"
-            />
-            {errors?.hoursWorked && (
-              <ErrorMessage message={errors?.hoursWorked.message} />
-            )}
-          </StyledFormGroup>
-          <StyledFormGroup>
-            <div className="fs-1rem fw-300">Hourly Rate</div>
-            <span className="input-symbol-euro">
-              <Form.Control
-                placeholder="Enter hourly rate"
-                value={hourlyRate}
-                className="form-input rate-input"
-                disabled
-              />
-            </span>
-          </StyledFormGroup>
-          <StyledFormGroup>
-            <div className="fs-1rem fw-300">Invoice Total</div>
-            <span className="input-symbol-euro">
-              <Form.Control
-                placeholder="Enter amount"
-                value={numberWithCommas(amount)}
-                onChange={(e) => setAmount(e.target.value)}
-                className="form-input rate-input"
-                disabled
-              />
-            </span>
-            {amount !== "" && (
-              <div className="mt-2 flex items-center">
-                <div className="fs-1rem font-normal">
-                  {/* You will get{' '}
-                  <span className="fw-700">{calculateFinalAmount}</span> */}
-                  <table className="mx-4">
-                    <tr>
-                      <td>ZehMizeh Fee:</td>
-                      <td>&nbsp;{zehmizehFees}%</td>
-                    </tr>
-                    <tr>
-                      <td>Your final takeaway:</td>
-                      <td className="fw-700">&nbsp;{calculateFinalAmount}</td>
-                    </tr>
-                  </table>
+    <Transition appear show={show} as={Fragment}>
+      <Dialog as="div" className="relative z-50" onClose={closeModal}>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-black/25" />
+        </Transition.Child>
+
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white px-4 py-8 md:p-12 shadow-xl transition-all">
+                <div className="absolute right-4 top-4 md:top-0 md:-right-8 ">
+                  <button
+                    type="button"
+                    className="rounded-md text-gray-400 md:text-white focus:outline-none"
+                    onClick={closeModal}
+                  >
+                    <XMarkIcon className="h-6 w-6" />
+                  </button>
                 </div>
-                {/* <Tooltip className="ms-1">
-                  <div>
+
+                <form onSubmit={validate} className="space-y-6">
+                  <Dialog.Title className="text-2xl font-normal">
+                    {selectedMilestone
+                      ? "Edit Hours"
+                      : isFinalHours
+                        ? "Submit Final Hours"
+                        : "Add Hours"}
+                  </Dialog.Title>
+
+                  <div className="space-y-4">
                     <div>
-                      Your proposed price: {numberWithCommas(amount, 'USD')}
+                      <label className="block text-sm font-light">
+                        Title<span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Pick a title that describes what you did during these hours"
+                        value={title}
+                        onChange={(e) =>
+                          setTitle(e.target.value.replace(REGEX.TITLE, ""))
+                        }
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm"
+                        autoFocus
+                      />
+                      {errors?.title && (
+                        <ErrorMessage message={errors?.title.message} />
+                      )}
                     </div>
-                    <div className="mt-1">ZehMizeh fees: -{zehmizehFees}%</div>
-                    <div className="mt-1">
-                      Final takeaway: {calculateFinalAmount}
+
+                    <div>
+                      <label className="block text-sm font-light">
+                        Total Hours Worked
+                        <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter the number of hours worked (Ex. 30.5 or 0.85)"
+                        value={hoursWorked}
+                        onChange={(e) => changeHours(e.target.value)}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm"
+                      />
+                      {errors?.hoursWorked && (
+                        <ErrorMessage message={errors?.hoursWorked.message} />
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-light">
+                        Hourly Rate
+                      </label>
+                      <div className="relative mt-1">
+                        <input
+                          type="text"
+                          value={hourlyRate}
+                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm"
+                          disabled
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-light">
+                        Invoice Total
+                      </label>
+                      <div className="relative mt-1">
+                        <input
+                          type="text"
+                          value={numberWithCommas(amount)}
+                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm"
+                          disabled
+                        />
+                      </div>
+                      {amount !== "" && (
+                        <div className="mt-2">
+                          <div className="text-sm font-normal">
+                            <table className="mx-4">
+                              <tbody>
+                                <tr>
+                                  <td>ZehMizeh Fee:</td>
+                                  <td>&nbsp;{zehmizehFees}%</td>
+                                </tr>
+                                <tr>
+                                  <td>Your final takeaway:</td>
+                                  <td className="font-bold">
+                                    &nbsp;{calculateFinalAmount}
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      )}
+                      {amount != "" && parseFloat(amount) > 99999 ? (
+                        <ErrorMessage message="Invoice total exceeded stripe payment limit." />
+                      ) : null}
+                      {amount != "" && parseFloat(amount) < 5 ? (
+                        <ErrorMessage message="Hours submissions must be worth at least $5." />
+                      ) : null}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-light">
+                        Description of Hours
+                        <span className="text-red-500">*</span>
+                      </label>
+                      <TextEditor
+                        value={description}
+                        onChange={onDescriptionChange}
+                        placeholder="Explain in detail the work you completed during these hours and where the project stands now."
+                        maxChars={2000}
+                      />
+                      {errors?.description && (
+                        <ErrorMessage message={errors?.description.message} />
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-light">
+                        Attach any completed work below. (Even research, notes,
+                        or incomplete drafts may be worth sharing.)
+                      </label>
+                      <CustomUploader
+                        handleUploadImage={handleUploadImage}
+                        attachments={formState?.screenshot_link || []}
+                        removeAttachment={removeAttachment}
+                        placeholder="Attach doc"
+                        acceptedFormats={[
+                          ...CONSTANTS.DEFAULT_ATTACHMENT_SUPPORTED_TYPES,
+                          "audio/*",
+                          "video/*",
+                        ].join(", ")}
+                        suggestions="File type: PDF, DOC, DOCX, XLS, XLSX, Image Files, Audio Files, Video Files"
+                        shouldShowFileNameAndExtension={false}
+                        handleMultipleUploadImage={handleMultipleUploadImage}
+                        limit={5}
+                        multiple
+                      />
+                      {errors?.screenshot_link && (
+                        <ErrorMessage
+                          message={errors.screenshot_link.message}
+                        />
+                      )}
                     </div>
                   </div>
-                </Tooltip> */}
-              </div>
-            )}
-            {amount != "" && parseFloat(amount) > 99999 ? (
-              <ErrorMessage message="Invoice total exceeded stripe payment limit." />
-            ) : null}
-            {amount != "" && parseFloat(amount) < 5 ? (
-              <ErrorMessage message="Hours submissions must be worth at least $5." />
-            ) : null}
-            {/* {errors?.amount && <ErrorMessage message={errors?.amount} />} */}
-          </StyledFormGroup>
-          <StyledFormGroup>
-            <FormLabel className="fs-1rem fw-300">
-              Description of Hours<span className="mandatory">&nbsp;*</span>
-            </FormLabel>
-            <TextEditor
-              value={description}
-              onChange={onDescriptionChange}
-              placeholder="Explain in detail the work you completed during these hours and where the project stands now."
-              maxChars={2000}
-            />
-            {errors?.description && (
-              <ErrorMessage message={errors?.description.message} />
-            )}
-          </StyledFormGroup>
-          <StyledFormGroup>
-            <FormLabel className="fs-1rem fw-300">
-              Attach any completed work below. (Even research, notes, or
-              incomplete drafts may be worth sharing.)
-            </FormLabel>
-            <CustomUploader
-              handleUploadImage={(file: Partial<UploadedFile>) => {
-                if (!file.file) return;
-                handleChange("screenshot_link", [
-                  ...formState.screenshot_link,
-                  { fileUrl: file.file, fileName: file.fileName },
-                ]);
-              }}
-              attachments={formState?.screenshot_link || []}
-              removeAttachment={(index?: number, fileUrl?: string) => {
-                if (index === undefined) return;
-                const newAttachments = [...formState.screenshot_link];
-                newAttachments.splice(index, 1);
-                handleChange("screenshot_link", newAttachments);
-              }}
-              placeholder="Attach doc"
-              acceptedFormats={[
-                ...CONSTANTS.DEFAULT_ATTACHMENT_SUPPORTED_TYPES,
-                "audio/*",
-                "video/*",
-              ].join(", ")}
-              suggestions="File type: PDF, DOC, DOCX, XLS, XLSX, Image Files, Audio Files, Video Files"
-              shouldShowFileNameAndExtension={false}
-              handleMultipleUploadImage={(files: Partial<UploadedFile>[]) => {
-                const newUploadedFiles = files
-                  .filter(
-                    (file): file is UploadedFile => file.file !== undefined
-                  )
-                  .map(({ file, fileName }) => {
-                    return { fileUrl: file, fileName };
-                  });
 
-                handleChange("screenshot_link", [
-                  ...formState.screenshot_link,
-                  ...newUploadedFiles,
-                ]);
-              }}
-              limit={5}
-              multiple
-            />
-            {errors?.screenshot_link && (
-              <ErrorMessage message={errors.screenshot_link.message} />
-            )}
-          </StyledFormGroup>
-          <div className="flex g-2 bottom-buttons flex-wrap">
-            <StyledButton
-              className={
-                isMobile ? "fs-16 font-normal w-100" : "fs-16 font-normal"
-              }
-              variant="primary"
-              padding="0.8125rem 2rem"
-              type="submit"
-              disabled={loading}
-            >
-              Submit
-            </StyledButton>
+                  <div className="mt-6">
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className={`w-full rounded-full bg-amber-500 px-8 py-4 text-white hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+                        isMobile ? "text-base" : "text-base"
+                      }`}
+                    >
+                      {loading ? (
+                        <div className="flex items-center justify-center">
+                          <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                        </div>
+                      ) : (
+                        "Submit"
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </Dialog.Panel>
+            </Transition.Child>
           </div>
-        </FormWrapper>
-      </Modal.Body>
-    </StyledModal>
+        </div>
+      </Dialog>
+    </Transition>
   );
 };
 
