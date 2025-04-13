@@ -1,15 +1,7 @@
-// SearchedResults
-
-/*
- * This is a prompt modal for deleting..
- */
-
 "use client";
+
 import { useEffect, useMemo } from "react";
-import { Modal, Button } from "react-bootstrap";
 import { useInfiniteQuery } from "react-query";
-import styled from "styled-components";
-import { StyledModal } from "@/components/styled/StyledModal";
 import SearchBox from "@/components/ui/SearchBox";
 import useDebounce from "@/helpers/hooks/useDebounce";
 import messageService from "@/helpers/http/message";
@@ -17,42 +9,7 @@ import { getUtcDate } from "@/helpers/utils/misc";
 import { MessageProps } from "../messaging.types";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import Image from "next/image";
-
-const StyledWrapper = styled(StyledModal)`
-  word-break: break-word;
-  .title {
-    margin: 0.5rem;
-  }
-  .modal-dialog {
-    top: 10%;
-  }
-  .modal-body {
-    border-radius: 12px;
-    padding: 1.5rem;
-    min-height: 400px;
-  }
-  .search-results {
-    max-height: 300px;
-    overflow-y: scroll;
-  }
-  .msg-item {
-    border: 1px solid ${(props) => props.theme.colors.gray6};
-    border-radius: 0.5rem;
-    margin: 1rem 0.5rem;
-    :hover {
-      background-color: ${(props) => props.theme.colors.body2};
-    }
-  }
-  .user-img {
-    height: 1.875rem;
-    width: 1.875rem;
-    border-radius: 100%;
-    border: 1px solid rgba(242, 180, 32, 0.2);
-  }
-  .loadmore-btn {
-    text-align: center;
-  }
-`;
+import { VscClose } from "react-icons/vsc";
 
 type Props = {
   show: boolean;
@@ -127,7 +84,6 @@ const SearchMessagesModal = ({
     toggle();
   };
 
-  /** @funciton This will will autofocus input when this modal will be opened */
   useEffect(() => {
     if (show) {
       setTimeout(() => {
@@ -147,98 +103,106 @@ const SearchMessagesModal = ({
     onChange("");
   };
 
+  if (!show) return null;
+
   return (
-    <StyledWrapper
-      maxwidth={718}
-      show={show}
-      size="lg"
-      onHide={onClose}
-      autoFocus={true}
-      animation={false}
-    >
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={onClose}>
-          &times;
-        </Button>
-        <div className="title fs-28 font-normal mb-3">Search messages</div>
-        <SearchBox
-          placeholder="Search messages"
-          value={searchTerm}
-          onChange={onSearch}
-          isLoading={isFetching}
-          id="search-msg-input"
-          onClear={onClear}
-          maxLength={100}
-          enableBorder={true}
-        />
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div
+        className="fixed inset-0 bg-black/50 transition-opacity"
+        onClick={onClose}
+      />
+      <div className="fixed inset-0 z-10 overflow-y-auto">
+        <div className="flex min-h-full items-center justify-center p-4 text-center">
+          <div className="relative w-full max-w-[718px] transform overflow-hidden rounded-2xl bg-white px-4 py-8 md:p-12 text-left align-middle shadow-xl transition-all">
+            <button
+              onClick={onClose}
+              className="absolute right-4 top-4 md:top-0 md:-right-8 md:text-white text-gray-400  focus:outline-none"
+            >
+              <VscClose className="h-6 w-6" />
+            </button>
 
-        {!isFetching && searchTerm === "" && searchResults?.length === 0 && (
-          <div className="flex justify-center mt-4">
-            <span className="text-center text-lg opacity-50 mx-5">
-              Search for messages within message thread of &quot;{jobTitle}
-              &quot; project.
-            </span>
-          </div>
-        )}
+            <div className="text-2xl font-normal mb-3">Search messages</div>
 
-        {searchResults?.length > 0 && (
-          <div className="search-results">
-            {searchResults?.map((msg: MessageProps) => (
-              <div
-                className="msg-item p-3 cursor-pointer flex gap-2"
-                key={msg.chat_id}
-                onClick={onSelect(msg)}
-              >
-                {isRemote(msg) ? (
-                  <Image
-                    src={msg.user_image}
-                    className="user-img"
-                    width={30}
-                    height={30}
-                    alt={`${msg.first_name} ${msg.last_name}`}
-                  />
-                ) : null}
-                <div>
-                  {/* <div className="msg fs-18 font-normal mb-1">
-                    {highlightSearch(msg.message_text)}
-                  </div> */}
-                  <MessageText msg={msg} searchTerm={searchTerm} />
-                  <span className="msg-by text-sm font-normal opacity-50 capitalize">
-                    {isRemote(msg)
-                      ? `${msg.first_name} ${msg.last_name}`
-                      : "You"}
-                  </span>
-                  <span className="msg-date text-sm font-normal opacity-50 flex-2">
-                    {" "}
-                    on{" "}
-                    {getUtcDate(
-                      msg.date_created.replace(/-/g, "/") || "",
-                      "MMM DD[,] YYYY [|] hh:mm A"
-                    )}
+            <SearchBox
+              placeholder="Search messages"
+              value={searchTerm}
+              onChange={onSearch}
+              isLoading={isFetching}
+              id="search-msg-input"
+              onClear={onClear}
+              maxLength={100}
+              enableBorder={true}
+            />
+
+            {!isFetching &&
+              searchTerm === "" &&
+              searchResults?.length === 0 && (
+                <div className="flex justify-center mt-4">
+                  <span className="text-center text-lg text-gray-500 mx-5">
+                    Search for messages within message thread of &quot;
+                    {jobTitle}
+                    &quot; project.
                   </span>
                 </div>
-              </div>
-            ))}
-            {searchResults?.length > 0 && hasNextPage ? (
-              <div className="loadmore-btn p-2">
-                <LoadMoreButton
-                  onClick={fetchNextPage}
-                  disabled={isFetchingNextPage}
-                />
-              </div>
-            ) : null}
-          </div>
-        )}
+              )}
 
-        {!isFetching &&
-          searchResults?.length === 0 &&
-          deboubcedSearch !== "" && (
-            <div className="mt-4 fs-18 text-center">
-              No messages found with &quot;{deboubcedSearch}&quot;
-            </div>
-          )}
-      </Modal.Body>
-    </StyledWrapper>
+            {searchResults?.length > 0 && (
+              <div className="max-h-[300px] overflow-y-auto mt-4">
+                {searchResults?.map((msg: MessageProps) => (
+                  <div
+                    className="p-3 cursor-pointer flex gap-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                    key={msg.chat_id}
+                    onClick={onSelect(msg)}
+                  >
+                    {isRemote(msg) ? (
+                      <Image
+                        src={msg.user_image}
+                        className="h-8 w-8 rounded-full border border-amber-200"
+                        width={32}
+                        height={32}
+                        alt={`${msg.first_name} ${msg.last_name}`}
+                      />
+                    ) : null}
+                    <div>
+                      <MessageText msg={msg} searchTerm={searchTerm} />
+                      <span className="text-sm text-gray-500 capitalize">
+                        {isRemote(msg)
+                          ? `${msg.first_name} ${msg.last_name}`
+                          : "You"}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {" "}
+                        on{" "}
+                        {getUtcDate(
+                          msg.date_created.replace(/-/g, "/") || "",
+                          "MMM DD[,] YYYY [|] hh:mm A"
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+                {searchResults?.length > 0 && hasNextPage ? (
+                  <div className="text-center p-2">
+                    <LoadMoreButton
+                      onClick={fetchNextPage}
+                      disabled={isFetchingNextPage}
+                    />
+                  </div>
+                ) : null}
+              </div>
+            )}
+
+            {!isFetching &&
+              searchResults?.length === 0 &&
+              deboubcedSearch !== "" && (
+                <div className="mt-4 text-lg text-center">
+                  No messages found with &quot;{deboubcedSearch}&quot;
+                </div>
+              )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -265,7 +229,7 @@ const MessageText = ({
   return (
     <div
       id={`search_msg_item_${msg.chat_id}`}
-      className="msg text-lg font-normal mb-1"
+      className="text-lg font-normal mb-1"
     />
   );
 };
@@ -278,8 +242,12 @@ const LoadMoreButton = ({
   disabled: boolean;
 }) => {
   return (
-    <Button disabled={disabled} onClick={onClick}>
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className="px-8 py-[0.9rem] text-lg bg-amber-500 text-white rounded-lg hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+    >
       Load More
-    </Button>
+    </button>
   );
 };

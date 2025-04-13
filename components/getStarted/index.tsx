@@ -1,18 +1,21 @@
+"use client";
+
 import useOnClickOutside from "@/helpers/hooks/useClickOutside";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { RiCheckboxBlankCircleLine } from "react-icons/ri";
-import { RiCheckboxCircleFill } from "react-icons/ri";
+import {
+  RiCheckboxBlankCircleLine,
+  RiCheckboxCircleFill,
+} from "react-icons/ri";
 import Link from "next/link";
 import { FaRocket } from "react-icons/fa";
 import useResponsive from "@/helpers/hooks/useResponsive";
 import { CSSTransition } from "react-transition-group";
-import { GetStartedWrapper } from "./style";
 import { IoMdClose } from "react-icons/io";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { Modal } from "react-bootstrap";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 import { FREELANCER_PROFILE_TABS } from "@/helpers/const/tabs";
 import CustomButton from "../custombutton/CustomButton";
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 type Props = {
   user: IFreelancerDetails;
@@ -89,22 +92,61 @@ export const GetStarted = ({ user, isLoading }: Props) => {
       typeof user?.is_account_approved === "undefined")
   ) {
     return (
-      <StyledModal maxwidth={767} show size="sm" centered>
-        <Modal.Body className="flex flex-col justify-center items-center text-center">
-          <h4>Your Profile is Filled Out!</h4>
-          <span className="mt-3">
-            Well done - you have fulfilled the required sections of your
-            profile! A ZMZ staff member will check your account for approval
-            shortly!
-          </span>
+      <Transition appear show={true} as={Fragment}>
+        <Dialog
+          as="div"
+          className="relative z-50"
+          onClose={() => setIsShowingCompleteModal(0)}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" aria-hidden="true" />
+          </Transition.Child>
 
-          <CustomButton
-            text="Close"
-            className="my-[10px] mx-[4px] py-[1.125rem] px-[2.5rem] bg-primary text-white rounded-md hover:scale-105 transition-all duration-300 mt-4"
-            onClick={() => setIsShowingCompleteModal(0)}
-          />
-        </Modal.Body>
-      </StyledModal>
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h4"
+                    className="text-xl font-bold text-center"
+                  >
+                    Your Profile is Filled Out!
+                  </Dialog.Title>
+                  <p className="mt-3 text-center text-gray-600">
+                    Well done - you have fulfilled the required sections of your
+                    profile! A ZMZ staff member will check your account for
+                    approval shortly!
+                  </p>
+
+                  <div className="mt-6 flex justify-center">
+                    <CustomButton
+                      text="Close"
+                      className="px-10 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200"
+                      onClick={() => setIsShowingCompleteModal(0)}
+                    />
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     );
   }
 
@@ -118,18 +160,22 @@ export const GetStarted = ({ user, isLoading }: Props) => {
   }
 
   return (
-    <GetStartedWrapper ref={outsideClickRef}>
-      <div onClick={() => setIsModalOpen((prev) => !prev)}>
+    <div ref={outsideClickRef} className="fixed bottom-4 right-4 z-50">
+      <div
+        onClick={() => setIsModalOpen((prev) => !prev)}
+        className="cursor-pointer"
+      >
         {isModalOpen ? (
-          <div className="cross">
+          <div className="bg-amber-500 text-white p-3 rounded-full hover:bg-amber-600 transition-colors duration-200">
             <IoMdClose size={22} />
           </div>
         ) : (
-          <div className="get-started">
-            <span className="pending-count">
+          <div className="bg-amber-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-amber-600 transition-colors duration-200">
+            <span className="bg-white text-amber-500 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
               {requiredData.filter((item) => !item.isCompleted).length}
             </span>
-            <FaRocket /> <span>Profile {percentCompleted}% Complete!</span>
+            <FaRocket />
+            <span>Profile {percentCompleted}% Complete!</span>
           </div>
         )}
       </div>
@@ -142,14 +188,18 @@ export const GetStarted = ({ user, isLoading }: Props) => {
       >
         <div
           ref={modalAnimationRef}
-          className={`get-started-modal shadow ${isMobile ? "full-width" : ""}`}
+          className={`absolute bottom-full right-0 mb-4 bg-white rounded-lg shadow-lg p-4 min-w-[300px] ${
+            isMobile ? "w-full" : ""
+          }`}
         >
-          <span className="fw-bold">Profile {percentCompleted}% Complete!</span>
-          <div className="progress my-2">
+          <span className="font-bold text-lg">
+            Profile {percentCompleted}% Complete!
+          </span>
+          <div className="w-full bg-gray-200 rounded-full h-2.5 my-2">
             <div
-              className="progress-bar bg-warning"
-              role="progressbar"
+              className="bg-amber-500 h-2.5 rounded-full transition-all duration-500"
               style={{ width: `${percentCompleted}%` }}
+              role="progressbar"
               aria-valuenow={percentCompleted}
               aria-valuemin={0}
               aria-valuemax={100}
@@ -157,35 +207,33 @@ export const GetStarted = ({ user, isLoading }: Props) => {
               {percentCompleted}%
             </div>
           </div>
-          <ul className="my-2">
-            {requiredData.map(({ isCompleted, label, link }) => {
-              return (
-                <li
-                  key={label}
-                  className={`flex items-center py-1 ${
-                    isCompleted ? "completed" : "text-decoration-none"
-                  }`}
+          <ul className="space-y-2 my-2">
+            {requiredData.map(({ isCompleted, label, link }) => (
+              <li
+                key={label}
+                className={`flex items-center py-1 ${
+                  isCompleted ? "text-gray-500" : "text-gray-900"
+                }`}
+              >
+                {isCompleted ? (
+                  <RiCheckboxCircleFill className="text-amber-500 mr-2" />
+                ) : (
+                  <RiCheckboxBlankCircleLine className="text-gray-400 mr-2" />
+                )}
+                <Link
+                  href={link}
+                  className="hover:text-amber-500 transition-colors duration-200"
+                  onClick={() => {
+                    setIsModalOpen(false);
+                  }}
                 >
-                  {isCompleted ? (
-                    <RiCheckboxCircleFill />
-                  ) : (
-                    <RiCheckboxBlankCircleLine />
-                  )}
-                  <Link
-                    href={link}
-                    className="mx-2"
-                    onClick={() => {
-                      setIsModalOpen(false);
-                    }}
-                  >
-                    {label}
-                  </Link>
-                </li>
-              );
-            })}
+                  {label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </CSSTransition>
-    </GetStartedWrapper>
+    </div>
   );
 };
