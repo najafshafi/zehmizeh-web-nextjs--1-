@@ -2,7 +2,7 @@
  * This component will list down all the disputes
  */
 "use client";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import moment from "moment";
 import { Wrapper, DisputeListItem } from "./disputes.styled";
 import Loader from "@/components/Loader";
@@ -25,25 +25,34 @@ interface DisputeStatusMap {
   [key: string]: DisputeStatus;
 }
 
+interface Milestone {
+  title: string;
+}
+
+interface UserData {
+  first_name: string;
+  last_name: string;
+  user_image?: string;
+  user_type?: string;
+}
+
 interface DisputeItem {
   dispute_id: string;
   job_title: string;
-  milestone?: {
-    title: string;
-  };
+  milestone?: Milestone;
   description: string;
-  submitted_by: string;
-  clientdata?: {
-    first_name: string;
-    last_name: string;
-  };
-  freelancerdata?: {
-    first_name: string;
-    last_name: string;
-  };
+  submitted_by: "CLIENT" | "FREELANCER";
+  clientdata?: UserData;
+  freelancerdata?: UserData;
+  userdata?: UserData;
   dispute_status: string;
   date_created: string;
   date_modified: string;
+}
+
+interface DetailsModalState {
+  show: boolean;
+  disputeId: string;
 }
 
 const DISPUTE_STATUSES: DisputeStatusMap = {
@@ -62,126 +71,122 @@ const RECORDS_PER_PAGE = 10;
 const Disputes = () => {
   useStartPageFromTop();
   const [currentPage, setCurrentPage] = useState<number>(1);
-
-  const [detailsModalState, setDetailsModalState] = useState<{
-    show: boolean;
-    disputeId: string;
-  }>({
-    show: false,
-    disputeId: "",
-  });
+  const [detailsModalState, setDetailsModalState] = useState<DetailsModalState>(
+    {
+      show: false,
+      disputeId: "",
+    }
+  );
 
   const { data, isLoading, isRefetching, totalResults } = useDisputes({
     page: currentPage,
     limit: RECORDS_PER_PAGE,
   });
 
-  const onPageChange = (page: { selected: number }) => {
+  const onPageChange = useCallback((page: { selected: number }) => {
     /* This will set next page as active and load new page data */
     setCurrentPage(page?.selected + 1);
-  };
+  }, []);
 
-  const showDisputeDetails = (disputeId: string) => () => {
-    setDetailsModalState({
-      show: true,
-      disputeId,
-    });
-  };
+  const showDisputeDetails = useCallback(
+    (disputeId: string) => () => {
+      setDetailsModalState({
+        show: true,
+        disputeId,
+      });
+    },
+    []
+  );
 
-  const onCloseDetailsModal = () => {
+  const onCloseDetailsModal = useCallback(() => {
     setDetailsModalState({
       show: false,
       disputeId: "",
     });
+  }, []);
+
+  const renderDisputeItem = (item: DisputeItem) => {
+    const submittedBy =
+      item?.submitted_by === "CLIENT"
+        ? `${item?.clientdata?.first_name} ${item?.clientdata?.last_name}`
+        : `${item?.freelancerdata?.first_name} ${item?.freelancerdata?.last_name}`;
+
+    const statusColor = DISPUTE_STATUSES[item?.dispute_status]?.color || "gray";
+    const statusLabel =
+      DISPUTE_STATUSES[item?.dispute_status]?.label || "Unknown";
+
+    return (
+      <DisputeListItem
+        key={item?.dispute_id}
+        className="flex justify-between flex-wrap gap-3 cursor-pointer"
+        onClick={showDisputeDetails(item?.dispute_id)}
+      >
+        <div className="dispute-content">
+          <div className="flex dispute-row flex-wrap">
+            <div className="label text-xl font-normal">Project Name:</div>
+            <div className="value text-xl font-normal">
+              {convertToTitleCase(item?.job_title)}
+            </div>
+          </div>
+          <div className="flex mt-2 dispute-row flex-wrap">
+            <div className="label text-xl font-normal">Milestone:</div>
+            <div className="value text-xl font-normal">
+              <StyledHtmlText
+                htmlString={item?.milestone?.title || ""}
+                id={`dispute_${item?.milestone?.title}`}
+                needToBeShorten={true}
+              />
+            </div>
+          </div>
+          <div className="flex mt-2 dispute-row flex-wrap">
+            <div className="label text-xl font-normal">Reason:</div>
+            <div className="value text-xl font-normal">
+              <StyledHtmlText
+                htmlString={item?.description || ""}
+                id={`dispute_${item.dispute_id}`}
+                needToBeShorten={true}
+              />
+            </div>
+          </div>
+          <div className="flex mt-2 dispute-row flex-wrap">
+            <div className="label text-xl font-normal">Submitted By:</div>
+            <div className="value text-xl font-normal capitalize">
+              {submittedBy}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-end">
+          <StatusBadge color={statusColor}>{statusLabel}</StatusBadge>
+          <div className="created-date text-xl font-normal mt-4">
+            Submitted On:{" "}
+            {item.date_created &&
+              moment(item.date_created).format("MMM DD, YYYY")}
+          </div>
+          <div className="created-date text-xl font-normal mt-2">
+            Closed On:{" "}
+            {item.date_modified &&
+              moment(item.date_modified).format("MMM DD, YYYY")}
+          </div>
+        </div>
+      </DisputeListItem>
+    );
   };
 
-  return (
-    <div className=" h-full min-w-[1170px] mt-10">
-      <Wrapper>
-        {/* Back button */}
-        <BackButton />
+  const renderContent = () => {
+    if (isLoading || isRefetching) {
+      return <Loader />;
+    }
 
-        {/* Page Title */}
+    if (!data?.length) {
+      return <NoDataFound className="py-5" />;
+    }
 
-        <h1 className="title text-center font-normal">Dispute History</h1>
+    return (
+      <>
+        {data.map(renderDisputeItem)}
 
-        {isLoading || (isRefetching && <Loader />)}
-
-        {!isLoading && !isRefetching && data?.length == 0 && (
-          <NoDataFound className="py-5" />
-        )}
-
-        {!isLoading &&
-          data?.length > 0 &&
-          data.map((item: DisputeItem) => (
-            <DisputeListItem
-              key={item?.dispute_id}
-              className="flex justify-between flex-wrap gap-3 pointer"
-              onClick={showDisputeDetails(item?.dispute_id)}
-            >
-              <div className="dispute-content">
-                <div className="flex dispute-row flex-wrap">
-                  <div className="label text-xl font-normal">Project Name:</div>
-                  <div className="value text-xl font-normal">
-                    {convertToTitleCase(item?.job_title)}
-                  </div>
-                </div>
-                <div className="flex mt-2 dispute-row flex-wrap">
-                  <div className="label text-xl font-normal">Milestone:</div>
-                  <div className="value text-xl font-normal">
-                    <StyledHtmlText
-                      htmlString={item?.milestone?.title || ""}
-                      id={`dispute_${item?.milestone?.title}`}
-                      needToBeShorten={true}
-                    />
-                  </div>
-                </div>
-                <div className="flex mt-2 dispute-row flex-wrap">
-                  <div className="label text-xl font-normal">Reason:</div>
-                  <div className="value text-xl font-normal">
-                    <StyledHtmlText
-                      htmlString={item?.description || ""}
-                      id={`dispute_${item.dispute_id}`}
-                      needToBeShorten={true}
-                    />
-                  </div>
-                </div>
-                <div className="flex mt-2 dispute-row flex-wrap">
-                  <div className="label text-xl font-normal">Submitted By:</div>
-                  <div className="value text-xl font-normal capitalize">
-                    {item?.submitted_by === "CLIENT"
-                      ? `${item?.clientdata?.first_name} ${item?.clientdata?.last_name}`
-                      : `${item?.freelancerdata?.first_name} ${item?.freelancerdata?.last_name}`}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col items-end">
-                <div>
-                  <StatusBadge
-                    color={
-                      DISPUTE_STATUSES[item?.dispute_status]?.color || "gray"
-                    }
-                  >
-                    {DISPUTE_STATUSES[item?.dispute_status]?.label || "Unknown"}
-                  </StatusBadge>
-                </div>
-                <div className="created-date text-xl font-normal mt-4">
-                  Submitted On:{" "}
-                  {item.date_created &&
-                    moment(item.date_created).format("MMM DD, YYYY")}
-                </div>
-                <div className="created-date text-xl font-normal mt-2">
-                  Closed On:{" "}
-                  {item.date_modified &&
-                    moment(item.date_modified).format("MMM DD, YYYY")}
-                </div>
-              </div>
-            </DisputeListItem>
-          ))}
-
-        {/* Pagination */}
-        {data?.length > 0 && (
+        {data.length > 0 && (
           <div className="flex justify-center mt-3 items-center">
             <PaginationComponent
               total={Math.ceil(totalResults / RECORDS_PER_PAGE)}
@@ -190,6 +195,20 @@ const Disputes = () => {
             />
           </div>
         )}
+      </>
+    );
+  };
+
+  return (
+    <div className="h-full min-w-[1170px] mt-10">
+      <Wrapper>
+        {/* Back button */}
+        <BackButton />
+
+        {/* Page Title */}
+        <h1 className="title text-center font-normal">Dispute History</h1>
+
+        {renderContent()}
 
         <DisputeDetails
           show={detailsModalState.show}
