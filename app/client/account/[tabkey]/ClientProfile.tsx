@@ -448,11 +448,24 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
     paymentMethodRefetch();
   };
 
+  // Move the comment scroll effect to a separate useEffect
+  useEffect(() => {
+    if (!isMounted || !searchParams) return;
+
+    const commentId = searchParams.get("commentId");
+    if (!commentId) return;
+
+    const anchorComment = document.getElementById(commentId);
+    if (anchorComment) {
+      anchorComment.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [searchParams, isMounted]);
+
   if (!isMounted) {
     return <Loader />;
   }
 
-  const SaveButtonUI = (
+  const renderSaveButtonUI = (
     loadingKey: TInputFieldLoading,
     dataKey: keyof TFormData,
     top?: number,
@@ -485,20 +498,6 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
       </div>
     );
   };
-
-  useEffect(() => {
-    // Scroll to anchor comment if available
-    if (isMounted && searchParams && searchParams.get("commentId")) {
-      const anchorCommentId = searchParams.get("commentId") || "";
-      // Only access document in browser environment
-      if (typeof document !== "undefined") {
-        const anchorComment = document.getElementById(anchorCommentId);
-        if (anchorComment) {
-          anchorComment.scrollIntoView({ behavior: "smooth" });
-        }
-      }
-    }
-  }, [searchParams, isMounted]);
 
   return (
     <C.ClientProfileWrapper>
@@ -627,7 +626,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                               }))
                             }
                           />
-                          {SaveButtonUI("first name", "first_name")}
+                          {renderSaveButtonUI("first name", "first_name")}
                         </StyledFormGroup>
                         {errors?.first_name && (
                           <ErrorMessage message={errors.first_name} />
@@ -652,7 +651,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                               }))
                             }
                           />
-                          {SaveButtonUI("last name", "last_name")}
+                          {renderSaveButtonUI("last name", "last_name")}
                         </StyledFormGroup>
                         {errors?.last_name && (
                           <ErrorMessage message={errors.last_name} />
@@ -738,40 +737,6 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                       {/* END ------------------------------------------- State / region */}
 
                       {/* START ----------------------------------------- Phone number */}
-                      {/* <div>
-                        <StyledFormGroup className="flex flex-col">
-                          <div className="text-sm font-normal">
-                            Phone<span className="text-red-500">&nbsp;*</span>
-                          </div>
-                          <PhoneInputWrapper className="phone-input-wrapper flex-1 w-full">
-                            <PhoneNumberInput
-                              initialValue={profileData?.formatted_phonenumber}
-                              onChange={(phone, formattedValue) => {
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  phone_number: phone,
-                                  formatted_phonenumber: formattedValue,
-                                }));
-                              }}
-                            />
-                            <SaveButtonUI
-                              loadingFieldName="phone number"
-                              fieldName="formatted_phonenumber"
-                              onSave={handleEditUser}
-                              timeout={30}
-                              additionalData={{
-                                phone_number: formData.phone_number,
-                              }}
-                            />
-                          </PhoneInputWrapper>
-                        </StyledFormGroup>
-                        {errors?.formatted_phonenumber && (
-                          <ErrorMessage
-                            message={errors.formatted_phonenumber}
-                          />
-                        )}
-                      </div> */}
-
                       <div className="w-full px-3">
                         <StyledFormGroup className="relative">
                           <div className="text-sm font-normal">
@@ -794,7 +759,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                                 }
                               }}
                             />
-                            {SaveButtonUI(
+                            {renderSaveButtonUI(
                               "phone number",
                               "formatted_phonenumber",
                               30,
@@ -810,7 +775,6 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                           />
                         )}
                       </div>
-
                       {/* END ------------------------------------------- Phone number */}
                     </div>
 
