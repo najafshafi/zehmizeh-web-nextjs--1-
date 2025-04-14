@@ -2,7 +2,19 @@ import { useState } from "react";
 import styled from "styled-components";
 import toast from "react-hot-toast";
 import InfoEditModal from "./edit-info/InfoEditModal";
-import EditPictureModal from "@/components/ui/EditPictureModal";
+import dynamic from "next/dynamic";
+// Improved dynamic import with loading fallback
+const EditPictureModal = dynamic(
+  () => import("@/components/ui/EditPictureModal"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center p-4">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500"></div>
+      </div>
+    ),
+  }
+);
 import { separateValuesWithComma } from "@/helpers/utils/misc";
 import { editUser } from "@/helpers/http/auth";
 import { transition } from "@/styles/transitions";
@@ -82,6 +94,7 @@ const ProfileBanner = ({
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [showEditPictureModal, setShowEditPictureModal] =
     useState<boolean>(false);
+  const [updatingProfile, setUpdatingProfile] = useState<boolean>(false);
 
   const toggleEditModal = () => {
     setShowEditModal(!showEditModal);
@@ -96,19 +109,28 @@ const ProfileBanner = ({
   };
 
   const updateUserProfile = (url: string) => {
-    const body: any = {
+    if (!url) {
+      toast.error("Failed to get image URL");
+      return;
+    }
+
+    setUpdatingProfile(true);
+
+    const body = {
       user_image: url,
     };
+
     const promise = editUser(body);
     toast.promise(promise, {
-      loading: "Updating your details - please wait...",
+      loading: "Updating your profile image...",
       success: (res) => {
-        setShowEditPictureModal(false);
+        setUpdatingProfile(false);
         refetch();
-        return res.message;
+        return res.message || "Profile image updated successfully";
       },
       error: (err) => {
-        return err?.response?.data?.message || "error";
+        setUpdatingProfile(false);
+        return err?.response?.data?.message || "Error updating profile image";
       },
     });
   };
@@ -172,12 +194,14 @@ const ProfileBanner = ({
         </div>
       </div>
 
-      <EditPictureModal
-        show={showEditPictureModal}
-        onUpdate={updateUserProfile}
-        onClose={togglePictureModal}
-        profilePic={data?.user_image}
-      />
+      {showEditPictureModal && (
+        <EditPictureModal
+          show={showEditPictureModal}
+          onUpdate={updateUserProfile}
+          onClose={togglePictureModal}
+          profilePic={data?.user_image}
+        />
+      )}
 
       <InfoEditModal
         show={showEditModal}

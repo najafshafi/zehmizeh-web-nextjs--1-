@@ -486,19 +486,19 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
     );
   };
 
-  useEffect(() => {
-    // Scroll to anchor comment if available
-    if (isMounted && searchParams && searchParams.get("commentId")) {
-      const anchorCommentId = searchParams.get("commentId") || "";
-      // Only access document in browser environment
-      if (typeof document !== "undefined") {
-        const anchorComment = document.getElementById(anchorCommentId);
-        if (anchorComment) {
-          anchorComment.scrollIntoView({ behavior: "smooth" });
-        }
-      }
-    }
-  }, [searchParams, isMounted]);
+  // useEffect(() => {
+  //   // Scroll to anchor comment if available
+  //   if (isMounted && searchParams && searchParams.get("commentId")) {
+  //     const anchorCommentId = searchParams.get("commentId") || "";
+  //     // Only access document in browser environment
+  //     if (typeof document !== "undefined") {
+  //       const anchorComment = document.getElementById(anchorCommentId);
+  //       if (anchorComment) {
+  //         anchorComment.scrollIntoView({ behavior: "smooth" });
+  //       }
+  //     }
+  //   }
+  // }, [searchParams, isMounted]);
 
   return (
     <C.ClientProfileWrapper>
