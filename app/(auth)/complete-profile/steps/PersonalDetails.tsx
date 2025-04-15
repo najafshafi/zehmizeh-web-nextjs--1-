@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import { StyledFormGroup, FormWrapper } from "./steps.styled";
-import { StyledButton } from "@/components/forms/Buttons";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import { getYupErrors } from "@/helpers/utils/misc";
 import EditPictureModal from "@/components/ui/EditPictureModal";
@@ -12,6 +11,7 @@ import { SeeMore } from "@/components/ui/SeeMore";
 import { IClientDetails } from "@/helpers/types/client.type";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 import { completeProfilePersonalDetailsValidation } from "@/helpers/validation/completProfileValidation";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 // Profile data contains fields from both client and freelancer interfaces
 type ProfileDataType = Partial<IClientDetails & IFreelancerDetails>;
@@ -165,19 +165,19 @@ const PersonalDetails = ({
                   Headline
                   <span className="mandatory">&nbsp;*</span>
                 </b>
-                <p className="fs-base mt-2 mb-0 text-justify text-secondary">
+                <p className="fs-base mt-2 mb-0 text-justify text-gray-500">
                   Your headline should introduce your work as a freelancer. When
-                  clients search for freelancers, they&apos;ll see it directly under
-                  your name as a personal subtitle or slogan.
+                  clients search for freelancers, they&apos;ll see it directly
+                  under your name as a personal subtitle or slogan.
                 </p>
                 {seeMore && (
-                  <p className="fs-base mb-0 mt-2 text-justify text-secondary">
+                  <p className="fs-base mb-0 mt-2 text-justify text-gray-500">
                     The simplest way to introduce yourself would be to mention
-                    your job title (&quot;Ghostwriter&quot; or &quot;Accountant&quot;).
-                    Alternatively, you could list your freelancing skills
-                    (&quot;Photoshop | Adobe | FinalCut Pro&quot;). Or you could even use
-                    a tagline that makes it clear what you do (&quot;Editing You Can
-                    Count On&quot;).
+                    your job title (&quot;Ghostwriter&quot; or
+                    &quot;Accountant&quot;). Alternatively, you could list your
+                    freelancing skills (&quot;Photoshop | Adobe | FinalCut
+                    Pro&quot;). Or you could even use a tagline that makes it
+                    clear what you do (&quot;Editing You Can Count On&quot;).
                   </p>
                 )}
                 <SeeMore onClick={() => setSeeMore((prev) => !prev)}>
@@ -186,7 +186,7 @@ const PersonalDetails = ({
               </div>
               <Form.Control
                 placeholder="Add a tagline to introduce what you do professionally"
-                className="form-input"
+                className="form-input w-full"
                 value={formState?.job_title || ""}
                 onChange={(e) => handleChange("job_title", e.target.value)}
                 maxLength={150}
@@ -205,7 +205,7 @@ const PersonalDetails = ({
             <StyledFormGroup>
               <div className="fs-sm font-normal">
                 <b className="fs-18">Hourly Rate</b> (Optional)
-                <p className="fs-base mt-2 mb-0 text-justify text-secondary">
+                <p className="fs-base mt-2 mb-0 text-justify text-gray-500">
                   If you have a standard hourly rate for your services, share it
                   here. If you charge different hourly rates for different
                   projects or if you do not have a standard rate, leave this
@@ -215,7 +215,7 @@ const PersonalDetails = ({
               <span className="input-symbol-euro">
                 <Form.Control
                   placeholder="Enter your hourly rate"
-                  className="form-input rate-input"
+                  className="form-input rate-input w-full items-center flex justify-center text-black"
                   value={
                     formState?.hourly_rate !== undefined
                       ? String(formState.hourly_rate)
@@ -247,13 +247,18 @@ const PersonalDetails = ({
       <Container className="mt-3 px-0">{UI()}</Container>
 
       {!client && (
-        <div className="flex justify-center justify-content-md-end gap-3">
-          <StyledButton variant="dark" onClick={skipForNow}>
-            Skip
-          </StyledButton>
-          <StyledButton variant="primary" onClick={validate}>
-            Next
-          </StyledButton>
+        <div className="flex justify-center md:justify-end gap-4">
+          <CustomButton
+            text="Skip"
+            className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal  rounded-full bg-black text-white text-[18px]"
+            onClick={skipForNow}
+          />
+
+          <CustomButton
+            text="Next"
+            className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+            onClick={validate}
+          />
         </div>
       )}
     </FormWrapper>

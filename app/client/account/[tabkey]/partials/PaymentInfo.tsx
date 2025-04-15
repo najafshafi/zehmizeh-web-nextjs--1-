@@ -61,7 +61,7 @@ const PaymentInfo = ({ paymentData, refetch, onNewAdded }: Props) => {
 
   return (
     <div className="mx-auto">
-      <div className="bg-white shadow-[0px_4px_60px_rgba(0,0,0,0.05)] rounded-xl p-8 min-h-[570px] md:min-h-auto ">
+      <div className="bg-white shadow-[0px_4px_60px_rgba(0,0,0,0.05)] rounded-xl p-8 md:min-h-[570px] md:min-w-[561px] min-h-fit ">
         {/* Heading */}
         <div className="text-2xl font-normal">Credit Card Details</div>
 

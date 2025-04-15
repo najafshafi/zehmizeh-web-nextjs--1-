@@ -2,8 +2,10 @@
  * This component is a modal to edit skills
  */
 
+"use client";
+
 import { useEffect, useState, useRef } from "react";
-import Cropper from "react-cropper";
+import Cropper, { ReactCropperElement } from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -28,17 +30,14 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
   );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
-  const cropperRef = useRef<Cropper | null>(null);
+  const cropperRef = useRef<ReactCropperElement>(null);
 
-  // Add effect to manage body scrolling
   useEffect(() => {
     if (show) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
     }
-
-    // Cleanup function to ensure body scrolling is restored when component unmounts
     return () => {
       document.body.style.overflow = "unset";
     };
@@ -50,7 +49,7 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
       setSelectedFile(null);
       setUploading(false);
     }
-  }, [profilePic, selectedFile, show]);
+  }, [profilePic, show]);
 
   const onLoaded = () => {
     setLoadingImage(false);
@@ -69,12 +68,12 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
     }
 
     if (files && files[0]) {
-    setSelectedFile(files[0]);
-    const reader = new FileReader();
-    reader.onload = () => {
+      setSelectedFile(files[0]);
+      const reader = new FileReader();
+      reader.onload = () => {
         setCurrentImage(reader.result as string);
-    };
-    reader.readAsDataURL(files[0]);
+      };
+      reader.readAsDataURL(files[0]);
     }
   };
 
@@ -107,7 +106,8 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
   }
 
   const validateFile = async () => {
-    if (!cropperRef.current) {
+    const cropper = cropperRef.current?.cropper;
+    if (!cropper) {
       toast.error("Please wait for the image to load");
       return;
     }
@@ -124,57 +124,70 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
       } else if (!allowedExtensions.exec(fileName)) {
         toast.error(`.${extension} file type is not supported.`);
         return;
-      } else {
-        uploadFileToSerever(fileName, extension);
       }
-    } else {
-      uploadFileToSerever("profile.png", "png");
     }
+
+    await uploadFileToSerever();
   };
 
-  const uploadFileToSerever = async (fileName: string, extension: string) => {
-    if (!cropperRef.current) {
+  const uploadFileToSerever = async () => {
+    const cropper = cropperRef.current?.cropper;
+    if (!cropper) {
       toast.error("Please wait for the image to load");
       return;
     }
 
     try {
-    setUploading(true);
+      setUploading(true);
 
-      const croppedCanvas = cropperRef.current.getCroppedCanvas();
+      const croppedCanvas = cropper.getCroppedCanvas({
+        width: 400,
+        height: 400,
+        minWidth: 256,
+        minHeight: 256,
+        maxWidth: 4096,
+        maxHeight: 4096,
+        fillColor: "#fff",
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: "high",
+      });
+
       if (!croppedCanvas) {
         throw new Error("Failed to get cropped canvas");
       }
 
       const roundedCanvas = getRoundedCanvas(croppedCanvas);
-    const dataUrl = await roundedCanvas.toDataURL();
-    const base64Data = dataUrl.replace(/^data:image\/(png|jpg);base64,/, "");
+      const dataUrl = roundedCanvas.toDataURL("image/jpeg", 0.9);
+      const base64Data = dataUrl.replace(
+        /^data:image\/(png|jpg|jpeg);base64,/,
+        ""
+      );
 
-    const file = await dataUrlToFileUsingFetch(
-      "data:image/jpeg;base64," + base64Data,
-      fileName,
-      `image/${extension}`
-    );
+      const file = await dataUrlToFileUsingFetch(
+        dataUrl,
+        selectedFile?.name || "profile.jpg",
+        "image/jpeg"
+      );
 
       const res = await generateAwsUrl({
-      folder: "job-documents",
-      file_name: file.name,
-      content_type: file.type,
+        folder: "profile-pictures",
+        file_name: file.name,
+        content_type: file.type,
       });
 
       const { uploadURL } = res;
       const contentType = file.type;
 
       await axios.put(uploadURL, file, {
-          headers: { "Content-Type": contentType },
+        headers: { "Content-Type": contentType },
       });
 
-          const uploadedUrl = uploadURL.split("?")[0];
+      const uploadedUrl = uploadURL.split("?")[0];
       onUpdate?.(uploadedUrl);
       onClose();
     } catch (err) {
       console.error("Error uploading image:", err);
-          setUploading(false);
+      setUploading(false);
       toast.error("Error uploading image. Please try again.");
     }
   };
@@ -192,8 +205,7 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
   if (!show) return null;
 
   return (
-
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/40 backdrop-blur-sm"
@@ -201,109 +213,101 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
       />
 
       {/* Modal Content */}
-      <div className="fixed inset-0 flex items-center justify-center p-4">
-        <div className="bg-white rounded-xl w-full max-w-[678px] max-h-[90vh] py-[2rem] px-[1rem] md:py-[3.20rem] md:px-12 relative">
-          {/* Close Button */}
-          <VscClose
-            className="absolute top-4 md:top-0 right-4 md:-right-8 text-2xl text-black md:text-white hover:text-gray-200 cursor-pointer"
-            onClick={onClose}
-          />
+      <div className="relative bg-white rounded-xl w-full max-w-[678px] max-h-[90vh] overflow-y-auto p-8 mx-4">
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 text-gray-500 hover:text-gray-700"
+        >
+          <VscClose className="w-6 h-6" />
+        </button>
 
-          <div className="content flex flex-col">
-            <h2 className="text-[#212529] text-[1.75rem] font-normal text-left mb-8">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+          Edit Profile Picture
+        </h2>
 
-              Edit Profile Picture
-            </h2>
-          </div>
-
-          <div className="cropper flex flex-col justify-center items-center mt-5 mb-3">
+        <div className="flex flex-col items-center space-y-6">
+          {/* Image Preview Container */}
+          <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px] bg-gray-100 rounded-full overflow-hidden">
             {loadingImage && (
-              <div className="spinner absolute m-auto">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
               </div>
             )}
 
-            {!currentImage && (
-              <div className="relative h-[400px] w-[400px]">
-                <Image
+            {!currentImage ? (
+              <Image
                 src="/images/default_avatar.png"
-                alt="default-avatar"
-                  fill
-                  width={400}
-                  height={400}
-                  className="object-cover rounded-full"
-                />
-              </div>
-            )}
-
-            {currentImage && (
+                alt="Default avatar"
+                fill
+                className="object-cover"
+              />
+            ) : (
               <Cropper
-                style={{ height: 400, width: 400, borderRadius: "50%" }}
-                initialAspectRatio={1}
-                preview=".img-preview"
+                ref={cropperRef}
                 src={currentImage}
+                style={{ height: "100%", width: "100%" }}
+                aspectRatio={1}
                 viewMode={1}
-                minCropBoxHeight={10}
-                minCropBoxWidth={10}
+                dragMode="move"
                 background={false}
-                responsive={true}
+                responsive
                 autoCropArea={1}
                 checkOrientation={false}
-                onInitialized={(instance) => {
-                  cropperRef.current = instance;
-                  setLoadingImage(true);
-                  setTimeout(() => {
-                    instance.zoomTo(0);
-                  }, 0);
-                }}
-                aspectRatio={1}
                 guides={true}
+                cropBoxMovable={true}
+                cropBoxResizable={true}
+                toggleDragModeOnDblclick={false}
+                onInitialized={() => {
+                  setLoadingImage(true);
+                }}
                 ready={onLoaded}
               />
             )}
+          </div>
 
-            <div className="flex flex-wrap mt-5 gap-3">
+          {/* Buttons */}
+          <div className="flex flex-wrap gap-4 justify-center w-full">
+            <button
+              className={`relative flex items-center px-6 py-2.5 rounded-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+                isMobile ? "w-full" : ""
+              }`}
+              disabled={uploading}
+            >
+              <svg
+                className="w-5 h-5 mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                />
+              </svg>
+              Change Picture
+              <input
+                type="file"
+                accept="image/*"
+                onChange={onChange}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+            </button>
+
+            {currentImage && (
               <button
-                className={`relative inline-flex items-center justify-center rounded-full border border-gray-300 bg-white px-8 py-[0.85rem] text-lg font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                className={`flex items-center px-6 py-2.5 rounded-full bg-[#F7B500] text-[#1d1e1b] hover:bg-[#e5a800] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F7B500] ${
                   isMobile ? "w-full" : ""
                 }`}
+                onClick={validateFile}
                 disabled={uploading}
               >
-                <svg
-                  className="mr-2 h-5 w-5"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-                  />
-                </svg>
-                Change Picture
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={onChange}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
+                Save {uploading && <LoadingButtons />}
               </button>
-
-              {currentImage && (
-                <button
-                  className={`inline-flex items-center justify-center rounded-full bg-[#F7B500] px-8 py-[0.85rem] text-lg font-medium text-[#1d1e1b] hover:scale-105 duration-300 focus:outline-none focus:ring-2 focus:ring-[#F7B500] focus:ring-offset-2 ${
-                    isMobile ? "w-full" : ""
-                  }`}
-                  onClick={validateFile}
-                  disabled={uploading}
-                >
-                  Save {uploading && <LoadingButtons />}
-                </button>
-              )}
-            </div>
+            )}
           </div>
         </div>
       </div>

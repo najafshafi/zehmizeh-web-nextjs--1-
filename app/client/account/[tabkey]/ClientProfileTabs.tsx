@@ -56,7 +56,7 @@ const ClientProfileTabs = ({ currentTab }: Prop) => {
             onClick={() => {
               handleTabClick(tb.path);
             }}
-            active={Boolean(tb.id === activeTab)}
+            data-active={tb.id === activeTab}
             key={tb.id}
           >
             {tb.title}

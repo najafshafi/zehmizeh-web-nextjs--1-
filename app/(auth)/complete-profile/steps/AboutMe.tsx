@@ -4,7 +4,6 @@
  */
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { StyledButton } from "@/components/forms/Buttons";
 import { FormWrapper } from "./steps.styled";
 import styled from "styled-components";
 import TextEditor from "@/components/forms/TextEditor";
@@ -14,6 +13,7 @@ import { useRouter } from "next/navigation"; // Changed from react-router-dom
 import { IClientDetails } from "@/helpers/types/client.type";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 import { CONSTANTS } from "@/helpers/const/constants";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 const Container = styled.div`
   .ck-editor__main {
@@ -57,7 +57,8 @@ const AboutMe = ({ aboutMe, onUpdate, onPrevious, skipForNow }: Props) => {
   const onDescriptionChange = (data: typeof aboutMe) => {
     setContent(data);
     if (
-      (getPlainText(data || '') || '').length <= CONSTANTS.ABOUT_ME_MAXIMUM_CHARACTERS
+      (getPlainText(data || "") || "").length <=
+      CONSTANTS.ABOUT_ME_MAXIMUM_CHARACTERS
     ) {
       if (isMaxLimitReached) {
         setIsMaxLimitReached(false);
@@ -152,36 +153,36 @@ const AboutMe = ({ aboutMe, onUpdate, onPrevious, skipForNow }: Props) => {
             maxChars={CONSTANTS.ABOUT_ME_MAXIMUM_CHARACTERS}
           />
         </div>
-        <div className="flex justify-center justify-content-md-end gap-3">
+        <div className="flex justify-center md:justify-end gap-4">
           {user_type !== "client" && (
-            <StyledButton
-              variant="outline-dark"
+            <CustomButton
+              text="Previous"
+              className="px-8 py-3 transition-transform duration-200 hover:scale-105 font-normal  rounded-full hover:bg-black hover:text-white text-[18px] border border-black "
               disabled={loading}
               onClick={onPrevious}
-            >
-              Previous
-            </StyledButton>
+            />
           )}
           {user_type === "client" ? (
-            <StyledButton
-              variant="dark"
+            <CustomButton
+              text="Skip"
+              className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal  rounded-full bg-black text-white text-[18px]"
               disabled={loading}
               onClick={() => handleUpdate(true)}
-            >
-              Skip
-            </StyledButton>
+            />
           ) : (
-            <StyledButton
+            <CustomButton
+              text="Skip"
+              className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal  rounded-full bg-black text-white text-[18px]"
               disabled={loading}
               onClick={skipForNow}
-              variant="dark"
-            >
-              Skip
-            </StyledButton>
+            />
           )}
-          <StyledButton disabled={loading} onClick={() => handleUpdate()}>
-            {user_type === "client" ? "Save & Go to Profile" : "Next"}
-          </StyledButton>
+
+          <CustomButton
+            text={user_type === "client" ? "Save & Go to Profile" : "Next"}
+            className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+            onClick={() => handleUpdate()}
+          />
         </div>
       </FormWrapper>
     </Container>

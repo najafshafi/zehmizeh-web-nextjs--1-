@@ -224,6 +224,7 @@ const NavbarProfile = () => {
                 width={50}
                 height={50}
                 alt="User avatar"
+                className="rounded-full"
                 priority
               />
               <p className="flex items-center gap-2 text-lg text-[#212529]">
