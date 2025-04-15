@@ -160,18 +160,18 @@ export const GetStarted = ({ user, isLoading }: Props) => {
   }
 
   return (
-    <div ref={outsideClickRef} className="fixed bottom-4 right-4 z-50">
+    <div ref={outsideClickRef} className="fixed bottom-4 left-4 z-50">
       <div
         onClick={() => setIsModalOpen((prev) => !prev)}
         className="cursor-pointer"
       >
         {isModalOpen ? (
-          <div className="bg-primary text-white p-3 rounded-full hover:bg-amber-600 transition-colors duration-200">
+          <div className="bg-primary text-white p-3 rounded-full transition-colors duration-200">
             <IoMdClose size={22} />
           </div>
         ) : (
-          <div className="bg-primary text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-amber-600 transition-colors duration-200">
-            <span className="bg-white text-primary rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+          <div className="bg-primary text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200">
+            <span className="absolute top-[-10px] right-[-10px] z-1000 bg-[#FF0000] text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
               {requiredData.filter((item) => !item.isCompleted).length}
             </span>
             <FaRocket />
@@ -188,7 +188,7 @@ export const GetStarted = ({ user, isLoading }: Props) => {
       >
         <div
           ref={modalAnimationRef}
-          className={`absolute bottom-full right-0 mb-4 bg-white rounded-lg shadow-lg p-4 min-w-[300px] ${
+          className={`absolute bottom-full left-0 mb-4 bg-white rounded-lg shadow-lg p-4 min-w-[300px] ${
             isMobile ? "w-full" : ""
           }`}
         >
@@ -204,7 +204,7 @@ export const GetStarted = ({ user, isLoading }: Props) => {
               aria-valuemin={0}
               aria-valuemax={100}
             >
-              {percentCompleted}%
+              {/* {percentCompleted}% */}
             </div>
           </div>
           <ul className="space-y-2 my-2">
