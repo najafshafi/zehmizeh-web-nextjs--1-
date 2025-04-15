@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const Wrapper = styled(Container)`
   max-width: 1170px;
-  margin: 0px 25px;
+
   padding: 0px 20px;
   .reset-password {
     color: ${(props) => props.theme.colors.lightBlue};
@@ -89,10 +89,10 @@ export const ClientTab = styled.div`
   }
 `;
 
-export const ClientTitle = styled.div<{ active?: boolean }>`
+export const ClientTitle = styled.div<{ "data-active"?: boolean }>`
   cursor: pointer;
   margin-top: 1rem;
-  font-weight: ${(props) => (props.active ? 700 : 400)};
+  font-weight: ${(props) => (props["data-active"] ? 700 : 400)};
   font-size: 18px;
   @media (max-width: 768px) {
     margin-top: 0;

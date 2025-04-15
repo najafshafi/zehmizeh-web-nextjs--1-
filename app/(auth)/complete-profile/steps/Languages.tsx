@@ -9,6 +9,7 @@ import { getLanguages } from "@/helpers/http/common";
 import { MultiSelectCustomStyle } from "./multiSelectCustomStyle";
 import { IClientDetails } from "@/helpers/types/client.type";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 type TData = Partial<IClientDetails & IFreelancerDetails>;
 
@@ -95,15 +96,15 @@ const Languages = ({
   };
 
   return (
-    <FormWrapper className="flex flex-col">
+    <FormWrapper className="flex flex-col w-full min-w-[600px]">
       <div>
         <div className="form-group">
           <div>
             <b className="fs-18">
               Languages
-              <span className="mandatory">&nbsp;*</span>
+              <span className="text-red-500">&nbsp;*</span>
             </b>
-            <p className="fs-base mt-2 mb-0 text-justify text-secondary">
+            <p className="fs-base mt-2 mb-0 text-justify text-gray-500">
               Select any languages that you can work in below.
             </p>
           </div>
@@ -120,14 +121,24 @@ const Languages = ({
           />
         </div>
       </div>
-      <div className="flex justify-center justify-content-md-end gap-3">
-        <StyledButton variant="outline-dark" onClick={onPrevious}>
-          Previous
-        </StyledButton>
-        <StyledButton variant="dark" onClick={skipForNow}>
-          Skip
-        </StyledButton>
-        <StyledButton onClick={handleUpdate}>Next</StyledButton>
+      <div className="flex justify-center md:justify-end gap-3">
+        <CustomButton
+          text="Previous"
+          className="px-8 py-3 transition-transform duration-200 hover:scale-105 font-normal  rounded-full hover:bg-black hover:text-white text-[18px] border border-black "
+          onClick={onPrevious}
+        />
+
+        <CustomButton
+          text="Skip"
+          className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal  rounded-full bg-black text-white text-[18px]"
+          onClick={skipForNow}
+        />
+
+        <CustomButton
+          text="Next"
+          className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+          onClick={handleUpdate}
+        />
       </div>
     </FormWrapper>
   );

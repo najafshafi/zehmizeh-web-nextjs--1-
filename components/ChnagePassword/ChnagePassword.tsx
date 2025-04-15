@@ -98,7 +98,7 @@ export default function ChangePassword() {
   const { errors } = formState;
 
   return (
-    <AuthLayout center small>
+    <AuthLayout center={true} small={true}>
       <h1>Reset Password</h1>
 
       <form className="mt-4" onSubmit={handleSubmit(onSubmit)}>

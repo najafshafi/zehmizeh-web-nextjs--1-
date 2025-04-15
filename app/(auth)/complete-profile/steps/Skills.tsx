@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { FormWrapper } from "./steps.styled";
-import { StyledButton } from "@/components/forms/Buttons";
 import { IClientDetails } from "@/helpers/types/client.type";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 import { CategorySkillSelectModal } from "@/components/skills-form/CategorySelectModal";
@@ -10,6 +9,7 @@ import {
   getRelevantSkillsBasedOnCategory,
   getSkills,
 } from "@/helpers/utils/helper";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 // Define the Skill type to match what's expected
 type Skill = Partial<{
@@ -105,14 +105,24 @@ const Skills = ({
         noResultFoundText="No Results Found. Please Select Category first to See Skills."
         isMandatory
       />
-      <div className="flex justify-center justify-content-md-end gap-3">
-        <StyledButton variant="outline-dark" onClick={onPrevious}>
-          Previous
-        </StyledButton>
-        <StyledButton onClick={skipForNow} variant="dark">
-          Skip
-        </StyledButton>
-        <StyledButton onClick={() => handleUpdate()}>Next</StyledButton>
+      <div className="flex justify-center md:justify-end gap-4">
+        <CustomButton
+          text="Previous"
+          className="px-8 py-3 transition-transform duration-200 hover:scale-105 font-normal  rounded-full hover:bg-black hover:text-white text-[18px] border border-black "
+          onClick={onPrevious}
+        />
+
+        <CustomButton
+          text="Skip"
+          className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal  rounded-full bg-black text-white text-[18px]"
+          onClick={skipForNow}
+        />
+
+        <CustomButton
+          text={"Next"}
+          className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+          onClick={() => handleUpdate()}
+        />
       </div>
     </FormWrapper>
   );

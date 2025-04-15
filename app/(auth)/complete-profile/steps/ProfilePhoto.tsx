@@ -8,6 +8,7 @@ import { StyledButton } from "@/components/forms/Buttons";
 import { IClientDetails } from "@/helpers/types/client.type";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 import Image from "next/image";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 type TData = Partial<IClientDetails & IFreelancerDetails>;
 
@@ -45,7 +46,7 @@ export const ProfilePhoto = ({
       <Container className="mt-3 px-0 flex flex-col">
         <div className="fs-sm font-normal mb-3">
           <b className="fs-18">Profile Pic</b> (Optional)
-          <p className="mt-2 mb-0 text-justify fs-base text-secondary">
+          <p className="mt-2 mb-0 text-justify fs-base text-gray-700">
             To make your profile even more personable, you can add a profile
             pic. Some users share a photo of their face, but it is also common
             to share your professional logo or a cartoon avatar instead.
@@ -75,19 +76,19 @@ export const ProfilePhoto = ({
         />
       </Container>
       <div className="flex justify-center justify-content-md-end gap-3">
-        <StyledButton
-          variant="outline-dark"
+        <CustomButton
+          text="Previous"
+          className="px-8 py-3 transition-transform duration-200 hover:scale-105 font-normal  rounded-full hover:bg-black hover:text-white text-[18px] border border-black "
           disabled={updatingProfile}
           onClick={onPrevious}
-        >
-          Previous
-        </StyledButton>
-        <StyledButton
+        />
+
+        <CustomButton
+          text="Save & Go to Profile"
+          className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
           disabled={updatingProfile}
           onClick={() => onUpdate(formState)}
-        >
-          Save & Go to Profile
-        </StyledButton>
+        />
       </div>
     </FormWrapper>
   );

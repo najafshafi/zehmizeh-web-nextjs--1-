@@ -367,9 +367,12 @@ export const AccountSettings = () => {
                     "px-4 py-3 border rounded mr-4 cursor-pointer",
                     {
                       "border-dark": formData.is_agency === 0,
+                      "border-gray-100": formData.is_agency !== 0,
                     }
                   )}
-                  style={{ borderColor: "grey" }}
+                  style={{
+                    borderColor: formData.is_agency === 0 ? "#333" : "",
+                  }}
                   onClick={() => {
                     if (formData?.is_agency === 1) {
                       setFormData((prev) => ({ ...prev, is_agency: 0 }));
@@ -384,9 +387,12 @@ export const AccountSettings = () => {
                     "px-4 py-3 border rounded mr-4 cursor-pointer",
                     {
                       "border-dark": formData.is_agency === 1,
+                      "border-gray-100": formData.is_agency !== 1,
                     }
                   )}
-                  style={{ borderColor: "grey" }}
+                  style={{
+                    borderColor: formData.is_agency === 1 ? "#333" : "",
+                  }}
                   onClick={() => {
                     if (formData?.is_agency === 0) {
                       setFormData((prev) => ({ ...prev, is_agency: 1 }));

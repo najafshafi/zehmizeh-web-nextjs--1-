@@ -1,5 +1,4 @@
-
-import styled, { css } from 'styled-components';
+import styled, { css } from "styled-components";
 
 export const RegisterWrapper = styled.div`
   /* background-color: ${(props) => props.theme.colors.bg}; */
@@ -19,14 +18,14 @@ export const RegisterWrapper = styled.div`
       margin-right: 1.25rem;
     }
   }
-  span[color='yellow'] {
+  span[color="yellow"] {
     position: absolute;
     top: 20px;
     right: 20px;
   }
 `;
 
-export const CardWrapper = styled.div<{ small?: boolean }>`
+export const CardWrapper = styled.div<{ small?: boolean | string }>`
   ${(props) =>
     props.small
       ? css`
@@ -45,7 +44,7 @@ export const CardWrapper = styled.div<{ small?: boolean }>`
   }
 `;
 
-export const Card = styled.div<{ small?: boolean }>`
+export const Card = styled.div<{ small?: boolean | string }>`
   ${(props) =>
     props.small
       ? css`
@@ -166,6 +165,10 @@ export const LimitedH2 = styled.h2`
   max-width: 480px;
 `;
 
+export const LimitedH2a = styled.h2`
+  // max-width: 480px;
+`;
+
 export const Verification = styled.input`
   max-width: 44px;
   height: 56px;
@@ -180,7 +183,7 @@ export const Verification = styled.input`
   }
 
   /* Firefox */
-  &[type='number'] {
+  &[type="number"] {
     -moz-appearance: textfield;
   }
 `;

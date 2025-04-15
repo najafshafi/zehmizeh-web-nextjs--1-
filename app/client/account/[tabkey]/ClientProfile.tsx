@@ -9,6 +9,7 @@ import AccountClosureModal from "@/components/profile/AccountClosureModal";
 import BackButton from "@/components/ui/BackButton";
 import Loader from "@/components/Loader";
 import { StyledButton } from "@/components/forms/Buttons";
+import CustomButton from "@/components/custombutton/CustomButton";
 import PaymentInfo from "./partials/PaymentInfo";
 import BankAccounts from "./partials/BankAccounts";
 import useClientProfile from "@/controllers/useClientProfile";
@@ -503,7 +504,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
     <C.ClientProfileWrapper>
       <ClientProfileTabs currentTab={clientId} />
       <C.ClientContent>
-        <C.Wrapper className="content-hfill mt-2 ">
+        <C.Wrapper className="content-hfill  mt-2 ">
           <BackButton onBack={onBack}>
             {isRefetching ? <Spinner className="ml-1 w-4 h-4" /> : null}
           </BackButton>
@@ -565,13 +566,13 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                   <div className="text-2xl font-normal mt-4 mb-3">
                     Payment Details
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                     {/* Payment info (Saved cards) */}
                     <div
                       className={
                         profileData?.location?.country_short_name === "US"
                           ? "mb-4"
-                          : "mx-auto"
+                          : "md:mx-auto mx-2"
                       }
                     >
                       <PaymentInfo
@@ -743,22 +744,35 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                             Phone<span className="mandatory">&nbsp;*</span>
                           </div>
                           <PhoneInputWrapper className="phone-input-wrapper ">
-                            <PhoneNumberInput
-                              initialValue={formData?.formatted_phonenumber}
-                              onChange={(phone, formattedValue) => {
-                                if (
-                                  phone !== formData.phone_number ||
-                                  formattedValue !==
-                                    formData.formatted_phonenumber
-                                ) {
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    phone_number: phone,
-                                    formatted_phonenumber: formattedValue,
-                                  }));
-                                }
+                            <div
+                              style={{
+                                pointerEvents:
+                                  inputFieldLoading === "phone number"
+                                    ? "none"
+                                    : "auto",
+                                opacity:
+                                  inputFieldLoading === "phone number"
+                                    ? "0.7"
+                                    : "1",
                               }}
-                            />
+                            >
+                              <PhoneNumberInput
+                                initialValue={formData?.formatted_phonenumber}
+                                onChange={(phone, formattedValue) => {
+                                  if (
+                                    phone !== formData.phone_number ||
+                                    formattedValue !==
+                                      formData.formatted_phonenumber
+                                  ) {
+                                    setFormData((prev) => ({
+                                      ...prev,
+                                      phone_number: phone,
+                                      formatted_phonenumber: formattedValue,
+                                    }));
+                                  }
+                                }}
+                              />
+                            </div>
                             {renderSaveButtonUI(
                               "phone number",
                               "formatted_phonenumber",
@@ -798,7 +812,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                               disabled={true}
                             />
                             <div
-                              className="edit-button flex items-center gap-2 cursor-pointer top-50"
+                              className="edit-button flex items-center gap-2 cursor-pointer bottom-0"
                               onClick={toggleEditModal}
                             >
                               <EditIcon
@@ -831,7 +845,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                               disabled={true}
                             />
                             <div
-                              className="edit-button flex items-center gap-2 cursor-pointer top-50"
+                              className="edit-button flex items-center gap-2 cursor-pointer bottom-0"
                               onClick={() => router.push("/change-password")}
                             >
                               <EditIcon
@@ -898,21 +912,18 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                     </div>
                     <div>
                       {profileData?.deletion_requested == 1 ? (
-                        <StyledButton
-                          className="text-lg font-normal cursor-pointer"
-                          variant="primary"
+                        <CustomButton
+                          text="Cancel Account Closure Request"
+                          className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[16px]"
                           onClick={handleCancelDeletionRequest}
                           disabled={loading}
-                        >
-                          Cancel Account Closure Request
-                        </StyledButton>
+                        />
                       ) : (
-                        <StyledButton
-                          className="close-account-btn text-lg font-normal cursor-pointer"
+                        <CustomButton
+                          text="Close My ZehMizeh Account"
+                          className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[16px]"
                           onClick={toggleClosureModal}
-                        >
-                          Close My ZehMizeh Account
-                        </StyledButton>
+                        />
                       )}
                     </div>
                   </div>

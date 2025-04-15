@@ -65,12 +65,11 @@
 //   );
 // };
 
-
 // Assuming this file is named AuthLayout.tsx
-import { Card, CardWrapper } from '@/components/styled/Auth.styled'; // Ensure this is correctly typed
-import BackButton from '@/components/ui/BackButton';
-import Link from 'next/link'; // Use Next.js Link instead of react-router-dom
-import Image from 'next/image';
+import { Card, CardWrapper } from "@/components/styled/Auth.styled"; // Ensure this is correctly typed
+import BackButton from "@/components/ui/BackButton";
+import Link from "next/link"; // Use Next.js Link instead of react-router-dom
+import Image from "next/image";
 
 // Define props type
 interface AuthLayoutProps {
@@ -93,9 +92,9 @@ export default function AuthLayout({
   return (
     <div
       style={{
-        height: '100%',
-        display: 'grid',
-        textAlign: center ? 'center' : 'initial',
+        height: "100%",
+        display: "grid",
+        textAlign: center ? "center" : "initial",
       }}
     >
       <CardWrapper>
@@ -116,7 +115,7 @@ export default function AuthLayout({
           </div>
         )}
 
-        <Card small={small}>
+        <Card small={small ? "true" : undefined}>
           <Logo className={logoClass} />
           {children}
         </Card>
@@ -128,11 +127,16 @@ export default function AuthLayout({
 const Logo = ({ className }: { className?: string }) => {
   return (
     <div
-      className={className || ''}
-      style={{ display: 'flex', justifyContent: 'center' }}
+      className={className || ""}
+      style={{ display: "flex", justifyContent: "center" }}
     >
-      <Image src="/zehmizeh-logo.svg" alt="logo" width={70} height={70} priority />
+      <Image
+        src="/zehmizeh-logo.svg"
+        alt="logo"
+        width={70}
+        height={70}
+        priority
+      />
     </div>
   );
 };
-
