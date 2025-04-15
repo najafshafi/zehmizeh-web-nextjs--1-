@@ -16,22 +16,12 @@ const config = {
   toolbar: ["bold", "italic", "numberedList", "bulletedList"],
 };
 
-// Clear any existing CKEditor instances in a safer way
-const clearExistingEditors = () => {
-  // Only remove DOM elements, don't try to destroy the actual instances
+// Safely log editor instances instead of removing them
+const checkExistingEditors = () => {
+  // Only check DOM elements, don't try to destroy the actual instances
   const editorElements = document.querySelectorAll(".ck.ck-editor");
-  if (editorElements.length > 1) {
-    // Keep only the first one
-    for (let i = 1; i < editorElements.length; i++) {
-      const element = editorElements[i];
-      if (element && element.parentNode) {
-        try {
-          element.parentNode.removeChild(element);
-        } catch (error) {
-          console.log("Error removing editor:", error);
-        }
-      }
-    }
+  if (editorElements.length > 0) {
+    console.log(`Found ${editorElements.length} CKEditor instances`);
   }
 };
 
@@ -61,9 +51,9 @@ const TextEditor = ({ placeholder, value, onChange, maxChars }: Props) => {
   useEffect(() => {
     setEditorLoaded(true);
 
-    // Clear any duplicate editors on component mount
+    // Just check editor count without removing any
     setTimeout(() => {
-      clearExistingEditors();
+      checkExistingEditors();
     }, 100);
 
     return () => {
@@ -109,8 +99,8 @@ const TextEditor = ({ placeholder, value, onChange, maxChars }: Props) => {
           editor.setData(value);
         }
 
-        // Clear any duplicate editors after this one is ready
-        setTimeout(clearExistingEditors, 100);
+        // Just check editor count without removing any
+        setTimeout(checkExistingEditors, 100);
       } catch (error) {
         console.log("Error in onReady:", error);
       }

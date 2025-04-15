@@ -36,6 +36,7 @@ import {
 } from "@/helpers/types/job.type";
 import { SeeMore } from "@/components/ui/SeeMore";
 import Tooltip from "@/components/ui/Tooltip";
+import CustomButton from "../custombutton/CustomButton";
 
 interface Props {
   show: boolean;
@@ -316,10 +317,13 @@ const SubmitProposalModal = ({
 
   const title = isEdit ? "Edit Proposal" : "Submit Proposal";
 
-  if (!show) return null;
-
   return (
-    <Dialog as="div" className="relative z-50" onClose={onCloseModal}>
+    <Dialog
+      as="div"
+      className="relative z-50"
+      onClose={onCloseModal}
+      open={show}
+    >
       <div className="fixed inset-0 bg-black/25" aria-hidden="true" />
 
       <div className="fixed inset-0 overflow-y-auto">
@@ -363,7 +367,7 @@ const SubmitProposalModal = ({
                       <div className="space-y-3">
                         {!seeMore && (
                           <SeeMore
-                            className="text-sm text-amber-500 hover:text-amber-600 cursor-pointer"
+                            className="text-sm text-primary hover:text-primary cursor-pointer"
                             onClick={() => setSeeMore(true)}
                           >
                             What's in a Proposal?
@@ -393,7 +397,7 @@ const SubmitProposalModal = ({
                               accepted your proposal
                             </p>
                             <SeeMore
-                              className="text-amber-500 hover:text-amber-600 cursor-pointer"
+                              className="text-primary  cursor-pointer"
                               onClick={() => setSeeMore(false)}
                             >
                               See Less
@@ -442,7 +446,7 @@ const SubmitProposalModal = ({
                             e.target.value.replace(/\D/g, "")
                           )
                         }
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                         maxLength={isHourlyJob ? 3 : 5}
                       />
                     </div>
@@ -482,7 +486,7 @@ const SubmitProposalModal = ({
                         }
                       >
                         <div className="relative">
-                          <Listbox.Button className="relative w-24 py-2 pl-3 pr-10 text-left bg-white border border-gray-300 rounded-lg shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 sm:text-sm">
+                          <Listbox.Button className="relative w-24 py-2 pl-3 pr-10 text-left bg-white border border-gray-300 rounded-lg shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm">
                             <span className="block truncate">
                               {formState.estimation?.number || "-"}
                             </span>
@@ -499,7 +503,7 @@ const SubmitProposalModal = ({
                             leaveFrom="opacity-100"
                             leaveTo="opacity-0"
                           >
-                            <Listbox.Options className="absolute z-10 w-24 py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                            <Listbox.Options className="absolute z-10 w-24 py-1 bottom-full mb-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                               {numberOptions.map((option) => (
                                 <Listbox.Option
                                   key={option.id}
@@ -528,8 +532,8 @@ const SubmitProposalModal = ({
                                         <span
                                           className={`${
                                             active
-                                              ? "text-amber-600"
-                                              : "text-amber-600"
+                                              ? "text-primary"
+                                              : "text-primary"
                                           }
                                           absolute inset-y-0 left-0 flex items-center pl-3`}
                                         >
@@ -558,7 +562,7 @@ const SubmitProposalModal = ({
                         }
                       >
                         <div className="relative">
-                          <Listbox.Button className="relative w-32 py-2 pl-3 pr-10 text-left bg-white border border-gray-300 rounded-lg shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 sm:text-sm">
+                          <Listbox.Button className="relative w-32 py-2 pl-3 pr-10 text-left bg-white border border-gray-300 rounded-lg shadow-sm cursor-default focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm">
                             <span className="block truncate">
                               {CONSTANTS.ESTIMATION_VALUES.find(
                                 (estimation) =>
@@ -579,7 +583,7 @@ const SubmitProposalModal = ({
                             leaveFrom="opacity-100"
                             leaveTo="opacity-0"
                           >
-                            <Listbox.Options className="absolute z-10 w-32 py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                            <Listbox.Options className="absolute z-10 w-32 py-1 bottom-full mb-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                               {CONSTANTS.ESTIMATION_VALUES.map(
                                 ({ id, label }) => (
                                   <Listbox.Option
@@ -609,8 +613,8 @@ const SubmitProposalModal = ({
                                           <span
                                             className={`${
                                               active
-                                                ? "text-amber-600"
-                                                : "text-amber-600"
+                                                ? "text-primary"
+                                                : "text-primary"
                                             }
                                           absolute inset-y-0 left-0 flex items-center pl-3`}
                                           >
@@ -633,7 +637,7 @@ const SubmitProposalModal = ({
                       {Object.values(formState.estimation).some((x) => x) && (
                         <button
                           type="button"
-                          className="text-sm text-amber-500 hover:text-amber-600"
+                          className="text-sm text-primary hover:text-primary"
                           onClick={() => {
                             handleChange("estimation", {
                               duration: "",
@@ -688,9 +692,10 @@ const SubmitProposalModal = ({
                     <TextEditor
                       value={formState.questions}
                       onChange={onQuestionsChange}
-                      placeholder=""
+                      placeholder="Write here..."
                       maxChars={2000}
                     />
+
                     {errors?.questions && (
                       <ErrorMessage message={errors.questions} />
                     )}
@@ -734,18 +739,25 @@ const SubmitProposalModal = ({
               {/* Navigation Buttons */}
               <div className="flex justify-end gap-4">
                 {step === 2 && (
-                  <button
-                    type="button"
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  // <button
+                  //   type="button"
+                  //   className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                  //   disabled={loading}
+                  //   onClick={() => setStep(1)}
+                  // >
+                  //   Back
+                  // </button>
+
+                  <CustomButton
+                    className="px-8 py-4 text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-[#E7E7E7] text-[18px]"
                     disabled={loading}
                     onClick={() => setStep(1)}
-                  >
-                    Back
-                  </button>
+                    text={"Back"}
+                  />
                 )}
-                <button
+                {/* <button
                   type="button"
-                  className="px-4 py-2 text-sm font-medium text-white bg-amber-500 border border-transparent rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 text-sm font-medium text-white bg-primary border border-transparent rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={loading}
                   onClick={() => (step === 1 ? setStep(2) : validate())}
                 >
@@ -758,7 +770,14 @@ const SubmitProposalModal = ({
                   ) : (
                     "Submit"
                   )}
-                </button>
+                </button> */}
+
+                <CustomButton
+                  className="px-8 py-4 text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+                  disabled={loading}
+                  onClick={() => (step === 1 ? setStep(2) : validate())}
+                  text={step === 1 ? "Next" : loading ? <Spinner /> : "Submit"}
+                />
               </div>
             </div>
           </Dialog.Panel>

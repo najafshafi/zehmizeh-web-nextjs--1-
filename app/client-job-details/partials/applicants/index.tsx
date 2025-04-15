@@ -68,6 +68,7 @@ interface Prop {
   refetch: () => void;
   jobStatus?: TJOB_STATUS;
   jobTitle: string;
+  selectedApplicantId?: string;
 }
 
 interface ProposalData {
@@ -94,7 +95,13 @@ interface ProposalData {
   feedback?: number;
 }
 
-const Applicants = ({ jobPostId, refetch, jobStatus, jobTitle }: Prop) => {
+const Applicants = ({
+  jobPostId,
+  refetch,
+  jobStatus,
+  jobTitle,
+  selectedApplicantId,
+}: Prop) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -123,9 +130,11 @@ const Applicants = ({ jobPostId, refetch, jobStatus, jobTitle }: Prop) => {
   useEffect(() => {
     if (proposalId) {
       onViewProposalDetails(proposalId);
+    } else if (selectedApplicantId) {
+      onViewProposalDetails(selectedApplicantId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [proposalId]);
+  }, [proposalId, selectedApplicantId]);
   /* END ------------------------------ If url has proposal id already */
 
   const [showProposalDetails, setShowProposalDetails] =
@@ -148,9 +157,12 @@ const Applicants = ({ jobPostId, refetch, jobStatus, jobTitle }: Prop) => {
     toggleProposalDetailsModal();
     viewProposal(id);
 
-    // Updating url with proposal id (without reload)
-    const newUrl = `${baseUrl}?proposalId=${id}`;
-    router.push(newUrl, { scroll: false });
+    // Update URL to use the new route pattern for direct applicant access
+    if (!selectedApplicantId) {
+      router.push(`/client-job-details/${jobPostId}/applicants/${id}`, {
+        scroll: false,
+      });
+    }
   };
 
   const toggleProposalDetailsModal = () => {

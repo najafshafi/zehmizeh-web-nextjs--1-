@@ -866,9 +866,14 @@ export type TcomponentConnectorRef = React.MutableRefObject<{
 interface ClientJobDetailsProps {
   initialTab?: string;
   jobId: string;
+  selectedApplicantId?: string;
 }
 
-const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
+const ClientJobDetails = ({
+  initialTab,
+  jobId,
+  selectedApplicantId,
+}: ClientJobDetailsProps) => {
   useStartPageFromTop();
   const { isMobile } = useResponsive();
   const router = useRouter();
@@ -1530,6 +1535,7 @@ const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
                 jobPostId={jobdetails?.job_post_id}
                 refetch={refreshOnStatusChange("applicants")}
                 jobStatus={jobdetails?.status as TJOB_STATUS}
+                selectedApplicantId={selectedApplicantId}
               />
             )}
 
