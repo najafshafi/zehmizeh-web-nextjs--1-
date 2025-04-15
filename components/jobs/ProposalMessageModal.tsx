@@ -13,6 +13,7 @@ import { useAuth } from "@/helpers/contexts/auth-context";
 import { addNewMessage } from "@/store/redux/slices/talkjsSlice";
 import { AppDispatch } from "@/store/redux/store";
 import { AddMessagePayload } from "@/store/redux/slices/chat.interface";
+import CustomButton from "../custombutton/CustomButton";
 
 interface FormProp {
   message: string;
@@ -137,14 +138,22 @@ const ProposalMessageModal = ({
               </div>
 
               <div className="flex justify-center">
-                <button
+                {/* <button
                   type="submit"
                   className={`px-8 py-4 text-white bg-amber-500 rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200 ${
                     isMobile ? "w-full" : ""
                   }`}
                 >
                   Send
-                </button>
+                </button> */}
+
+                <CustomButton
+                  text="Send"
+                  className={`px-10 py-4 text-base font-normal  bg-primary rounded-full transition-transform duration-200 hover:scale-105   ${
+                    isMobile ? "w-full" : ""
+                  }`}
+                  onClick={handleSubmit(onSubmit)}
+                />
               </div>
             </form>
           </div>

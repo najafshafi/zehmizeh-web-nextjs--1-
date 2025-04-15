@@ -387,12 +387,12 @@ const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
               </div>
             </>
           ) : (
-            <div className="pending-badge text-sm font-normal width-fit-content">
+            <div className="pending-badge text-sm font-normal w-fit">
               Pending
             </div>
           )
         ) : (
-          <div className="archived-badge text-sm font-normal width-fit-content">
+          <div className="archived-badge text-sm font-normal w-fit">
             Archived
           </div>
         )}
