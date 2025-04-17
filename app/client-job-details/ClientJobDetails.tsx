@@ -104,6 +104,8 @@
 // interface ClientJobDetailsProps {
 //   initialTab?: string;
 //   jobId: string;
+//   selectedApplicantId?: string;
+//   selectedInviteId?: string;
 // }
 
 // // Client-side only wrapper component
@@ -116,7 +118,12 @@
 //   return <ClientJobDetails {...props} />;
 // };
 
-// const ClientJobDetails = ({ initialTab, jobId }: ClientJobDetailsProps) => {
+// const ClientJobDetails = ({
+//   initialTab,
+//   jobId,
+//   selectedApplicantId,
+//   selectedInviteId,
+// }: ClientJobDetailsProps) => {
 //   useStartPageFromTop();
 //   const { isMobile } = useResponsive();
 //   const router = useRouter();
@@ -653,6 +660,7 @@
 //                   jobPostId={jobdetails?.job_post_id}
 //                   refetch={refreshOnStatusChange("invitees")}
 //                   jobStatus={jobdetails?.status as TJOB_STATUS}
+//                   selectedInviteId={selectedInviteId}
 //                 />
 //               )}
 
@@ -733,6 +741,7 @@
 //                   jobPostId={jobdetails?.job_post_id}
 //                   refetch={refreshOnStatusChange("applicants")}
 //                   jobStatus={jobdetails?.status as TJOB_STATUS}
+//                   selectedApplicantId={selectedApplicantId}
 //                 />
 //               )}
 
@@ -867,12 +876,24 @@ interface ClientJobDetailsProps {
   initialTab?: string;
   jobId: string;
   selectedApplicantId?: string;
+  selectedInviteId?: string;
 }
+
+// Client-side only wrapper component
+const ClientJobDetailsWrapper = (props: ClientJobDetailsProps) => {
+  // Return null during server-side rendering
+  if (typeof window === "undefined") {
+    return <div>Loading job details...</div>;
+  }
+
+  return <ClientJobDetails {...props} />;
+};
 
 const ClientJobDetails = ({
   initialTab,
   jobId,
   selectedApplicantId,
+  selectedInviteId,
 }: ClientJobDetailsProps) => {
   useStartPageFromTop();
   const { isMobile } = useResponsive();
@@ -1455,6 +1476,7 @@ const ClientJobDetails = ({
                 jobPostId={jobdetails?.job_post_id}
                 refetch={refreshOnStatusChange("invitees")}
                 jobStatus={jobdetails?.status as TJOB_STATUS}
+                selectedInviteId={selectedInviteId}
               />
             )}
 

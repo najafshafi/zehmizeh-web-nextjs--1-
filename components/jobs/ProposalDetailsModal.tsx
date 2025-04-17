@@ -706,14 +706,6 @@ const ProposalDetailsModal = ({
                         type === "proposal" &&
                         proposalDetails?._job_post_id && (
                           <>
-                            {/* <button
-                              onClick={() => conversationHandler()}
-                              className="w-full md:w-auto px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
-                              disabled={loading}
-                            >
-                              Message Freelancer
-                            </button> */}
-
                             <CustomButton
                               text="Message Freelancer"
                               className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[16px] border border-black hover:border-black hover:text-white hover:bg-black "
@@ -721,28 +713,12 @@ const ProposalDetailsModal = ({
                               onClick={() => conversationHandler()}
                             />
 
-                            {/* <button
-                              onClick={onAcceptDecline("denied")}
-                              className="w-full md:w-auto px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
-                              disabled={loading}
-                            >
-                              Decline Proposal
-                            </button> */}
-
                             <CustomButton
                               text="Decline Proposal"
                               className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[16px] border border-black hover:border-black hover:text-white hover:bg-black "
                               disabled={loading}
                               onClick={onAcceptDecline("denied")}
                             />
-
-                            {/* <button
-                              onClick={handleAcceptFreelancer}
-                              className="w-full md:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200"
-                              disabled={loading}
-                            >
-                              Accept Proposal
-                            </button> */}
 
                             <CustomButton
                               text="Accept Proposal"
@@ -755,27 +731,12 @@ const ProposalDetailsModal = ({
 
                       {proposalStatus.pending && (
                         <>
-                          {/* <button
-                            onClick={() => conversationHandler()}
-                            className="w-full md:w-auto px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
-                            disabled={loading}
-                          >
-                            Message Freelancer
-                          </button> */}
-
                           <CustomButton
                             text="Message Freelancer"
                             className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[16px] border border-black hover:border-black hover:text-white hover:bg-black "
                             disabled={loading}
                             onClick={() => conversationHandler()}
                           />
-                          {/* <button
-                            onClick={onAcceptDecline("denied")}
-                            className="w-full md:w-auto px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
-                            disabled={loading}
-                          >
-                            Decline Proposal
-                          </button> */}
 
                           <CustomButton
                             text="Decline Proposal"
@@ -783,13 +744,6 @@ const ProposalDetailsModal = ({
                             disabled={loading}
                             onClick={onAcceptDecline("denied")}
                           />
-                          {/* <button
-                            onClick={handleAcceptFreelancer}
-                            className="w-full md:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200"
-                            disabled={loading}
-                          >
-                            Accept Proposal
-                          </button> */}
 
                           <CustomButton
                             text="Accept Proposal"
@@ -811,25 +765,27 @@ const ProposalDetailsModal = ({
                       )}
 
                       {inviteStatus.pending && (
-                        <>
-                          <button
+                        <div className="w-full flex justify-end gap-3">
+                          <CustomButton
+                            text="Edit Invitation"
+                            className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
                             onClick={() => {
                               closeModal();
-                              setShowInviteMessageModal(true);
+                              router.push(
+                                `/client-job-details/${proposalDetails._job_post_id}/invitees?editInvite=${proposalDetails.invite_id}`,
+                                { scroll: false }
+                              );
                             }}
-                            className="w-full md:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200"
                             disabled={loading}
-                          >
-                            Edit Invitation
-                          </button>
-                          <button
+                          />
+
+                          <CustomButton
+                            text="Cancel Invitation"
+                            className="px-8 py-4 text-base font-normal border-2 border-gray-800 text-black rounded-full transition-transform duration-200 hover:scale-105 hover:bg-black hover:text-white text-[18px]"
                             onClick={() => updateStatus("canceled")}
-                            className="w-full md:w-auto px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
                             disabled={loading}
-                          >
-                            Cancel Invitation
-                          </button>
-                        </>
+                          />
+                        </div>
                       )}
 
                       {inviteStatus.canceled && (

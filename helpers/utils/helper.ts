@@ -210,7 +210,7 @@ export const talkjsApiKey = () => {
       process.env.REACT_APP_TALKJS_APP_ID_PROD;
 
   console.log("TalkJS Environment:", isStaging ? "Staging" : "Production");
-  console.log("TalkJS API Key:", key);
+  // console.log("TalkJS API Key:", key);
   console.log("Backend API:", process.env.NEXT_PUBLIC_BACKEND_API);
   console.log(
     "Hostname:",

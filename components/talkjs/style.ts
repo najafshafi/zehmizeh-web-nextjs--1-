@@ -1,8 +1,8 @@
-import styled from 'styled-components';
-import { breakpoints } from '@/helpers/hooks/useResponsive';
-import { chatType } from '@/store/redux/slices/talkjs.interface';
-import { chatTypeSolidColor } from '@/helpers/http/common';
-import ReactSelect from 'react-select';
+import styled from "styled-components";
+import { breakpoints } from "@/helpers/hooks/useResponsive";
+import { chatType } from "@/store/redux/slices/talkjs.interface";
+import { chatTypeSolidColor } from "@/helpers/http/common";
+import ReactSelect from "react-select";
 
 export const Select = styled(ReactSelect)`
   width: 200px;
@@ -53,7 +53,7 @@ export const DisableChatReason = styled.div`
   }
 `;
 
-export const Sidebar = styled.div<{ openState: string }>`
+export const Sidebar = styled.div<{ $openState: string }>`
   background-color: #ffffff;
   width: 280px;
   min-width: 280px;
@@ -70,7 +70,7 @@ export const Sidebar = styled.div<{ openState: string }>`
     width: calc(100% - 20px);
     left: 10px;
     height: 100%;
-    transform: translateX(${({ openState }) => (openState ? `0` : `-150%`)});
+    transform: translateX(${({ $openState }) => ($openState ? `0` : `-150%`)});
     transition: 0.3s;
   }
 
@@ -121,7 +121,7 @@ export const ChatListHeader = styled.div`
   }
 `;
 
-export const NotificationToggle = styled.button<{ active: boolean }>`
+export const NotificationToggle = styled.button<{ $active: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,15 +130,16 @@ export const NotificationToggle = styled.button<{ active: boolean }>`
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  background: ${(props) => (props.active ? '#FEF6E1' : '#f5f5f5')};
-  color: ${(props) => (props.active ? '#F2B420' : '#9ca3af')};
+  background: ${(props) => (props.$active === "true" ? "#FEF6E1" : "#f5f5f5")};
+  color: ${(props) => (props.$active === "true" ? "#F2B420" : "#9ca3af")};
   transition: all 0.2s ease;
   padding: 0;
   margin-left: 8px;
 
   &:hover {
-    background: ${(props) => (props.active ? '#FEF6E1' : '#f5f5f5')};
-    color: ${(props) => (props.active ? '#F2B420' : '#6b7280')};
+    background: ${(props) =>
+      props.$active === "true" ? "#FEF6E1" : "#f5f5f5"};
+    color: ${(props) => (props.$active === "true" ? "#F2B420" : "#6b7280")};
   }
 
   svg {
@@ -149,7 +150,7 @@ export const NotificationToggle = styled.button<{ active: boolean }>`
 
 export const ToggleLabel = styled.span`
   font-size: 12px;
-  color: ${(props) => props.theme.colors.gray2 || '#666'};
+  color: ${(props) => props.theme.colors.gray2 || "#666"};
   cursor: pointer;
 `;
 
@@ -200,13 +201,13 @@ export const Navbar = styled.div`
   }
 `;
 
-export const SingleUserChatAction = styled.div<{ chatType: chatType }>`
+export const SingleUserChatAction = styled.div<{ $chatType: chatType }>`
   display: flex;
   justify-content: space-between;
   gap: 20px;
   .closed-project {
     flex: none;
-    color: ${({ chatType }) => chatTypeSolidColor(chatType)};
+    color: ${({ $chatType }) => chatTypeSolidColor($chatType)};
   }
 `;
 
@@ -222,8 +223,8 @@ export const Filters = styled.div`
   flex-wrap: wrap;
 `;
 
-export const UnreadCount = styled.div<{ chatType: chatType }>`
-  background-color: ${({ chatType }) => chatTypeSolidColor(chatType)};
+export const UnreadCount = styled.div<{ $chatType: chatType }>`
+  background-color: ${({ $chatType }) => chatTypeSolidColor($chatType)};
   color: ${(props) => props.theme.colors.white};
   width: 28px;
   height: 28px;
@@ -247,7 +248,7 @@ export const ResetButton = styled.button`
   }
 `;
 
-export const MobileViewButtons = styled.div<{ chatType: chatType }>`
+export const MobileViewButtons = styled.div<{ $chatType: chatType }>`
   display: none;
   @media ${breakpoints.tablet} {
     display: flex;
@@ -262,24 +263,24 @@ export const MobileViewButtons = styled.div<{ chatType: chatType }>`
     width: 35px;
     height: 35px;
     color: #ffffff;
-    background-color: ${({ chatType }) => chatTypeSolidColor(chatType)};
+    background-color: ${({ $chatType }) => chatTypeSolidColor($chatType)};
     border: none;
     border-radius: 5px;
   }
 `;
 
-export const ToggleSwitch = styled.div<{ checked: boolean }>`
+export const ToggleSwitch = styled.div<{ $checked: boolean }>`
   position: relative;
   width: 32px;
   height: 16px;
-  background: ${(props) => (props.checked ? '#F2B420' : '#E5E5E5')};
+  background: ${(props) => (props.$checked ? "#F2B420" : "#E5E5E5")};
   border-radius: 16px;
   padding: 2px;
   transition: 300ms all;
   cursor: pointer;
 
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     width: 12px;
     height: 12px;
@@ -288,7 +289,8 @@ export const ToggleSwitch = styled.div<{ checked: boolean }>`
     left: 2px;
     background: white;
     transition: 300ms all;
-    transform: ${(props) => (props.checked ? 'translateX(16px)' : 'translateX(0)')};
+    transform: ${(props) =>
+      props.$checked ? "translateX(16px)" : "translateX(0)"};
   }
 `;
 

@@ -1,8 +1,11 @@
-import { breakpoints } from '@/helpers/hooks/useResponsive';
-import { chatOnUserHoverOrActiveColor, chatTypeSolidColor } from '@/helpers/http/common';
-import { pxToRem } from '@/helpers/utils/misc';
-import { chatType } from '@/store/redux/slices/talkjs.interface';
-import styled, { css } from 'styled-components';
+import { breakpoints } from "@/helpers/hooks/useResponsive";
+import {
+  chatOnUserHoverOrActiveColor,
+  chatTypeSolidColor,
+} from "@/helpers/http/common";
+import { pxToRem } from "@/helpers/utils/misc";
+import { chatType } from "@/store/redux/slices/talkjs.interface";
+import styled, { css } from "styled-components";
 
 export const MessageContainer = styled.div`
   gap: 2rem;
@@ -76,14 +79,18 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const ChatSingleUser = styled.div<{ chatType: chatType; isSeleted?: boolean }>`
-  border-left: 4px solid ${({ chatType }) => chatTypeSolidColor(chatType)};
+export const ChatSingleUser = styled.div<{
+  $chatType: chatType;
+  $isSelected?: boolean;
+}>`
+  border-left: 4px solid ${({ $chatType }) => chatTypeSolidColor($chatType)};
   padding: 0.6rem 1.25rem;
   padding-right: 0.5rem;
   gap: ${pxToRem(12)};
   cursor: pointer;
   &:hover {
-    background-color: ${({ chatType }) => chatOnUserHoverOrActiveColor(chatType)};
+    background-color: ${({ $chatType }) =>
+      chatOnUserHoverOrActiveColor($chatType)};
   }
   .userlistitem__avatar {
     img {
@@ -123,15 +130,17 @@ export const ChatSingleUser = styled.div<{ chatType: chatType; isSeleted?: boole
     flex: 1;
   }
   &.active {
-    background-color: ${({ chatType }) => chatOnUserHoverOrActiveColor(chatType)};
+    background-color: ${({ $chatType }) =>
+      chatOnUserHoverOrActiveColor($chatType)};
   }
   .closed-project {
     font-size: 14px !important;
   }
 
   .conversation-type-text {
-    color: ${({ chatType }) => chatTypeSolidColor(chatType)};
-    background-color: ${({ chatType }) => chatOnUserHoverOrActiveColor(chatType)};
+    color: ${({ $chatType }) => chatTypeSolidColor($chatType)};
+    background-color: ${({ $chatType }) =>
+      chatOnUserHoverOrActiveColor($chatType)};
     padding: 2px 5px;
     text-transform: uppercase;
   }
@@ -190,13 +199,13 @@ export const MessageSidebarHeader = styled.div`
   }
 `;
 
-export const SingleUserChatAction = styled.div<{ chatType: chatType }>`
+export const SingleUserChatAction = styled.div<{ $chatType: chatType }>`
   display: flex;
   justify-content: space-between;
   gap: 20px;
   .closed-project {
     flex: none;
-    color: ${({ chatType }) => chatTypeSolidColor(chatType)};
+    color: ${({ $chatType }) => chatTypeSolidColor($chatType)};
   }
 `;
 
@@ -290,7 +299,7 @@ export const ChatPanelWrapper = styled.div`
 
 export const ChatHeaderButton = styled.button<{
   variantColor: chatType;
-  variantType: 'primary' | 'secondary';
+  variantType: "primary" | "secondary";
 }>`
   border-radius: 5px;
   padding: 10px 1.5rem;
@@ -304,13 +313,13 @@ export const ChatHeaderButton = styled.button<{
   gap: 0.75rem;
 
   ${({ variantType, variantColor }) => {
-    if (variantType === 'primary') {
+    if (variantType === "primary") {
       return `
         background-color: ${chatTypeSolidColor(variantColor)};
         color: white;
       `;
     }
-    if (variantType === 'secondary') {
+    if (variantType === "secondary") {
       return `
         background-color: ${chatOnUserHoverOrActiveColor(variantColor)};
         color: ${chatTypeSolidColor(variantColor)};
@@ -319,7 +328,10 @@ export const ChatHeaderButton = styled.button<{
   }}
 `;
 
-export const MessageBubbleWrapper = styled.div<{ type: 'self' | 'remote'; variant: chatType }>`
+export const MessageBubbleWrapper = styled.div<{
+  type: "self" | "remote";
+  variant: chatType;
+}>`
   max-width: 50%;
   .message__avatar {
     img {
@@ -350,7 +362,7 @@ export const MessageBubbleWrapper = styled.div<{ type: 'self' | 'remote'; varian
     font-size: 0.857rem;
   }
   ${(props) =>
-    props.type === 'self' &&
+    props.type === "self" &&
     css`
       align-self: flex-end;
       .message__time {
@@ -396,19 +408,22 @@ export const MessageBubbleWrapper = styled.div<{ type: 'self' | 'remote'; varian
   }
 `;
 
-export const ChatUserTimeZoneWrapper = styled.div<{ isFromSingleMessaging: boolean }>`
+export const ChatUserTimeZoneWrapper = styled.div<{
+  isFromSingleMessaging: boolean;
+}>`
   display: flex;
-  position: ${(props) => (props.isFromSingleMessaging ? 'relative' : 'sticky')};
+  position: ${(props) => (props.isFromSingleMessaging ? "relative" : "sticky")};
   /* left: 0px;
   top: -1px; */
-  /* margin-left: ${(props) => (props.isFromSingleMessaging ? '4px' : '-20px')};
-  margin-right: ${(props) => (props.isFromSingleMessaging ? '4px' : '-18px')}; */
+  /* margin-left: ${(props) => (props.isFromSingleMessaging ? "4px" : "-20px")};
+  margin-right: ${(props) =>
+    props.isFromSingleMessaging ? "4px" : "-18px"}; */
   z-index: 999;
   .timezone {
     display: flex;
     align-items: center;
     gap: 6px;
-    border-radius: ${(props) => (props.isFromSingleMessaging ? '2rem' : '0px')};
+    border-radius: ${(props) => (props.isFromSingleMessaging ? "2rem" : "0px")};
     border: solid rgb(242, 180, 32, 0.16);
     padding: 0px 0.5rem;
     background-color: ${(props) => props.theme.colors.body};
@@ -418,7 +433,8 @@ export const ChatUserTimeZoneWrapper = styled.div<{ isFromSingleMessaging: boole
     }
   }
   @media ${breakpoints.tablet} {
-    margin: ${(props) => (props.isFromSingleMessaging ? '10px 0px' : '0px -18px 0px -20px')};
+    margin: ${(props) =>
+      props.isFromSingleMessaging ? "10px 0px" : "0px -18px 0px -20px"};
     .timezone {
       justify-content: center;
       width: calc(100% + 20px);

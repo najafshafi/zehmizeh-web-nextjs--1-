@@ -46,7 +46,7 @@ const SingleUser = ({ conversation, onSelectChat }: Prop) => {
 
   return (
     <ChatSingleUser
-      chatType={conversation.custom.type as chatType}
+      $chatType={conversation.custom.type as chatType}
       className={cns("flex items-center", {
         active: conversation.id === selectedConversationId,
       })}
@@ -77,7 +77,7 @@ const SingleUser = ({ conversation, onSelectChat }: Prop) => {
             ]
           }
         </div>
-        <SingleUserChatAction chatType={conversation.custom.type as chatType}>
+        <SingleUserChatAction $chatType={conversation.custom.type as chatType}>
           <div className="userlistitem--info-msg capital-first-ltr">
             <span>{conversation.custom.projectName}</span>
             {isClosedorDeclined(conversation) && (
@@ -89,7 +89,7 @@ const SingleUser = ({ conversation, onSelectChat }: Prop) => {
         </SingleUserChatAction>
       </div>
       {conversation.unreadMessageCount > 0 && (
-        <UnreadCount chatType={conversation.custom.type as chatType}>
+        <UnreadCount $chatType={conversation.custom.type as chatType}>
           {conversation.unreadMessageCount}
         </UnreadCount>
       )}

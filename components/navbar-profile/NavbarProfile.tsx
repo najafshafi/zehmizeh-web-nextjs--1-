@@ -9,11 +9,13 @@ import { IoIosArrowDown } from "react-icons/io";
 import CustomButton from "../custombutton/CustomButton";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import NotificationDropdown from "../notification-dropdown/NotificationDropdown";
+import { useUnreads } from "@talkjs/react";
 
 // Types for better type safety
 interface NavigationItem {
   href: string;
   label: string;
+  unreadCount?: number;
 }
 
 interface MenuItem {
@@ -29,9 +31,14 @@ const NavbarProfile = () => {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  // Commented out unused states
-  // const [windowWidth, setWindowWidth] = useState<number | null>(null);
-  // const [notificationCount, setNotificationCount] = useState(1);
+
+  // Get unread conversations using TalkJS hook
+  const unreads = useUnreads();
+  const unreadMessagesCount = unreads?.length || 0;
+  // Log unreads for debugging
+  useEffect(() => {
+    console.log("TalkJS unreads:", unreadMessagesCount);
+  }, [unreads]);
 
   // Check if user is a client or freelancer
   const isClient = user?.user_type === "client";
@@ -41,14 +48,23 @@ const NavbarProfile = () => {
         { href: "/client/dashboard", label: "Dashboard" },
         { href: "/client-jobs", label: "My Projects" },
         { href: "/search?type=freelancers", label: "Find Freelancers" },
-        { href: "/messages-new", label: "Messages" },
+        {
+          href: "/messages-new",
+          label: "Messages",
+
+          unreadCount: unreadMessagesCount,
+        },
         { href: "/payments", label: "Transactions" },
         { href: "/support", label: "Help" },
       ]
     : [
         { href: "/dashboard", label: "Dashboard" },
         { href: "/jobs", label: "My Projects" },
-        { href: "/messages-new", label: "Messages" },
+        {
+          href: "/messages-new",
+          label: "Messages",
+          unreadCount: unreadMessagesCount,
+        },
         { href: "/payments", label: "Transactions" },
         { href: "/support", label: "Help" },
       ];
@@ -118,7 +134,7 @@ const NavbarProfile = () => {
     }
   };
 
-  const NavLink = ({ href, label }: NavigationItem) => {
+  const NavLink = ({ href, label, unreadCount }: NavigationItem) => {
     // Improved active path detection that handles deeper paths
     const isActive = () => {
       if (href.startsWith("/search")) {
@@ -141,13 +157,24 @@ const NavbarProfile = () => {
     return (
       <div className="relative group">
         <Link href={href}>
-          <p
-            className={`${
-              isActive() ? "font-semibold" : "font-normal"
-            } text-black text-[18px] group-hover:text-black/60 transition-colors duration-200`}
-          >
-            {label}
-          </p>
+          <div className="flex items-center">
+            <p
+              className={`${
+                isActive() ? "font-semibold" : "font-normal"
+              } text-black text-[18px] group-hover:text-black/60 transition-colors duration-200`}
+            >
+              {label}
+            </p>
+            {unreadCount && unreadCount > 0 && (
+              <span
+                className={`ml-2 bg-primary text-black text-xs font-bold flex items-center justify-center min-w-6 h-6 px-1.5 rounded-full ${
+                  unreadCount == 0 ? "hidden" : "bg-primary"
+                }`}
+              >
+                {unreadCount > 9 ? "9+" : unreadCount}
+              </span>
+            )}
+          </div>
         </Link>
         <span className="block h-[2px] bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center" />
       </div>
@@ -162,7 +189,7 @@ const NavbarProfile = () => {
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-secondary border-b border-primary h-[110px] flex items-center p-6">
-      <div className="max-w-[1320px] w-full mx-auto lg:px-16 xl:px-0 sm:px-24 !px-4 flex items-center justify-between">
+      <div className="max-w-[1340px] w-full mx-auto lg:px-16 xl:px-0 sm:px-24 !px-4 flex items-center justify-between">
         <div className="flex items-center gap-5">
           <Link href="/home" aria-label="Home">
             <Image
@@ -177,7 +204,7 @@ const NavbarProfile = () => {
 
           <div className="ml-1 h-5 border border-customGray" />
           <nav
-            className="hidden lg:flex items-center gap-5"
+            className="hidden lg:flex items-center gap-4"
             aria-label="Main navigation"
           >
             {navigationItems.map((item) => (
@@ -268,7 +295,7 @@ const NavbarProfile = () => {
               </div>
             )}
           </div>
-          <p className="font-bold text-xl">
+          <p className="font-bold text-xl ">
             <span dir="rtl">בס"ד</span>
           </p>
         </div>
@@ -344,15 +371,21 @@ const NavbarProfile = () => {
           </div>
 
           {navigationItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className=" text-black py-2 border-b border-gray-300 text-[18px] hover:text-black/60"
-              onClick={() => setIsMobileMenuOpen(false)}
-              style={{ fontWeight: "550" }}
-            >
-              {item.label}
-            </Link>
+            <div key={item.href} className="flex items-center">
+              <Link
+                href={item.href}
+                className="text-black py-2 border-b border-gray-300 text-[18px] hover:text-black/60 flex-1"
+                onClick={() => setIsMobileMenuOpen(false)}
+                style={{ fontWeight: "550" }}
+              >
+                {item.label}
+              </Link>
+              {item.unreadCount && item.unreadCount > 0 && (
+                <span className="ml-2 bg-primary text-black text-xs font-bold flex items-center justify-center min-w-6 h-6 px-1.5 rounded-full mr-4">
+                  {item.unreadCount > 9 ? "9+" : item.unreadCount}
+                </span>
+              )}
+            </div>
           ))}
           <div className="flex justify-center">
             <CustomButton

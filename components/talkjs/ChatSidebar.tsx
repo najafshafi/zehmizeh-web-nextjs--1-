@@ -15,14 +15,14 @@ export const ChatSidebar = ({
   onSelectChat,
 }: ChatSidebarProps) => {
   return (
-    <T.Sidebar openState={open ? "open" : ""}>
+    <T.Sidebar $openState={open ? "open" : ""}>
       <T.ChatListHeader>
         <div className="header-content">
           <p className="inbox-title">
             Inbox {totalUnreadMessages > 0 ? `(${totalUnreadMessages})` : "(1)"}
           </p>
           <T.NotificationToggle
-            active={permission === "granted"}
+            $active={permission === "granted" ? "true" : "false"}
             onClick={() => {
               if (permission === "granted") {
                 alert(

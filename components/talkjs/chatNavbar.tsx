@@ -247,7 +247,7 @@ const ChatNavbar = ({ setOpen, singleConversation }: Prop) => {
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <div className="left-section">
             {!singleConversation && (
-              <T.MobileViewButtons chatType={selectedConversation.custom.type}>
+              <T.MobileViewButtons $chatType={selectedConversation.custom.type}>
                 <button onClick={() => setOpen((prev) => !prev)}>
                   <FaArrowLeft />
                 </button>

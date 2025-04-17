@@ -311,7 +311,7 @@ const UserListItem = ({
 
   return (
     <ChatSingleUser
-      chatType={activeTheme}
+      $chatType={activeTheme}
       className={`flex items-center ${className}`}
       onClick={onSelectChat}
       title={`Project: ${convertToTitleCase(data.job_title)}`}
@@ -333,7 +333,7 @@ const UserListItem = ({
         >
           {remoteUser ? getUserName(remoteUser) : ""}
         </div>
-        <SingleUserChatAction chatType={activeTheme}>
+        <SingleUserChatAction $chatType={activeTheme}>
           <div className="userlistitem--info-msg capital-first-ltr">
             <span>{convertToTitleCase(data.job_title)}</span>
           </div>

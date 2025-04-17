@@ -26,6 +26,8 @@ import {
 } from "@/helpers/http/common";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import CustomButton from "@/components/custombutton/CustomButton";
+import { editInvitation } from "@/helpers/http/jobs";
+import { getInviteeDetails } from "@/helpers/http/proposals";
 
 // Dynamically import components that might use browser APIs
 const ProposalDetailsModal = dynamic(
@@ -35,6 +37,10 @@ const ProposalDetailsModal = dynamic(
 const ChatModal = dynamic(() => import("@/components/talkjs/chat-modal"), {
   ssr: false,
 });
+const InviteFreelancerMessageModal = dynamic(
+  () => import("@/components/invite-flow-modals/InviteFreelancerMessageModal"),
+  { ssr: false }
+);
 
 const RECORDS_PER_PAGE = 10;
 
@@ -62,10 +68,12 @@ export const Invitees = ({
   jobPostId,
   refetch,
   jobStatus,
+  selectedInviteId,
 }: {
   jobPostId: string;
   refetch: () => void;
   jobStatus?: TJOB_STATUS;
+  selectedInviteId?: string;
 }) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -87,7 +95,23 @@ export const Invitees = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invitedId]);
-  /* END ------------------------------ If url has invite id already */
+
+  // Handle the selectedInviteId prop
+  useEffect(() => {
+    if (selectedInviteId) {
+      onViewInviteesDetails(selectedInviteId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedInviteId]);
+
+  // Handle the editInvite query parameter
+  useEffect(() => {
+    const editInviteId = searchParams?.get("editInvite");
+    if (editInviteId) {
+      fetchInviteeDetailsForEdit(editInviteId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const [showInviteeDetails, setShowInviteeDetails] = useState<boolean>(false);
   const [selectedInviteeId, setSelectedInviteeId] = useState<string>("");
@@ -99,6 +123,13 @@ export const Invitees = ({
   const [openChatModal, setOpenChatModal] = useState<boolean>(false);
   const { user } = useAuth();
 
+  // State for edit invitation modal
+  const [showEditInvitationModal, setShowEditInvitationModal] =
+    useState<boolean>(false);
+  const [editInvitationLoading, setEditInvitationLoading] =
+    useState<boolean>(false);
+  const [selectedInviteeData, setSelectedInviteeData] = useState<any>(null);
+
   const { data, isLoading, totalResults } = useInvitees({
     job_id: jobPostId,
     page: currentPage,
@@ -109,16 +140,19 @@ export const Invitees = ({
     setSelectedInviteeId(id);
     toggleInviteeDetailsModal();
 
-    // Updating url with invite id (without reload)
-    const newUrl = `${baseUrl}?invitedId=${id}`;
-    router.push(newUrl, { scroll: false });
+    // Updating URL to the new route pattern
+    router.push(`/client-job-details/${jobPostId}/invitees/${id}`, {
+      scroll: false,
+    });
   };
 
   const toggleInviteeDetailsModal = () => {
     setShowInviteeDetails(!showInviteeDetails);
     if (showInviteeDetails) {
-      // removing invite id in url (without reload)
-      router.push(baseUrl, { scroll: false });
+      // When closing the modal, navigate back to the invitees list
+      router.push(`/client-job-details/${jobPostId}/invitees`, {
+        scroll: false,
+      });
     }
   };
 
@@ -135,6 +169,55 @@ export const Invitees = ({
   const onPageChange = (page: { selected: number }) => {
     /* This will set next page as active and load new page data - Pagination is implemented locally  */
     setCurrentPage(page?.selected + 1);
+  };
+
+  const fetchInviteeDetailsForEdit = async (inviteId: string) => {
+    try {
+      setEditInvitationLoading(true);
+      const response = await getInviteeDetails(inviteId);
+      if (response.data) {
+        setSelectedInviteeData(response.data);
+        setShowEditInvitationModal(true);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch invitation details");
+    } finally {
+      setEditInvitationLoading(false);
+    }
+  };
+
+  const toggleEditInvitationModal = () => {
+    setShowEditInvitationModal(!showEditInvitationModal);
+    if (showEditInvitationModal) {
+      // Remove the query parameter when closing the modal
+      router.push(`/client-job-details/${jobPostId}/invitees`, {
+        scroll: false,
+      });
+    }
+  };
+
+  const handleEditInvitation = async (message: string) => {
+    if (!selectedInviteeData?.invite_id) return;
+
+    try {
+      setEditInvitationLoading(true);
+      const response = await editInvitation({
+        invite_id: selectedInviteeData.invite_id,
+        invite_message: message,
+      });
+
+      if (response.status) {
+        toast.success(response.message || "Invitation updated successfully");
+        toggleEditInvitationModal();
+        refetch();
+      } else {
+        toast.error(response.message || "Failed to update invitation");
+      }
+    } catch (error) {
+      toast.error("An error occurred while updating the invitation");
+    } finally {
+      setEditInvitationLoading(false);
+    }
   };
 
   const noDataFoundJSX = (
@@ -175,9 +258,8 @@ export const Invitees = ({
     setThreadLoading(true);
     toast.loading("loading chat...");
     const invite_convo_id = `invite_${invite.invite_id}`;
-    const { conversation } = await talkJsFetchSingleConversation(
-      invite_convo_id
-    );
+    const { conversation } =
+      await talkJsFetchSingleConversation(invite_convo_id);
     toast.remove();
 
     setFreelancerName(`${invite.first_name} ${invite.last_name}`);
@@ -357,6 +439,19 @@ export const Invitees = ({
           closeModal={closeChatModal}
           key={"invities-chat-modal"}
           theme="invite"
+        />
+      )}
+
+      {/* Edit Invitation Modal */}
+      {showEditInvitationModal && selectedInviteeData && (
+        <InviteFreelancerMessageModal
+          show={showEditInvitationModal}
+          toggle={toggleEditInvitationModal}
+          freelancerName={`${selectedInviteeData.first_name} ${selectedInviteeData.last_name}`}
+          inviteMessage={selectedInviteeData.invite_message || ""}
+          onInvite={handleEditInvitation}
+          isEditFlag={true}
+          loading={editInvitationLoading}
         />
       )}
     </InviteesWrapper>
