@@ -46,12 +46,9 @@ const EndJobModal = ({ show, toggle, onConfirm }: Props) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white px-4 py-8 md:p-12 shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-lg transform  rounded-2xl bg-white px-4 py-8 md:p-12 shadow-xl transition-all">
                 <div className="absolute right-4 top-4 md:top-0 md:-right-8 md:text-white">
-                  <button
-                    type="button"
-                    onClick={onCloseModal}
-                  >
+                  <button type="button" onClick={onCloseModal}>
                     <XMarkIcon className="h-6 w-6" />
                   </button>
                 </div>

@@ -1,15 +1,15 @@
 /*
- * This is a prompt modal for deleting..
+ * This is a prompt modal for editing due date
  */
 import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import moment from "moment";
-import { Modal, Button } from "react-bootstrap";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { StyledButton } from "@/components/forms/Buttons";
-import { editJobDueDate } from "@/helpers/http/post-job";
 import { adjustTimezone } from "@/helpers/utils/misc";
 import NewCustomDatePicker from "@/components/forms/NewDatePicker";
+import CustomButton from "@/components/custombutton/CustomButton";
+import { VscClose } from "react-icons/vsc";
+
+import { editJobDueDate } from "@/helpers/http/post-job";
 
 type Props = {
   show: boolean;
@@ -42,8 +42,7 @@ const EditDueDate = ({ show, toggle, update, data }: Props) => {
   };
 
   /** @function This will call an api to update the due date */
-  const handleUpdate = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleUpdate = () => {
     setLoading(true);
 
     // Ensure job_post_id is defined
@@ -75,6 +74,7 @@ const EditDueDate = ({ show, toggle, update, data }: Props) => {
       },
     });
   };
+
   const isDateSelectable = (date: Date) => {
     if (!dueDate) return new Date();
     const oneWeekLater = new Date(dueDate);
@@ -82,54 +82,51 @@ const EditDueDate = ({ show, toggle, update, data }: Props) => {
     return date >= oneWeekLater;
   };
 
-  return (
-    <StyledModal
-      maxwidth={570}
-      show={show}
-      size="lg"
-      onHide={toggle}
-      centered
-      onSubmit={handleUpdate}
-    >
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={toggle}>
-          &times;
-        </Button>
-        <form>
-          <div className="fs-32 font-normal">Edit Due Date</div>
-          {/* <Form.Control
-            type="date"
-            className="p-3 mt-3"
-            value={dueDate}
-            onChange={handleDueDateChange}
-            min={new Date().toISOString().split('T')[0]}
-            max={moment().add(3, 'years').toISOString().split('T')[0]}
-          /> */}
-          <NewCustomDatePicker
-            placeholderText="Due Date"
-            onChange={handleDueDateChange}
-            selected={dueDate}
-            minDate={dueDate ? dueDate : new Date()}
-            format="YYYY-MM-DD"
-            filterDate={isDateSelectable}
-            maxDate={
-              new Date(moment().add(3, "years").toISOString().split("T")[0])
-            }
-            isClearable={!!dueDate}
-          />
+  if (!show) return null;
 
-          <div className="mt-4 flex items-center justify-end gap-2">
-            <StyledButton
-              variant="primary"
-              type="submit"
-              disabled={loading || !dueDate}
+  return (
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div
+        className="fixed inset-0 bg-black/50 transition-opacity"
+        onClick={toggle}
+      />
+      <div className="fixed inset-0 z-10 overflow-y-auto">
+        <div className="flex min-h-full items-center justify-center p-4 text-center">
+          <div className="relative w-full max-w-[570px] transform rounded-2xl bg-white px-6 py-8 text-left align-middle shadow-xl transition-all">
+            <button
+              onClick={toggle}
+              className="absolute right-4 top-4 text-gray-400 hover:text-gray-500 focus:outline-none"
             >
-              Update
-            </StyledButton>
+              <VscClose className="h-6 w-6" />
+            </button>
+
+            <div className="text-3xl font-normal mb-4">Edit Due Date</div>
+
+            <NewCustomDatePicker
+              placeholderText="Due Date"
+              onChange={handleDueDateChange}
+              selected={dueDate}
+              minDate={dueDate ? dueDate : new Date()}
+              format="YYYY-MM-DD"
+              filterDate={isDateSelectable}
+              maxDate={
+                new Date(moment().add(3, "years").toISOString().split("T")[0])
+              }
+              isClearable={!!dueDate}
+            />
+
+            <div className="mt-4 flex items-center justify-end gap-2">
+              <CustomButton
+                text="Update"
+                className="px-[2rem] py-[1rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[16px] border border-primary"
+                disabled={loading || !dueDate}
+                onClick={handleUpdate}
+              />
+            </div>
           </div>
-        </form>
-      </Modal.Body>
-    </StyledModal>
+        </div>
+      </div>
+    </div>
   );
 };
 

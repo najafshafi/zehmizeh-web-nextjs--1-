@@ -702,7 +702,7 @@ const QuickOptions: React.FC<Props> = ({
                     ? "Pay for Hours"
                     : "Accept Milestones"
                 }
-                className={`px-8 py-4 text-base font-normal bg-[#F2B420] text-[#212529] rounded-full transition-transform duration-200 hover:scale-105 ${
+                className={`px-8 py-4 text-base font-normal bg-[#f2b320a4] text-[#212529b6] rounded-full transition-transform duration-200 hover:scale-105 ${
                   isMobile ? "mt-4 w-full" : ""
                 }`}
                 onClick={() => {

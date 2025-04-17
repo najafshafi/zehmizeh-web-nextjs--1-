@@ -124,7 +124,6 @@ const Applicants = ({
   const { user } = useAuth();
 
   // Url to restore/add proposal id when modal open or closes
-  const baseUrl = `/client-job-details/${id}/applicants`;
 
   /* START ---------------------------- If url has proposal id already */
   useEffect(() => {
@@ -151,7 +150,7 @@ const Applicants = ({
     sorting: sortKey,
     proposalStatus: jobStatus || "",
   });
-
+  const baseUrl = `/client-job-details/${jobPostId}/applicants`;
   const onViewProposalDetails = (id: string) => {
     setSelectedproposalId(id);
     toggleProposalDetailsModal();

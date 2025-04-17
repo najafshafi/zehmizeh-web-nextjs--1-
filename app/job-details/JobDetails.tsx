@@ -531,7 +531,7 @@ const JobDetails = () => {
               </div>
               {/* Swapping Propose New Milestone/Submit New Hours button with Request to close job */}
 
-              <div className="flex items-center justify-between flex-1">
+              <div className="flex items-center justify-between flex-1 flex-wrap md:flex-nowrap ">
                 {activeTab === "m_stone" &&
                 jobdetails.proposal?.approved_budget?.type == "hourly" &&
                 jobdetails.status !== "closed" &&
@@ -539,7 +539,7 @@ const JobDetails = () => {
                   jobdetails?.is_closure_request &&
                   jobdetails?.closure_req_submitted_by
                 ) ? (
-                  <div className="flex justify-center items-center">
+                  <div className="flex justify-center items-center ">
                     <CustomButton
                       text={"Submit Hours"}
                       disabled={
@@ -548,7 +548,7 @@ const JobDetails = () => {
                           (x: Milestone) => x.is_final_milestone
                         ).length > 0
                       }
-                      className={`px-[2rem] py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5 ${
+                      className={`px-[5rem] py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5 ${
                         isMobile
                           ? "add-button"
                           : "submit-hours-button add-button"
@@ -568,7 +568,7 @@ const JobDetails = () => {
                 jobdetails?.budget?.type == "hourly" ? (
                   <div
                     className={`flex justify-end items-center ${
-                      isMobile || isTablet ? "" : "w-full"
+                      isMobile || isTablet ? "" : "w-fit"
                     }`}
                   >
                     <CustomButton
@@ -579,8 +579,8 @@ const JobDetails = () => {
                           (x: Milestone) => x.is_final_milestone
                         ).length > 0
                       }
-                      className={`px-[2rem] py-4 w-full min-w-[21rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5 ${
-                        isMobile || isTablet ? "" : "w-full"
+                      className={`px-[2rem] py-4  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5 ${
+                        isMobile || isTablet ? "" : "w-fit"
                       }`}
                       onClick={toggleEndJobModal}
                     />

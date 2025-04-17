@@ -43,6 +43,7 @@ import {
 import { useAuth } from "@/helpers/contexts/auth-context";
 import ChatModal from "@/components/talkjs/chat-modal";
 import PaymentTermsPopup from "@/components/PaymentTermsPopup";
+import CustomButton from "../custombutton/CustomButton";
 
 interface Props {
   show: boolean;
@@ -316,7 +317,6 @@ const ProposalDetailsModal = ({
   };
 
   const handleAcceptFreelancer = () => {
-    toggle();
     setIsShowingHiringMoreFreelancerModal(true);
   };
 
@@ -397,10 +397,10 @@ const ProposalDetailsModal = ({
         />
         <div className="fixed inset-0 z-10 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <div className="relative w-full max-w-[767px] transform overflow-hidden rounded-2xl bg-white px-4 py-8 md:p-12 text-left align-middle shadow-xl transition-all">
+            <div className="relative w-full max-w-[767px] transform  rounded-2xl bg-white px-4 py-8 md:p-12 text-left align-middle shadow-xl transition-all">
               <button
                 onClick={closeModal}
-                className="absolute right-4 top-4 md:top-0 md:-right-8 md:text-white text-gray-400 hover:text-gray-500 focus:outline-none"
+                className="absolute right-4 top-4 md:top-0 md:-right-8 md:text-white text-gray-400 focus:outline-none"
               >
                 <VscClose className="h-6 w-6" />
               </button>
@@ -448,12 +448,20 @@ const ProposalDetailsModal = ({
                       href={`/freelancer/${proposalDetails?.user_id}`}
                       className={`${isMobile ? "relative" : "absolute right-8 top-4"}`}
                     >
-                      <button
+                      {/* <button
                         className="w-full md:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200"
                         disabled={loading}
                       >
                         See Freelancer Profile
-                      </button>
+                      </button> */}
+                      <CustomButton
+                        text="See Freelancer Profile"
+                        className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary  border border-primary text-[18px]"
+                        disabled={loading}
+                        onClick={() =>
+                          router.push(`/freelancer/${proposalDetails?.user_id}`)
+                        }
+                      />
                     </Link>
                   ) : null}
 
@@ -698,53 +706,97 @@ const ProposalDetailsModal = ({
                         type === "proposal" &&
                         proposalDetails?._job_post_id && (
                           <>
-                            <button
+                            {/* <button
                               onClick={() => conversationHandler()}
                               className="w-full md:w-auto px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
                               disabled={loading}
                             >
                               Message Freelancer
-                            </button>
-                            <button
+                            </button> */}
+
+                            <CustomButton
+                              text="Message Freelancer"
+                              className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[16px] border border-black hover:border-black hover:text-white hover:bg-black "
+                              disabled={loading}
+                              onClick={() => conversationHandler()}
+                            />
+
+                            {/* <button
                               onClick={onAcceptDecline("denied")}
                               className="w-full md:w-auto px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
                               disabled={loading}
                             >
                               Decline Proposal
-                            </button>
-                            <button
+                            </button> */}
+
+                            <CustomButton
+                              text="Decline Proposal"
+                              className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[16px] border border-black hover:border-black hover:text-white hover:bg-black "
+                              disabled={loading}
+                              onClick={onAcceptDecline("denied")}
+                            />
+
+                            {/* <button
                               onClick={handleAcceptFreelancer}
                               className="w-full md:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200"
                               disabled={loading}
                             >
                               Accept Proposal
-                            </button>
+                            </button> */}
+
+                            <CustomButton
+                              text="Accept Proposal"
+                              className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[16px] border border-primary"
+                              disabled={loading}
+                              onClick={handleAcceptFreelancer}
+                            />
                           </>
                         )}
 
                       {proposalStatus.pending && (
                         <>
-                          <button
+                          {/* <button
                             onClick={() => conversationHandler()}
                             className="w-full md:w-auto px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
                             disabled={loading}
                           >
                             Message Freelancer
-                          </button>
-                          <button
+                          </button> */}
+
+                          <CustomButton
+                            text="Message Freelancer"
+                            className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[16px] border border-black hover:border-black hover:text-white hover:bg-black "
+                            disabled={loading}
+                            onClick={() => conversationHandler()}
+                          />
+                          {/* <button
                             onClick={onAcceptDecline("denied")}
                             className="w-full md:w-auto px-8 py-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
                             disabled={loading}
                           >
                             Decline Proposal
-                          </button>
-                          <button
+                          </button> */}
+
+                          <CustomButton
+                            text="Decline Proposal"
+                            className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[16px] border border-black hover:border-black hover:text-white hover:bg-black "
+                            disabled={loading}
+                            onClick={onAcceptDecline("denied")}
+                          />
+                          {/* <button
                             onClick={handleAcceptFreelancer}
                             className="w-full md:w-auto px-8 py-4 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200"
                             disabled={loading}
                           >
                             Accept Proposal
-                          </button>
+                          </button> */}
+
+                          <CustomButton
+                            text="Accept Proposal"
+                            className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[16px] border border-primary"
+                            disabled={loading}
+                            onClick={handleAcceptFreelancer}
+                          />
                         </>
                       )}
 
