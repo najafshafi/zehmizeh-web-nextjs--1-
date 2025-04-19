@@ -18,7 +18,7 @@ import { AppDispatch } from "@/store/redux/store";
 interface NavigationItem {
   href: string;
   label: string;
-  unreadCount?: number;
+  unreadCount?: number | string;
 }
 
 interface MenuItem {
@@ -76,7 +76,7 @@ const NavbarProfile = () => {
 
   // Check if user is a client or freelancer
   const isClient = user?.user_type === "client";
-
+   
   const navigationItems: NavigationItem[] = isClient
     ? [
         { href: "/client/dashboard", label: "Dashboard" },
@@ -86,7 +86,7 @@ const NavbarProfile = () => {
           href: "/messages-new",
           label: "Messages",
 
-          unreadCount: totalUnreadMessages,
+          unreadCount: totalUnreadMessages ? totalUnreadMessages : "",
         },
         { href: "/payments", label: "Transactions" },
         { href: "/support", label: "Help" },
@@ -97,7 +97,7 @@ const NavbarProfile = () => {
         {
           href: "/messages-new",
           label: "Messages",
-          unreadCount: totalUnreadMessages,
+          unreadCount: totalUnreadMessages ? totalUnreadMessages : "",
         },
         { href: "/payments", label: "Transactions" },
         { href: "/support", label: "Help" },
@@ -202,7 +202,7 @@ const NavbarProfile = () => {
             {unreadCount && unreadCount > 0 && (
               <span
                 className={`ml-2 bg-primary text-black text-xs font-semibold flex items-center justify-center h-[30px] w-[30px] rounded-full !text-[14px] ${
-                  unreadCount == 0 ? "hidden" : "bg-primary"
+                  unreadCount == 0 ? "hidden" : ""
                 }`}
               >
                 {unreadCount > 100 ? "99+" : unreadCount}
