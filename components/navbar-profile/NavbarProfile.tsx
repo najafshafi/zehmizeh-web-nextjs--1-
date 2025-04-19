@@ -9,7 +9,10 @@ import { IoIosArrowDown } from "react-icons/io";
 import CustomButton from "../custombutton/CustomButton";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import NotificationDropdown from "../notification-dropdown/NotificationDropdown";
-import { useUnreads } from "@talkjs/react";
+import { useSelector, useDispatch } from "react-redux";
+import { useChatMessages } from "@/helpers/hooks/useChatMessages";
+import { fetchMyConversation } from "@/store/redux/slices/talkjsSlice";
+import { AppDispatch } from "@/store/redux/store";
 
 // Types for better type safety
 interface NavigationItem {
@@ -33,12 +36,43 @@ const NavbarProfile = () => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
   // Get unread conversations using TalkJS hook
-  const unreads = useUnreads();
-  const unreadMessagesCount = unreads?.length || 0;
+
   // Log unreads for debugging
+  const dispatch: AppDispatch = useDispatch();
+  const { chatlist, filters } = useSelector(
+    (state: any) => state.talkJsChat || {}
+  );
+  const { totalUnreadMessages } = useChatMessages(
+    chatlist || [],
+    filters || {}
+  );
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Function to refresh data
+  const refreshData = () => {
+    if (!isRefreshing) {
+      setIsRefreshing(true);
+      dispatch(fetchMyConversation(""))
+        .then(() => {
+          setIsRefreshing(false);
+        })
+        .catch(() => {
+          setIsRefreshing(false);
+        });
+    }
+  };
+
+  // Poll for updates every 5 seconds
   useEffect(() => {
-    console.log("TalkJS unreads:", unreadMessagesCount);
-  }, [unreads]);
+    const intervalId = setInterval(() => {
+      refreshData();
+    }, 5000); // Polling every 5 seconds
+
+    // Initial fetch
+    refreshData();
+
+    return () => clearInterval(intervalId);
+  }, [dispatch]);
 
   // Check if user is a client or freelancer
   const isClient = user?.user_type === "client";
@@ -52,7 +86,7 @@ const NavbarProfile = () => {
           href: "/messages-new",
           label: "Messages",
 
-          unreadCount: unreadMessagesCount,
+          unreadCount: totalUnreadMessages,
         },
         { href: "/payments", label: "Transactions" },
         { href: "/support", label: "Help" },
@@ -63,7 +97,7 @@ const NavbarProfile = () => {
         {
           href: "/messages-new",
           label: "Messages",
-          unreadCount: unreadMessagesCount,
+          unreadCount: totalUnreadMessages,
         },
         { href: "/payments", label: "Transactions" },
         { href: "/support", label: "Help" },
@@ -167,11 +201,11 @@ const NavbarProfile = () => {
             </p>
             {unreadCount && unreadCount > 0 && (
               <span
-                className={`ml-2 bg-primary text-black text-xs font-bold flex items-center justify-center min-w-6 h-6 px-1.5 rounded-full ${
+                className={`ml-2 bg-primary text-black text-xs font-semibold flex items-center justify-center h-[30px] w-[30px] rounded-full !text-[14px] ${
                   unreadCount == 0 ? "hidden" : "bg-primary"
                 }`}
               >
-                {unreadCount > 9 ? "9+" : unreadCount}
+                {unreadCount > 100 ? "99+" : unreadCount}
               </span>
             )}
           </div>
