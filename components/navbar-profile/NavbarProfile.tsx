@@ -76,7 +76,7 @@ const NavbarProfile = () => {
 
   // Check if user is a client or freelancer
   const isClient = user?.user_type === "client";
-   
+
   const navigationItems: NavigationItem[] = isClient
     ? [
         { href: "/client/dashboard", label: "Dashboard" },
@@ -199,13 +199,13 @@ const NavbarProfile = () => {
             >
               {label}
             </p>
-            {unreadCount && unreadCount > 0 && (
+            {unreadCount && Number(unreadCount) > 0 && (
               <span
                 className={`ml-2 bg-primary text-black text-xs font-semibold flex items-center justify-center h-[30px] w-[30px] rounded-full !text-[14px] ${
-                  unreadCount == 0 ? "hidden" : ""
+                  Number(unreadCount) === 0 ? "hidden" : ""
                 }`}
               >
-                {unreadCount > 100 ? "99+" : unreadCount}
+                {Number(unreadCount) > 100 ? "99+" : unreadCount}
               </span>
             )}
           </div>
@@ -414,9 +414,9 @@ const NavbarProfile = () => {
               >
                 {item.label}
               </Link>
-              {item.unreadCount && item.unreadCount > 0 && (
+              {item.unreadCount && Number(item.unreadCount) > 0 && (
                 <span className="ml-2 bg-primary text-black text-xs font-bold flex items-center justify-center min-w-6 h-6 px-1.5 rounded-full mr-4">
-                  {item.unreadCount > 9 ? "9+" : item.unreadCount}
+                  {Number(item.unreadCount) > 9 ? "9+" : item.unreadCount}
                 </span>
               )}
             </div>
