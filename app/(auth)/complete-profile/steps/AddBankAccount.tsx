@@ -1,12 +1,11 @@
 "use client";
 import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation"; // Changed from react-router-dom
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Form } from "react-bootstrap";
 import Tooltip from "@/components/ui/Tooltip";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import { StyledButton } from "@/components/forms/Buttons";
-import { StyledFormGroup } from "./steps.styled";
 import { validateAccountDetailsWithRouting } from "@/helpers/validation/common";
 import { getYupErrors } from "@/helpers/utils/misc";
 import { managePayment } from "@/helpers/http/freelancer";
@@ -40,7 +39,7 @@ const AddBankAccount = ({ onPrevious }: Props) => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState<boolean>(false);
 
-  const router = useRouter(); // Changed from useNavigate
+  const router = useRouter();
 
   const handleChange = useCallback(
     (field: keyof BankAccountForm, value: string) => {
@@ -82,7 +81,7 @@ const AddBankAccount = ({ onPrevious }: Props) => {
       loading: "Loading...",
       success: (res) => {
         setLoading(false);
-        router.push("/login"); // Changed from navigate
+        router.push("/login");
         return res.message;
       },
       error: (err) => {
@@ -96,46 +95,46 @@ const AddBankAccount = ({ onPrevious }: Props) => {
     <div>
       <Tooltip title="Account details">Please add your account details</Tooltip>
 
-      <div className="account-form">
-        <StyledFormGroup>
+      <div className="space-y-4 mt-5">
+        <div className="mb-4">
           <Form.Control
             placeholder="Account holder's name"
-            className="form-input"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             value={formState.accountHolderName}
             onChange={(e) => handleChange("accountHolderName", e.target.value)}
           />
           {errors.accountHolderName && (
             <ErrorMessage message={errors.accountHolderName} />
           )}
-        </StyledFormGroup>
+        </div>
 
         {/* Israel and Belgium takes IBAN number as account number  */}
-        <StyledFormGroup>
+        <div className="mb-4">
           <Form.Control
             placeholder={"Bank account number"}
-            className="form-input"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             value={formState.accountNumber}
             onChange={(e) => handleChange("accountNumber", e.target.value)}
           />
           {errors.accountNumber && (
             <ErrorMessage message={errors.accountNumber} />
           )}
-        </StyledFormGroup>
+        </div>
 
-        <StyledFormGroup>
+        <div className="mb-4">
           <Form.Control
             placeholder="Routing number"
-            className="form-input"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             value={formState.routingNumber}
             onChange={(e) => handleChange("routingNumber", e.target.value)}
           />
           {errors.routingNumber && (
             <ErrorMessage message={errors.routingNumber} />
           )}
-        </StyledFormGroup>
+        </div>
       </div>
 
-      <div className="flex justify-center justify-content-md-end gap-3 mt-4">
+      <div className="flex justify-center md:justify-end gap-3 mt-4">
         <StyledButton
           variant="outline-dark"
           disabled={loading}
