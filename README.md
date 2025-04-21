@@ -6,15 +6,20 @@ First, set up your environment variables by creating a `.env.local` file in the 
 
 ```env
 NEXT_PUBLIC_BACKEND_API=https://apidev.zehmizeh.com
+
 NEXT_PUBLIC_PUSHER_API_KEY=your_pusher_api_key
 NEXT_PUBLIC_PUSHER_API_KEY_PROD=your_pusher_api_key_prod
+
 NEXT_PUBLIC_INTERCOM_APP_ID=your_intercom_app_id
-
-NEXT_PUBLIC_INTERCOM_APP_ID=your_api_key
-
 NEXT_PUBLIC_GA_TRACKING_CODE=your_api_key
-
 NEXT_PUBLIC_WSC_WPROOFREADER_SERVICE_ID=your_api_key
+
+
+NEXT_PUBLIC_TALKJS_APP_ID=your_api_key
+NEXT_PUBLIC_TALKJS_APP_SECRET_KEY=your_api_key
+NEXT_PUBLIC_TALKJS_APP_ID_PROD=your_api_key
+NEXT_PUBLIC_TALKJS_APP_SECRET_KEY_PROD=your_api_key
+
 
 ```
 
@@ -45,8 +50,8 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deployed on Netlify - [Link](https://zehmizeh.netlify.app/home)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
