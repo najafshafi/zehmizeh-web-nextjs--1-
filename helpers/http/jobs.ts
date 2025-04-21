@@ -1,4 +1,5 @@
-import { apiClient } from './index';
+import { apiClient } from "./index";
+import axios from "axios";
 
 interface MilestoneInterface {
   action: string;
@@ -26,16 +27,28 @@ export const getJobDetails = (id: string) => {
     });
 };
 
-export const inviteFreelancer = (formData: { job_post_id: string; freelancer_user_id: any; message?: string }) => {
+export const inviteFreelancer = (formData: {
+  job_post_id: string;
+  freelancer_user_id: any;
+  message?: string;
+}) => {
   return apiClient.post(`/invite/freelancer`, formData).then((res) => res.data);
 };
 
-export const editInvitation = (formData: { invite_id: string; invite_message: string }) => {
+export const editInvitation = (formData: {
+  invite_id: string;
+  invite_message: string;
+}) => {
   return apiClient.post(`/invite/edit`, formData).then((res) => res.data);
 };
 
-export const updateInvitationStatus = (inviteId: string, status: 'canceled' | 'pending') => {
-  return apiClient.get(`/invite/status/${inviteId}/${status}`).then((res) => res.data);
+export const updateInvitationStatus = (
+  inviteId: string,
+  status: "canceled" | "pending"
+) => {
+  return apiClient
+    .get(`/invite/status/${inviteId}/${status}`)
+    .then((res) => res.data);
 };
 
 export const manageFeedback = (formData: {
@@ -47,15 +60,22 @@ export const manageFeedback = (formData: {
   rate: number;
   description: string;
 }) => {
-  return apiClient.post(`/job/manage-feedback`, formData).then((res) => res.data);
+  return apiClient
+    .post(`/job/manage-feedback`, formData)
+    .then((res) => res.data);
 };
 
 export const manageMilestone = (formData: MilestoneInterface) => {
-  return apiClient.post(`/job/manage-milestone`, formData).then((res) => res.data);
+  return apiClient
+    .post(`/job/manage-milestone`, formData)
+    .then((res) => res.data);
 };
 
 export const manageMilestoneNew = async (formData: MilestoneInterface) => {
-  const { data, status } = await apiClient.post(`/job/manage-milestone`, formData);
+  const { data, status } = await apiClient.post(
+    `/job/manage-milestone`,
+    formData
+  );
   return { data, status };
 };
 
@@ -85,24 +105,60 @@ export const manageHours = async (formData: {
 
 export const cancelClosureRequest = (job_id: string) => {
   return apiClient
-    .post('/job/closure-request-cancel', {
+    .post("/job/closure-request-cancel", {
       job_id,
     })
     .then((res) => res.data);
 };
 
 export const jobClosureRequest = (formData: { job_id?: string }) => {
-  return apiClient.post(`/job/closure-request-send`, formData).then((res) => res.data);
+  return apiClient
+    .post(`/job/closure-request-send`, formData)
+    .then((res) => res.data);
 };
 
 export const acceptClosureRequest = (formData: { job_id?: string }) => {
-  return apiClient.post(`/job/closure-request-accept`, formData).then((res) => res.data);
+  return apiClient
+    .post(`/job/closure-request-accept`, formData)
+    .then((res) => res.data);
 };
 
-export const clientJobNameSearch = (formData: { status?: string; text?: string; page: number; limit: number }) => {
-  return apiClient.post(`/job/client-job-name/search`, formData).then((res) => res.data);
+export const clientJobNameSearch = (formData: {
+  status?: string;
+  text?: string;
+  page: number;
+  limit: number;
+}) => {
+  return apiClient
+    .post(`/job/client-job-name/search`, formData)
+    .then((res) => res.data);
 };
 
-export const freelancerJobNameSearch = (formData: { status?: string; text?: string; page: number; limit: number }) => {
-  return apiClient.post(`/job/job-name/search`, formData).then((res) => res.data);
+export const freelancerJobNameSearch = (formData: {
+  status?: string;
+  text?: string;
+  page: number;
+  limit: number;
+}) => {
+  return apiClient
+    .post(`/job/job-name/search`, formData)
+    .then((res) => res.data);
+};
+
+export const sendTip = async (data: { job_id: string; amount: number }) => {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/jobs/send-tip`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error sending tip:", error);
+    throw error;
+  }
 };

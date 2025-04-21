@@ -26,6 +26,7 @@ import { MdDelete } from "react-icons/md";
 import { ChangeBudgetDeleteRequest } from "@/components/changeBudget/ChangeBudgetDeleteRequest";
 import { TJobDetails } from "@/helpers/types/job.type";
 import MilestoneStats from "./MilestoneStats";
+import SendTipModal from "@/components/sendTip/SendTipModal";
 
 interface DetailsBannerProps {
   data: TJobDetails;
@@ -36,6 +37,7 @@ const JobDetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
   const [changeBudgetModal, setChangeBudgetModal] = useState<boolean>(false);
   const [changeBudgetDeleteModal, setChangeBudgetDeleteModal] = useState(false);
   const [editDueDateModal, setEditDueDateModal] = useState<boolean>(false);
+  const [sendTipModal, setSendTipModal] = useState<boolean>(false);
   const theme = useTheme();
   /* This will format the date label to be displayed */
   const dateLabel = useMemo(() => {
@@ -316,7 +318,7 @@ const JobDetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
             )}
           {/* END ------------------------------------------- Requested increase budget amount */}
 
-          <div className="flex-1">
+          <div className="flex-1 ">
             <div className="light-text fs-1rem font-normal">
               {data?.budget?.type == "hourly"
                 ? "Total Hours Worked"
@@ -350,6 +352,13 @@ const JobDetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
               {data?.paid ? numberWithCommas(data?.paid, "USD") : "$0"}
             </div>
           </div>
+
+          <span
+            className="inline-block budget-change-button h-fit self-end cursor-pointer"
+            onClick={() => setSendTipModal(true)}
+          >
+            Send Tip
+          </span>
         </div>
         {data?.proposal?.approved_budget && (
           <ChangeBudgetModal
@@ -373,6 +382,12 @@ const JobDetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
             jobId: data?.job_post_id,
             dueDate: data?.due_date,
           }}
+        />
+        <SendTipModal
+          show={sendTipModal}
+          toggle={() => setSendTipModal(false)}
+          jobId={data?.job_post_id}
+          refetch={refetch}
         />
       </InProgressClosedJobWrapper>
     </>

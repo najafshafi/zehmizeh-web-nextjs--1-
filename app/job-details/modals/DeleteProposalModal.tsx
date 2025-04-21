@@ -1,10 +1,10 @@
 /*
  * This component is a modal for delete proposal *
  */
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { deleteProposal } from '@/helpers/http/proposals';
-import { useRouter } from 'next/navigation'; // Replaced useNavigate
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { deleteProposal } from "@/helpers/http/proposals";
+import { useRouter } from "next/navigation"; // Replaced useNavigate
 import Spinner from "@/components/forms/Spin/Spinner";
 
 // Type definitions
@@ -14,7 +14,11 @@ interface DeleteProposalModalProps {
   proposal_id: number;
 }
 
-const DeleteProposalModal = ({ show, toggle, proposal_id }: DeleteProposalModalProps) => {
+const DeleteProposalModal = ({
+  show,
+  toggle,
+  proposal_id,
+}: DeleteProposalModalProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter(); // Replaced useNavigate
 
@@ -27,7 +31,7 @@ const DeleteProposalModal = ({ show, toggle, proposal_id }: DeleteProposalModalP
 
     const promise = deleteProposal({ proposal_id });
     toast.promise(promise, {
-      loading: 'Deleting proposal...',
+      loading: "Deleting proposal...",
       error: (error) => {
         setLoading(false);
         return error?.response?.data?.message ?? error?.message;
@@ -35,7 +39,7 @@ const DeleteProposalModal = ({ show, toggle, proposal_id }: DeleteProposalModalP
       success: (resp) => {
         setLoading(false);
         router.back(); // Replaced navigate(-1)
-        return resp.message ?? 'Proposal deleted successfully';
+        return resp.message ?? "Proposal deleted successfully";
       },
     });
   };
@@ -44,7 +48,7 @@ const DeleteProposalModal = ({ show, toggle, proposal_id }: DeleteProposalModalP
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="relative w-full max-w-[718px] bg-white rounded-lg shadow-lg p-6">
+      <div className="relative w-full max-w-[718px] bg-white rounded-lg shadow-lg  px-4 py-8 md:p-12">
         {/* Close Button */}
         <button
           className="absolute top-2 right-2 text-2xl text-gray-600 hover:text-gray-800"
@@ -63,9 +67,9 @@ const DeleteProposalModal = ({ show, toggle, proposal_id }: DeleteProposalModalP
           </p>
 
           {/* Buttons */}
-          <div className="flex items-center justify-center gap-3 mt-4">
+          <div className="flex items-center justify-center gap-3 mt-6">
             <button
-              className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+              className="flex items-center gap-2 px-8 py-[0.85rem] bg-[#F2B420] text-lg rounded-full hover:scale-105 transition-transform duration-300 disabled:opacity-50"
               disabled={loading}
               onClick={deleteProposalHandler}
             >
@@ -73,7 +77,7 @@ const DeleteProposalModal = ({ show, toggle, proposal_id }: DeleteProposalModalP
               Yes - Delete
             </button>
             <button
-              className="px-4 py-2 border border-gray-800 rounded hover:bg-gray-100"
+              className="border border-[#212529] px-8 py-[0.85rem] bg-transparent text-lg text-[#212529] rounded-full hover:scale-105 hover:bg-[#212529] hover:text-white transition-all duration-300"
               onClick={toggle}
             >
               No - Keep Proposal
