@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Wrapper, StepIndicator } from "./complete-profile.styled";
 import PersonalDetails from "./steps/PersonalDetails";
 import AboutMe from "./steps/AboutMe";
 import Skills from "./steps/Skills";
@@ -237,20 +236,20 @@ const CompleteProfile = () => {
   };
 
   return (
-    <Wrapper className="my-5 mx-auto">
-      <div className="fs-32 fw-700">Set Your Profile</div>
+    <div className="my-5 md:my-12 mx-auto max-w-[678px] shadow-[0px_4px_60px_rgba(0,0,0,0.05)] bg-white rounded-xl md:p-12 p-4">
+      <div className="text-[32px] font-bold">Set Your Profile</div>
 
       <div>
         {user?.user_type !== "client" && (
-          <StepIndicator className="mt-2">
+          <div className="mt-2 bg-[#FBF5E8] px-5 py-2.5 rounded-[3rem] w-max">
             Step {currentStep} of 5
-          </StepIndicator>
+          </div>
         )}
 
         {ClientUI()}
         {FreelancerUI()}
       </div>
-    </Wrapper>
+    </div>
   );
 };
 
