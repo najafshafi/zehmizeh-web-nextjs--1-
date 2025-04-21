@@ -115,8 +115,8 @@ const PortfolioFiles = ({ files, onPosChange, allowEdit }: Props) => {
             onClick={() => previewHandler("")}
           />
 
-          <div className="fixed inset-0 flex items-center justify-center p-4">
-            <div className="relative bg-white rounded-xl w-full max-w-[678px] max-h-[90vh] overflow-y-auto py-[2rem] px-[1rem] md:py-[3.20rem] md:px-12">
+          <div className="fixed  inset-0 flex items-center justify-center p-4">
+            <div className="relative bg-white rounded-xl w-full max-w-[678px] max-h-[90vh]  py-[2rem] px-[1rem] md:py-[3.20rem] md:px-12">
               <button
                 onClick={() => previewHandler("")}
                 className="absolute top-4 md:top-0 right-4 md:-right-8 text-2xl text-black md:text-white hover:text-gray-200 cursor-pointer"
@@ -127,7 +127,7 @@ const PortfolioFiles = ({ files, onPosChange, allowEdit }: Props) => {
               {isPDF(previewURL) && (
                 <iframe
                   src={previewURL}
-                  className="w-full h-[80vh] rounded-lg"
+                  className="w-full  h-[80vh] rounded-lg"
                 />
               )}
 
