@@ -1,13 +1,12 @@
-"use client";
 import { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
-import { Spinner } from "react-bootstrap";
+import Spinner from "@/components/forms/Spin/Spinner";
 import styled from "styled-components";
 import { transition } from "@/styles/transitions";
 import ErrorMessage from "./ErrorMessage";
 import { generateAwsUrl } from "@/helpers/http/common";
 import { showErr } from "@/helpers/utils/misc";
-import AttachIcon from "../../public/icons/attach.svg";
+import AttachIcon from "@/public/icons/attach.svg";
 import AttachmentPreview from "./AttachmentPreview";
 import toast from "react-hot-toast";
 import { CONSTANTS } from "@/helpers/const/constants";
@@ -57,12 +56,6 @@ export const Wrapper = styled.div`
     border: ${(props) => `1px solid ${props.theme.colors.primary}`};
     background: ${(props) => props.theme.colors.white};
   }
-`;
-
-export const UploadCount = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 `;
 
 export type TCustomUploaderFile = Partial<{
@@ -124,8 +117,8 @@ const CustomUploader = ({
   }, [uploading]);
   /* END ------------------------------------------- If image is uploading then user can't leave */
 
-  const isFileValid = (file: File): boolean => {
-    if (!file) return false;
+  const isFileValid = (file) => {
+    if (!file) return;
     const fileSize = file?.size / 1024 / 1024;
     const extension = file?.type?.replace(/(.*)\//g, "");
 
@@ -165,8 +158,6 @@ const CustomUploader = ({
   };
 
   const onChangeMultipleFile = async (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return;
-
     let isValid = true;
     let i = 0;
     const files = Array.from(e.target.files);
@@ -176,9 +167,7 @@ const CustomUploader = ({
       i++;
     }
     if (!isValid) return;
-
-    const maxLimit = limit || Infinity;
-    if (attachments.length + files.length > maxLimit || count >= maxLimit)
+    if ((limit && attachments.length + files.length > limit) || count >= limit)
       return toast.error("Maximum Attachment Limit Reached");
 
     try {
@@ -188,24 +177,17 @@ const CustomUploader = ({
       const uploadedFiles = await Promise.all(
         files.map((file) => uploadFile(file))
       );
-
-      if (handleMultipleUploadImage) {
-        handleMultipleUploadImage(uploadedFiles);
-      }
+      handleMultipleUploadImage(uploadedFiles);
       setUploading(false);
-    } catch {
+    } catch (error) {
       setUploading(false);
       showErr("Error while uploading file.");
     }
   };
 
   const onChangeSingleFile = async (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return;
-
     if (!isFileValid(e.target.files[0])) return;
-
-    const maxLimit = limit || Infinity;
-    if (attachments.length + 1 > maxLimit || count >= maxLimit)
+    if ((limit && attachments.length + 1 > limit) || count >= limit)
       return toast.error("Maximum Attachment Limit Reached");
 
     /* This will make error empty when proper format file is uploaded */
@@ -216,38 +198,40 @@ const CustomUploader = ({
       const file = e.target.files[0];
       const uploadedFile = await uploadFile(file);
 
-      if (handleUploadImage) {
-        handleUploadImage(uploadedFile);
-      }
+      handleUploadImage(uploadedFile);
       setUploading(false);
-    } catch {
+    } catch (error) {
       setUploading(false);
       showErr("Error while uploading file.");
     }
   };
+
+  const UploadCount = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  `;
 
   const count = attachments?.length + (totalUploaded || 0);
 
   return (
     <Wrapper>
       <label
-        className={`file-uploader w-full text-base font-light cursor-pointer flex ${
-          uploading ? "uploading" : ""
-        }`}
+        className={`file-uploader w-full text-base font-light cursor-pointer flex ${uploading ? "uploading" : ""}`}
         htmlFor="file-upload"
       >
         <AttachIcon className="mx-1" /> &nbsp;
         {placeholder || "Attach file"} (Max size: 100MB)
         {uploading && (
           <div className="upload-loader">
-            <Spinner animation="border" size="sm" />
+            <Spinner />
           </div>
         )}
       </label>
       <input
         id="file-upload"
         type="file"
-        className="w-100"
+        className="w-full"
         onChange={(e) =>
           multiple ? onChangeMultipleFile(e) : onChangeSingleFile(e)
         }
@@ -262,7 +246,7 @@ const CustomUploader = ({
         </div>
         {limit && (
           <div
-            className="text-base font-light mt-2 ms-2"
+            className="text-base font-light mt-2 ml-2"
             style={{ flex: "none" }}
           >
             {count}/{limit}

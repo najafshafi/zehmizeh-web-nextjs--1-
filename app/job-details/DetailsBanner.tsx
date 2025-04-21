@@ -429,7 +429,9 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
           </div>
         </div>
         <div className="flex items-center flex-wrap gap-3">
-          <div className={!user?.is_account_approved ? "blurred-9px" : ""}>
+          <div
+            className={`flex items-center flex-wrap ${!user?.is_account_approved ? "blurred-9px" : ""}`}
+          >
             <BlurredImage
               src={data.userdata?.user_image || "/images/default_avatar.png"}
               height="2.625rem"

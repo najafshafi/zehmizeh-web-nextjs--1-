@@ -318,17 +318,12 @@ const SubmitProposalModal = ({
   const title = isEdit ? "Edit Proposal" : "Submit Proposal";
 
   return (
-    <Dialog
-      as="div"
-      className="relative z-50"
-      onClose={onCloseModal}
-      open={show}
-    >
+    <Dialog as="div" className="relative z-50" onClose={() => {}} open={show}>
       <div className="fixed inset-0 bg-black/25" aria-hidden="true" />
 
       <div className="fixed inset-0 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4">
-          <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white px-4 py-8 md:p-12 text-left align-middle shadow-xl transition-all">
+          <Dialog.Panel className="w-full max-w-2xl transform  rounded-2xl bg-white px-4 py-8 md:p-12 text-left align-middle shadow-xl transition-all">
             <button
               type="button"
               className="absolute top-4 right-4 md:top-0 md:-right-8 md:text-white text-gray-400 hover:text-gray-500"
