@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import StyledHtmlText from "@/components/ui/StyledHtmlText";
 import AttachmentPreview from "@/components/ui/AttachmentPreview";
 import { numberWithCommas } from "@/helpers/utils/misc";
-import EditBlueIcon from "@/public/icons/edit-blue.svg";
+import EditBlueIcon from "@/public/icons/edit-blue-outline.svg";
 import DeleteIcon from "@/public/icons/trash.svg";
 import moment from "moment";
 import DeleteProposalModal from "./modals/DeleteProposalModal";
@@ -20,7 +20,6 @@ import { WarningProposalMessageModal } from "@/components/jobs/WarningProposalMe
 import { useQueryClient } from "react-query";
 import toast from "react-hot-toast";
 import { reopenProposal } from "@/helpers/http/proposals";
-import Image from "next/image";
 
 interface ProposalDetailsProps {
   data: any;
@@ -130,12 +129,7 @@ const ProposalDetails = ({
                     onClick={toggleEditProposalModal}
                     className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200"
                   >
-                    <Image
-                      src={EditBlueIcon}
-                      alt="Edit"
-                      width={20}
-                      height={20}
-                    />
+                    <EditBlueIcon />
                     <span className="text-blue-600">Edit</span>
                   </button>
 
@@ -143,12 +137,7 @@ const ProposalDetails = ({
                     onClick={toggleDeleteProposalModal}
                     className="flex items-center gap-2 px-4 py-2 bg-amber-50 rounded-lg hover:bg-amber-100 transition-colors duration-200 ml-4"
                   >
-                    <Image
-                      src={DeleteIcon}
-                      alt="Delete"
-                      width={20}
-                      height={20}
-                    />
+                    <DeleteIcon />
                     <span className="text-red-500">Delete</span>
                   </button>
                 </>

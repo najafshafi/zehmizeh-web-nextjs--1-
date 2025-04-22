@@ -73,24 +73,23 @@ const JobOtherDetails = ({ data }: { data: JobData }) => {
                 0 > 0) && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
                   {/* START ----------------------------------------- Related Files */}
-                  {data.attachments?.length ||
-                    (0 > 0 && (
-                      <div>
-                        <div className="text-xl font-normal mb-2">
-                          Related Files
-                        </div>
-                        <div className="flex flex-wrap" style={{ gap: "10px" }}>
-                          {data.attachments?.map((item: string) => (
-                            <AttachmentPreview
-                              key={item}
-                              uploadedFile={item}
-                              removable={false}
-                              shouldShowFileNameAndExtension={false}
-                            />
-                          ))}
-                        </div>
+                  {data.attachments?.length && data.attachments?.length > 0 && (
+                    <div>
+                      <div className="text-xl font-normal mb-2">
+                        Related Files
                       </div>
-                    ))}
+                      <div className="flex flex-wrap" style={{ gap: "10px" }}>
+                        {data.attachments?.map((item: string) => (
+                          <AttachmentPreview
+                            key={item}
+                            uploadedFile={item}
+                            removable={false}
+                            shouldShowFileNameAndExtension={false}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   {/* END ------------------------------------------- Related Files */}
 
                   {(data?.reference_links?.length ||
@@ -106,14 +105,14 @@ const JobOtherDetails = ({ data }: { data: JobData }) => {
                         data.reference_links.length > 0 && (
                           <div className="mb-3">
                             {data.reference_links.map(
-                              (referenceLink: string) => {
+                              (referenceLink: string, index: number) => {
                                 if (!referenceLink.includes("http")) {
                                   referenceLink = `http://${referenceLink}`;
                                 }
                                 return (
-                                  <div key={referenceLink}>
+                                  <div key={referenceLink + index}>
                                     <Link
-                                      className="text-primary"
+                                      className="text-blue-600"
                                       href={referenceLink}
                                       target="_blank"
                                       rel="noreferrer"
@@ -129,8 +128,24 @@ const JobOtherDetails = ({ data }: { data: JobData }) => {
                       {/* END ------------------------------------------- Style Samples Links */}
 
                       {/* START ----------------------------------------- Style Samples Attachments */}
-                      {data?.reference_attachments?.length ||
+                      {/* {data?.reference_attachments?.length ||
                         (0 > 0 && (
+                          <div
+                            className="flex flex-wrap"
+                            style={{ gap: "10px" }}
+                          >
+                            {data?.reference_attachments?.map((item: any) => (
+                              <AttachmentPreview
+                                key={item}
+                                uploadedFile={item}
+                                removable={false}
+                                shouldShowFileNameAndExtension={false}
+                              />
+                            ))}
+                          </div>
+                        ))} */}
+                      {data?.reference_attachments?.length &&
+                        data?.reference_attachments?.length > 0 && (
                           <div
                             className="flex flex-wrap"
                             style={{ gap: "10px" }}
@@ -146,7 +161,7 @@ const JobOtherDetails = ({ data }: { data: JobData }) => {
                               )
                             )}
                           </div>
-                        ))}
+                        )}
                       {/* END ------------------------------------------- Style Samples Attachments */}
                     </div>
                   )}

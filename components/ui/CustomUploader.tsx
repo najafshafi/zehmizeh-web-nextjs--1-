@@ -1,7 +1,7 @@
 "use client";
 import { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
-import { Spinner } from "react-bootstrap";
+import Spinner from "@/components/forms/Spin/Spinner";
 import styled from "styled-components";
 import { transition } from "@/styles/transitions";
 import ErrorMessage from "./ErrorMessage";
@@ -240,9 +240,10 @@ const CustomUploader = ({
         {placeholder || "Attach file"} (Max size: 100MB)
         {uploading && (
           <div className="upload-loader">
-            <Spinner animation="border" size="sm" />
+            <Spinner />
           </div>
         )}
+        
       </label>
       <input
         id="file-upload"
