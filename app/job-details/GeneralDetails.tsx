@@ -144,18 +144,24 @@ const JobOtherDetails = ({ data }: { data: JobData }) => {
                             ))}
                           </div>
                         ))} */}
-                      {data?.reference_attachments?.length > 0 && (
-                        <div className="flex flex-wrap" style={{ gap: "10px" }}>
-                          {data?.reference_attachments?.map((item: string) => (
-                            <AttachmentPreview
-                              key={item}
-                              uploadedFile={item}
-                              removable={false}
-                              shouldShowFileNameAndExtension={false}
-                            />
-                          ))}
-                        </div>
-                      )}
+                      {data?.reference_attachments?.length &&
+                        data?.reference_attachments?.length > 0 && (
+                          <div
+                            className="flex flex-wrap"
+                            style={{ gap: "10px" }}
+                          >
+                            {data?.reference_attachments?.map(
+                              (item: string) => (
+                                <AttachmentPreview
+                                  key={item}
+                                  uploadedFile={item}
+                                  removable={false}
+                                  shouldShowFileNameAndExtension={false}
+                                />
+                              )
+                            )}
+                          </div>
+                        )}
                       {/* END ------------------------------------------- Style Samples Attachments */}
                     </div>
                   )}
