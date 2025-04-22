@@ -492,7 +492,10 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
                   user?.stp_account_status === "verified" ? (
                     <CustomButton
                       className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
-                      onClick={() => setShowSubmitProposalModal(true)}
+                      // onClick={() => setShowSubmitProposalModal(true)}
+                      onClick={() =>
+                        router.push(`/job-details/${id}/gen_details/submit`)
+                      }
                       text="Submit Proposal"
                     />
                   ) : (
