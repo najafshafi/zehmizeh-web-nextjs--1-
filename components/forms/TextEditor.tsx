@@ -158,7 +158,7 @@ const TextEditor = ({ placeholder, value, onChange, maxChars }: Props) => {
           }
         }}
       />
-      <div className="mt-2 flex justify-end">
+      <div className="my-2 flex justify-end">
         {characters <= maxChars ? (
           <p>
             {characters}/{maxChars} characters

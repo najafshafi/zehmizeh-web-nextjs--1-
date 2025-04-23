@@ -23,6 +23,9 @@ export default {
       fontFamily: {
         sans: ["Helvetica", "sans-serif"],
       },
+      boxShadow: {
+        "custom-lg": "0px 4px 74px rgba(0, 0, 0, 0.08)",
+      },
     },
   },
   plugins: [],

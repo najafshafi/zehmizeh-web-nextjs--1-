@@ -3,12 +3,12 @@
  */
 
 "use client";
-import { useState } from 'react';
-import styled from 'styled-components';
-import Tabs from '@/components/ui/Tabs';
-import InviteReceived from './InviteReceived';
-import SubmittedProposals from './SubmittedProposals';
-import ArchivedProposals from './ArchivedProposals';
+import { useState } from "react";
+import styled from "styled-components";
+import Tabs from "@/components/ui/Tabs";
+import InviteReceived from "./InviteReceived";
+import SubmittedProposals from "./SubmittedProposals";
+import ArchivedProposals from "./ArchivedProposals";
 
 const Wrapper = styled.div`
   border-radius: 0.75rem;
@@ -31,13 +31,13 @@ const Wrapper = styled.div`
 `;
 
 const TABS = [
-  { id: 1, label: 'Project Invites', key: 'invites_received' },
-  { id: 2, label: 'Sent Proposals', key: 'submitted' },
-  { id: 3, label: 'Invite Archive', key: 'archived' },
+  { id: 1, label: "Project Invites", key: "invites_received" },
+  { id: 2, label: "Sent Proposals", key: "submitted" },
+  { id: 3, label: "Invite Archive", key: "archived" },
 ];
 
 const Proposals = () => {
-  const [activeTab, setActiveTab] = useState('invites_received');
+  const [activeTab, setActiveTab] = useState("invites_received");
   return (
     <Wrapper>
       <div className="stat-label text-2xl font-bold">Invites & Proposals</div>
@@ -51,9 +51,9 @@ const Proposals = () => {
         />
       </div>
       <div className="tabs-content">
-        {activeTab == 'invites_received' && <InviteReceived />}
-        {activeTab == 'submitted' && <SubmittedProposals />}
-        {activeTab == 'archived' && <ArchivedProposals />}
+        {activeTab == "invites_received" && <InviteReceived />}
+        {activeTab == "submitted" && <SubmittedProposals />}
+        {activeTab == "archived" && <ArchivedProposals />}
       </div>
     </Wrapper>
   );
