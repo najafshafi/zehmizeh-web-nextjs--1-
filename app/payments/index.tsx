@@ -1,5 +1,5 @@
-import Payments from './Payments';
-import { PaymentControllerProvider } from './PaymentController';
+import Payments from "./Payments";
+import { PaymentControllerProvider } from "./PaymentController";
 
 const PaymentsWrapper = () => {
   return (

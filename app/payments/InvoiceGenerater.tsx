@@ -18,43 +18,6 @@ import useStartPageFromTop from "@/helpers/hooks/useStartPageFromTop";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import CustomButton from "@/components/custombutton/CustomButton";
-const Wrapper = styled.div`
-  margin: 20px auto;
-  width: 800px;
-`;
-
-const InvoiceBody = styled.div`
-  padding: 1rem;
-  table {
-    width: 100%;
-    table-layout: fixed;
-  }
-  .summary-header {
-    background: #f2b420;
-    tr > td {
-      padding: 0.6rem 0.6rem 0.6rem 1rem;
-      text-transform: uppercase;
-      width: 100%;
-      text-align: center;
-    }
-  }
-  .invoice-content {
-    td {
-      padding: 1rem;
-      padding-bottom: 2rem;
-      text-align: center;
-    }
-  }
-  .total-content {
-    border-top: 1px solid #e9e7e7;
-  }
-  .total-inner {
-    td {
-      padding: 0.35rem;
-      font-size: 0.875rem;
-    }
-  }
-`;
 
 // Define types for milestone data
 type Milestone = {
@@ -165,9 +128,9 @@ function InvoiceGenerater() {
   if (isLoading) return <Loader />;
 
   return (
-    <Wrapper>
+    <div className="mx-auto my-5 w-[800px]">
       <BackButton className="mt-2  print:hidden" />
-      <InvoiceBody id="invoice">
+      <div className="p-4" id="invoice">
         <header className="flex justify-between mt-6">
           <div>
             <span className="capitalize">
@@ -222,26 +185,34 @@ function InvoiceGenerater() {
           </div>
         </section>
         <div className="summary mt-6">
-          <table className="w-full">
-            <thead className="summary-header">
+          <table className="w-full table-fixed">
+            <thead className="bg-[#f2b420]">
               <tr>
-                <td>Description</td>
-                <td>Project</td>
+                <td className="p-2.5 pl-4 uppercase text-center w-full">
+                  Description
+                </td>
+                <td className="p-2.5 pl-4 uppercase text-center w-full">
+                  Project
+                </td>
                 {/* <td>Rate</td> */}
-                <td>Line Total</td>
+                <td className="p-2.5 pl-4 uppercase text-center w-full">
+                  Line Total
+                </td>
               </tr>
             </thead>
             <tbody>
               {invoice?.milestone ? (
                 <tr className="invoice-content">
-                  <td className="capital-first-ltr">
+                  <td className="capital-first-ltr p-4 pb-8 text-center">
                     {invoice?.milestone.title}
                   </td>
-                  <td className="capital-first-ltr">
+                  <td className="capital-first-ltr p-4 pb-8 text-center">
                     {convertToTitleCase(invoice?.jobdata.job_title)}
                   </td>
                   {/* <td>{numberWithCommas(invoice?.amount, 'USD')}</td> */}
-                  <td>{numberWithCommas(feeBreakup?.subtotal, "USD")}</td>
+                  <td className="p-4 pb-8 text-center">
+                    {numberWithCommas(feeBreakup?.subtotal, "USD")}
+                  </td>
                 </tr>
               ) : (
                 <>
@@ -251,13 +222,13 @@ function InvoiceGenerater() {
                         className="invoice-content"
                         key={`milestone-${milestone.hourly_id}`}
                       >
-                        <td className="capital-first-ltr">
+                        <td className="capital-first-ltr p-4 pb-8 text-center">
                           {milestone?.title}
                         </td>
-                        <td className="capital-first-ltr">
+                        <td className="capital-first-ltr p-4 pb-8 text-center">
                           {convertToTitleCase(invoice?.jobdata.job_title)}
                         </td>
-                        <td>
+                        <td className="p-4 pb-8 text-center">
                           {numberWithCommas(
                             milestone?.total_amount || milestone?.amount || 0,
                             "USD"
@@ -268,19 +239,25 @@ function InvoiceGenerater() {
                 </>
               )}
 
-              <tr className="total-content">
-                <td colSpan={2}></td>
-                <td colSpan={2}>
-                  <table className="mt-6 w-full text-end total-inner">
+              <tr className="border-t border-[#e9e7e7]">
+                <td
+                  className="p-2.5 pl-4 uppercase text-center w-full"
+                  colSpan={2}
+                ></td>
+                <td
+                  className="p-2.5 pl-4 uppercase text-center w-full"
+                  colSpan={2}
+                >
+                  <table className="mt-6 w-full text-end table-fixed">
                     <tbody>
                       <tr>
-                        <td width={180}>
+                        <td className="p-1.5 text-sm" width={180}>
                           {invoice.payment_type !== "charge"
                             ? "Freelancer Original Price"
                             : "Subtotal"}
                           :
                         </td>
-                        <td>
+                        <td className="p-1.5 text-sm">
                           {/* <span className="uppercase">
                             {invoice?.currency}
                           </span>{' '} */}
@@ -288,13 +265,13 @@ function InvoiceGenerater() {
                         </td>
                       </tr>
                       <tr>
-                        <td width={150}>
+                        <td className="p-1.5 text-sm" width={150}>
                           ZehMizeh Fee ({feeBreakup.percentage}):
                         </td>
-                        <td>
+                        <td className="text-sm">
                           <span>
-                            {invoice.payment_type === "transfer" ? "-" : "+"}
-                          </span>{" "}
+                            {invoice.payment_type === "transfer" ? "-" : " + "}
+                          </span>
                           {numberWithCommas(feeBreakup.fee, "USD")}
                         </td>
                       </tr>
@@ -308,13 +285,21 @@ function InvoiceGenerater() {
                   borderTop: "1px solid #ccc",
                 }}
               >
-                <td colSpan={2}></td>
-                <td colSpan={2}>
-                  <table className="w-full text-end total-inner">
+                <td
+                  className="p-2.5 pl-4 uppercase text-center w-full"
+                  colSpan={2}
+                ></td>
+                <td
+                  className="p-2.5 pl-4 uppercase text-center w-full"
+                  colSpan={2}
+                >
+                  <table className="w-full text-end  table-fixed">
                     <tbody>
                       <tr>
-                        <td width={130}>Total:</td>
-                        <td className="text-base">
+                        <td className="p-1.5 text-sm" width={130}>
+                          Total:
+                        </td>
+                        <td className="text-base p-1.5 ">
                           <b>{numberWithCommas(invoice?.amount, "USD")}</b>
                         </td>
                       </tr>
@@ -325,7 +310,7 @@ function InvoiceGenerater() {
             </tbody>
           </table>
         </div>
-      </InvoiceBody>
+      </div>
       <div className="text-center flex gap-2 justify-center mt-10 print:hidden">
         {/* <StyledButton size="sm" onClick={exportPdf}>
           Download
@@ -343,7 +328,7 @@ function InvoiceGenerater() {
           onClick={() => window.print()}
         />
       </div>
-    </Wrapper>
+    </div>
   );
 }
 

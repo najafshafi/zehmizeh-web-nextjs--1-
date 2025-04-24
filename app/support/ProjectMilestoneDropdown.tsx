@@ -3,7 +3,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { DropdownWrapper } from "./support.styled";
+
 import Loader from "@/components/Loader";
 import { manageMilestone } from "@/helpers/http/jobs";
 import ArrowDown from "@/public/icons/chevronDown.svg";
@@ -57,11 +57,11 @@ const ProjectMilestoneDropdown = ({
   };
 
   return (
-    <DropdownWrapper className="mt-1 md:min-w-[720px]">
+    <div className="mt-1 md:min-w-[720px]">
       <div>
         {/* Dropdown button */}
         <div
-          className="dropdown-button flex justify-between items-center cursor-pointer"
+          className="p-4 px-5 border border-[#dddddd] rounded-[7px] flex justify-between items-center cursor-pointer"
           onClick={toggleDropdownOptions}
         >
           <div className="capital-first-ltr">
@@ -73,13 +73,13 @@ const ProjectMilestoneDropdown = ({
 
       {/* Milestone Dropdown options */}
       {showDropdownOptions && (
-        <div className="dropdown-options flex flex-col gap-3">
+        <div className="mt-3 bg-white max-h-[250px] overflow-y-auto shadow-[0_4px_19px_rgba(0,0,0,0.13)] rounded-lg p-6 flex flex-col gap-3">
           {isLoading ? (
             <Loader height={250} />
           ) : milestones?.length > 0 ? (
             milestones.map((item: any) => (
               <div
-                className="option pointer"
+                className="border border-[#d9d9d9] p-6 rounded-lg hover:bg-gray-200 cursor-pointer"
                 // If it is milestone then key will be milestone_id else hourly_id
                 key={item?.milestone_id || item?.hourly_id}
                 onClick={onSelect(item)}
@@ -103,7 +103,7 @@ const ProjectMilestoneDropdown = ({
           )}
         </div>
       )}
-    </DropdownWrapper>
+    </div>
   );
 };
 

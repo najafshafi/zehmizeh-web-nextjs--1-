@@ -5,7 +5,6 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Wrapper } from "./support.styled";
 import DisputeForm from "./DisputeForm";
 import GeneralInquiryForm from "./GeneralInquiryForm";
 import Tabs from "@/components/ui/Tabs";
@@ -43,10 +42,10 @@ const Support = () => {
 
   return (
     <div className="h-full flex-1 my-4">
-      <Wrapper>
+      <div className="max-w-[770px] mx-auto">
         <div className="content">
           {/* Title */}
-          <h1 className="page-title text-center font-normal">
+          <h1 className="text-[2.25rem] text-center font-normal">
             Customer Support
           </h1>
 
@@ -71,12 +70,12 @@ const Support = () => {
         {/* Dispute button */}
         {activeTab === "submit_dispute" && (
           <Link href="/disputes">
-            <div className="view-dispute-btn text-center pointer text-base font-normal">
+            <div className="my-8 bg-white shadow-[0_4px_74px_rgba(0,0,0,0.04)] p-7 rounded-[1.25rem] text-center pointer text-base font-normal">
               Open Dispute History
             </div>
           </Link>
         )}
-      </Wrapper>
+      </div>
     </div>
   );
 };
