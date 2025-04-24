@@ -7,26 +7,8 @@ import { StyledButton } from "@/components/forms/Buttons";
 import GradientText from "@/components/styled/GradientText";
 import { Card } from "@/components/styled/Auth.styled";
 import CheckMark from "@/public/icons/check-mark.svg";
-import logo from "@/public/icons/logo.svg";
-import Image from "next/image";
+import Logo from "@/public/zehmizeh-logo.svg";
 import CustomButton from "@/components/custombutton/CustomButton";
-
-const Wrapper = styled.div`
-  height: 100vh;
-  .success-icon {
-    background: #34a853;
-    box-shadow: 0px 13px 26px -4px rgba(52, 168, 83, 0.31);
-    width: 104px;
-    height: 104px;
-    border-radius: 50%;
-    display: inlinflex;
-    justent: center;
-    align-items: center;
-  }
-  h2 {
-    opacity: 1;
-  }
-`;
 
 export default function Terms() {
   const [isAccepted, setIsAccepted] = React.useState(true);
@@ -44,13 +26,13 @@ export default function Terms() {
 
   if (isAccepted) {
     return (
-      <Wrapper className="flex justify-center items-center">
+      <div className="flex justify-center items-center h-[100vh]">
         <Card small={true}>
           <div className="text-center flex flex-col items-center">
-            <span className="flex justify-center items-center success-icon">
+            <span className="flex justify-center items-center  bg-[#34a853] w-28 h-28 rounded-full mb-2 box-shadow: 0px 13px 26px -4px rgba(52, 168, 83, 0.31) ">
               <CheckMark className="" />
             </span>
-            <h2 className="mt-4">
+            <h2 className="mt-10 opacity-100 text-black">
               Mazal tov - your account has been created successfully!
             </h2>
             <Link href="/complete-profile" className="block">
@@ -69,15 +51,15 @@ export default function Terms() {
             </Link>
           </div>
         </Card>
-      </Wrapper>
+      </div>
     );
   }
 
   return (
-    <Wrapper className="flex justify-center items-center">
+    <div className="flex justify-center items-center h-[100vh]">
       <Card small={true}>
         <div className="logo">
-          <Image src={logo} alt="logo" width={70} height={70} />
+          <Logo className="w-20 h-20" />
         </div>
         <h1>Accept Terms</h1>
         <p className="terms-description">
@@ -86,20 +68,20 @@ export default function Terms() {
           ZehMizeh platform to acquire a freelancer whom you found on the
           platform.
         </p>
-        <footer className="flex justify-end gap-1 mt-4">
-          <StyledButton
-            padding="0 2rem"
-            variant="outline-primary"
-            height={56}
+        <footer className="flex justify-end gap-4 mt-4">
+          <CustomButton
+            text={"Leave Platform"}
+            className="px-[2rem] py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full hover:bg-black hover:text-white text-[18px] border border-black"
             onClick={onLeave}
-          >
-            Leave Platform
-          </StyledButton>
-          <StyledButton padding="0 2rem" height={56} onClick={onAccept}>
-            Accept
-          </StyledButton>
+          />
+
+          <CustomButton
+            text={"Accept"}
+            className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] "
+            onClick={onAccept}
+          />
         </footer>
       </Card>
-    </Wrapper>
+    </div>
   );
 }
