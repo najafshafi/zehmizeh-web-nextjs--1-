@@ -10,7 +10,6 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import CustomUploader from "@/components/ui/CustomUploader";
 import { StyledButton } from "@/components/forms/Buttons";
 import ErrorMessage from "@/components/ui/ErrorMessage";
-import { FormWrapper } from "./support.styled";
 import useResponsive from "@/helpers/hooks/useResponsive";
 import { validateGeneralInquiryForm } from "@/helpers/validation/common";
 import { getPlainText, getYupErrors } from "@/helpers/utils/misc";
@@ -142,7 +141,7 @@ const GeneralInquiryForm = () => {
   }, [description]);
 
   return (
-    <FormWrapper>
+    <div className="bg-white p-6 rounded-[1.25rem] shadow-[0_4px_74px_rgba(0,0,0,0.04)] md:p-8">
       <h4 className="text-center mb-3">Submit Inquiry</h4>
       {/* Subject input */}
       <label className="text-base font-normal">
@@ -150,13 +149,13 @@ const GeneralInquiryForm = () => {
         staff. You can also see if your question is already answered in our Help
         Center by checking the yellow icon in the bottom-right corner.
       </label>
-      <div className="form-group">
+      <div className="mt-4">
         <FormLabel className="text-base font-normal">
           Subject<span className="mandatory">&nbsp;*</span>
         </FormLabel>
         <Form.Control
           placeholder="Enter subject"
-          className="form-input"
+          className="rounded-[7px] p-4 px-5"
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
           maxLength={100}
@@ -167,7 +166,7 @@ const GeneralInquiryForm = () => {
       </div>
 
       {/* Description - CK Editor */}
-      <div className="form-group">
+      <div className="mt-4">
         <FormLabel className="text-base font-normal">
           Description<span className="mandatory">&nbsp;*</span>
         </FormLabel>
@@ -202,7 +201,7 @@ const GeneralInquiryForm = () => {
       </div>
 
       {/* File Uploader */}
-      <div className="form-group">
+      <div className="mt-4">
         <CustomUploader
           handleUploadImage={handleUploadImage}
           attachments={attachments}
@@ -211,7 +210,7 @@ const GeneralInquiryForm = () => {
       </div>
 
       {/* Submit button */}
-      <div className="form-group flex justify-end">
+      <div className="mt-4 flex justify-end">
         <StyledButton
           variant="primary"
           padding="0.875rem 1.875rem"
@@ -222,7 +221,7 @@ const GeneralInquiryForm = () => {
           Submit
         </StyledButton>
       </div>
-    </FormWrapper>
+    </div>
   );
 };
 

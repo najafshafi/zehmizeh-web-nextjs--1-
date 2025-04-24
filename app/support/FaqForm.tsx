@@ -1,4 +1,3 @@
-import { FormWrapper } from "./support.styled";
 import { usePathname, useRouter } from "next/navigation";
 import { FAQ_QUESTIONS } from "@/helpers/const/faqQuestions";
 import BackButton from "@/components/ui/BackButton";
@@ -133,7 +132,7 @@ const FaqForm = () => {
 
   if (user.user_type === "freelancer")
     return (
-      <FormWrapper>
+      <div className="bg-white p-6 rounded-[1.25rem] shadow-[0_4px_74px_rgba(0,0,0,0.04)] md:p-8">
         <h4 className="text-center mb-3 text-2xl font-semibold">
           Frequently Asked Questions
         </h4>
@@ -157,11 +156,11 @@ const FaqForm = () => {
             </div>
           </div>
         </div>
-      </FormWrapper>
+      </div>
     );
 
   return (
-    <FormWrapper>
+    <div className="bg-white p-6 rounded-[1.25rem] shadow-[0_4px_74px_rgba(0,0,0,0.04)] md:p-8">
       <h4 className="text-center mb-3 text-2xl font-semibold">
         Frequently Asked Questions
       </h4>
@@ -182,7 +181,7 @@ const FaqForm = () => {
           />
         </div>
       </div>
-    </FormWrapper>
+    </div>
   );
 };
 

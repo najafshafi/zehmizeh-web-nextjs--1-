@@ -4,7 +4,6 @@
 "use client";
 import { useState, useCallback } from "react";
 import moment from "moment";
-import { Wrapper, DisputeListItem } from "./disputes.styled";
 import Loader from "@/components/Loader";
 import BackButton from "@/components/ui/BackButton";
 import { StatusBadge, StatusColor } from "@/components/styled/Badges";
@@ -116,21 +115,25 @@ const Disputes = () => {
       DISPUTE_STATUSES[item?.dispute_status]?.label || "Unknown";
 
     return (
-      <DisputeListItem
+      <div
         key={item?.dispute_id}
-        className="flex justify-between flex-wrap gap-3 cursor-pointer"
+        className="flex justify-between flex-wrap gap-3 cursor-pointer p-8 mt-8 rounded-[0.875rem] bg-white shadow-[0_4px_52px_rgba(0,0,0,0.08)] transition-all duration-300"
         onClick={showDisputeDetails(item?.dispute_id)}
       >
-        <div className="dispute-content">
-          <div className="flex dispute-row flex-wrap">
-            <div className="label text-xl font-normal">Project Name:</div>
-            <div className="value text-xl font-normal">
+        <div className="max-w-[70%]">
+          <div className="flex  md:flex-nowrap flex-wrap">
+            <div className="opacity-50 min-w-[140px] mr-2 break-words text-xl font-normal">
+              Project Name:
+            </div>
+            <div className="break-words text-xl font-normal">
               {convertToTitleCase(item?.job_title)}
             </div>
           </div>
-          <div className="flex mt-2 dispute-row flex-wrap">
-            <div className="label text-xl font-normal">Milestone:</div>
-            <div className="value text-xl font-normal">
+          <div className="flex mt-2  md:flex-nowrap flex-wrap">
+            <div className="opacity-50 min-w-[140px] mr-2 break-words text-xl font-normal">
+              Milestone:
+            </div>
+            <div className="break-words text-xl font-normal">
               <StyledHtmlText
                 htmlString={item?.milestone?.title || ""}
                 id={`dispute_${item?.milestone?.title}`}
@@ -138,9 +141,11 @@ const Disputes = () => {
               />
             </div>
           </div>
-          <div className="flex mt-2 dispute-row flex-wrap">
-            <div className="label text-xl font-normal">Reason:</div>
-            <div className="value text-xl font-normal">
+          <div className="flex mt-2  md:flex-nowrap flex-wrap">
+            <div className="opacity-50 min-w-[140px] mr-2 break-words text-xl font-normal">
+              Reason:
+            </div>
+            <div className="break-words text-xl font-normal">
               <StyledHtmlText
                 htmlString={item?.description || ""}
                 id={`dispute_${item.dispute_id}`}
@@ -148,9 +153,11 @@ const Disputes = () => {
               />
             </div>
           </div>
-          <div className="flex mt-2 dispute-row flex-wrap">
-            <div className="label text-xl font-normal">Submitted By:</div>
-            <div className="value text-xl font-normal capitalize">
+          <div className="flex mt-2  md:flex-nowrap flex-wrap">
+            <div className="opacity-50 min-w-[140px] mr-2 break-words text-xl font-normal">
+              Submitted By:
+            </div>
+            <div className="break-words text-xl font-normal capitalize">
               {submittedBy}
             </div>
           </div>
@@ -158,18 +165,18 @@ const Disputes = () => {
 
         <div className="flex flex-col items-end">
           <StatusBadge color={statusColor}>{statusLabel}</StatusBadge>
-          <div className="created-date text-xl font-normal mt-4">
+          <div className="opacity-50 text-xl font-normal mt-4">
             Submitted On:{" "}
             {item.date_created &&
               moment(item.date_created).format("MMM DD, YYYY")}
           </div>
-          <div className="created-date text-xl font-normal mt-2">
+          <div className="opacity-50 text-xl font-normal mt-2">
             Closed On:{" "}
             {item.date_modified &&
               moment(item.date_modified).format("MMM DD, YYYY")}
           </div>
         </div>
-      </DisputeListItem>
+      </div>
     );
   };
 
@@ -201,12 +208,12 @@ const Disputes = () => {
 
   return (
     <div className="h-full min-w-[1170px] mt-10">
-      <Wrapper>
+      <div className="max-w-[1170px] mx-auto mb-[100px]">
         {/* Back button */}
         <BackButton />
 
         {/* Page Title */}
-        <h1 className="title text-center font-normal">Dispute History</h1>
+        <h1 className="text-[3.25rem] mb-7 text-center font-normal">Dispute History</h1>
 
         {renderContent()}
 
@@ -215,7 +222,7 @@ const Disputes = () => {
           dispute_id={detailsModalState.disputeId}
           onCloseModal={onCloseDetailsModal}
         />
-      </Wrapper>
+      </div>
     </div>
   );
 };

@@ -10,7 +10,6 @@ import CustomUploader from "@/components/ui/CustomUploader";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import ProjectDropdown from "./ProjectDropdown";
 import ProjectMilestoneDropdown from "./ProjectMilestoneDropdown";
-import { FormWrapper } from "./support.styled";
 import { validateDispute } from "@/helpers/validation/common";
 import { getPlainText, getYupErrors } from "@/helpers/utils/misc";
 import { manageDispute } from "@/helpers/http/dispute";
@@ -207,11 +206,11 @@ const DisputeForm = () => {
   }, [description]);
 
   return (
-    <FormWrapper>
+    <div className="bg-white p-6 rounded-[1.25rem] shadow-[0_4px_74px_rgba(0,0,0,0.04)] md:p-8">
       <h4 className="text-center mb-3 text-2xl font-semibold">
         Submit Dispute
       </h4>
-      <div className="form-group">
+      <div className="mt-4">
         <FormLabel className="text-base font-normal">
           Select Project<span className="mandatory text-red-500">&nbsp;*</span>
         </FormLabel>
@@ -227,7 +226,7 @@ const DisputeForm = () => {
         )}
       </div>
 
-      <div className="form-group">
+      <div className="mt-4">
         <FormLabel className="text-base font-normal">
           Select Milestone/Hours Submission
           <span className="mandatory text-red-500">&nbsp;*</span>
@@ -246,7 +245,7 @@ const DisputeForm = () => {
       </div>
 
       {/* Description CK Editor */}
-      <div className="form-group">
+      <div className="mt-4">
         <div className="mb-2">
           <FormLabel className="text-base font-normal ">
             Explain the reasons behind your dispute. Include all relevant
@@ -284,7 +283,7 @@ const DisputeForm = () => {
 
       {/* File Uploader */}
 
-      <div className="form-group">
+      <div className="mt-4">
         <CustomUploader
           handleUploadImage={handleUploadImage}
           attachments={attachments}
@@ -293,7 +292,7 @@ const DisputeForm = () => {
       </div>
 
       {/* Submit button */}
-      <div className="form-group flex justify-end">
+      <div className="mt-4 flex justify-end">
         <CustomButton
           className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
           onClick={validate}
@@ -301,7 +300,7 @@ const DisputeForm = () => {
           text="Submit"
         />
       </div>
-    </FormWrapper>
+    </div>
   );
 };
 

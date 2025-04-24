@@ -209,7 +209,7 @@ const ClientJobs = () => {
       </PageTitle>
 
       <form onSubmit={handleSubmit} className="" ref={ref}>
-        <div className="w-full md:max-w-[570px] mx-auto bg-white shadow-[0px_6px_29px_rgba(155,155,155,0.09)] relative h-[72px]  mb-6 mt-8 rounded-lg md:left-0 md:w-full md:mt-6 ">
+        <div className="relative bg-white h-[72px] w-full mt-6 mb-6 rounded-lg shadow-[0_6px_29px_rgba(155,155,155,0.09)] md:w-1/2 md:mx-auto md:mt-8 md:mb-12">
           <JobAutoCompleteSearch
             jobs={jobs?.pages}
             filteredJobs={filteredJobs}
