@@ -1,5 +1,4 @@
 import { useQuery } from "react-query";
-import { DisputeDetailsWrapper } from "./disputes.styled";
 import Loader from "@/components/Loader";
 import StyledHtmlText from "@/components/ui/StyledHtmlText";
 import { StatusBadge } from "@/components/styled/Badges";
@@ -72,12 +71,12 @@ const DisputeDetails = ({ show, onCloseModal, dispute_id }: Props) => {
 
       <div
         ref={modalRef}
-        className="relative mx-auto max-w-[604px] w-full bg-white rounded-lg shadow-xl overflow-hidden z-10 px-4"
+        className="relative mx-auto max-w-[604px] w-full bg-white rounded-lg shadow-xl  z-10 px-4"
         style={{ maxWidth: "604px" }}
       >
         <div className="p-6">
           <button
-            className="absolute top-4 right-4 text-3xl font-bold text-gray-500 hover:text-gray-700 transition-colors"
+            className="absolute -top-4 -right-8 text-3xl text-white "
             onClick={onCloseModal}
           >
             &times;
@@ -86,16 +85,16 @@ const DisputeDetails = ({ show, onCloseModal, dispute_id }: Props) => {
           {(isLoading || isRefetching) && <Loader />}
 
           {!isLoading && !isRefetching && data && (
-            <DisputeDetailsWrapper className="flex flex-col">
+            <div className="flex flex-col gap-8">
               {/* Title | Subtitle and type of support request */}
               <div className="support-header flex gap-3 justify-between items-center">
-                <div className="heading-title">
+                <div className=" max-w-[80%]">
                   <div className="text-2xl font-bold">
                     {data?.subject ||
                       convertToTitleCase(data?.jobdata?.job_title)}
                   </div>
                   {data?.dispute_id && (
-                    <div className="text-xl font-normal mt-2 light-black">
+                    <div className="text-xl font-normal mt-2 text-[#333333]">
                       {convertToTitleCase(data?.milestone?.title)}
                     </div>
                   )}
@@ -114,9 +113,9 @@ const DisputeDetails = ({ show, onCloseModal, dispute_id }: Props) => {
               </div>
 
               {/* Submitted by */}
-              <div className="support-request--by p-4">
+              <div className="bg-[#f5f5f5] rounded-[9px]  p-4">
                 <div className="flex items-center justify-between">
-                  <div className="light-black light-text text-sm font-normal">
+                  <div className="text-[#333333]  opacity-70 text-sm font-normal">
                     Dispute Submitted By:
                   </div>
                   {data?.dispute_status == "closed" &&
@@ -125,7 +124,7 @@ const DisputeDetails = ({ show, onCloseModal, dispute_id }: Props) => {
                 </div>
                 <div className="mt-3 flex items-center gap-2">
                   <Image
-                    className="support-request--avatar"
+                    className="h-[38px] w-[38px] rounded-full object-cover"
                     src={
                       data?.submitted_by === "CLIENT"
                         ? data?.clientdata?.user_image ||
@@ -143,7 +142,7 @@ const DisputeDetails = ({ show, onCloseModal, dispute_id }: Props) => {
                       target.src = "/images/_default_avatar.png";
                     }}
                   />
-                  <div className="text-sm font-normal light-black capitalize">
+                  <div className="text-sm font-normal text-[#333333] capitalize">
                     {data?.submitted_by === "CLIENT"
                       ? `${data?.clientdata?.first_name} ${data?.clientdata?.last_name} (${data?.clientdata?.user_type})`
                       : `${data?.userdata?.first_name} ${data?.userdata?.last_name} (${data?.userdata?.user_type})`}
@@ -152,7 +151,7 @@ const DisputeDetails = ({ show, onCloseModal, dispute_id }: Props) => {
               </div>
 
               {/* Support request description */}
-              <div className="capital-first-ltr text-sm font-normal light-black light-text">
+              <div className="capital-first-ltr text-sm font-normal text-[#333333]  opacity-70">
                 {dispute_id && (
                   <StyledHtmlText
                     htmlString={data?.description}
@@ -164,9 +163,9 @@ const DisputeDetails = ({ show, onCloseModal, dispute_id }: Props) => {
 
               {/* If dispute - Project owner */}
               {data?.dispute_id && (
-                <div className="project-owner-details p-4">
+                <div className="bg-[#f8f8f8] rounded-[9px] p-4">
                   <div className="flex items-center justify-between">
-                    <div className="light-black light-text text-sm font-normal">
+                    <div className="text-[#333333]  opacity-70 text-sm font-normal">
                       Receiver of Dispute
                     </div>
                     {data?.dispute_status == "closed" &&
@@ -175,7 +174,7 @@ const DisputeDetails = ({ show, onCloseModal, dispute_id }: Props) => {
                   </div>
                   <div className="mt-3 flex items-center gap-2">
                     <Image
-                      className="support-request--avatar"
+                      className="h-[38px] w-[38px] rounded-full object-cover"
                       src={
                         data?.submitted_by === "FREELANCER"
                           ? data?.clientdata?.user_image ||
@@ -193,7 +192,7 @@ const DisputeDetails = ({ show, onCloseModal, dispute_id }: Props) => {
                         target.src = "/images/_default_avatar.png";
                       }}
                     />
-                    <div className="text-sm font-normal light-black capitalize">
+                    <div className="text-sm font-normal text-[#333333] capitalize">
                       {data?.submitted_by === "FREELANCER"
                         ? `${data?.clientdata?.first_name} ${data?.clientdata?.last_name} (${data?.clientdata?.user_type})`
                         : `${data?.userdata?.first_name} ${data?.userdata?.last_name} (${data?.userdata?.user_type})`}
@@ -203,7 +202,7 @@ const DisputeDetails = ({ show, onCloseModal, dispute_id }: Props) => {
               )}
 
               {/* Support request attachment */}
-              <div className="support-attachment flex items-center gap-3">
+              <div className=" bg-[#f8f8f8] border border-[#d9d9d9] py-3 px-5 rounded-lg flex items-center gap-3">
                 <div className="text-sm font-light">Attachment:</div>
                 {data?.attachment_file ? (
                   <AttachmentPreview
@@ -225,7 +224,7 @@ const DisputeDetails = ({ show, onCloseModal, dispute_id }: Props) => {
                     </div>
                   </div>
                 )}
-            </DisputeDetailsWrapper>
+            </div>
           )}
         </div>
       </div>
