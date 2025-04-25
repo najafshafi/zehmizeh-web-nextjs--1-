@@ -16,36 +16,6 @@ import Image from "next/image";
 import CustomButton from "@/components/custombutton/CustomButton";
 import Spinner from "@/components/forms/Spin/Spinner";
 
-const MobileWrapper = styled.div`
-  display: flex;
-  background: white;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  .logo {
-    margin-top: 2rem;
-  }
-  .h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-top: 1.5rem;
-    text-align: center;
-  }
-  .h2 {
-    margin-top: 0.2rem;
-    font-weight: 300;
-    font-size: 1.5rem;
-    line-height: 140%;
-    opacity: 0.63;
-    text-align: center;
-  }
-  .h4 {
-    font-weight: 300;
-    font-size: 1.25rem;
-    line-height: 140%;
-    margin-bottom: 2rem;
-  }
-`;
 
 const OtpInputWrapper = styled.div`
   display: flex;
@@ -146,16 +116,18 @@ export default function TwoFactor() {
 
   return isMobile ? (
     <div className="mt-4 flex p-2">
-      <MobileWrapper>
+      <div className="flex flex-col items-center gap-4 bg-white">
         <Image
-          className="logo"
+          className="mt-8"
           src="/zehmizeh-logo.svg"
           alt="logo"
           width={70}
           height={70}
         />
-        <h1 className="h1">Two-Factor Authentication</h1>
-        <h2 className="h3 px-1 text-2xl font-medium">
+        <h1 className=" text-3xl font-bold mt-6 text-center">
+          Two-Factor Authentication
+        </h1>
+        <h2 className="mt-1 leading-[140%] opacity-60 text-center px-1 text-2xl font-medium">
           We've sent a 6-digit code to{" "}
           <strong>{user?.email_id || "your email address"}</strong>. If this
           email address is incorrect, you can update it by clicking{" "}
@@ -209,14 +181,14 @@ export default function TwoFactor() {
           />
 
           {timer > 0 ? (
-            <h4 className="h4 mt-5 flex items-center justify-center">
+            <h4 className="font-light text-xl leading-[140%] mb-8 mt-5 flex items-center justify-center">
               You can resend a new OTP in&nbsp;
               <span className="font-bold">
                 00:{timer > 9 ? timer : `0${timer}`}
               </span>
             </h4>
           ) : (
-            <h4 className="h4 mt-4 flex items-center justify-center gap-1">
+            <h4 className="font-light text-xl leading-[140%] mb-8 mt-4 flex items-center justify-center gap-1">
               Didn't receive your code?{" "}
               <StyledButton
                 onClick={onResend}
@@ -232,7 +204,7 @@ export default function TwoFactor() {
             </h4>
           )}
         </form>
-      </MobileWrapper>
+      </div>
     </div>
   ) : (
     <AuthLayout center>

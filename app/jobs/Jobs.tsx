@@ -6,7 +6,6 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import cns from "classnames";
-import { Wrapper } from "./jobs.styled";
 import Loader from "@/components/Loader";
 import Tabs from "@/components/ui/Tabs";
 import NoDataFound from "@/components/ui/NoDataFound";
@@ -164,11 +163,15 @@ const Jobs = () => {
   }, [jobs?.pages]);
 
   return (
-    <Wrapper className="w-full">
+    <div className="w-full py-[4.375rem] px-0 max-w-[1170px] mx-auto md:py-8 md:px-4">
       <PageTitle className="text-center">
         {user?.first_name}&apos;s Projects
       </PageTitle>
-      <form onSubmit={handleSubmit} className="project-filter " ref={ref}>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white relative h-[72px] w-full mt-6 mb-8 rounded-lg shadow-[0_6px_29px_rgba(155,155,155,0.09)] md:w-1/2 md:mx-auto md:mt-8 md:mb-12 "
+        ref={ref}
+      >
         <JobAutoCompleteSearch
           jobs={jobs?.pages}
           filteredJobs={filteredJobs}
@@ -217,7 +220,7 @@ const Jobs = () => {
           />
         </div>
       )}
-    </Wrapper>
+    </div>
   );
 };
 
