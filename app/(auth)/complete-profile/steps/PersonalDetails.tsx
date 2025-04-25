@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
-import { StyledFormGroup, FormWrapper } from "./steps.styled";
+
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import { getYupErrors } from "@/helpers/utils/misc";
 import EditPictureModal from "@/components/ui/EditPictureModal";
@@ -130,15 +130,15 @@ const PersonalDetails = ({
           </div>
           <div className="flex justify-center">
             <div
-              className="profile__img pointer"
+              className="relative h-[9.5625rem] w-[9.5625rem] rounded-full border border-[#DDDDDD] cursor-pointer"
               onClick={() => setShowEditPictureModal((prev) => !prev)}
             >
               <img
-                className="img"
+                className="img h-full w-full rounded-full object-cover"
                 src={formState?.user_image || "/images/default_avatar.png"}
                 alt="freelancer-profile"
               />
-              <div className="edit-picture-btn flex items-center justify-center">
+              <div className="absolute bg-[#f7faff] h-10 w-10 rounded-full bottom-0 right-0 transition-all duration-300 flex items-center justify-center">
                 <EditBlueIcon />
               </div>
             </div>
@@ -159,7 +159,7 @@ const PersonalDetails = ({
       <>
         <Row>
           <Col>
-            <StyledFormGroup>
+            <div className="mt-5">
               <div className="fs-sm font-normal mb-2">
                 <b className="fs-18">
                   Headline
@@ -186,23 +186,23 @@ const PersonalDetails = ({
               </div>
               <Form.Control
                 placeholder="Add a tagline to introduce what you do professionally"
-                className="form-input w-full"
+                className="mt-1.5 p-4 px-5 rounded-[7px] border border-[#d9d9d9] w-full"
                 value={formState?.job_title || ""}
                 onChange={(e) => handleChange("job_title", e.target.value)}
                 maxLength={150}
               />
-              <div className="character-counter">
+              <div className="text-right text-[#f2b420] mt-2.5">
                 {150 - countCharactersWithoutSpaces(formState?.job_title)}/150
                 characters
               </div>
               {errors?.job_title && <ErrorMessage message={errors.job_title} />}
-            </StyledFormGroup>
+            </div>
           </Col>
         </Row>
 
         <Row>
           <Col>
-            <StyledFormGroup>
+            <div className="mt-5">
               <div className="fs-sm font-normal">
                 <b className="fs-18">Hourly Rate</b> (Optional)
                 <p className="fs-base mt-2 mb-0 text-justify text-gray-500">
@@ -212,10 +212,10 @@ const PersonalDetails = ({
                   section blank.
                 </p>
               </div>
-              <span className="input-symbol-euro">
+              <span className="relative text-[#606060]">
                 <Form.Control
                   placeholder="Enter your hourly rate"
-                  className="form-input rate-input w-full items-center flex justify-center text-black"
+                  className="mt-1.5 p-4 px-5 rounded-[7px] border border-[#d9d9d9] rate-input w-full items-center flex justify-center text-black pl-[1.625rem]"
                   value={
                     formState?.hourly_rate !== undefined
                       ? String(formState.hourly_rate)
@@ -230,11 +230,12 @@ const PersonalDetails = ({
                   }}
                   maxLength={3}
                 />
+                <span className="absolute top-[30%] left-4 ">$</span>
               </span>
               {errors?.hourly_rate && (
                 <ErrorMessage message={errors.hourly_rate} />
               )}
-            </StyledFormGroup>
+            </div>
           </Col>
         </Row>
       </>
@@ -243,7 +244,7 @@ const PersonalDetails = ({
   };
 
   return (
-    <FormWrapper className="flex flex-col">
+    <div className="flex flex-col gap-8">
       <Container className="mt-3 px-0">{UI()}</Container>
 
       {!client && (
@@ -261,7 +262,7 @@ const PersonalDetails = ({
           />
         </div>
       )}
-    </FormWrapper>
+    </div>
   );
 };
 
