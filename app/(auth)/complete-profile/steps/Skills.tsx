@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { FormWrapper } from "./steps.styled";
+
 import { IClientDetails } from "@/helpers/types/client.type";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 import { CategorySkillSelectModal } from "@/components/skills-form/CategorySelectModal";
@@ -61,15 +61,15 @@ const Skills = ({
   };
 
   return (
-    <FormWrapper className="flex flex-col">
+    <div className="flex flex-col gap-8">
       <CategorySkillSelectModal
         type="CATEGORY"
         label="Skill Categories"
-        labelClassName="fs-18 font-weight-bold"
+        labelClassName="fs-18 font-weight-bold ]"
         subText={{
           content:
             "When you think of the types of services you would like to offer on ZMZ, which of the categories listed below would they fall into? Select all that apply.",
-          className: "text-secondary",
+          className: "text-[#656565]",
         }}
         errorMessage={error.categories}
         formData={getCategories(categoryAndSkillData)}
@@ -93,7 +93,7 @@ const Skills = ({
         subText={{
           content:
             "Select the freelancing skills you would like to offer as a service on ZMZ.",
-          className: "text-secondary",
+          className: "text-[#656565]",
         }}
         errorMessage={error.skills}
         categories={getCategories(categoryAndSkillData)}
@@ -124,7 +124,7 @@ const Skills = ({
           onClick={() => handleUpdate()}
         />
       </div>
-    </FormWrapper>
+    </div>
   );
 };
 

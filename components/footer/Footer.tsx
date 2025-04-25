@@ -27,7 +27,7 @@ const Footer = () => {
       <div className="border-t border-orangeYellow w-full    ">
         <div className="flex md:flex-row flex-col md:gap-0 gap-4 items-center justify-between  py-8">
           <div className="flex flex-row items-center justify-center sm:gap-6 gap-3 md:text-sm  text-xs">
-            <Link href={"/terms"} className="text-[#212529] ">
+            <Link href={"/terms-of-service"} className="text-[#212529] ">
               Terms of Service
             </Link>
             <Link

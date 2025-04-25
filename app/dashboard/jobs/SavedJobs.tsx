@@ -2,25 +2,25 @@
  * This component serves a list of SAVED JOBS
  */
 "use client";
-import { useState } from 'react';
-import moment from 'moment';
-import Spinner from '@/components/forms/Spin/Spinner';
-import Link from 'next/link';
-import { ProposalWrapper, BookmarkIcon, TabContent } from './jobs.styled';
-import Loader from '@/components/Loader';
-import NoDataFound from '@/components/ui/NoDataFound';
-import useJobs from './use-jobs';
-import { toggleBookmarkPost } from '@/helpers/http/search';
-import { convertToTitleCase, numberWithCommas } from '@/helpers/utils/misc';
-import DollarCircleIcon from '@/public/icons/dollar-circle.svg';
-import LocationIcon from '@/public/icons/location-blue.svg';  
-import SavedIcon from '@/public/icons/saved.svg';
-import classNames from 'classnames';
-import { isProjectHiddenForFreelancer } from '@/helpers/utils/helper';
+import { useState } from "react";
+import moment from "moment";
+import Spinner from "@/components/forms/Spin/Spinner";
+import Link from "next/link";
+import { ProposalWrapper, BookmarkIcon, TabContent } from "./jobs.styled";
+import Loader from "@/components/Loader";
+import NoDataFound from "@/components/ui/NoDataFound";
+import useJobs from "./use-jobs";
+import { toggleBookmarkPost } from "@/helpers/http/search";
+import { convertToTitleCase, numberWithCommas } from "@/helpers/utils/misc";
+import DollarCircleIcon from "@/public/icons/dollar-circle.svg";
+import LocationIcon from "@/public/icons/location-blue.svg";
+import SavedIcon from "@/public/icons/saved.svg";
+import classNames from "classnames";
+import { isProjectHiddenForFreelancer } from "@/helpers/utils/helper";
 
 const SavedJobs = () => {
-  const { jobs, isLoading, isRefetching, refetch } = useJobs('saved');
-  const [loadingId, setLoadingId] = useState<string>('');
+  const { jobs, isLoading, isRefetching, refetch } = useJobs("saved");
+  const [loadingId, setLoadingId] = useState<string>("");
 
   const onBookmarkClick = (e: any, id: string) => {
     e.stopPropagation();
@@ -42,14 +42,14 @@ const SavedJobs = () => {
             <Link
               href={`/job-details/${item.job_post_id}/gen_details`}
               key={item.job_post_id}
-              className={classNames('no-hover-effect', {
-                'pe-none': isProjectHiddenForFreelancer(item),
-                'pe-auto': !isProjectHiddenForFreelancer(item),
+              className={classNames("no-hover-effect", {
+                "pe-none": isProjectHiddenForFreelancer(item),
+                "pe-auto": !isProjectHiddenForFreelancer(item),
               })}
             >
-              <ProposalWrapper className="mt-3 flex cursor-pointer gap-2 justify-between no-hover-effect">
+              <ProposalWrapper className="mt-3 flex cursor-pointer gap-2 justify-between no-hover-effect text-black">
                 <div className="saved-job--content flex flex-col">
-                  <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center justify-between flex-wrap gap-2 ">
                     <div className="job-title text-lg font-normal">
                       {convertToTitleCase(item.job_title)}
                     </div>
@@ -61,18 +61,18 @@ const SavedJobs = () => {
                     <div className="proposal__budget flex items-center justify-center flex-wrap">
                       <DollarCircleIcon />
                       <div className="proposal__budget-value flex">
-                        {item.budget.type === 'fixed' ? (
-                          numberWithCommas(item.budget?.amount, 'USD')
+                        {item.budget.type === "fixed" ? (
+                          numberWithCommas(item.budget?.amount, "USD")
                         ) : (
                           <>
-                            {numberWithCommas(item?.budget?.max_amount, 'USD')}
+                            {numberWithCommas(item?.budget?.max_amount, "USD")}
                             <span className="light-text">/hr</span>&nbsp;
                             {/* -&nbsp;{numberWithCommas(item?.budget?.max_amount, 'USD')}
                           <span className="light-text">/hr</span> */}
                           </>
                         )}
                       </div>
-                      {item?.budget?.type === 'fixed' && (
+                      {item?.budget?.type === "fixed" && (
                         <span className="light-text ms-2">Budget</span>
                       )}
                     </div>
@@ -84,20 +84,20 @@ const SavedJobs = () => {
                         <div className="proposal__budget flex items-center justify-center flex-wrap">
                           <LocationIcon />
                           <div className="text-sm font-normal mx-1">
-                            {item.preferred_location.join(', ')}
+                            {item.preferred_location.join(", ")}
                           </div>
                         </div>
                       )}
                   </div>
 
                   <div className="text-sm font-normal applied-date light-text">
-                    Posted on{' '}
-                    {moment(item?.date_created).format('MMM DD, YYYY')}
+                    Posted on{" "}
+                    {moment(item?.date_created).format("MMM DD, YYYY")}
                   </div>
                   {isHidden && (
                     <span className="text-danger">
-                      Client has hidden this post -{' '}
-                      {moment(item?.is_hidden?.date).format('MMM DD, YYYY')}
+                      Client has hidden this post -{" "}
+                      {moment(item?.is_hidden?.date).format("MMM DD, YYYY")}
                     </span>
                   )}
                 </div>
@@ -105,11 +105,7 @@ const SavedJobs = () => {
                   className="flex justify-center items-center cursor-pointer"
                   onClick={(e) => onBookmarkClick(e, item?.job_post_id)}
                 >
-                  {loadingId == item?.job_post_id ? (
-                    <Spinner  />
-                  ) : (
-                    <SavedIcon />
-                  )}
+                  {loadingId == item?.job_post_id ? <Spinner /> : <SavedIcon />}
                 </BookmarkIcon>
               </ProposalWrapper>
             </Link>

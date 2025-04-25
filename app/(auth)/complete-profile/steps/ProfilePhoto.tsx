@@ -1,10 +1,8 @@
 "use client";
 import { useCallback, useState } from "react";
-import { FormWrapper } from "./steps.styled";
 import { Container } from "react-bootstrap";
 import EditPictureModal from "@/components/ui/EditPictureModal";
 import EditBlueIcon from "@/public/icons/edit-blue-outline.svg";
-import { StyledButton } from "@/components/forms/Buttons";
 import { IClientDetails } from "@/helpers/types/client.type";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 import Image from "next/image";
@@ -42,7 +40,7 @@ export const ProfilePhoto = ({
   };
 
   return (
-    <FormWrapper className="flex flex-col">
+    <div className="flex flex-col gap-8">
       <Container className="mt-3 px-0 flex flex-col">
         <div className="fs-sm font-normal mb-3">
           <b className="fs-18">Profile Pic</b> (Optional)
@@ -54,17 +52,17 @@ export const ProfilePhoto = ({
         </div>
 
         <div
-          className="profile__img pointer flex justify-center self-center my-3"
+          className="relative h-[9.5625rem] w-[9.5625rem] rounded-full border border-[#DDDDDD] pointer flex justify-center self-center my-3"
           onClick={() => setShowEditPictureModal((prev) => !prev)}
         >
           <Image
-            className="img"
+            className="h-full w-full rounded-full object-cover"
             src={formState?.user_image || "/images/default_avatar.png"}
             alt="freelancer-profile"
             width={100}
             height={100}
           />
-          <div className="edit-picture-btn flex items-center justify-center">
+          <div className="absolute bg-[#f7faff] h-10 w-10 rounded-full bottom-0 right-0 transition-all duration-300 flex items-center justify-center cursor-pointer">
             <EditBlueIcon />
           </div>
         </div>
@@ -90,6 +88,6 @@ export const ProfilePhoto = ({
           onClick={() => onUpdate(formState)}
         />
       </div>
-    </FormWrapper>
+    </div>
   );
 };

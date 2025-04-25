@@ -4,7 +4,6 @@
 
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import moment from "moment";
-import { Bookmark } from "./listings.styled";
 import { StatusBadge } from "@/components/styled/Badges";
 import BookmarkIcon from "@/public/icons/saved.svg";
 import { JOBS_STATUS } from "../consts";
@@ -124,11 +123,10 @@ const StatusAndDateSection = ({
   };
 
   return (
-    <div className="flex flex-col justify-between flex-2 gap-3 md:items-end">
-      {/* Status badge or Bookmark icon */}
+    <div className="flex flex-col justify-between flex-2 gap-3 md:items-end ">
       {listingType == "saved" && (
-        <Bookmark
-          className="flex justify-center items-center cursor-pointer"
+        <div
+          className=" h-[43px] w-[43px] rounded-[2rem] bg-[#F2B420] text-white flex justify-center items-center cursor-pointer"
           onClick={onBookmark}
         >
           {saving ? (
@@ -141,7 +139,7 @@ const StatusAndDateSection = ({
           ) : (
             <BookmarkIcon />
           )}
-        </Bookmark>
+        </div>
       )}
 
       <div>
