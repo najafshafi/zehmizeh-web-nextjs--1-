@@ -24,8 +24,9 @@ const Wrapper = styled(Container)`
   }
   p {
     font-size: 1.125rem;
+    padding: 10px 0px;
   }
-  a {
+  Link {
     color: ${({ theme }) => theme.colors.yellow};
   }
 `;
@@ -71,7 +72,7 @@ function Terms() {
 
   return (
     <HeaderWrapper>
-      <Wrapper className="content-hfill">
+      <Wrapper className="h-full">
         <h1 className="title mt-5 mb-3">
           <strong>Terms &amp; Conditions: ZMZ&rsquo;s User Agreement</strong>
         </h1>

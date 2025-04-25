@@ -236,7 +236,7 @@ const CompleteProfile = () => {
   };
 
   return (
-    <div className="my-5 md:my-12 mx-auto max-w-[678px] shadow-[0px_4px_60px_rgba(0,0,0,0.05)] bg-white rounded-xl md:p-12 p-4">
+    <div className="my-5 md:my-12 mx-auto max-w-[678px] shadow-[0px_4px_60px_rgba(0,0,0,0.05)] bg-white rounded-xl md:p-12 p-4 ">
       <div className="text-[32px] font-bold">Set Your Profile</div>
 
       <div>
