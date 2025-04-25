@@ -9,19 +9,20 @@ import { useAuth } from "@/helpers/contexts/auth-context";
 import Link from "next/link";
 
 export const BannerWrapper = styled.div`
+  background: #fefbf4;
   padding: 5.75rem 0rem;
   position: relative;
   .banner-left-spiral {
     position: absolute;
     left: 10.8125rem;
     top: 2rem;
-    z-index: -1;
+    z-index: 10;
   }
   .banner-right-spiral {
     position: absolute;
     right: 12.5rem;
     bottom: 0rem;
-    z-index: -1;
+    z-index: 10;
   }
   a {
     color: ${(props) => props.theme.colors.yellow};

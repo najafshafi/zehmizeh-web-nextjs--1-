@@ -5,7 +5,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
-import { Wrapper } from "./offer-details.styled";
 import Loader from "@/components/Loader";
 import BackButton from "@/components/ui/BackButton";
 import OfferDetailsBanner from "./OfferDetailsBanner";
@@ -45,7 +44,7 @@ const OfferDetails = () => {
 
   if (!isLoading && data?.data?.status === "active")
     return (
-      <Wrapper className="my-7 h-full flex-1">
+      <div className="max-w-[970px] mx-auto min-h-[70vh] my-7 h-full flex-1">
         <BackButton route="/dashboard" />
         <div className="text-center mt-7">
           <p className="text-lg">
@@ -53,12 +52,12 @@ const OfferDetails = () => {
             project.
           </p>
         </div>
-      </Wrapper>
+      </div>
     );
 
   return (
-    <div className="my-12 h-full flex-1 ">
-      <Wrapper>
+    <div className="my-12 h-full flex-1">
+      <div className="max-w-[970px] mx-auto min-h-[70vh]">
         {/* Back button header */}
         <BackButton />
 
@@ -81,7 +80,7 @@ const OfferDetails = () => {
             </>
           )
         )}
-      </Wrapper>
+      </div>
     </div>
   );
 };

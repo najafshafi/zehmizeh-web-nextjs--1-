@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ProposalWrapper, TabContent } from "./proposals.styled";
 import Loader from "@/components/Loader";
 import { StatusBadge } from "@/components/styled/Badges";
 import NoDataFound from "@/components/ui/NoDataFound";
@@ -11,7 +10,7 @@ import DollarCircleIcon from "@/public/icons/dollar-circle.svg";
 const ArchivedProposals = () => {
   const { proposals, isLoading, isRefetching } = useProposals("archived");
   return (
-    <TabContent>
+    <div className="h-[500px] max-h-[500px] overflow-y-auto">
       {isLoading || isRefetching ? (
         <Loader />
       ) : proposals?.length > 0 ? (
@@ -21,13 +20,13 @@ const ArchivedProposals = () => {
             key={item.invite_id}
             className="no-hover-effect"
           >
-            <ProposalWrapper
+            <div
               key={item.invite_id}
-              className="mt-3 flex flex-col cursor-pointer"
+              className="mt-3 flex flex-col cursor-pointer border border-[#dbdbdb] p-5 rounded-lg transition-all gap-3.5"
             >
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-3">
                 <div className="lg:col-span-8">
-                  <div className="text-lg font-normal">
+                  <div className="text-lg font-normal break-words">
                     {convertToTitleCase(item.job_title)}
                   </div>
                 </div>
@@ -43,13 +42,15 @@ const ArchivedProposals = () => {
                 <div className="flex items-center">
                   <BlurredImage
                     src={item?.user_image || "/images/default_avatar.png"}
-                    className="proposal__client-profile-img"
+                    className="mr-2"
                     height="2.625rem"
                     width="2.625rem"
                     allowToUnblur={false}
                   />
                   <div className="ml-2">
-                    <div className="text-sm font-normal">Sent by:</div>
+                    <div className="text-sm font-normal opacity-50 mb-0.5">
+                      Sent by:
+                    </div>
                     <div className="text-sm font-normal capitalize">
                       {item?.first_name} {item?.last_name}
                     </div>
@@ -57,12 +58,12 @@ const ArchivedProposals = () => {
                 </div>
 
                 {/* Divider */}
-                <div className="hidden lg:block w-px h-6 bg-gray-300" />
+                <div className="hidden lg:block w-px h-8 bg-[#FEEBF0]" />
 
                 {/* Budget */}
-                <div className="flex items-center flex-wrap gap-2">
+                <div className="flex items-center flex-wrap gap-2 bg-[#fbf5e8] rounded-full p-2">
                   <DollarCircleIcon />
-                  <div className="text-lg font-normal text-gray-500">
+                  <div className="text-base font-normal text-[#212529]">
                     {item?.budget?.isProposal
                       ? "Open To Proposals"
                       : item?.budget?.type === "fixed"
@@ -71,13 +72,13 @@ const ArchivedProposals = () => {
                   </div>
                 </div>
               </div>
-            </ProposalWrapper>
+            </div>
           </Link>
         ))
       ) : (
         <NoDataFound />
       )}
-    </TabContent>
+    </div>
   );
 };
 

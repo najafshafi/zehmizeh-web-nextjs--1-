@@ -2,18 +2,9 @@
  * This will display the selected filters on top of the listings
  */
 
-import styled from "styled-components";
 import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
 import CrossIcon from "@/public/icons/cross-black.svg";
 import { RATINGS_FILTER_ENUM } from "@/helpers/const/constants";
-const FilterChip = styled.div`
-  background: #f6f6f6;
-  padding: 0.75rem 0.875rem;
-  border-radius: 0.5rem;
-  border: 1px solid #d9d9d9;
-  gap: 10px;
-  text-transform: capitalize;
-`;
 
 export default function SelectedFilters() {
   const { filters, updateFilterHandler } = useSearchFilters();
@@ -53,58 +44,73 @@ export default function SelectedFilters() {
     <div className="my-4 g-2 flex flex-wrap">
       {filters?.job_status &&
         filters?.job_status?.map((status: string) => (
-          <FilterChip className="filter-chip flex items-center" key={status}>
+          <div
+            className="bg-[#f6f6f6] px-[0.875rem] py-3 rounded-[0.5rem] border border-[#d9d9d9] gap-2.5 capitalize flex items-center"
+            key={status}
+          >
             Job Type: {status === "prospects" ? "Open" : status}
             <CrossIcon
               className="pointer"
               onClick={filterResults(status, "job_status")}
             />
-          </FilterChip>
+          </div>
         ))}
       {filters?.languages &&
         filters?.languages?.map((language: string) => (
-          <FilterChip className="filter-chip flex items-center" key={language}>
+          <div
+            className="bg-[#f6f6f6] px-[0.875rem] py-3 rounded-[0.5rem] border border-[#d9d9d9] gap-2.5 capitalize flex items-center"
+            key={language}
+          >
             {language.split("#")[0]}
             <CrossIcon
               className="pointer"
               onClick={filterResults(language, "languages")}
             />
-          </FilterChip>
+          </div>
         ))}
       {filters?.location &&
         filters?.location?.map((location: string) => (
-          <FilterChip className="filter-chip flex items-center" key={location}>
+          <div
+            className="bg-[#f6f6f6] px-[0.875rem] py-3 rounded-[0.5rem] border border-[#d9d9d9] gap-2.5 capitalize flex items-center"
+            key={location}
+          >
             Location: {location}
             <CrossIcon
               className="pointer"
               onClick={filterResults(location, "location")}
             />
-          </FilterChip>
+          </div>
         ))}
       {filters?.categories &&
         filters?.categories?.map((category: string) => (
-          <FilterChip className="filter-chip flex items-center" key={category}>
+          <div
+            className="bg-[#f6f6f6] px-[0.875rem] py-3 rounded-[0.5rem] border border-[#d9d9d9] gap-2.5 capitalize flex items-center"
+            key={category}
+          >
             {category.split("#")[0]}
             <CrossIcon
               className="pointer"
               onClick={filterResults(category, "categories")}
             />
-          </FilterChip>
+          </div>
         ))}
       {filters?.skills &&
         filters?.skills?.map((skill: string) => (
-          <FilterChip className="filter-chip flex items-center" key={skill}>
+          <div
+            className="bg-[#f6f6f6] px-[0.875rem] py-3 rounded-[0.5rem] border border-[#d9d9d9] gap-2.5 capitalize flex items-center"
+            key={skill}
+          >
             {skill.split("#")[0]}
             <CrossIcon
               className="pointer"
               onClick={filterResults(skill, "skills")}
             />
-          </FilterChip>
+          </div>
         ))}
       {filters?.job_type &&
         filters?.job_type?.map((jobTypeItem: string) => (
-          <FilterChip
-            className="filter-chip flex items-center"
+          <div
+            className="bg-[#f6f6f6] px-[0.875rem] py-3 rounded-[0.5rem] border border-[#d9d9d9] gap-2.5 capitalize flex items-center"
             key={jobTypeItem}
           >
             Project Type: {textForUI(jobTypeItem)}
@@ -112,13 +118,13 @@ export default function SelectedFilters() {
               className="pointer"
               onClick={filterResults(jobTypeItem, "job_type")}
             />
-          </FilterChip>
+          </div>
         ))}
 
       {Array.isArray(filters?.hourly_rate) &&
         filters?.hourly_rate?.map((hourly_rate: string) => (
-          <FilterChip
-            className="filter-chip flex items-center"
+          <div
+            className="bg-[#f6f6f6] px-[0.875rem] py-3 rounded-[0.5rem] border border-[#d9d9d9] gap-2.5 capitalize flex items-center"
             key={hourly_rate}
           >
             Hourly Rate: {hourly_rate}
@@ -126,13 +132,13 @@ export default function SelectedFilters() {
               className="pointer"
               onClick={filterResults(hourly_rate, "hourly_rate")}
             />
-          </FilterChip>
+          </div>
         ))}
 
       {Array.isArray(filters?.fixed_budget) &&
         filters?.fixed_budget?.map((fixed_budget: string) => (
-          <FilterChip
-            className="filter-chip flex items-center"
+          <div
+            className="bg-[#f6f6f6] px-[0.875rem] py-3 rounded-[0.5rem] border border-[#d9d9d9] gap-2.5 capitalize flex items-center"
             key={fixed_budget}
           >
             Fix Budget: {fixed_budget}
@@ -140,13 +146,13 @@ export default function SelectedFilters() {
               className="pointer"
               onClick={filterResults(fixed_budget, "fixed_budget")}
             />
-          </FilterChip>
+          </div>
         ))}
 
       {filters?.account_type &&
         filters?.account_type?.map((talentTypeItem: string) => (
-          <FilterChip
-            className="filter-chip flex items-center"
+          <div
+            className="bg-[#f6f6f6] px-[0.875rem] py-3 rounded-[0.5rem] border border-[#d9d9d9] gap-2.5 capitalize flex items-center"
             key={talentTypeItem}
           >
             Account Type: {talentTypeItem}
@@ -154,12 +160,12 @@ export default function SelectedFilters() {
               className="pointer"
               onClick={filterResults(talentTypeItem, "account_type")}
             />
-          </FilterChip>
+          </div>
         ))}
       {filters?.freelancerFilters &&
         filters?.freelancerFilters?.map((freelancer: string) => (
-          <FilterChip
-            className="filter-chip flex items-center"
+          <div
+            className="bg-[#f6f6f6] px-[0.875rem] py-3 rounded-[0.5rem] border border-[#d9d9d9] gap-2.5 capitalize flex items-center"
             key={freelancer}
           >
             My Freelancer: {freelancer}
@@ -167,23 +173,26 @@ export default function SelectedFilters() {
               className="pointer"
               onClick={filterResults(freelancer, "freelancerFilters")}
             />
-          </FilterChip>
+          </div>
         ))}
       {filters?.rating &&
         filters?.rating?.map((rating: keyof typeof RATINGS_FILTER_ENUM) => (
-          <FilterChip className="filter-chip flex items-center" key={rating}>
+          <div
+            className="bg-[#f6f6f6] px-[0.875rem] py-3 rounded-[0.5rem] border border-[#d9d9d9] gap-2.5 capitalize flex items-center"
+            key={rating}
+          >
             Rating: {RATINGS_FILTER_ENUM[rating]}
             <CrossIcon
               className="pointer"
               onClick={filterResults(rating, "rating")}
             />
-          </FilterChip>
+          </div>
         ))}
 
       {filters?.hourly_rate && !Array.isArray(filters?.hourly_rate) && (
         <>
           {(filters?.hourly_rate?.min || filters?.hourly_rate?.max) && (
-            <FilterChip className="filter-chip flex items-center">
+            <div className="bg-[#f6f6f6] px-[0.875rem] py-3 rounded-[0.5rem] border border-[#d9d9d9] gap-2.5 capitalize flex items-center">
               Hourly rate: ${filters?.hourly_rate?.min ?? 0} - $
               {filters?.hourly_rate?.max ?? 0}
               <CrossIcon
@@ -192,11 +201,11 @@ export default function SelectedFilters() {
                   hourlyRateHandler(filters?.hourly_rate?.isNAChecked)
                 }
               />
-            </FilterChip>
+            </div>
           )}
 
           {filters?.hourly_rate?.isNAChecked && (
-            <FilterChip className="filter-chip flex items-center">
+            <div className="bg-[#f6f6f6] px-[0.875rem] py-3 rounded-[0.5rem] border border-[#d9d9d9] gap-2.5 capitalize flex items-center">
               NA Checked
               <CrossIcon
                 className="pointer"
@@ -207,7 +216,7 @@ export default function SelectedFilters() {
                   })
                 }
               />
-            </FilterChip>
+            </div>
           )}
         </>
       )}

@@ -1,6 +1,5 @@
 "use client";
 
-import { MainLayout, Card, NewJobOption, BackButtons } from "./postJob.styled";
 import { ChooseTemplateOrDraft } from "./steps/ChooseTemplateOrDraft";
 import ProposalExistsModal from "@/components/invite-flow-modals/ProposalExistsModa";
 import { POST_JOB_OPTIONS } from "@/helpers/const/postJobOptions";
@@ -49,18 +48,21 @@ export default function PostJob({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {POST_JOB_OPTIONS.map((item) => (
             <div key={item.id} className="flex justify-center items-center">
-              <NewJobOption
-                $active={selectedOption === item.key}
+              <div
+                className={`w-[200px] h-[200px] border rounded-[0.875rem] cursor-pointer p-8 m-[1.875rem_0_0_0] transition-all flex flex-col justify-center items-center ${
+                  selectedOption === item.key
+                    ? "border-3 border-primary"
+                    : "border-[#d9d9d9]"
+                }`}
                 onClick={() => {
                   setSelectedOption(item.key);
                 }}
-                className="flex flex-col justify-center items-center"
               >
-                <div>{item.icon}</div>
-                <div className="option-title font-normal mt-2">
+                <div className="icon-style">{item.icon}</div>
+                <div className="text-[1.2rem] leading-[1.24rem] tracking-[0.03em] font-normal mt-2">
                   {item.label}
                 </div>
-              </NewJobOption>
+              </div>
             </div>
           ))}
         </div>
@@ -90,7 +92,7 @@ export default function PostJob({
 
   const HeaderUI = () => {
     const heading = (
-      <h1 className="text-3xl font-bold mb-4">
+      <h1 className="text-[2.3rem] font-bold mt-8 mb-[0.875rem]">
         {Object.values(POST_JOB_STEPS).find((x) => x.number === step)?.label ||
           ""}
       </h1>
@@ -146,8 +148,8 @@ export default function PostJob({
   ) as typeof POST_JOB_STEPS;
 
   return (
-    <MainLayout>
-      <BackButtons>
+    <div className="max-w-[719px] mx-auto my-[7.5rem] md:my-[7.5rem] md:mx-auto mobile:my-0 mobile:mt-4">
+      <div className="flex justify-between">
         <BackButton className={isMobile ? "ml-3" : ""} />
         <button
           className="text-red-500 rounded px-4 py-2 mr-3 hover:scale-105 transition-all duration-300 hover:bg-secondary hover:text-black"
@@ -155,9 +157,9 @@ export default function PostJob({
         >
           Cancel Project Post
         </button>
-      </BackButtons>
+      </div>
 
-      <Card $small={false} className="text-center ">
+      <div className="bg-white rounded-[17px] p-[4.3125rem_4rem] mobile:bg-body mobile:p-4">
         {step > 0 && (
           <Stepper
             activeStep={step}
@@ -167,7 +169,7 @@ export default function PostJob({
         )}
         {HeaderUI()}
         {StepUI()}
-      </Card>
+      </div>
 
       {/* START ----------------------------------------- Proposal exist modal */}
       <ProposalExistsModal
@@ -179,6 +181,6 @@ export default function PostJob({
         }}
       />
       {/* END ------------------------------------------- Proposal exist modal */}
-    </MainLayout>
+    </div>
   );
 }

@@ -3,7 +3,6 @@
  */
 import moment from "moment";
 import Link from "next/link";
-import { ProposalWrapper, TabContent } from "./proposals.styled";
 import Loader from "@/components/Loader";
 import NoDataFound from "@/components/ui/NoDataFound";
 import { StatusBadge } from "@/components/styled/Badges";
@@ -19,7 +18,7 @@ import LocationIcon from "@/public/icons/location-blue.svg";
 const SubmittedProposals = () => {
   const { proposals, isLoading, isRefetching } = useProposals("submitted");
   return (
-    <TabContent>
+    <div className="h-[500px] max-h-[500px] overflow-y-auto">
       {isLoading || isRefetching ? (
         <Loader />
       ) : proposals?.length > 0 ? (
@@ -29,11 +28,10 @@ const SubmittedProposals = () => {
             key={item.proposal_id}
             className="no-hover-effect"
           >
-            <ProposalWrapper className="mt-3 flex flex-col cursor-pointer">
+            <div className="mt-3 flex flex-col cursor-pointer border border-[#dbdbdb] p-5 rounded-lg transition-all gap-3.5">
               {/* Name and title */}
-
               <div className="flex items-center justify-between flex-wrap gap-2">
-                <div className="job-title text-lg font-normal">
+                <div className="text-lg font-normal break-words">
                   {convertToTitleCase(item.job_title)}
                 </div>
                 <div>
@@ -55,19 +53,18 @@ const SubmittedProposals = () => {
                 </div>
               </div>
 
-              <div className="location-and-budget flex items-center flex-wrap">
+              <div className="flex items-center flex-wrap gap-2.5">
                 {/* Budget */}
-
-                <div className="proposal__budget flex items-center justify-center flex-wrap">
+                <div className="flex items-center justify-center flex-wrap bg-[#fbf5e8] rounded-full p-2">
                   <DollarCircleIcon />
-                  <div className="proposal__budget-value text-lg font-normal flex">
+                  <div className="flex text-base font-normal text-[#212529]">
                     {numberWithCommas(item?.proposed_budget?.amount, "USD")}
                     {item?.budget?.type === "fixed" ? (
-                      <span className="light-text font-normal ms-1">
+                      <span className="opacity-60 font-normal ms-1">
                         Budget
                       </span>
                     ) : (
-                      <span className="light-text font-normal ms-1">/hr</span>
+                      <span className="opacity-60 font-normal ms-1">/hr</span>
                     )}
                   </div>
                 </div>
@@ -75,9 +72,9 @@ const SubmittedProposals = () => {
                 {/* Location */}
                 {Array.isArray(item?.preferred_location) &&
                   item?.preferred_location?.length > 0 && (
-                    <div className="proposal__budget flex items-center justify-center flex-wrap">
+                    <div className="flex items-center justify-center flex-wrap bg-[#fbf5e8] rounded-full p-2">
                       <LocationIcon />
-                      <div className="text-lg font-normal mx-1">
+                      <div className="text-base font-normal mx-4">
                         {item.preferred_location.join(", ")}
                       </div>
                     </div>
@@ -85,16 +82,16 @@ const SubmittedProposals = () => {
               </div>
 
               {/* Applied on */}
-              <div className="text-lg font-normal applied-date">
+              <div className="text-base font-normal opacity-63">
                 Submitted {moment(item?.applied_on).format("MMM DD, YYYY")}
               </div>
-            </ProposalWrapper>
+            </div>
           </Link>
         ))
       ) : (
         <NoDataFound />
       )}
-    </TabContent>
+    </div>
   );
 };
 

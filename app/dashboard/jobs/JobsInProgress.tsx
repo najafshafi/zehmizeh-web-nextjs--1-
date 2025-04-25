@@ -2,7 +2,6 @@
  * This component serves a list of JOBS - IN PROGRESS
  */
 
-import { ProposalWrapper, TabContent } from "./jobs.styled";
 import Loader from "@/components/Loader";
 import NoDataFound from "@/components/ui/NoDataFound";
 import useJobs from "./use-jobs";
@@ -14,7 +13,7 @@ import Link from "next/link";
 const JobsInProgress = () => {
   const { jobs, isLoading, isRefetching } = useJobs("active");
   return (
-    <TabContent>
+    <div className="h-[500px] max-h-[500px] overflow-y-auto text-black">
       {isLoading || isRefetching ? (
         <Loader />
       ) : jobs.length > 0 ? (
@@ -24,23 +23,23 @@ const JobsInProgress = () => {
             key={item.job_post_id}
             className="no-hover-effect"
           >
-            <ProposalWrapper className="mt-3 flex flex-col cursor-pointer no-hover-effect text-black">
-              <div className="job-title text-lg font-normal">
+            <div className="mt-3 flex flex-col cursor-pointer no-hover-effect text-black border border-[#dbdbdb] p-5 rounded-lg transition-all">
+              <div className="text-lg font-normal break-words">
                 {convertToTitleCase(item.job_title)}
               </div>
-              <div className="proposal__details flex items-center flex-wrap">
+              <div className="flex items-center flex-wrap gap-4">
                 {/* Client details */}
                 <div className="flex items-center mt-2">
                   <BlurredImage
                     src={item?.user_image || "/images/default_avatar.png"}
-                    className="proposal__client-profile-img"
+                    className="mr-2"
                     height="2.625rem"
                     width="2.625rem"
                     allowToUnblur={false}
                     type="small"
                   />
                   <div>
-                    <div className="proposal__client-detail-label text-sm font-normal">
+                    <div className="text-sm font-normal opacity-50 mb-0.5">
                       Client:
                     </div>
                     <div className="text-base font-normal capitalize">
@@ -50,32 +49,30 @@ const JobsInProgress = () => {
                 </div>
 
                 {/* Divider */}
-                <div className="divider hidden lg:block" />
+                <div className="hidden lg:block w-px h-8 bg-[#d1d1d1]" />
 
                 {/* Budget */}
-
-                <div className="proposal__budget flex items-center justify-center flex-wrap">
+                <div className="flex items-center justify-center flex-wrap bg-[#fbf5e8] py-1.5 px-2.5 rounded-full">
                   <DollarCircleIcon />
-                  <div className="proposal__budget-value flex">
+                  <div className="flex ml-1.5">
                     <>
                       {numberWithCommas(item?.approved_budget?.amount, "USD")}
                       {item?.approved_budget?.type === "hourly" ? (
-                        <span className="light-text">/hr</span>
+                        <span className="opacity-63">/hr</span>
                       ) : (
-                        <span className="light-text ms-1">Budget</span>
+                        <span className="opacity-63 ms-1">Budget</span>
                       )}
                     </>
                   </div>
                 </div>
-                {/* -- */}
               </div>
-            </ProposalWrapper>
+            </div>
           </Link>
         ))
       ) : (
         <NoDataFound />
       )}
-    </TabContent>
+    </div>
   );
 };
 
