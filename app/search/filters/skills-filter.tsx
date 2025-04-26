@@ -5,7 +5,7 @@ import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
 import { TJobDetails } from "@/helpers/types/job.type";
 import toast from "react-hot-toast";
 import { getRelevantSkillsBasedOnCategory } from "@/helpers/utils/helper";
-import { Form, Spinner } from "react-bootstrap";
+import Spinner from "@/components/forms/Spin/Spinner";
 import useOnClickOutside from "@/helpers/hooks/useClickOutside";
 import { SkillAndCategoryFilterWrapper } from "./skillAndCategoryStyled";
 import { IoMdClose } from "react-icons/io";
@@ -144,8 +144,9 @@ export const SkillFilter = () => {
 
   const searchUI = () => {
     return (
-      <Form.Control
-        className="searchbox"
+      <input
+        type="text"
+        className="w-full px-3 py-2 border-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 my-3"
         placeholder="Search"
         value={search}
         onChange={(e) => {
@@ -204,7 +205,7 @@ export const SkillFilter = () => {
         <div className="modal-search">
           <div>{searchUI()}</div>
           <IoMdClose
-            className="pointer ms-2"
+            className="cursor-pointer ml-2"
             onClick={() => {
               setModalOpen("");
             }}
@@ -217,10 +218,7 @@ export const SkillFilter = () => {
           {dataToDisplay.map((item) => {
             if (typeof item === "string")
               return (
-                <p
-                  key={item}
-                  className="m-0 my-2 mt-3 font-weight-bold text-capitalize"
-                >
+                <p key={item} className="m-0 my-2 mt-3 font-bold capitalize">
                   {item}
                 </p>
               );
@@ -232,7 +230,7 @@ export const SkillFilter = () => {
         {/* START ----------------------------------------- Apply and clear button */}
         <div className="button-wrapper">
           <p
-            className="text-primary pointer mx-2"
+            className="text-blue-600 cursor-pointer mx-2"
             onClick={() => {
               updateFilterHandler("skills", []);
               setModalOpen("");
@@ -274,7 +272,7 @@ export const SkillFilter = () => {
       {searchUI()}
       {isLoading ? (
         <div>
-          <Spinner animation="border" size="sm" />
+          <Spinner />
         </div>
       ) : (
         <>
@@ -283,7 +281,7 @@ export const SkillFilter = () => {
               return checkboxUI(item as SkillItem);
             })}
             <p
-              className="pointer text-primary m-0 mt-2"
+              className="cursor-pointer text-blue-600 m-0 mt-2"
               onClick={() => setModalOpen("SKILLS")}
             >
               {

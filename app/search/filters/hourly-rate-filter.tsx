@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { Form } from "react-bootstrap";
 import Checkbox from "@/components/forms/FilterCheckBox2";
-import { SliderWrapper } from "../Search.styled";
+import { SliderWrapper } from "./Filters.styled";
 import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
 import { HourlyFilter } from "@/helpers/types/filter.type";
 
@@ -69,7 +69,7 @@ const HourlyRateFilter = () => {
     <SliderWrapper>
       <div className="mt-4 flex flex-col items-left justify-start">
         {/* Max Amount */}
-        <div className="filter__checkbox__row__first flex items-center mb-3">
+        <div className="filter__checkbox__row__first flex items-center mb-3 bg-red-600">
           <Checkbox
             checked={hourlyRateCheck.max}
             toggle={(e) => hourlyRateCheckHandler("max", e.target.checked)}
@@ -102,7 +102,7 @@ const HourlyRateFilter = () => {
             </div>
           </div>
           {hourlyRateCheck.min && (
-            <span className="input-symbol-euro mt-2 d-block">
+            <span className="input-symbol-euro mt-2 block ">
               <Form.Control
                 placeholder="Min Amount"
                 value={filters.hourly_rate.min ?? ""}

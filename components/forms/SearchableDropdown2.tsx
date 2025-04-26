@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Form, Spinner } from "react-bootstrap";
 import styled from "styled-components";
-
+import Spinner from "@/components/forms/Spin/Spinner";
 const Wrapper = styled.div`
   .input {
     padding: 0.875rem 1rem;
@@ -69,7 +68,8 @@ const SearchableDropdown = ({
   }, []);
   return (
     <Wrapper>
-      <Form.Control
+      <input
+        type="text"
         onFocus={() => {
           if (showSuggessions) {
             setSuggest(true);
@@ -79,28 +79,28 @@ const SearchableDropdown = ({
         autoFocus={true}
         placeholder={placeholder || "Search"}
         value={searchQuery}
-        className="fs-sm fw-300 input searchable-input"
+        className="w-full text-sm font-light input searchable-input px-4 py-3.5 border-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         onChange={(e) => setSearchQuery(e.target.value)}
       />
       {((searchQuery !== null && searchQuery !== "") || suggest) && (
         <div className="search-result">
           {fetching ? (
-            <div className="loader fs-sm">
-              <Spinner animation="border" size="sm" /> &nbsp;Searching...
+            <div className="loader fs-sm flex ">
+              <Spinner /> &nbsp;Searching...
             </div>
           ) : showOptions ? (
             searchResults.length > 0 ? (
               searchResults.map((item: any, index) => (
                 <div
                   key={`common-searchable-dropdown-${index}`}
-                  className="search-option fs-1rem pointer"
+                  className="search-option text-base cursor-pointer"
                   onClick={() => onClick(item)}
                 >
                   {item.label}
                 </div>
               ))
             ) : (
-              <div className="search-option fs-sm">No result found</div>
+              <div className="search-option text-sm">No result found</div>
             )
           ) : null}
         </div>

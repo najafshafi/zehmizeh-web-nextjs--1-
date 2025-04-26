@@ -30,8 +30,8 @@ const JobTypeFilter = () => {
         <Checkbox
           checked={filters?.job_type?.includes("hourly")}
           toggle={() => onSelectItem("hourly")}
-        />{" "}
-        <div className="checkbox-label fs-1rem fw-400">Hourly</div>
+        />
+        <div className=" fs-1rem fw-400">Hourly</div>
       </div>
       {filters?.job_type?.includes("hourly") && <HourlyRateFilter />}
 
@@ -39,8 +39,8 @@ const JobTypeFilter = () => {
         <Checkbox
           checked={filters?.job_type?.includes("fixed")}
           toggle={() => onSelectItem("fixed")}
-        />{" "}
-        <div className="checkbox-label fs-1rem fw-400">Project-Based</div>
+        />
+        <div className=" fs-1rem fw-400">Project-Based</div>
       </div>
       {filters?.job_type?.includes("fixed") && <FixedBudgetFilter />}
     </div>

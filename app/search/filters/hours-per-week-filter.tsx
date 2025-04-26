@@ -5,7 +5,7 @@
 import React from "react";
 import TooltipSlider from "@/components/ui/TooltipSlider";
 import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
-import { SliderWrapper } from "../Search.styled";
+import { SliderWrapper } from "./Filters.styled";
 
 const HoursPerWeekFilter = () => {
   const { filters, updateFilters } = useSearchFilters();

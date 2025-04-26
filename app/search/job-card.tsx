@@ -8,7 +8,6 @@ import cns from "classnames";
 import Spinner from "@/components/forms/Spin/Spinner";
 import Link from "next/link";
 import { transition } from "@/styles/transitions";
-import { BookmarkIcon } from "./Search.styled";
 import Tooltip from "@/components/ui/Tooltip";
 import { toggleBookmarkPost } from "@/helpers/http/search";
 import { useAuth } from "@/helpers/contexts/auth-context";
@@ -255,12 +254,12 @@ const JobCard = ({
       </div>
       <Tooltip
         customTrigger={
-          <BookmarkIcon
-            className="flex justify-center items-center"
+          <div
+            className="flex justify-center items-center h-[43px] w-[43px] rounded-[2rem] bg-[#f5f5f5]"
             onClick={onBookmarkClick}
           >
             {loading ? <Spinner /> : isSaved ? <SavedIcon /> : <UnSavedIcon />}
-          </BookmarkIcon>
+          </div>
         }
         className="inline-block align-middle"
       >
