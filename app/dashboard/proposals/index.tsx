@@ -41,7 +41,7 @@ const Proposals = () => {
   return (
     <Wrapper>
       <div className="stat-label text-2xl font-bold">Invites & Proposals</div>
-      <div className="tabs mt-4">
+      <div className="tabs mt-6">
         <Tabs
           tabs={TABS}
           activeTab={activeTab}
