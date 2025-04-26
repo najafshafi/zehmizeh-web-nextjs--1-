@@ -158,7 +158,7 @@ const JobDetails = () => {
   };
 
   useEffect(() => {
-    if (user.user.user_type !== "freelancer") {
+    if (user?.user?.user_type !== "freelancer") {
       router.push("/client/dashboard");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -485,7 +485,9 @@ const JobDetails = () => {
     <div className="w-full px-4 lg:px-0 py-12 pb-25 max-w-[970px] mx-auto">
       {/* Back button header */}
       <BackButton
-        route={user.user.user_type === "freelancer" ? "/jobs" : "/client-jobs"}
+        route={
+          user?.user?.user_type === "freelancer" ? "/jobs" : "/client-jobs"
+        }
       />
 
       {isLoading || isRefetching ? <Loader /> : null}

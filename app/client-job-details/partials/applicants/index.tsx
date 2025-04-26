@@ -10,7 +10,6 @@ import { StatusBadge } from "@/components/styled/Badges";
 import BlurredImage from "@/components/ui/BlurredImage";
 import PaginationComponent from "@/components/ui/Pagination";
 import NoDataFound from "@/components/ui/NoDataFound";
-import { ApplicantsWrapper, ApplicantListItem } from "./applicants.styled";
 import useApplicants from "../../hooks/useApplicants";
 import {
   numberWithCommas,
@@ -253,7 +252,7 @@ const Applicants = ({
         sorting={sortKey}
         setSorting={setSorting}
       />
-      <ApplicantsWrapper className="flex flex-col">
+      <div className=" flex gap-[30px] mt-10  flex-col">
         {isLoading && <Loader />}
 
         {!isLoading && data?.length == 0 && (
@@ -270,31 +269,31 @@ const Applicants = ({
         {!isLoading &&
           data?.length > 0 &&
           data?.map((item: ProposalData) => (
-            <ApplicantListItem
+            <div
               key={item?.proposal_id}
-              className="flex flex-wrap justify-between"
+              className="flex flex-wrap justify-between p-8 bg-white rounded-[12px] shadow-[0_4px_74px_rgba(0,0,0,0.04)]  gap-8 relative overflow-hidden md:p-11"
             >
               {item?.edited_at && (
-                <p className="updated-on">
+                <p className=" absolute top-0 left-0 right-0 text-center bg-[#ffedd3] text-[#ee761c] py-0.5 text-sm">
                   Updated on - {formatDateAndTime(item.edited_at)}
                 </p>
               )}
-              <div className="applicant-details flex gap-4 flex-wrap">
+              <div className=" max-w-full w-full break-words flex gap-4 flex-wrap">
                 <BlurredImage
                   src={item?.user_image || "/images/default_avatar.png"}
                   height="80px"
                   width="80px"
                 />
-                <div className="main-details flex flex-col flex-1">
+                <div className="flex gap-[10px]  flex-col flex-1">
                   <div className="flex justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="fs-24 font-normal line-height-140 capitalize">
+                    <div className="flex items-center gap-2 flex-wrap md:flex-nowrap">
+                      <div className="fs-24 font-normal leading-[140%] capitalize ">
                         <Link href={`/freelancer/${item?.user_id}`}>
                           {item?.first_name} {item?.last_name}
                         </Link>
                       </div>
                       <StatusBadge
-                        className="width-fit-content"
+                        className="w-fit"
                         color={
                           item?.status &&
                           JOBS_STATUS[item.status as keyof typeof JOBS_STATUS]
@@ -308,7 +307,7 @@ const Applicants = ({
                         {item?.status == "denied" ? "Declined" : item.status}
                       </StatusBadge>
                       <StatusBadge
-                        className="width-fit-content"
+                        className="w-fit"
                         color={item?.is_viewed ? "green" : "red"}
                       >
                         {item?.is_viewed ? "Read" : "Unread"}
@@ -324,25 +323,25 @@ const Applicants = ({
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-end">
+                  <div className="flex justify-between items-end flex-wrap md:flex-nowrap">
                     <div>
-                      <div className="description fs-18 font-normal light-text line-height-140 capital-first-ltr mb-2">
+                      <div className="description fs-18 font-normal opacity-50 leading-[140%] capital-first-ltr mb-2">
                         {item?.job_title}
                       </div>
                       {item?.date_created && (
-                        <div className="light-text mb-2">
+                        <div className="opacity-50 mb-2">
                           <span className="fw-500">Proposal Date:</span>{" "}
                           <span>
                             {moment(item.date_created).format("MMM DD, YYYY")}
                           </span>
                         </div>
                       )}
-                      <div className="location-and-ratings flex items-center gap-2 flex-wrap mb-2">
+                      <div className="location-and-ratings flex items-center gap-2 flex-wrap mb-2 ">
                         {(item?.location?.state ||
                           item?.location?.country_name) && (
-                          <div className="rounded-chip flex width-fit-content items-center">
+                          <div className=" flex w-fit items-center">
                             <LocationIcon />
-                            <div className="fs-1rem font-normal mx-1 light-text">
+                            <div className="fs-1rem font-normal mx-1 opacity-50">
                               {separateValuesWithComma(
                                 [
                                   item?.location?.state,
@@ -352,27 +351,27 @@ const Applicants = ({
                             </div>
                           </div>
                         )}
-                        <div className="rounded-chip flex width-fit-content items-center">
+                        <div className="bg-[#fbf5e8] py-1.5 px-[0.875rem] rounded-[1rem] flex w-fit items-center">
                           <StarIcon />
                           <div className="fs-1rem font-normal mx-1">
                             {item?.avg_rate ? item?.avg_rate?.toFixed(1) : 0}
                           </div>
-                          <div className="fs-1rem font-normal mx-1 light-text">
+                          <div className="fs-1rem font-normal mx-1 opacity-50">
                             Ratings ({item?.feedback})
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className="flex gap-3 mt-4 flex-wrap md:flex-nowrap">
+                    <div className="flex gap-3  flex-wrap md:flex-nowrap">
                       <CustomButton
                         text="View Proposal"
-                        className="px-[1.5rem] py-[1rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-base"
+                        className="px-[1rem] py-[1rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-base"
                         onClick={() => onViewProposalDetails(item?.proposal_id)}
                       />
 
                       <CustomButton
                         text="Message Freelancer"
-                        className="px-[1.5rem] py-[1rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white hover:border-none"
+                        className="px-[1rem] py-[1rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white "
                         onClick={() => handleTalkJSConversation(item)}
                         disabled={threadLoading}
                       />
@@ -380,7 +379,7 @@ const Applicants = ({
                   </div>
                 </div>
               </div>
-            </ApplicantListItem>
+            </div>
           ))}
 
         {/* Pagination */}
@@ -422,7 +421,7 @@ const Applicants = ({
             handleAcceptTerms();
           }}
         />
-      </ApplicantsWrapper>
+      </div>
     </>
   );
 };
