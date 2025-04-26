@@ -37,7 +37,12 @@ const RegisterEmployerAgreement: React.FC<RegisterEmployerAgreementProps> = ({
   const [isCheckedFourth, setIsCheckedFourth] = useState(false);
 
   const handleSubmit = async () => {
-    if (!isCheckedFirst || !isCheckedSecond || !isCheckedThird || !isCheckedFourth) {
+    if (
+      !isCheckedFirst ||
+      !isCheckedSecond ||
+      !isCheckedThird ||
+      !isCheckedFourth
+    ) {
       toast.error("Please accept all terms and conditions to continue.");
       return;
     }
@@ -51,21 +56,21 @@ const RegisterEmployerAgreement: React.FC<RegisterEmployerAgreementProps> = ({
       confirm: detailsData.confirmPassword,
       phone_number: detailsData.phone,
       formatted_phonenumber: detailsData.phone,
-      user_type: 'client' as const,
+      user_type: "client" as const,
       is_agency: 0,
-      company_name: detailsData.companyName || '',
+      company_name: detailsData.companyName || "",
       location: {
         country_name: detailsData.country,
         state: detailsData.state,
         country_id: 305, // These will be set by the backend
         country_code: "1",
         country_short_name: "US",
-        label: detailsData.country
-      }
+        label: detailsData.country,
+      },
     };
 
     console.log("Registration payload:", registrationPayload);
-    
+
     try {
       await submitRegisterUser(registrationPayload);
       onNext(detailsData);

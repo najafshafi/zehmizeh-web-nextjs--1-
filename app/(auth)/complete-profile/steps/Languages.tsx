@@ -3,8 +3,6 @@ import { useState, useMemo } from "react";
 import toast from "react-hot-toast";
 import { components } from "react-select";
 import AsyncSelect from "react-select/async";
-import { FormWrapper } from "./steps.styled";
-import { StyledButton } from "@/components/forms/Buttons";
 import { getLanguages } from "@/helpers/http/common";
 import { MultiSelectCustomStyle } from "./multiSelectCustomStyle";
 import { IClientDetails } from "@/helpers/types/client.type";
@@ -96,7 +94,7 @@ const Languages = ({
   };
 
   return (
-    <FormWrapper className="flex flex-col w-full min-w-[600px]">
+    <div className="flex flex-col w-full min-w-[600px] gap-8">
       <div>
         <div className="form-group">
           <div>
@@ -140,7 +138,7 @@ const Languages = ({
           onClick={handleUpdate}
         />
       </div>
-    </FormWrapper>
+    </div>
   );
 };
 

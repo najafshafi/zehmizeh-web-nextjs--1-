@@ -1,6 +1,3 @@
-/*
- * This component serves a list of SAVED JOBS
- */
 "use client";
 import { useState } from "react";
 import moment from "moment";

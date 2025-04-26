@@ -12,14 +12,14 @@ const ListingFooter = ({ item }: any) => {
   const amount = item?.proposal?.proposed_budget?.amount
     ? item?.proposal?.proposed_budget?.amount
     : item.budget.type === "fixed"
-    ? item.budget?.amount
-    : item?.budget?.max_amount;
+      ? item.budget?.amount
+      : item?.budget?.max_amount;
 
   return item?.status !== "active" && item?.status !== "closed" ? (
     /* If Job type is PROPSPECTS (applied job) */
 
     <div className="listing__item-other-details flex items-center flex-wrap ">
-      <div className="flex budget items-center gap-2">
+      <div className="flex bg-[#FBF5E8] py-1.5 px-3 rounded-[1rem] items-center gap-2">
         <DollarCircleIcon />
         <div className="budget-value fs-1rem font-normal">
           {numberWithCommas(amount, "USD")}
@@ -32,9 +32,9 @@ const ListingFooter = ({ item }: any) => {
       </div>
       {Array.isArray(item?.preferred_location) &&
         item?.preferred_location?.length > 0 && (
-          <div className="budget flex items-center gap-1">
+          <div className="bg-[#FBF5E8] py-1.5 px-3 rounded-[1rem] flex items-center gap-1">
             <LocationIcon />
-            <div className="fs-1rem font-normal budget-label">
+            <div className="fs-1rem font-normal opacity-60 tracking-[0.02em]">
               {item.preferred_location.join(", ")}
             </div>
           </div>
@@ -49,7 +49,7 @@ const ListingFooter = ({ item }: any) => {
   ) : (
     /* If Job type is CLOSED or ACTIVE */
 
-    <div className="in-progress-closed flex flex-col lg:flex-row lg:items-center gap-3 ">
+    <div className="mt-[11px] flex flex-col lg:flex-row lg:items-center gap-6 ">
       {/* Hired person details */}
       <div className="client-details flex items-center gap-2">
         <BlurredImage
@@ -68,9 +68,9 @@ const ListingFooter = ({ item }: any) => {
         </div>
       </div>
       {/* Divider */}
-      <div className="divider hidden lg:block" />
+      <div className="w-px h-8 bg-[#d1d1d1] hidden lg:block" />
       {/* -- */}
-      <div className="flex budget w-fit gap-1 items-center">
+      <div className="flex bg-[#FBF5E8] py-1.5 px-3 rounded-[1rem] w-fit gap-1 items-center">
         <DollarCircleIcon />
         <div className="budget-value fs-1rem font-normal">
           {numberWithCommas(item?.proposal?.approved_budget?.amount, "USD")}
@@ -82,7 +82,7 @@ const ListingFooter = ({ item }: any) => {
         </div>
       </div>
       {/* Divider */}
-      <div className="divider hidden lg:block" />
+      <div className="w-px h-8 bg-[#d1d1d1] hidden lg:block" />
 
       <div className="flex items-center gap-2">
         <span className="light-text text-xl font-normal">Started:</span>
@@ -96,7 +96,7 @@ const ListingFooter = ({ item }: any) => {
       {item?.status === "closed" && (
         <>
           {/* Divider */}
-          <div className="divider hidden lg:block" />
+          <div className="w-px h-8 bg-[#d1d1d1] hidden lg:block" />
           <div className="flex items-center gap-2">
             <span className="light-text text-xl font-normal">Ended:</span>
             <span className="budget-amount text-xl font-normal">
