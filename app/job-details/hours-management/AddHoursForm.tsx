@@ -7,8 +7,6 @@ import { useQuery } from "react-query";
 import { convertToTitleCase, getYupErrors } from "@/helpers/utils/misc";
 import TextEditor from "@/components/forms/TextEditor";
 import CustomUploader from "@/components/ui/CustomUploader";
-import { FormWrapper, StyledFormGroup } from "./hours-management.styled";
-import { StyledButton } from "@/components/forms/Buttons";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import { numberWithCommas } from "@/helpers/utils/misc";
 import { manageHours } from "@/helpers/http/jobs";
@@ -270,29 +268,29 @@ const AddHoursForm = ({
 
   return (
     <div className="fixed inset-0 flex items-start justify-center z-[9999] bg-black bg-opacity-50 overflow-y-auto">
-      <div className="absolute inset-0  " onClick={closeModal}></div>
+      <div className="absolute inset-0" onClick={closeModal}></div>
       <div
-        className="relative bg-white my-[50px] rounded-lg shadow-lg max-w-[570px] w-full mx-4 overflow-y-auto"
+        className="relative bg-white my-[50px] rounded-lg shadow-lg max-w-[570px] w-full mx-4"
         style={{ minWidth: "300px" }}
       >
-        <div className="relative p-5">
+        <div className="relative px-4 py-8 md:p-12">
           <button
-            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-light focus:outline-none"
+            className="absolute top-4 right-4 md:top-0 md:-right-8 md:text-white text-gray-500 hover:text-opacity-70 text-2xl font-light focus:outline-none"
             onClick={closeModal}
           >
             &times;
           </button>
-          <FormWrapper onSubmit={validate}>
-            <div className="fs-24 fw-400">
+          <form onSubmit={validate} className="overflow-x-hidden">
+            <div className="text-2xl font-normal">
               {selectedMilestone
                 ? "Edit Hours"
                 : isFinalHours
                   ? "Submit Final Hours"
                   : "Add Hours"}
             </div>
-            <StyledFormGroup>
-              <div className="fs-1rem fw-300">
-                Title<span className="mandatory">&nbsp;*</span>
+            <div className="mt-5">
+              <div className="text-base font-light">
+                Title<span className="text-red-500">&nbsp;*</span>
               </div>
               <input
                 placeholder="Pick a title that describes what you did during these hours"
@@ -300,51 +298,56 @@ const AddHoursForm = ({
                 onChange={(e) =>
                   setTitle(e.target.value.replace(REGEX.TITLE, ""))
                 }
-                className="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-5 py-4 mt-1.5 rounded-[7px] border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
                 autoFocus
-                //disabled={jobTitle != ''}
               />
               {errors?.title && <ErrorMessage message={errors?.title} />}
-            </StyledFormGroup>
-            <StyledFormGroup>
-              <label className="fs-1rem fw-300 block">
-                Total Hours Worked<span className="mandatory">&nbsp;*</span>
+            </div>
+            <div className="mt-5">
+              <label className="text-base font-light block">
+                Total Hours Worked<span className="text-red-500">&nbsp;*</span>
               </label>
               <input
                 placeholder="Enter the number of hours worked (Ex. 30.5 or 0.85)"
                 value={hoursWorked}
                 onChange={(e) => changeHours(e.target.value)}
-                className="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-5 py-4 mt-1.5 rounded-[7px] border border-black focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {errors?.hoursWorked && (
                 <ErrorMessage message={errors?.hoursWorked} />
               )}
-            </StyledFormGroup>
-            <StyledFormGroup>
-              <div className="fs-1rem fw-300">Hourly Rate</div>
-              <span className="input-symbol-euro">
+            </div>
+            <div className="mt-5">
+              <div className="text-base font-light">Hourly Rate</div>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2">
+                  $
+                </span>
                 <input
                   placeholder="Enter hourly rate"
                   value={hourlyRate}
-                  className="form-input rate-input w-full px-3 py-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 flex justify-center bg-gray-200"
+                  className="w-full px-10 py-4 mt-1.5 rounded-[7px] border border-black focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100"
                   disabled
                 />
-              </span>
-            </StyledFormGroup>
-            <StyledFormGroup>
-              <div className="fs-1rem fw-300">Invoice Total</div>
-              <span className="input-symbol-euro">
+              </div>
+            </div>
+            <div className="mt-5">
+              <div className="text-base font-light">Invoice Total</div>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2">
+                  $
+                </span>
                 <input
                   placeholder="Enter amount"
                   value={numberWithCommas(amount)}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="form-input rate-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 flex justify-center bg-gray-200"
+                  className="w-full px-10 py-4 mt-1.5 rounded-[7px] border border-black focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100"
                   disabled
                 />
-              </span>
+              </div>
               {amount !== "" && (
-                <div className="mt-2 d-flex align-items-center">
-                  <div className="fs-1rem fw-400">
+                <div className="mt-2 flex items-center">
+                  <div className="text-base font-normal">
                     <table className="mx-4">
                       <tr>
                         <td>ZehMizeh Fee:</td>
@@ -352,7 +355,9 @@ const AddHoursForm = ({
                       </tr>
                       <tr>
                         <td>Your final takeaway:</td>
-                        <td className="fw-700">&nbsp;{calculateFinalAmount}</td>
+                        <td className="font-bold">
+                          &nbsp;{calculateFinalAmount}
+                        </td>
                       </tr>
                     </table>
                   </div>
@@ -364,10 +369,11 @@ const AddHoursForm = ({
               {amount != "" && parseFloat(amount) < 5 ? (
                 <ErrorMessage message="Hours submissions must be worth at least $5." />
               ) : null}
-            </StyledFormGroup>
-            <StyledFormGroup>
-              <label className="fs-1rem fw-300 block">
-                Description of Hours<span className="mandatory">&nbsp;*</span>
+            </div>
+            <div className="mt-5">
+              <label className="text-base font-light block">
+                Description of Hours
+                <span className="text-red-500">&nbsp;*</span>
               </label>
               <TextEditor
                 value={description}
@@ -378,9 +384,9 @@ const AddHoursForm = ({
               {errors?.description && (
                 <ErrorMessage message={errors?.description} />
               )}
-            </StyledFormGroup>
-            <StyledFormGroup>
-              <label className="fs-1rem fw-300 block">
+            </div>
+            <div className="mt-5">
+              <label className="text-base font-light block">
                 Attach any completed work below. (Even research, notes, or
                 incomplete drafts may be worth sharing.)
               </label>
@@ -405,28 +411,18 @@ const AddHoursForm = ({
               {errors?.screenshot_link && (
                 <ErrorMessage message={errors.screenshot_link} />
               )}
-            </StyledFormGroup>
-            <div className="flex gap-2 bottom-buttons flex-wrap md:justify-end">
-              {/* <StyledButton
-                className={isMobile ? "fs-16 fw-400 w-100" : "fs-16 fw-400"}
-                variant="primary"
-                padding="0.8125rem 2rem"
-                type="submit"
-                disabled={loading}
-              >
-                Submit
-              </StyledButton> */}
-
+            </div>
+            <div className="flex gap-2 mt-5 flex-wrap md:justify-end">
               <CustomButton
                 className={`
-                  px-[2rem] py-[0.8125rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-base mt-5
-                  ${isMobile ? "fs-16 fw-400 w-100" : "fs-16 fw-400"}`}
+                  px-[2rem] py-[0.8125rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-base
+                  ${isMobile ? "w-full" : ""}`}
                 text="Submit"
                 disabled={loading}
                 onClick={() => {}}
               />
             </div>
-          </FormWrapper>
+          </form>
         </div>
       </div>
     </div>

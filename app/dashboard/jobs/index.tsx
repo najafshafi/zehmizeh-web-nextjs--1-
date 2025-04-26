@@ -2,68 +2,41 @@
  * This is the main component that lists all the components of jobs list
  */
 "use client";
-import { useState } from 'react';
-import Link from 'next/link';
-import styled from 'styled-components';
-import Tabs from '@/components/ui/Tabs';
-import JobsInProgress from './JobsInProgress';
-import SavedJobs from './SavedJobs';
-
-const Wrapper = styled.div`
-  border-radius: 0.75rem;
-  box-shadow: 0px 4px 74px rgba(0, 0, 0, 0.08);
-  background: ${(props) => props.theme.colors.white};
-  padding: 2rem;
-  .tabs {
-    margin-top: 1.5rem;
-  }
-  a {
-    color: ${(props) => props.theme.colors.lightBlue};
-  }
-  .tabs-content {
-    margin-top: 4px;
-  }
-  .tabs-container {
-    .tab {
-      font-size: 1rem;
-      padding: 0.75rem 1.25rem;
-      height: 48px;
-    }
-    .active {
-      box-shadow: 0px 4px 26px rgba(0, 0, 0, 0.09);
-    }
-  }
-`;
+import { useState } from "react";
+import Link from "next/link";
+import Tabs from "@/components/ui/Tabs";
+import JobsInProgress from "./JobsInProgress";
+import SavedJobs from "./SavedJobs";
 
 const TABS = [
-  { id: 1, label: 'Work in Progress', key: 'work_in_progress' },
-  { id: 2, label: 'Saved', key: 'saved' },
+  { id: 1, label: "Work in Progress", key: "work_in_progress" },
+  { id: 2, label: "Saved", key: "saved" },
 ];
 
 const Jobs = () => {
-  const [activeTab, setActiveTab] = useState('work_in_progress');
+  const [activeTab, setActiveTab] = useState("work_in_progress");
   return (
-    <Wrapper>
+    <div className="rounded-xl shadow-[0px_4px_74px_rgba(0,0,0,0.08)] bg-white p-8">
       <div className="flex items-center justify-between">
-        <div className="stat-label text-2xl font-bold">Projects</div>
-        <Link href="/jobs" className="text-base font-normal">
+        <div className="text-2xl font-bold">Projects</div>
+        <Link href="/jobs" className="text-base font-normal text-blue-600">
           View All Projects
         </Link>
       </div>
-      <div className="tabs ">
+      <div className="mt-6 !text-base">
         <Tabs
           tabs={TABS}
           activeTab={activeTab}
           onTabChange={(item) => setActiveTab(item)}
           breakPoint="576px"
-          className="tabs-container cursor-pointer"
+          className="cursor-pointer"
         />
       </div>
-      <div className="tabs-content">
-        {activeTab == 'work_in_progress' && <JobsInProgress />}
-        {activeTab == 'saved' && <SavedJobs />}
+      <div className="mt-1">
+        {activeTab == "work_in_progress" && <JobsInProgress />}
+        {activeTab == "saved" && <SavedJobs />}
       </div>
-    </Wrapper>
+    </div>
   );
 };
 

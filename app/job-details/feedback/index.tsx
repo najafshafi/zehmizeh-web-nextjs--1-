@@ -5,7 +5,6 @@
 
 import ReviewContent from "@/components/ReviewContent";
 import AddReviewForm from "./AddReviewForm";
-import { FeedbackWrapper } from "./feedback.styled";
 import { separateValuesWithComma } from "@/helpers/utils/misc";
 import BlurredImage from "@/components/ui/BlurredImage";
 
@@ -19,9 +18,9 @@ const Feedback = ({
   isClientFeedback,
 }: any) => {
   return (
-    <FeedbackWrapper className="flex flex-col">
+    <div className="flex flex-col">
       {isClientFeedback && !feedbackData?.freelancer && (
-        <div className="review-heading-note text-center fs-20 font-normal">
+        <div className="m-auto mt-16 text-center text-xl font-normal">
           Your client has ended the project and shared a review. To read it,
           submit your review below.
         </div>
@@ -39,10 +38,10 @@ const Feedback = ({
       )}
       {feedbackData && feedbackData?.client && feedbackData?.freelancer && (
         <div className="">
-          <div className="client-feedback">
+          <div className="mt-10">
             <div className="text-xl font-bold">Received</div>
-            <div className="review-content flex flex-wrap items-start">
-              <div className="client-details flex items-center">
+            <div className="!mt-[1.125rem] flex flex-wrap items-start !gap-[1.875rem] !rounded-[1rem] !bg-white !p-[1.875rem]">
+              <div className="flex items-center gap-5">
                 <BlurredImage
                   src={
                     clientDetails?.user_image || "/images/default_avatar.png"
@@ -54,7 +53,7 @@ const Feedback = ({
                   <div className="text-base font-normal capitalize">
                     {clientDetails?.first_name} {clientDetails?.last_name}
                   </div>
-                  <div className="client-location text-base font-normal text-gray-500">
+                  <div className="mt-1.5 text-base font-normal text-gray-500">
                     {separateValuesWithComma([
                       clientDetails?.location?.state,
                       clientDetails?.location?.country_name,
@@ -62,21 +61,21 @@ const Feedback = ({
                   </div>
                 </div>
               </div>
-              <div className="divider hidden lg:block" />
+              <div className="hidden h-[8.5rem] w-[1px] bg-black lg:block" />
               <div className="flex-1">
                 <ReviewContent review={feedbackData?.client} />
               </div>
             </div>
           </div>
-          <div className="freelancer-feedback">
+          <div className="mt-12">
             <div className="text-xl font-bold">Given</div>
-            <div className="review-content">
+            <div className="mt-[1.125rem] rounded-[1rem] bg-white p-[1.875rem]">
               <ReviewContent review={feedbackData?.freelancer} />
             </div>
           </div>
         </div>
       )}
-    </FeedbackWrapper>
+    </div>
   );
 };
 

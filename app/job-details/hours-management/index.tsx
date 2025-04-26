@@ -5,10 +5,6 @@
 import { useState } from "react";
 import moment from "moment";
 import toast from "react-hot-toast";
-import {
-  MilestonesWrapper,
-  MileStoneListItem,
-} from "./hours-management.styled";
 import { StatusBadge } from "@/components/styled/Badges";
 import StripeCompleteWarning from "@/components/jobs/StripeCompleteWarning";
 import NoDataFound from "@/components/ui/NoDataFound";
@@ -145,13 +141,13 @@ const HoursManagement = ({
   };
 
   return (
-    <MilestonesWrapper>
+    <div className="mx-auto mt-10 w-[816px] max-w-full">
       {milestone?.length == 0 && (
         <div>
           <NoDataFound className="pb-2" />
-          <p className="text-center mt-4">
+          <p className="mt-4 text-center">
             Check{" "}
-            <Link to="/support/faq/working_a_project">
+            <Link to="/support/faq/working_a_project" className="text-yellow-500">
               Working a Project FAQs
             </Link>{" "}
             section for more information
@@ -160,16 +156,16 @@ const HoursManagement = ({
       )}
       {milestone?.length > 0 &&
         milestone?.map((item: Milestone, index: number) => (
-          <MileStoneListItem
+          <div
             key={item.milestone_id}
-            className="flex flex-col gap-2 milestone-item"
+            className="mt-6 flex flex-col gap-2 rounded-[1.25rem] bg-white p-7 shadow-[0px_4px_74px_rgba(0,0,0,0.04)]"
             data-hourly-status={item.hourly_status}
           >
             <div>
-              <div className="flex justify-between gap-3 ">
+              <div className="flex justify-between gap-3">
                 <div
                   className={classNames(
-                    "heading fs-20 font-normal capital-first-ltr",
+                    "heading text-xl font-normal first-letter:capitalize",
                     {
                       "mb-3": item.is_final_milestone,
                     }
@@ -217,19 +213,19 @@ const HoursManagement = ({
               </div>
               <div
                 className={classNames(
-                  "flex md:flex-row flex-col justify-between align-items-md-end gap-2",
+                  "flex flex-col justify-between gap-2 md:flex-row md:items-end",
                   {
                     "mt-3": item.hourly_status !== "pending",
                   }
                 )}
               >
-                <h4 className="amount fs-32 font-normal">
+                <h4 className="text-3xl font-normal">
                   {numberWithCommas(item.total_amount, "USD")}
                 </h4>
 
                 <div>
                   {!!item.date_created && (
-                    <div className="fs-18 font-normal">
+                    <div className="text-lg font-normal">
                       Submitted on{" "}
                       {item.date_created
                         ? moment(item.date_created).format("MMM DD, YYYY")
@@ -237,7 +233,7 @@ const HoursManagement = ({
                     </div>
                   )}
                   {!!item.cancelled_date && (
-                    <div className="fs-18 font-normal">
+                    <div className="text-lg font-normal">
                       Closed on{" "}
                       {item.cancelled_date
                         ? moment(item.cancelled_date).format("MMM DD, YYYY")
@@ -245,7 +241,7 @@ const HoursManagement = ({
                     </div>
                   )}
                   {item.hourly_status == "paid" && (
-                    <div className="fs-18 font-normal">
+                    <div className="text-lg font-normal">
                       Paid on{" "}
                       {item.paid_date
                         ? moment(item.paid_date).format("MMM DD, YYYY")
@@ -255,7 +251,7 @@ const HoursManagement = ({
                 </div>
               </div>
             </div>
-            <div className="flex md:flex-row flex-col justify-between align-items-md-end gap-3">
+            <div className="flex flex-col justify-between gap-3 md:flex-row md:items-end">
               <div>
                 <StyledHtmlText
                   needToBeShorten
@@ -264,11 +260,11 @@ const HoursManagement = ({
                 />
 
                 {item?.attachments ? (
-                  <div className="flex items-center justify-content-start gap-3">
+                  <div className="mt-3 flex items-center justify-start gap-3">
                     {item.attachments
                       .split(",")
                       .map((att: string, index: number) => (
-                        <div className="mt-3" key={`attachments-${index}`}>
+                        <div key={`attachments-${index}`}>
                           <AttachmentPreview
                             uploadedFile={att}
                             removable={false}
@@ -280,14 +276,14 @@ const HoursManagement = ({
                 ) : null}
               </div>
               {item.hourly_status == "pending" && (
-                <div className="request-release-btn">
+                <div>
                   <StatusBadge color="yellow">
                     Waiting for Client to Pay
                   </StatusBadge>
                 </div>
               )}
             </div>
-          </MileStoneListItem>
+          </div>
         ))}
 
       <AddHoursForm
@@ -305,7 +301,7 @@ const HoursManagement = ({
         stripeStatus={stripeWarningModalState?.stripeStatus}
         toggle={closeStripeModal}
       />
-    </MilestonesWrapper>
+    </div>
   );
 };
 
