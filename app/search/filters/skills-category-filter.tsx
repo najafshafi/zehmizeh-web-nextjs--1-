@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import toast from "react-hot-toast";
 import { TJobDetails } from "@/helpers/types/job.type";
 import useOnClickOutside from "@/helpers/hooks/useClickOutside";
-import { Form, Spinner } from "react-bootstrap";
+import Spinner from "@/components/forms/Spin/Spinner";
 import Checkbox from "@/components/forms/FilterCheckBox2";
 import { SkillAndCategoryFilterWrapper } from "./skillAndCategoryStyled";
 import { IoMdClose } from "react-icons/io";
@@ -87,8 +87,9 @@ export const SkillCategoryFilter = () => {
 
   const searchUI = () => {
     return (
-      <Form.Control
-        className="searchbox"
+      <input
+        type="text"
+        className="w-full px-3 py-2 border-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 my-3"
         placeholder="Search"
         value={search}
         onChange={(e) => {
@@ -131,7 +132,7 @@ export const SkillCategoryFilter = () => {
         <div className="modal-search">
           <div>{searchUI()}</div>
           <IoMdClose
-            className="pointer ms-2"
+            className="cursor-pointer ml-2"
             onClick={() => {
               setModalOpen("");
             }}
@@ -151,7 +152,7 @@ export const SkillCategoryFilter = () => {
         {/* START ----------------------------------------- Apply and clear button */}
         <div className="button-wrapper">
           <p
-            className="text-primary pointer mx-2"
+            className="text-primary cursor-pointer mx-2"
             onClick={() => {
               updateFilterHandler("categories", []);
               setModalOpen("");
@@ -184,7 +185,7 @@ export const SkillCategoryFilter = () => {
       {searchUI()}
       {isLoading ? (
         <div>
-          <Spinner animation="border" size="sm" />
+          <Spinner />
         </div>
       ) : (
         <>
@@ -193,7 +194,7 @@ export const SkillCategoryFilter = () => {
               return checkboxUI(item);
             })}
             <p
-              className="pointer text-primary m-0 mt-2"
+              className="cursor-pointer text-blue-600 m-0 mt-2"
               onClick={() => setModalOpen("CATEGORIES")}
             >
               {allItems.slice(5).length} More

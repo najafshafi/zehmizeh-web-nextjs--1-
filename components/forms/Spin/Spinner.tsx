@@ -1,7 +1,8 @@
-import React from 'react';
+import React from "react";
 
-const Spinner = ({ className = '', loadingText = 'Loading...' }) => {
-  const defaultClasses = 'w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-white';
+const Spinner = ({ className = "", loadingText = "Loading..." }) => {
+  const defaultClasses =
+    "w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-white";
   const svgClasses = `${defaultClasses} ${className}`;
 
   return (
@@ -22,7 +23,7 @@ const Spinner = ({ className = '', loadingText = 'Loading...' }) => {
           fill="currentFill"
         />
       </svg>
-      <span className="sr-only">{loadingText}</span>
+      <span className="sr-only bg-black">{loadingText}</span>
     </div>
   );
 };

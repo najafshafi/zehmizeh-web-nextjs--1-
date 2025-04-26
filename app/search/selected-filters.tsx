@@ -50,7 +50,7 @@ export default function SelectedFilters() {
           >
             Job Type: {status === "prospects" ? "Open" : status}
             <CrossIcon
-              className="pointer"
+              className="cursor-pointer"
               onClick={filterResults(status, "job_status")}
             />
           </div>
@@ -63,7 +63,7 @@ export default function SelectedFilters() {
           >
             {language.split("#")[0]}
             <CrossIcon
-              className="pointer"
+              className="cursor-pointer"
               onClick={filterResults(language, "languages")}
             />
           </div>
@@ -76,7 +76,7 @@ export default function SelectedFilters() {
           >
             Location: {location}
             <CrossIcon
-              className="pointer"
+              className="cursor-pointer"
               onClick={filterResults(location, "location")}
             />
           </div>
@@ -89,7 +89,7 @@ export default function SelectedFilters() {
           >
             {category.split("#")[0]}
             <CrossIcon
-              className="pointer"
+              className="cursor-pointer"
               onClick={filterResults(category, "categories")}
             />
           </div>
@@ -102,7 +102,7 @@ export default function SelectedFilters() {
           >
             {skill.split("#")[0]}
             <CrossIcon
-              className="pointer"
+              className="cursor-pointer"
               onClick={filterResults(skill, "skills")}
             />
           </div>
@@ -115,7 +115,7 @@ export default function SelectedFilters() {
           >
             Project Type: {textForUI(jobTypeItem)}
             <CrossIcon
-              className="pointer"
+              className="cursor-pointer"
               onClick={filterResults(jobTypeItem, "job_type")}
             />
           </div>
@@ -129,7 +129,7 @@ export default function SelectedFilters() {
           >
             Hourly Rate: {hourly_rate}
             <CrossIcon
-              className="pointer"
+              className="cursor-pointer"
               onClick={filterResults(hourly_rate, "hourly_rate")}
             />
           </div>
@@ -143,7 +143,7 @@ export default function SelectedFilters() {
           >
             Fix Budget: {fixed_budget}
             <CrossIcon
-              className="pointer"
+              className="cursor-pointer"
               onClick={filterResults(fixed_budget, "fixed_budget")}
             />
           </div>
@@ -157,7 +157,7 @@ export default function SelectedFilters() {
           >
             Account Type: {talentTypeItem}
             <CrossIcon
-              className="pointer"
+              className="cursor-pointer"
               onClick={filterResults(talentTypeItem, "account_type")}
             />
           </div>
@@ -170,7 +170,7 @@ export default function SelectedFilters() {
           >
             My Freelancer: {freelancer}
             <CrossIcon
-              className="pointer"
+              className="cursor-pointer"
               onClick={filterResults(freelancer, "freelancerFilters")}
             />
           </div>
@@ -183,7 +183,7 @@ export default function SelectedFilters() {
           >
             Rating: {RATINGS_FILTER_ENUM[rating]}
             <CrossIcon
-              className="pointer"
+              className="cursor-pointer"
               onClick={filterResults(rating, "rating")}
             />
           </div>
@@ -196,7 +196,7 @@ export default function SelectedFilters() {
               Hourly rate: ${filters?.hourly_rate?.min ?? 0} - $
               {filters?.hourly_rate?.max ?? 0}
               <CrossIcon
-                className="pointer"
+                className="cursor-pointer"
                 onClick={() =>
                   hourlyRateHandler(filters?.hourly_rate?.isNAChecked)
                 }
@@ -208,7 +208,7 @@ export default function SelectedFilters() {
             <div className="bg-[#f6f6f6] px-[0.875rem] py-3 rounded-[0.5rem] border border-[#d9d9d9] gap-2.5 capitalize flex items-center">
               NA Checked
               <CrossIcon
-                className="pointer"
+                className="cursor-pointer"
                 onClick={() =>
                   updateFilterHandler("hourly_rate", {
                     ...filters?.hourly_rate,

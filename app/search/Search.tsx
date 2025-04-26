@@ -1,9 +1,5 @@
 "use client";
 
-/*
- * This is the main component of this route
- */
-import { MainContainer } from "./Search.styled";
 import SearchBox from "@/components/search-comp/SearchBox";
 import Banner from "./banner";
 import FiltersAndListings from "./filters-and-listings";
@@ -28,7 +24,7 @@ export default function Search() {
   };
 
   return (
-    <MainContainer className="flex flex-col justify-center h-full flex-1">
+    <div className=" min-h-[80vh] mx-auto overflow-hidden md:p-2 flex flex-col justify-center h-full flex-1">
       {/* Search banner */}
 
       <Banner searchType={searchType}>
@@ -63,6 +59,6 @@ export default function Search() {
       {/* START ----------------------------------------- After posting project. Link will have hash value and based on that showing this text */}
       <ModalAfterPostingProject />
       {/* END ------------------------------------------- After posting project. Link will have hash value and based on that showing this text */}
-    </MainContainer>
+    </div>
   );
 }

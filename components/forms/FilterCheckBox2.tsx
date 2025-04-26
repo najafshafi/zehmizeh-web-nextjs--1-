@@ -1,5 +1,4 @@
 import { ChangeEvent, ReactNode } from "react";
-import { Form } from "react-bootstrap";
 
 interface Props {
   label?: ReactNode | string;
@@ -9,15 +8,25 @@ interface Props {
 }
 
 function Checkbox({ label = "", className = "", toggle, checked }: Props) {
+  const id =
+    typeof label === "string"
+      ? label
+      : `checkbox-${Math.random().toString(36).substring(2, 9)}`;
+
   return (
-    <Form.Check
-      type="checkbox"
-      className={`fs-1rem ${className}`}
-      id={typeof label === "string" ? label : undefined}
-      label={label}
-      checked={checked}
-      onChange={toggle}
-    />
+    <label
+      htmlFor={id}
+      className={`flex items-center gap-2 cursor-pointer ${className}`}
+    >
+      <input
+        type="checkbox"
+        id={id}
+        checked={checked}
+        onChange={toggle}
+        className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+      />
+      <span>{label}</span>
+    </label>
   );
 }
 

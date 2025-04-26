@@ -2,7 +2,6 @@
  * This is the Hourly rate filter
  */
 
-import { Form } from "react-bootstrap";
 import { useSearchFilters } from "@/helpers/contexts/search-filter-context";
 
 const HourlyRateFilter = () => {
@@ -25,43 +24,55 @@ const HourlyRateFilter = () => {
   return (
     <div className="mx-4">
       <div className="filter__checkbox__row flex items-center">
-        <Form.Check
-          inline
-          label="$1 - $25/hour"
-          name="hourly_budget_type"
-          type="checkbox"
-          value="1-25"
-          id="c_card_1_25"
-          onChange={(e) => onSelectItem(e.target.value)}
-          checked={filters.hourly_rate.includes("1-25")}
-          className="d-inline-flex items-center g-1 me-2"
-        />
+        <label
+          htmlFor="c_card_1_25"
+          className="inline-flex items-center gap-1 mr-2 cursor-pointer"
+        >
+          <input
+            type="checkbox"
+            id="c_card_1_25"
+            name="hourly_budget_type"
+            value="1-25"
+            onChange={(e) => onSelectItem(e.target.value)}
+            checked={filters.hourly_rate.includes("1-25")}
+            className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+          />
+          <span>$1 - $25/hour</span>
+        </label>
       </div>
       <div className="filter__checkbox__row flex items-center">
-        <Form.Check
-          inline
-          label="$25 - $100/hour"
-          name="hourly_budget_type"
-          type="checkbox"
-          value="25-100"
-          id="c_card_25_100"
-          onChange={(e) => onSelectItem(e.target.value)}
-          checked={filters.hourly_rate.includes("25-100")}
-          className="d-inline-flex items-center g-1 me-2"
-        />
+        <label
+          htmlFor="c_card_25_100"
+          className="inline-flex items-center gap-1 mr-2 cursor-pointer"
+        >
+          <input
+            type="checkbox"
+            id="c_card_25_100"
+            name="hourly_budget_type"
+            value="25-100"
+            onChange={(e) => onSelectItem(e.target.value)}
+            checked={filters.hourly_rate.includes("25-100")}
+            className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+          />
+          <span>$25 - $100/hour</span>
+        </label>
       </div>
       <div className="filter__checkbox__row flex items-center">
-        <Form.Check
-          inline
-          label="$100+/hour"
-          name="hourly_budget_type"
-          type="checkbox"
-          value="100-999"
-          id="c_card_100_999"
-          onChange={(e) => onSelectItem(e.target.value)}
-          checked={filters.hourly_rate.includes("100-999")}
-          className="d-inline-flex items-center g-1 me-2"
-        />
+        <label
+          htmlFor="c_card_100_999"
+          className="inline-flex items-center gap-1 mr-2 cursor-pointer"
+        >
+          <input
+            type="checkbox"
+            id="c_card_100_999"
+            name="hourly_budget_type"
+            value="100-999"
+            onChange={(e) => onSelectItem(e.target.value)}
+            checked={filters.hourly_rate.includes("100-999")}
+            className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+          />
+          <span>$100+/hour</span>
+        </label>
       </div>
     </div>
   );

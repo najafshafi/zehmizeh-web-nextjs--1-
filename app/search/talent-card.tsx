@@ -15,7 +15,6 @@ import Tooltip from "@/components/ui/Tooltip";
 import StyledHtmlText from "@/components/ui/StyledHtmlText";
 import BlurredImage from "@/components/ui/BlurredImage";
 import { useAuth } from "@/helpers/contexts/auth-context";
-import { BookmarkIcon } from "./Search.styled";
 import { toggleBookmarkUser } from "@/helpers/http/search";
 import { inviteFreelancer } from "@/helpers/http/jobs";
 import {
@@ -301,12 +300,12 @@ const TalentCard = ({ data }: { data?: TalentData }) => {
     return (
       <Tooltip
         customTrigger={
-          <BookmarkIcon
-            className="flex justify-center items-center"
+          <div
+            className="flex justify-center items-center h-[43px] w-[43px] rounded-[2rem] bg-[#f5f5f5]"
             onClick={onBookmarkClick}
           >
             {loading ? <Spinner /> : isSaved ? <SavedIcon /> : <UnSavedIcon />}
-          </BookmarkIcon>
+          </div>
         }
         className="inline-block align-middle"
       >

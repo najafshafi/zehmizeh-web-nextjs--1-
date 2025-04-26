@@ -42,14 +42,14 @@ const Filters = ({ onApply, showApplyBtn }: Props) => {
               {showApplyBtn && (
                 <div
                   onClick={onApply}
-                  className="fs-14 fw-400 filter__header__clearbtn pointer me-3"
+                  className="fs-14 fw-400 filter__header__clearbtn cursor-pointer me-3"
                 >
                   Apply
                 </div>
               )}
               <div
                 onClick={clearFilters}
-                className="fs-14 fw-400 filter__header__clearbtn pointer"
+                className="fs-14 fw-400 filter__header__clearbtn cursor-pointer"
               >
                 Clear all
               </div>
