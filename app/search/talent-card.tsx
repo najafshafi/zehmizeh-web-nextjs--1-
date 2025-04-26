@@ -324,7 +324,7 @@ const TalentCard = ({ data }: { data?: TalentData }) => {
       <TalentComponentWrapper
         href={`/freelancer/${data?.user_id}`}
         className={cns(
-          "flex flex-wrap gap-4 justify-between no-hover-effect overflow-hidden",
+          "flex flex-wrap gap-4 justify-between no-hover-effect overflow-hidden ",
           {
             "cursor-auto": !user || !hasClientAddedPaymentDetails(user),
           }

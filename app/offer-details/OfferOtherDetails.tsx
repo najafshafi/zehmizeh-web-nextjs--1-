@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import { expectedHoursRemap, showFormattedBudget } from "@/helpers/utils/misc";
 import StyledHtmlText from "@/components/ui/StyledHtmlText";
 import AttachmentPreview from "@/components/ui/AttachmentPreview";
@@ -12,27 +11,6 @@ type Props = {
   isProposalSubmitted: boolean;
 };
 
-const DetailStyledItem = styled.div`
-  margin: auto;
-  margin-top: 1.5rem;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.03);
-  border-radius: 0.75rem;
-  .job-detail-item-title {
-    line-height: 2.1rem;
-  }
-  .description-text {
-    opacity: 0.5;
-  }
-  .line-height-2rem {
-    line-height: 2rem;
-  }
-  .job-detail-item-value {
-    margin-top: 1.375rem;
-  }
-`;
-
 const OfferOtherDetails = ({ data, isProposalSubmitted }: Props) => {
   return (
     <div className="grid grid-cols-1 gap-2">
@@ -42,7 +20,7 @@ const OfferOtherDetails = ({ data, isProposalSubmitted }: Props) => {
           <DetailsItem
             title="Client's Invitation"
             atributeValue={
-              <div className="line-height-2rem font-light text-lg mt-3">
+              <div className="leading-8 font-light text-lg mt-3">
                 <StyledHtmlText
                   htmlString={data.invite_message}
                   id={`invite_msg_${data.invite_message}`}
@@ -60,7 +38,7 @@ const OfferOtherDetails = ({ data, isProposalSubmitted }: Props) => {
           title="Project Description"
           atributeValue={
             <div>
-              <div className="description-text line-height-2rem font-light text-lg mt-3">
+              <div className="opacity-50 leading-8 font-light text-lg mt-3">
                 {/* This will convert html to normal text */}
                 <StyledHtmlText
                   htmlString={data.job_description}
@@ -154,7 +132,7 @@ const OfferOtherDetails = ({ data, isProposalSubmitted }: Props) => {
             <DetailsItem
               title="Budget"
               atributeValue={
-                <div className="job-detail-item-value font-normal text-lg">
+                <div className="mt-[1.375rem] font-normal text-lg">
                   {data.budget?.isProposal === true
                     ? "Open to Proposals"
                     : showFormattedBudget(data.budget)}
@@ -171,12 +149,12 @@ const OfferOtherDetails = ({ data, isProposalSubmitted }: Props) => {
             <DetailsItem
               title="Payment Structure"
               atributeValue={
-                <div className="job-detail-item-value text-lg font-normal">
+                <div className="mt-[1.375rem] text-lg font-normal">
                   {data.budget?.type == "fixed"
                     ? "Project-Based"
                     : data.budget?.type == "hourly"
-                    ? "Hourly"
-                    : "Unsure"}
+                      ? "Hourly"
+                      : "Unsure"}
                 </div>
               }
             />
@@ -190,9 +168,9 @@ const OfferOtherDetails = ({ data, isProposalSubmitted }: Props) => {
             <DetailsItem
               title="Delivery Time"
               atributeValue={
-                <div className="job-detail-item-value">
+                <div className="mt-[1.375rem]">
                   <div className="flex items-center gap-1">
-                    <div className="description-text text-xl font-normal">
+                    <div className="opacity-50 text-xl font-normal">
                       Duration:
                     </div>
                     <div className="text-xl font-normal">
@@ -213,7 +191,7 @@ const OfferOtherDetails = ({ data, isProposalSubmitted }: Props) => {
               title="Skills Category"
               atributeValue={
                 <div className="flex items-center mt-3 flex-wrap">
-                  <div className="description-text line-height-2rem font-light text-lg capitalize">
+                  <div className="opacity-50 leading-8 font-light text-lg capitalize">
                     {getCategories(data.skills)
                       .map((dt) => dt.category_name)
                       .join(", ")}
@@ -255,7 +233,7 @@ const OfferOtherDetails = ({ data, isProposalSubmitted }: Props) => {
                     (item, index: number) =>
                       item.skill_id && (
                         <div
-                          className="description-text line-height-2rem font-light text-lg capitalize"
+                          className="opacity-50 leading-8 font-light text-lg capitalize"
                           key={item.skill_id}
                         >
                           {item.skill_name}
@@ -298,7 +276,7 @@ const OfferOtherDetails = ({ data, isProposalSubmitted }: Props) => {
                 <div className="flex items-center mt-3 flex-wrap">
                   {data.languages?.map((item, index: number) => (
                     <div
-                      className="description-text line-height-2rem font-light text-lg"
+                      className="opacity-50 leading-8 font-light text-lg"
                       key={item.id}
                     >
                       {item.name}
@@ -327,9 +305,9 @@ const DetailsItem = ({
   atributeValue: React.ReactNode;
 }) => {
   return (
-    <DetailStyledItem>
-      <div className="job-detail-item-title text-2xl font-normal">{title}</div>
+    <div className="mx-auto mt-6 p-8 bg-white/70 shadow-[0px_4px_24px_rgba(0,0,0,0.03)] rounded-xl">
+      <div className="leading-[2.1rem] text-2xl font-normal">{title}</div>
       {atributeValue}
-    </DetailStyledItem>
+    </div>
   );
 };

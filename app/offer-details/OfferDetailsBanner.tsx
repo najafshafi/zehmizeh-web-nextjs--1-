@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from "react";
 import Spinner from "@/components/forms/Spin/Spinner";
 import toast from "react-hot-toast";
 import moment from "moment";
-import styled from "styled-components";
 import SubmitProposalModal from "@/components/jobs/SubmitProposalModal";
 import { archiveUnarchiveProposal } from "@/helpers/http/proposals";
 import BlurredImage from "@/components/ui/BlurredImage";
@@ -16,94 +15,6 @@ import ProposalMessageModal from "@/components/jobs/ProposalMessageModal";
 import { WarningInviteesMessageModal } from "@/components/jobs/WarningInviteesMessageModal";
 import { breakpoints } from "@/helpers/hooks/useResponsive";
 import CustomButton from "@/components/custombutton/CustomButton";
-
-const Wrapper = styled.div`
-  padding: 2.25rem;
-  box-shadow: 0px 4px 60px rgba(0, 0, 0, 0.05);
-  background: ${(props) => props.theme.colors.white};
-  border: ${(props) => `1px solid ${props.theme.colors.yellow}`};
-  border-radius: 12px;
-  & > div {
-    width: 100%;
-  }
-  .job-title-wrapper {
-    display: flex;
-    flex-direction: row;
-    gap: 2rem;
-    justify-content: space-between;
-    .banner-title {
-      line-height: 2.1rem;
-      margin-bottom: 1.25rem;
-      & + div {
-        min-width: 160px;
-        display: flex;
-        justify-content: flex-end;
-      }
-    }
-  }
-  .attribute-gray-label {
-    opacity: 0.5;
-  }
-  .posted-date {
-    gap: 0.5rem;
-  }
-  .line-height-28 {
-    line-height: 1.75rem;
-  }
-  .posted-by {
-    margin-top: 1.75rem;
-  }
-  .devider {
-    opacity: 0.1;
-    margin: 0rem 1.25rem;
-  }
-  .buttons {
-    gap: 1rem;
-    align-items: flex-end;
-    @media (max-width: 767px) {
-      align-items: flex-start;
-    }
-    margin-top: auto;
-  }
-  .archived-badge {
-    width: auto;
-    color: #858585;
-    background-color: rgba(29, 30, 27, 0.1);
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-  }
-  .pending-badge {
-    color: #ebb05d;
-    background-color: rgba(227, 177, 102, 0.19);
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-  }
-  .inviteButton {
-    flex-wrap: wrap;
-  }
-  @media ${breakpoints.mobile} {
-    .inviteButton {
-      button {
-        width: 100%;
-      }
-    }
-    .posted-date {
-      margin-top: 10px;
-    }
-    .job-title-wrapper {
-      flex-direction: column;
-      gap: 10px;
-      .banner-title {
-        line-height: 2.1rem;
-        margin-bottom: 0px;
-        & + div {
-          width: 100%;
-          justify-content: flex-start;
-        }
-      }
-    }
-  }
-`;
 
 const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
   const router = useRouter();
@@ -226,16 +137,21 @@ const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
           }}
         />
       )}
-      <Wrapper className="flex justify-between flex-wrap gap-4 mt-4">
+      <div className="p-9 shadow-[0px_4px_60px_rgba(0,0,0,0.05)] bg-white border border-[#EE761C] rounded-xl flex flex-col justify-between flex-wrap gap-4 mt-4 w-full">
         {/* START ----------------------------------------- Job title */}
         <div>
-          <div className="job-title-wrapper">
-            <div className="banner-title text-2xl font-normal capital-first-ltr">
-              {convertToTitleCase(data.job_title)}
+          <div className="w-full flex md:flex-row md:gap-8 justify-between flex-col gap-2.5">
+            <div className="leading-[2.1rem] md:mb-5 mb-0">
+              <div className="text-2xl font-normal capital-first-ltr">
+                {convertToTitleCase(data.job_title)}
+              </div>
             </div>
             {/* START ----------------------------------------- Archive and unarchive */}
             {!isProposalSubmitted && (
-              <div onClick={onArchiveUnarchiveProposal}>
+              <div
+                onClick={onArchiveUnarchiveProposal}
+                className="md:min-w-[160px] flex md:justify-end w-full justify-start"
+              >
                 {!archiving ? (
                   !isArchived ? (
                     <div
@@ -265,18 +181,18 @@ const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
           {/* END ------------------------------------------- Job title */}
 
           {/* START ----------------------------------------- Posted date */}
-          <div className="posted-date flex items-center flex-wrap">
-            <div className="attribute-gray-label line-height-28 text-xl font-normal">
+          <div className="flex items-center flex-wrap gap-2 md:mt-10 mt-2.5">
+            <div className="opacity-50 leading-7 text-xl font-normal">
               Posted:
             </div>
-            <div className="attribute-value line-height-28 text-xl font-normal">
+            <div className="leading-7 text-xl font-normal">
               {moment(data?.date_created).format("MMM DD, YYYY")}
             </div>
           </div>
           {/* END ------------------------------------------- Posted date */}
 
           {/* START ----------------------------------------- Client name */}
-          <div className="posted-by flex items-center gap-1">
+          <div className="flex items-center gap-1 mt-7">
             <BlurredImage
               src={data?.userdata?.user_image || "/images/default_avatar.png"}
               height="52px"
@@ -284,10 +200,8 @@ const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
               allowToUnblur={false}
             />
             <div>
-              <div className="attribute-gray-label text-sm font-normal">
-                Client:
-              </div>
-              <div className="text-xl font-normal line-height-28 capitalize">
+              <div className="opacity-50 text-sm font-normal">Client:</div>
+              <div className="text-xl font-normal leading-7 capitalize">
                 {data?.userdata?.first_name} {data?.userdata?.last_name}
               </div>
             </div>
@@ -299,7 +213,7 @@ const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
         {!isArchived ? (
           !isProposalSubmitted ? (
             <>
-              <div className="bottom-buttons flex gap-3 inviteButton">
+              <div className="flex gap-3 md:items-end items-start mt-auto">
                 {isProjectProposalDisabled && (
                   <Tooltip className="stripe-tooltip">
                     {!["verified"].includes(user.stp_account_status)
@@ -307,30 +221,10 @@ const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
                       : "Before you can respond to this invitation, make sure to complete your profile to be considered for approval."}
                   </Tooltip>
                 )}
-                {/* <StyledButton
-                  variant="outline-dark"
-                  className="width-fit-content"
-                  border="0.87px solid #EE761C"
-                  onClick={() => {
-                    if (data?.threadExists)
-                      return router.push(
-                        `/messages-new/invite_${data?.invite_id}`
-                      );
-                    // warning modal should be shown 3 times per project after that it shouldnt show
-                    if (warningPopupCount < 3) {
-                      setIsWarningModalOpen(true);
-                      return;
-                    }
-                    setProMessModal(true);
-                  }}
-                >
-                  {data?.threadExists ? "Go To Chat" : "Message Client"}
-                </StyledButton> */}
 
                 <CustomButton
                   text={data?.threadExists ? "Go To Chat" : "Message Client"}
-                  className="px-8 py-4 w-full  md:max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-[#EE761C] mt-3  hover:bg-black hover:text-white
-                  hover:border-none"
+                  className="px-8 py-4 w-full md:max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[18px] border border-[#EE761C] mt-3 hover:bg-black hover:text-white hover:border-none"
                   onClick={() => {
                     if (data?.threadExists)
                       return router.push(
@@ -345,18 +239,6 @@ const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
                   }}
                   disabled={declineLoading}
                 />
-
-                {/* <StyledButton
-                  variant="outline-dark"
-                  className="width-fit-content flex items-center gap-2"
-                  padding="10px 55px 10px 55px !important"
-                  border="0.87px solid #EE761C"
-                  onClick={onDeclinedProposal}
-                  disabled={declineLoading}
-                >
-                  {declineLoading && <Spinner size="sm" />}
-                  Decline Invite
-                </StyledButton> */}
 
                 <CustomButton
                   text={
@@ -366,20 +248,13 @@ const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
                       "Decline Invite"
                     )
                   }
-                  className="px-8 py-4 text-center w-full  md:max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-[#EE761C] mt-3 hover:bg-black hover:text-white hover:border-none"
+                  className="px-8 py-4 text-center w-full md:max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[18px] border border-[#EE761C] mt-3 hover:bg-black hover:text-white hover:border-none"
                   onClick={onDeclinedProposal}
                   disabled={declineLoading}
                 />
 
-                {/* <StyledButton
-                  disabled={isProjectProposalDisabled}
-                  padding="10px 28px 10px 28px !important"
-                  onClick={toggleProposalModal}
-                >
-                  Submit Proposal
-                </StyledButton> */}
                 <CustomButton
-                  className="px-8 py-4 text-center w-full  md:max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-3"
+                  className="px-8 py-4 text-center w-full md:max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-3"
                   disabled={isProjectProposalDisabled}
                   onClick={toggleProposalModal}
                   text="Submit Proposal"
@@ -387,17 +262,17 @@ const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
               </div>
             </>
           ) : (
-            <div className="pending-badge text-sm font-normal w-fit">
+            <div className="text-[#ebb05d] bg-[rgba(227,177,102,0.19)] rounded px-4 py-2 text-sm font-normal w-fit">
               Pending
             </div>
           )
         ) : (
-          <div className="archived-badge text-sm font-normal w-fit">
+          <div className="text-[#858585] bg-[rgba(29,30,27,0.1)] rounded px-4 py-2 text-sm font-normal w-fit">
             Archived
           </div>
         )}
         {/* END ------------------------------------------- Submit, decline invite or message client buttons */}
-      </Wrapper>
+      </div>
       <SubmitProposalModal
         show={showSubmitProposalModal}
         toggle={toggleProposalModal}

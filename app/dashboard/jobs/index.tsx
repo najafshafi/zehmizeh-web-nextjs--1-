@@ -50,7 +50,7 @@ const Jobs = () => {
           View All Projects
         </Link>
       </div>
-      <div className="tabs">
+      <div className="tabs ">
         <Tabs
           tabs={TABS}
           activeTab={activeTab}

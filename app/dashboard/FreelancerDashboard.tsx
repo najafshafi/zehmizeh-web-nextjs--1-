@@ -5,13 +5,13 @@ import DashboardStats from "./DashboardStats";
 import Proposals from "./proposals";
 import Jobs from "./jobs";
 import useDashboardStats from "./use-dashboard-stats";
-import { MainContainer, Wrapper } from "./freelancerDashboard.styled";
 import TopRatedIcon from "@/public/icons/top-rated.svg";
 import useStartPageFromTop from "@/helpers/hooks/useStartPageFromTop";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import PageTitle from "@/components/styled/PageTitle";
 import { useEffect } from "react";
 import { redirect } from "next/navigation";
+import { Container } from "react-bootstrap";
 
 export default function FreelancerDashboard() {
   useStartPageFromTop();
@@ -30,20 +30,18 @@ export default function FreelancerDashboard() {
   }, [user?.is_account_approved]);
 
   return (
-    <MainContainer>
-      <Wrapper>
+    <Container className="relative">
+      <div className="max-w-[1170px] mx-auto min-h-[70vh] relative">
         {/* Title and top rated badge */}
         <div
           className={`flex justify-between items-center ${
             dashboardStats?.ratings?.average <= 4.5 ? "mt-5" : ""
           }`}
         >
-          <PageTitle>{user?.first_name}’s Dashboard</PageTitle>
+          <PageTitle>{user?.first_name}'s Dashboard</PageTitle>
           {dashboardStats?.ratings?.average > 4.5 && (
-            <div className="top-rated-badge flex flex-col">
-              <div className="top-rated__label text-sm font-normal">
-                Top Rated
-              </div>
+            <div className="flex flex-col bg-white gap-2 p-5 pt-9 h-36 rounded-t-none rounded-b-[74px]">
+              <div className="text-sm font-normal">Top Rated</div>
               <TopRatedIcon />
             </div>
           )}
@@ -53,7 +51,7 @@ export default function FreelancerDashboard() {
         <DashboardStats dashboardStats={dashboardStats} isLoading={isLoading} />
 
         {/* Proposal and jobs */}
-        <div className="proposals-and-jobs">
+        <div className="my-8 mb-25 lg:my-8 lg:mb-25">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             <div className="mb-5">
               <Proposals />
@@ -63,7 +61,7 @@ export default function FreelancerDashboard() {
             </div>
           </div>
         </div>
-      </Wrapper>
-    </MainContainer>
+      </div>
+    </Container>
   );
 }

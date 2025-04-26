@@ -1,12 +1,8 @@
-/*
- * This component serves a list of SAVED JOBS
- */
 "use client";
 import { useState } from "react";
 import moment from "moment";
 import Spinner from "@/components/forms/Spin/Spinner";
 import Link from "next/link";
-import { ProposalWrapper, BookmarkIcon, TabContent } from "./jobs.styled";
 import Loader from "@/components/Loader";
 import NoDataFound from "@/components/ui/NoDataFound";
 import useJobs from "./use-jobs";
@@ -32,7 +28,7 @@ const SavedJobs = () => {
   };
 
   return (
-    <TabContent>
+    <div className="h-[500px] max-h-[500px] overflow-y-auto text-black">
       {isLoading || isRefetching ? (
         <Loader />
       ) : jobs.length > 0 ? (
@@ -47,50 +43,46 @@ const SavedJobs = () => {
                 "pe-auto": !isProjectHiddenForFreelancer(item),
               })}
             >
-              <ProposalWrapper className="mt-3 flex cursor-pointer gap-2 justify-between no-hover-effect text-black">
-                <div className="saved-job--content flex flex-col">
-                  <div className="flex items-center justify-between flex-wrap gap-2 ">
-                    <div className="job-title text-lg font-normal">
+              <div className="mt-3 flex cursor-pointer gap-2 justify-between no-hover-effect border border-[#dbdbdb] p-5 rounded-lg transition-all">
+                <div className="flex flex-col gap-3.5">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <div className="text-lg font-normal break-words text-[#212529]">
                       {convertToTitleCase(item.job_title)}
                     </div>
                   </div>
 
-                  <div className="budget-and-location flex items-center flex-wrap">
+                  <div className="flex items-center flex-wrap gap-2.5">
                     {/* Budget */}
-
-                    <div className="proposal__budget flex items-center justify-center flex-wrap">
+                    <div className="flex items-center justify-center flex-wrap bg-[#fbf5e8] py-1.5 px-2.5 rounded-full">
                       <DollarCircleIcon />
-                      <div className="proposal__budget-value flex">
+                      <div className="flex ml-1.5 text-[#212529]">
                         {item.budget.type === "fixed" ? (
                           numberWithCommas(item.budget?.amount, "USD")
                         ) : (
                           <>
                             {numberWithCommas(item?.budget?.max_amount, "USD")}
-                            <span className="light-text">/hr</span>&nbsp;
-                            {/* -&nbsp;{numberWithCommas(item?.budget?.max_amount, 'USD')}
-                          <span className="light-text">/hr</span> */}
+                            <span className="opacity-60">/hr</span>&nbsp;
                           </>
                         )}
                       </div>
                       {item?.budget?.type === "fixed" && (
-                        <span className="light-text ms-2">Budget</span>
+                        <span className="opacity-63 ms-2">Budget</span>
                       )}
                     </div>
 
                     {/* Location */}
-
                     {Array.isArray(item?.preferred_location) &&
                       item?.preferred_location?.length > 0 && (
-                        <div className="proposal__budget flex items-center justify-center flex-wrap">
+                        <div className="flex text-[#212529] items-center justify-center flex-wrap bg-[#fbf5e8] py-1.5 px-2.5 rounded-full">
                           <LocationIcon />
-                          <div className="text-sm font-normal mx-1">
+                          <div className="text-base font-normal mx-4">
                             {item.preferred_location.join(", ")}
                           </div>
                         </div>
                       )}
                   </div>
 
-                  <div className="text-sm font-normal applied-date light-text">
+                  <div className="text-sm font-normal opacity-60 text-[#212529]">
                     Posted on{" "}
                     {moment(item?.date_created).format("MMM DD, YYYY")}
                   </div>
@@ -101,20 +93,20 @@ const SavedJobs = () => {
                     </span>
                   )}
                 </div>
-                <BookmarkIcon
-                  className="flex justify-center items-center cursor-pointer"
+                <div
+                  className="h-[43px] w-[43px] rounded-full bg-[#f5f5f5] text-[#747474] flex justify-center items-center cursor-pointer"
                   onClick={(e) => onBookmarkClick(e, item?.job_post_id)}
                 >
                   {loadingId == item?.job_post_id ? <Spinner /> : <SavedIcon />}
-                </BookmarkIcon>
-              </ProposalWrapper>
+                </div>
+              </div>
             </Link>
           );
         })
       ) : (
         <NoDataFound />
       )}
-    </TabContent>
+    </div>
   );
 };
 
