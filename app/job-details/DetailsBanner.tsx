@@ -5,7 +5,6 @@
 import { useState } from "react";
 import Spinner from "@/components/forms/Spin/Spinner";
 import moment from "moment";
-import { PengingProposalWrapper, NoPropsalWrapper } from "./job-details.styled";
 import Tooltip from "@/components/ui/Tooltip";
 import { StatusBadge } from "@/components/styled/Badges";
 import SubmitProposalModal from "@/components/jobs/SubmitProposalModal";
@@ -140,7 +139,7 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
 
   return data?.proposal?.status ? (
     ["pending", "declined", "denied"].includes(data?.proposal?.status) ? (
-      <PengingProposalWrapper>
+      <div className="p-9 shadow-[0px_4px_60px_rgba(0,0,0,0.05)] bg-white mt-9 rounded-xl border border-[#FFD700]">
         <div className="text-2xl font-normal">
           {convertToTitleCase(data.job_title)}
         </div>
@@ -186,7 +185,7 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
             </span>
           </div>
         </div>
-      </PengingProposalWrapper>
+      </div>
     ) : (
       <>
         {data.milestone.length > 0 && (
@@ -376,128 +375,146 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
       </>
     )
   ) : (
-    <NoPropsalWrapper className="header flex flex-col md:flex-row justify-between md:items-start gap-3">
-      <div className="content flex flex-col flex-wrap flex-1">
-        <div className="flex flex-row justify-between">
-          <span className="text-2xl font-normal">
-            {convertToTitleCase(data.job_title)}
-          </span>
-          <div className="flex">
-            <Tooltip
-              customTrigger={
-                <div
-                  className="h-[43px] w-[43px] rounded-full flex justify-center items-center cursor-pointer"
-                  onClick={onBookmarkClick}
-                >
-                  {loading ? (
-                    <Spinner />
-                  ) : isSaved ? (
-                    <SavedIcon />
-                  ) : (
-                    <UnSavedIcon className={user ? "" : "blurred-2px"} />
-                  )}
-                </div>
-              }
-            >
-              {user
-                ? !isSaved
-                  ? BOOKMARK_TOOLTIPS.save
-                  : BOOKMARK_TOOLTIPS.unsave
-                : BOOKMARK_TOOLTIPS.not_logged_in}
-            </Tooltip>
-            <Tooltip
-              customTrigger={
-                <div
-                  className="h-[43px] w-[43px] rounded-full flex justify-center items-center cursor-pointer ml-2.5"
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    if (navigator.share) {
-                      navigator.share({
-                        title: "Share this job",
-                        text: "Check out this job",
-                        url: window.location.href,
-                      });
-                    }
-                  }}
-                >
-                  <ShareIcon />
-                </div>
-              }
-            >
-              Share
-            </Tooltip>
-          </div>
-        </div>
-        <div className="flex items-center flex-wrap gap-3">
-          <div
-            className={`flex items-center flex-wrap ${!user?.is_account_approved ? "blurred-9px" : ""}`}
-          >
-            <BlurredImage
-              src={data.userdata?.user_image || "/images/default_avatar.png"}
-              height="2.625rem"
-              width="2.625rem"
-              className="mr-4"
-              allowToUnblur={false}
-            />
-            <span className="text-xl font-normal leading-7 capitalize">
-              {data.userdata?.first_name} {data.userdata?.last_name}
+    <div className="p-9 shadow-[0px_4px_60px_rgba(0,0,0,0.05)] bg-white mt-9 rounded-xl border border-[#FFD700]">
+      <div className="flex flex-col md:flex-row justify-between md:items-start gap-3">
+        <div className="flex flex-col flex-wrap flex-1 gap-6">
+          <div className="flex flex-row justify-between">
+            <span className="text-2xl font-normal">
+              {convertToTitleCase(data.job_title)}
             </span>
-          </div>
-          <Divider />
-          <div className="flex items-center flex-wrap gap-3">
-            {data.userdata?.location && (
-              <div className="flex items-center">
-                <LocationIcon />
-                <div className="text-base font-normal opacity-50 ml-2">
-                  {data.userdata.location.country_name}
-                </div>
-              </div>
-            )}
-            <div className="flex items-center">
-              <StarIcon />
-              <div className="text-base font-normal ml-2">
-                {data.avg_rating?.toFixed(1)}
-              </div>
-              <div className="text-sm font-light opacity-50 ml-1">
-                Ratings (
-                {numberWithCommas(data?.count_rating?.toString() || "0")})
-              </div>
+            <div className="flex">
+              <Tooltip
+                customTrigger={
+                  <div
+                    className="h-[43px] w-[43px] rounded-full flex justify-center items-center cursor-pointer"
+                    onClick={onBookmarkClick}
+                  >
+                    {loading ? (
+                      <Spinner />
+                    ) : isSaved ? (
+                      <SavedIcon />
+                    ) : (
+                      <UnSavedIcon className={user ? "" : "blurred-2px"} />
+                    )}
+                  </div>
+                }
+              >
+                {user
+                  ? !isSaved
+                    ? BOOKMARK_TOOLTIPS.save
+                    : BOOKMARK_TOOLTIPS.unsave
+                  : BOOKMARK_TOOLTIPS.not_logged_in}
+              </Tooltip>
+              <Tooltip
+                customTrigger={
+                  <div
+                    className="h-[43px] w-[43px] rounded-full flex justify-center items-center cursor-pointer ml-2.5"
+                    onClick={() => {
+                      navigator.clipboard.writeText(window.location.href);
+                      if (navigator.share) {
+                        navigator.share({
+                          title: "Share this job",
+                          text: "Check out this job",
+                          url: window.location.href,
+                        });
+                      }
+                    }}
+                  >
+                    <ShareIcon />
+                  </div>
+                }
+              >
+                Share
+              </Tooltip>
             </div>
           </div>
-        </div>
-        <div className="flex flex-col md:flex-row justify-between md:items-center gap-3">
           <div className="flex items-center flex-wrap gap-3">
-            <div className="text-xl font-normal leading-7 opacity-50">
-              Posted:
-            </div>
-            <div className="text-xl font-normal leading-7">
-              {data?.date_created &&
-                moment(data.date_created).format("MMM DD, YYYY")}
-            </div>
-            <Divider />
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-normal opacity-50">Due date: </span>
-              <span className="text-xl font-normal">
-                {data?.due_date
-                  ? moment(data?.due_date).format("MMM DD, YYYY")
-                  : "-"}
+            <div
+              className={`flex items-center flex-wrap ${!user?.is_account_approved ? "blurred-9px" : ""}`}
+            >
+              <BlurredImage
+                src={data.userdata?.user_image || "/images/default_avatar.png"}
+                height="2.625rem"
+                width="2.625rem"
+                className="mr-4"
+                allowToUnblur={false}
+              />
+              <span className="text-xl font-normal leading-7 capitalize">
+                {data.userdata?.first_name} {data.userdata?.last_name}
               </span>
             </div>
+            <Divider />
+            <div className="flex items-center flex-wrap gap-3">
+              {data.userdata?.location && (
+                <div className="flex items-center">
+                  <LocationIcon />
+                  <div className="text-base font-normal opacity-50 ml-2">
+                    {data.userdata.location.country_name}
+                  </div>
+                </div>
+              )}
+              <div className="flex items-center">
+                <StarIcon />
+                <div className="text-base font-normal ml-2">
+                  {data.avg_rating?.toFixed(1)}
+                </div>
+                <div className="text-sm font-light opacity-50 ml-1">
+                  Ratings (
+                  {numberWithCommas(data?.count_rating?.toString() || "0")})
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="flex">
-            {data?.status === "prospects" && !isProposalSubmitted && (
-              <div className="flex-2">
-                {user?.is_account_approved ? (
-                  user.stp_account_id &&
-                  user?.stp_account_status === "verified" ? (
-                    <CustomButton
-                      className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
-                      // onClick={() => setShowSubmitProposalModal(true)}
-                      onClick={() =>
-                        router.push(`/job-details/${id}/gen_details/submit`)
-                      }
-                      text="Submit Proposal"
-                    />
+          <div className="flex flex-col md:flex-row justify-between md:items-center gap-3">
+            <div className="flex items-center flex-wrap gap-3">
+              <div className="text-xl font-normal leading-7 opacity-50">
+                Posted:
+              </div>
+              <div className="text-xl font-normal leading-7">
+                {data?.date_created &&
+                  moment(data.date_created).format("MMM DD, YYYY")}
+              </div>
+              <Divider />
+              <div className="flex items-center gap-2">
+                <span className="text-xl font-normal opacity-50">
+                  Due date:{" "}
+                </span>
+                <span className="text-xl font-normal">
+                  {data?.due_date
+                    ? moment(data?.due_date).format("MMM DD, YYYY")
+                    : "-"}
+                </span>
+              </div>
+            </div>
+            <div className="flex">
+              {data?.status === "prospects" && !isProposalSubmitted && (
+                <div className="flex-2">
+                  {user?.is_account_approved ? (
+                    user.stp_account_id &&
+                    user?.stp_account_status === "verified" ? (
+                      <CustomButton
+                        className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+                        onClick={() =>
+                          router.push(`/job-details/${id}/gen_details/submit`)
+                        }
+                        text="Submit Proposal"
+                      />
+                    ) : (
+                      <Tooltip
+                        customTrigger={
+                          <CustomButton
+                            disabled
+                            className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] disabled:opacity-50"
+                            text="Submit Proposal"
+                            onClick={() => {}}
+                          />
+                        }
+                        className="inline-block align-middle"
+                      >
+                        Please {!user.stp_account_id ? "create" : "activate"}{" "}
+                        your stripe account to submit proposals
+                      </Tooltip>
+                    )
                   ) : (
                     <Tooltip
                       customTrigger={
@@ -510,35 +527,20 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
                       }
                       className="inline-block align-middle"
                     >
-                      Please {!user.stp_account_id ? "create" : "activate"} your
-                      stripe account to submit proposals
+                      Your account is still under review. You&apos;ll be able to
+                      apply to projects once it&apos; been approved.
                     </Tooltip>
-                  )
-                ) : (
-                  <Tooltip
-                    customTrigger={
-                      <CustomButton
-                        disabled
-                        className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] disabled:opacity-50"
-                        text="Submit Proposal"
-                        onClick={() => {}}
-                      />
-                    }
-                    className="inline-block align-middle"
-                  >
-                    Your account is still under review. You&apos;ll be able to
-                    apply to projects once it&apos;s been approved.
-                  </Tooltip>
-                )}
-              </div>
-            )}
-            {data?.status === "prospects" && isProposalSubmitted && (
-              <div>
-                <StatusBadge className="w-fit" color="yellow">
-                  Pending
-                </StatusBadge>
-              </div>
-            )}
+                  )}
+                </div>
+              )}
+              {data?.status === "prospects" && isProposalSubmitted && (
+                <div>
+                  <StatusBadge className="w-fit" color="yellow">
+                    Pending
+                  </StatusBadge>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -549,7 +551,7 @@ const DetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
         data={data as any}
         onSubmitProposal={onSubmitProposal}
       />
-    </NoPropsalWrapper>
+    </div>
   );
 };
 
