@@ -71,3 +71,7 @@
   background: none;
   outline: none;
 }
+
+.modal-backdrop.show {
+  opacity: 0.4 !important;
+}
