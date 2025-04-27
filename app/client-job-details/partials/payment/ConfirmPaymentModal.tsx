@@ -10,6 +10,7 @@ import { queryKeys } from "@/helpers/const/queryKeys";
 import { useParams } from "next/navigation";
 import { TJobDetails } from "@/helpers/types/job.type";
 import { VscClose } from "react-icons/vsc";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 interface Milestone {
   status: string;
@@ -197,24 +198,18 @@ const ConfirmPaymentModal: React.FC<Props> = ({
             )}
             <div className="flex flex-col md:flex-row justify-center mt-6 gap-4">
               {isReleasePrompt && (
-                <button
-                  type="button"
-                  className="px-8 py-[0.9rem] text-lg font-normal rounded-full text-gray-800 bg-[#e7e7e7] hover:scale-105 duration-300 transition-transform"
+                <CustomButton
+                  text={CONSTANTS.payment.reviewWorkFirst}
+                  className={`px-8 py-4 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full transition-transform duration-200 hover:scale-105 hover:bg-black hover:text-white`}
                   onClick={toggle}
-                >
-                  {CONSTANTS.payment.reviewWorkFirst}
-                </button>
+                />
               )}
-              <button
-                type="button"
-                className={`px-8 py-[0.9rem] text-lg font-normal rounded-full bg-[#F2B420] text-[#212529] hover:scale-105 duration-300 transition-transform ${
-                  loading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+              <CustomButton
+                text={buttonText || "Confirm"}
+                className={`px-[2rem] py-[1rem] text-lg font-normal rounded-full bg-[#F2B420] text-[#212529] hover:scale-105 duration-300 transition-transform ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
                 onClick={onConfirm}
                 disabled={loading}
-              >
-                {buttonText || "Confirm"}
-              </button>
+              />
             </div>
           </div>
         </div>

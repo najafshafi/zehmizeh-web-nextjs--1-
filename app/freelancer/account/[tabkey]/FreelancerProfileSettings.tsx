@@ -2,9 +2,7 @@
 
 import { useEffect } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-// import { Spinner } from "react-bootstrap";
 import Spinner from "@/components/forms/Spin/Spinner";
-import CustomButton from "@/components/custombutton/CustomButton";
 import {
   FreelancerContent,
   FreelancerProfileWrapper,
