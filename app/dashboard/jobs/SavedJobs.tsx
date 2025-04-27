@@ -73,7 +73,7 @@ const SavedJobs = () => {
                     {/* Location */}
                     {Array.isArray(item?.preferred_location) &&
                       item?.preferred_location?.length > 0 && (
-                        <div className="flex text-[#212529] items-center justify-center flex-wrap bg-[#fbf5e8] py-1.5 px-2.5 rounded-full">
+                        <div className="flex text-[#212529] items-center justify-center flex-wrap bg-[#fbf5e8] py-1.5 px-2.5 rounded-lg">
                           <LocationIcon />
                           <div className="text-base font-normal mx-4">
                             {item.preferred_location.join(", ")}
@@ -87,7 +87,7 @@ const SavedJobs = () => {
                     {moment(item?.date_created).format("MMM DD, YYYY")}
                   </div>
                   {isHidden && (
-                    <span className="text-danger">
+                    <span className="text-[#FF0505]">
                       Client has hidden this post -{" "}
                       {moment(item?.is_hidden?.date).format("MMM DD, YYYY")}
                     </span>
