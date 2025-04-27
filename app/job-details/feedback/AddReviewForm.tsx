@@ -62,19 +62,19 @@ const AddReviewForm = ({
   };
 
   return (
-    <div className="content flex flex-col">
-      <div className="fs-24 font-normal">Freelancer&apos;s Review</div>
-      <div className="ratings flex flex-col">
-        <div className="ratings__label fs-16 font-normal">
+    <div className="mt-11 flex flex-col gap-6 rounded-[1rem] bg-[rgba(255,255,255,0.7)] p-8 shadow-[0px_4px_54px_rgba(0,0,0,0.04)]">
+      <div className="text-2xl font-normal">Freelancer&apos;s Review</div>
+      <div className="flex flex-col gap-5 rounded-[0.5rem] border border-[#d7d7d7] p-6">
+        <div className="text-base font-normal uppercase opacity-70">
           RATE YOUR EXPERIENCE WITH {clientName}
         </div>
         <div className="flex items-center">
-          <div className="ratings__range-label fs-18 font-normal">Worst</div>
-          <div className="ratings__stars flex items-center mx-3">
+          <div className="text-lg font-normal">Worst</div>
+          <div className="mx-3 flex items-center gap-[3px]">
             {Array(5)
               .fill(1)
               .map((item: any, index) => (
-                <div key={`star_${index}`} className="pointer">
+                <div key={`star_${index}`} className="cursor-pointer">
                   <AnimatedStar
                     isFilled={index < ratings}
                     onChange={() => setRatings(index + 1)}
@@ -82,7 +82,7 @@ const AddReviewForm = ({
                 </div>
               ))}
           </div>
-          <div className="ratings__range-label fs-18 font-normal">Best</div>
+          <div className="text-lg font-normal">Best</div>
         </div>
       </div>
       <Form.Control
@@ -92,23 +92,13 @@ const AddReviewForm = ({
         placeholder="Describe your experience with the client here..."
         value={reviewMsg}
         onChange={(e) => setReviewMsg(e.target.value)}
-        className="feedback-message"
+        className="rounded-[7px] p-4 border border-[#d7d7d7] focus:outline-none focus:ring-4 focus:ring-blue-400/70"
         maxLength={500}
       />
-      <div className="text-end">
-        {/* <StyledButton
-          padding="0.75rem 2rem"
-          variant="outline"
-          className="button"
-          disabled={loading}
-          onClick={addFeedback}
-        >
-          Submit Review
-        </StyledButton> */}
-
+      <div className="flex justify-end">
         <CustomButton
           text={"Submit Review"}
-          className={`px-[2rem] py-[0.75rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white hover:border-none`}
+          className={`px-[2rem] py-[0.85rem] text-lg text-center font-normal bg-[#f2b420] text-black rounded-full hover:scale-105 transition-transform duration-300`}
           disabled={loading}
           onClick={addFeedback}
         />
