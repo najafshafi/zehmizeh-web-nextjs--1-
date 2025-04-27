@@ -581,7 +581,7 @@ const JobDetails = () => {
                           (x: Milestone) => x.is_final_milestone
                         ).length > 0
                       }
-                      className={`px-[2rem] py-4  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5 ${
+                      className={`px-[2rem] py-4  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full border border-primary bg-white text-[18px] mt-5 hover:bg-primary  ${
                         isMobile || isTablet ? "" : "w-fit"
                       }`}
                       onClick={toggleEndJobModal}

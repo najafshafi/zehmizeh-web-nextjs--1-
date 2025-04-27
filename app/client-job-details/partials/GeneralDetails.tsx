@@ -1,45 +1,9 @@
 import React from "react";
-import styled from "styled-components";
 import StyledHtmlText from "@/components/ui/StyledHtmlText";
 import AttachmentPreview from "@/components/ui/AttachmentPreview";
 import { showFormattedBudget, expectedHoursRemap } from "@/helpers/utils/misc";
 import { getCategories, getSkills } from "@/helpers/utils/helper";
 import Link from "next/link";
-
-const DetailStyledItem = styled.div`
-  margin: auto;
-  margin-top: 2rem;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.03);
-  border-radius: 0.75rem;
-  .job-detail-item-title {
-    line-height: 2.1rem;
-  }
-  .description-text {
-    opacity: 0.7;
-  }
-  .line-height-2rem {
-    line-height: 2rem;
-  }
-  .job-detail-item-value {
-    margin-top: 1.375rem;
-  }
-  .attachment {
-    border: 1px solid #dedede;
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    gap: 10px;
-    width: 400px;
-    max-width: 100%;
-    .content {
-      max-width: 90%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-`;
 
 const JobOtherDetails = ({ data }: any) => {
   const skillCategory = getCategories(data?.skills);
@@ -342,9 +306,16 @@ const DetailsItem = ({
   atributeValue: React.ReactNode;
 }) => {
   return (
-    <DetailStyledItem>
-      <div className="job-detail-item-title text-2xl font-normal">{title}</div>
+    <div className="mx-auto mt-8 p-8 bg-white bg-opacity-70 shadow-[0px_4px_24px_rgba(0,0,0,0.03)] rounded-[0.75rem]">
+      <div className="text-2xl font-normal leading-[2.1rem]">{title}</div>
       {atributeValue}
-    </DetailStyledItem>
+    </div>
   );
 };
+
+// Add these global styles to your CSS to maintain the same look for nested classes
+// .description-text { @apply opacity-70; }
+// .line-height-2rem { @apply leading-8; }
+// .job-detail-item-value { @apply mt-[1.375rem]; }
+// .attachment { @apply border border-[#dedede] p-3 rounded-lg gap-[10px] w-[400px] max-w-full; }
+// .attachment .content { @apply max-w-[90%] whitespace-nowrap overflow-hidden text-ellipsis; }

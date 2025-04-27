@@ -361,7 +361,7 @@ const Milestones = ({
     <>
       <CustomButton
         text={"Deliver Payment"}
-        className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-[#167347] text-[18px]"
+        className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-white rounded-full bg-[#167347] text-[18px]"
         disabled={item?.milestone_id == selectedMilestoneId}
         onClick={onRelease(item)}
       />

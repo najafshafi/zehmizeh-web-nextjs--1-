@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { Modal, Button, Form } from "react-bootstrap";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { StyledButton } from "@/components/forms/Buttons";
-import { FormWrapper } from "./milestones/milestones.styled";
 import { manageMilestone } from "@/helpers/http/jobs";
 import { manageHours } from "@/helpers/http/jobs";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 type Props = {
   show: boolean;
@@ -43,6 +40,21 @@ const DeclineReasonPrompt = ({
       setShowWarning(true);
     }
   }, [type, show]);
+
+  useEffect(() => {
+    if (show) {
+      // Lock body scroll
+      document.body.style.overflow = "hidden";
+    } else {
+      // Restore scroll
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      // Cleanup
+      document.body.style.overflow = "";
+    };
+  }, [show]);
 
   const submitDeclineReason = (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,80 +112,86 @@ const DeclineReasonPrompt = ({
     setShowWarning(false);
   };
 
-  return (
-    <StyledModal
-      maxwidth={570}
-      show={show}
-      size="sm"
-      onHide={closeModal}
-      centered
-    >
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={closeModal}>
-          &times;
-        </Button>
-        {showWarning && (
-          <div>
-            <div className="fs-24 font-normal text-center mb-3">
-              Are you sure you want to terminate this milestone?
-            </div>
-            <div className="fs-20 font-normal text-center mb-3">
-              When you terminate, the milestone is closed permanently and the
-              money you deposited previously is returned to you.
-            </div>
-            <div className="fs-20 font-normal text-center">
-              If you are simply not ready to deliver payment because you have
-              feedback about the work your freelancer delivered - or because
-              your freelancer has not yet delivered the work - close this window
-              and communicate with them in the &quot;Messages&quot; tab.
-            </div>
-            <div className="flex align-itms-center justify-center gap-3 flex-wrap mt-4">
-              <StyledButton variant="outline-dark" onClick={closeWarning}>
-                Terminate Milestone
-              </StyledButton>
-              <StyledButton onClick={toggle}>
-                I&apos;ll Send Feedback
-              </StyledButton>
-            </div>
-          </div>
-        )}
+  if (!show) return null;
 
-        {!showWarning && (
-          <>
-            <div className="fs-20 font-normal text-center">
-              Are you sure you would like to decline this Final Hours
-              Submission? This will return the project to a &quot;Project in
-              Progress&quot; status and the freelancer will be able to continue
-              to submit hours.
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        onClick={closeModal}
+      ></div>
+
+      <div className="relative w-full max-w-[570px] mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="p-12">
+          <button
+            className="absolute -top-4 -right-8 text-3xl font-extralight leading-none hover:text-gray-500 focus:outline-none"
+            onClick={closeModal}
+          >
+            &times;
+          </button>
+
+          {showWarning && (
+            <div>
+              <div className="fs-24 font-normal text-center mb-3">
+                Are you sure you want to terminate this milestone?
+              </div>
+              <div className="fs-20 font-normal text-center mb-3">
+                When you terminate, the milestone is closed permanently and the
+                money you deposited previously is returned to you.
+              </div>
+              <div className="fs-20 font-normal text-center">
+                If you are simply not ready to deliver payment because you have
+                feedback about the work your freelancer delivered - or because
+                your freelancer has not yet delivered the work - close this
+                window and communicate with them in the &quot;Messages&quot;
+                tab.
+              </div>
+              <div className="flex items-center justify-center gap-3 flex-wrap mt-4">
+                <CustomButton
+                  text="Terminate Milestone"
+                  className="px-8 py-4 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full transition-transform duration-200 hover:scale-105 hover:bg-black hover:text-white"
+                  onClick={closeWarning}
+                />
+
+                <CustomButton
+                  text="I'll Send Feedback"
+                  className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+                  onClick={toggle}
+                />
+              </div>
             </div>
-            <FormWrapper>
-              <Form onSubmit={submitDeclineReason}>
-                <div className="flex g-2 flex-wrap mt-4 justify-center">
-                  <StyledButton
-                    className="fs-16 font-normal"
-                    variant="primary"
-                    padding="0.8125rem 2rem"
-                    type="submit"
+          )}
+
+          {!showWarning && (
+            <>
+              <div className="fs-20 font-normal text-center">
+                Are you sure you would like to decline this Final Hours
+                Submission? This will return the project to a &quot;Project in
+                Progress&quot; status and the freelancer will be able to
+                continue to submit hours.
+              </div>
+              <form onSubmit={submitDeclineReason}>
+                <div className="flex gap-2 flex-wrap mt-4 justify-center">
+                  <CustomButton
+                    text="Reopen the Project"
+                    className={`px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[16px] ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+                    onClick={() => {}}
                     disabled={loading}
-                  >
-                    Reopen the Project
-                  </StyledButton>
-                  <StyledButton
-                    className="fs-16 font-normal"
-                    variant="outline-dark"
-                    padding="0.8125rem 2rem"
+                  />
+
+                  <CustomButton
+                    text="Cancel"
+                    className={`px-8 py-4 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full transition-transform duration-200 hover:scale-105 hover:bg-black hover:text-white ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
                     onClick={closeModal}
                     disabled={loading}
-                  >
-                    Cancel
-                  </StyledButton>
+                  />
                 </div>
-              </Form>
-            </FormWrapper>
-          </>
-        )}
-      </Modal.Body>
-    </StyledModal>
+              </form>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 
