@@ -1,33 +1,8 @@
 import { useState, useEffect } from "react";
-import styled from "styled-components";
-import { StyledButton } from "@/components/forms/Buttons";
 import PaymentSummary from "./PaymentSummary";
-import { transition } from "@/styles/transitions";
-import { Row, Col, Container } from "react-bootstrap";
 import { usePayments } from "../../controllers/usePayments";
 import toast from "react-hot-toast";
-
-const CardsWrapper = styled.div`
-  .listing {
-    max-height: 300px;
-    overflow-y: auto;
-  }
-  .card-item {
-    border: 1px solid ${(props) => props.theme.colors.gray6};
-    border-radius: 10px;
-    padding: 1.25rem;
-    ${() => transition()};
-  }
-  .selected {
-    border: 2px solid ${(props) => props.theme.font.color.heading};
-  }
-  .payment-text {
-    color: #404040;
-  }
-  .light-text {
-    opacity: 0.7;
-  }
-`;
+import CustomButton from "@/components/custombutton/CustomButton";
 
 type Props = {
   cards: any;
@@ -53,52 +28,54 @@ const SavedCards = ({ cards, processingPayment, onPay }: Props) => {
   const onContinuePaying = () => {
     if (!selectedCardId) {
       toast.error("Please select a card.");
+      return;
     }
     onPay(selectedCardId);
   };
 
   return (
-    <CardsWrapper>
+    <div>
       <div className="fs-20 font-normal mt-3">Select Card</div>
-      <Container className="listing">
+      <div className="max-h-[300px] overflow-y-auto">
         {cards?.map((item: any) => (
-          <Row
+          <div
             key={item?.user_card_id}
-            className={`card-item mt-3 pointer ${
-              item?.stripe_card_id == selectedCardId ? "selected" : ""
-            }`}
+            className={`flex flex-row mt-3 cursor-pointer transition-all duration-200 ease-in hover:shadow-[0px_8px_36px_rgba(0,0,0,0.16)] hover:-translate-y-[2px] ${
+              item?.stripe_card_id == selectedCardId
+                ? "border-2 border-[#404040]"
+                : "border border-[#d8d8d8]"
+            } rounded-[10px] p-5`}
             onClick={onSelectCard(item?.stripe_card_id)}
           >
-            <Col md={8} xs={8}>
-              <div className="payment-text light-text fs-sm fw-300">
+            <div className="w-2/3">
+              <div className="text-[#404040] opacity-70 fs-sm fw-300">
                 CARD NUMBER
               </div>
-              <div className="payment-text fs-1rem font-normal mt-1">
+              <div className="text-[#404040] fs-1rem font-normal mt-1">
                 xxxx xxxx xxxx {item?.last_4_digit}
               </div>
-            </Col>
-            <Col md={4} xs={4}>
-              <div className="payment-text light-text fs-sm fw-300">EXP</div>
-              <div className="payment-text fs-1rem font-normal mt-1">
+            </div>
+            <div className="w-1/3">
+              <div className="text-[#404040] opacity-70 fs-sm fw-300">EXP</div>
+              <div className="text-[#404040] fs-1rem font-normal mt-1">
                 {item?.exp_date}
               </div>
-            </Col>
-          </Row>
+            </div>
+          </div>
         ))}
-      </Container>
+      </div>
 
       <PaymentSummary />
 
       <div className="flex justify-center">
-        <StyledButton
+        <CustomButton
+          text={jobType === "hourly" ? "Pay" : "Deposit Milestone Payment"}
+          className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-3 w-full"
           disabled={processingPayment}
           onClick={onContinuePaying}
-          className="mt-3 w-100"
-        >
-          {jobType === "hourly" ? "Pay" : "Deposit Milestone Payment"}
-        </StyledButton>
+        />
       </div>
-    </CardsWrapper>
+    </div>
   );
 };
 

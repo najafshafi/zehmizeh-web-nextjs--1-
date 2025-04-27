@@ -1,3 +1,9 @@
+/*
+ * This file contains CSS that has been converted to Tailwind CSS.
+ * It is kept here for reference but is no longer being used in the application.
+ */
+
+/*
 import styled from 'styled-components';
 export const MilestonesWrapper = styled.div`
   margin: 2.5rem auto auto;
@@ -67,3 +73,4 @@ export const FormWrapper = styled.div`
     }
   }
 `;
+*/

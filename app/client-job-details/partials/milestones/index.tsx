@@ -1,7 +1,6 @@
 import { useState } from "react";
 import moment from "moment";
 import toast from "react-hot-toast";
-import { MilestonesWrapper, MileStoneListItem } from "./milestones.styled";
 import { StatusBadge } from "@/components/styled/Badges";
 import AttachmentPreview from "@/components/ui/AttachmentPreview";
 import DeclineReasonPrompt from "../DeclineReasonPrompt";
@@ -20,9 +19,7 @@ import { paymentProcessingStatusHandler } from "@/helpers/validation/common";
 import { CLIENT_HOW_TO_PROJECT_BASED_PROJECTS } from "@/helpers/const/CONFIG";
 import Info from "@/public/icons/info-octashape.svg";
 import { VideoComponent } from "@/components/video";
-import styled from "styled-components";
 import { TcomponentConnectorRef } from "@/app/client-job-details/ClientJobDetails";
-// import { getValueByPercentage } from "@/helpers/utils/helper";
 import { AcceptAndPaynowModal } from "../payment/AcceptAndPaynowModal";
 import CustomButton from "@/components/custombutton/CustomButton";
 
@@ -131,21 +128,6 @@ const PAYMENT_STATUS: Record<string, { color: string; label: string }> = {
     label: "",
   },
 };
-
-const MilestoneHintText = styled.div`
-  color: ${(props) => props.theme.colors.red};
-`;
-
-// Warning text for disputed milestones
-const DisputeWarningText = styled.div`
-  color: ${(props) => props.theme.colors.primary};
-  margin-top: 1rem;
-  font-weight: 500;
-  display: flex;
-  svg {
-    margin-right: 0.5rem;
-  }
-`;
 
 interface MilestonesProps {
   milestone: Milestone[];
@@ -393,7 +375,7 @@ const Milestones = ({
       .length > 1;
 
   return (
-    <MilestonesWrapper>
+    <div className="mt-10 mx-auto w-[816px] max-w-full">
       {milestone?.length == 0 && (
         <div>
           <h4 className="text-center text-2xl font-bold">
@@ -445,9 +427,9 @@ const Milestones = ({
       {milestone?.length > 0 &&
         !isRefetching &&
         milestone?.map((item, index) => (
-          <MileStoneListItem
+          <div
             key={`${item?.milestone_id}_${item?.title}_${index}`}
-            className="flex flex-col milestone-item"
+            className="flex flex-col p-7 shadow-[0px_4px_74px_rgba(0,0,0,0.04)] bg-white mt-6 rounded-[1.25rem]"
             data-milestone-status={item.status}
           >
             <div className="flex md:flex-row flex-col justify-between md:gap-3 gap-4">
@@ -455,7 +437,7 @@ const Milestones = ({
                 <div className="text-2xl font-normal capital-first-ltr">
                   {convertToTitleCase(item.title)}
                 </div>
-                <div className="text-4xl font-normal line-height-100-perc mt-3">
+                <div className="text-4xl font-normal leading-[100%] mt-3">
                   {numberWithCommas(item.amount, "USD")}
                 </div>
 
@@ -468,7 +450,7 @@ const Milestones = ({
                 )*/}
                 {/* END ------------------------------------------- Showing price client has to pay including fees */}
               </div>
-              <div className="status">
+              <div className="min-w-max">
                 <div className="flex flex-col md:items-end">
                   <>
                     <StatusBadge
@@ -478,15 +460,18 @@ const Milestones = ({
                       item?.dispute_submitted_by === "CLIENT"
                         ? "Closed by Client"
                         : ["decline_dispute"].includes(item.status) &&
-                          item?.dispute_submitted_by === "FREELANCER"
-                        ? "Canceled"
-                        : jobstatus !== "active" && item.status === "pending"
-                        ? "Milestone Never Accepted"
-                        : item?.status === "payment_processing"
-                        ? paymentProcessingStatusHandler(
-                            item?.payment_method as "ACH" | "OTHER" | undefined
-                          )
-                        : PAYMENT_STATUS[item?.status]?.label || ""}
+                            item?.dispute_submitted_by === "FREELANCER"
+                          ? "Canceled"
+                          : jobstatus !== "active" && item.status === "pending"
+                            ? "Milestone Never Accepted"
+                            : item?.status === "payment_processing"
+                              ? paymentProcessingStatusHandler(
+                                  item?.payment_method as
+                                    | "ACH"
+                                    | "OTHER"
+                                    | undefined
+                                )
+                              : PAYMENT_STATUS[item?.status]?.label || ""}
                     </StatusBadge>
                   </>
                   {!!item?.date_created && (
@@ -515,7 +500,7 @@ const Milestones = ({
               </div>
             </div>
             <div className="flex mt-md-1 md:flex-row flex-col justify-between md:items-end gap-3">
-              <div>
+              <div className="break-words">
                 <StyledHtmlText
                   needToBeShorten
                   htmlString={item.description}
@@ -547,46 +532,30 @@ const Milestones = ({
             )}
             {/* Show warning message if milestone is under dispute */}
             {item?.status === "under_dispute" && item?.attachments && (
-              <DisputeWarningText>
-                <Info /> Attachments are not available while this milestone is
-                under dispute.
-              </DisputeWarningText>
+              <div className="flex items-center mt-4 text-primary font-medium">
+                <Info className="mr-2" /> Attachments are not available while
+                this milestone is under dispute.
+              </div>
             )}
             {jobstatus === "active" && item?.status === "pending" && (
               <div>
                 {/* Hint text to dont start working until milestone is approved */}
                 {!!item?.failure_message && (
-                  <MilestoneHintText className="mb-0 mt-1 text-2xl">
+                  <div className="mb-0 mt-1 text-2xl text-red-500">
                     <b>Payment Failed:</b> Your last payment failed because{" "}
                     {item?.failure_message}
-                  </MilestoneHintText>
+                  </div>
                 )}
-                <div className="divider my-4" />
-                <div className="bottom-buttons flex items-center gap-4">
+                <div className="h-px bg-black bg-opacity-10 my-4" />
+                <div className="flex items-center gap-4 md:justify-end justify-center">
                   {!moreThanOnePendingMilestone && (
                     <>
-                      {/* <StyledButton
-                        variant="success"
-                        padding="1rem 2rem"
-                        disabled={item?.milestone_id == selectedMilestoneId}
-                        onClick={askForPayNowConfirmation(item)}
-                      >
-                        Accept & Pay Now
-                      </StyledButton> */}
-
                       <CustomButton
                         text={"Accept & Pay Now"}
                         className="px-[2rem] py-[1rem] transition-transform duration-200 hover:scale-105 font-normal  rounded-full bg-[#167347] text-white text-[18px]"
                         disabled={item?.milestone_id == selectedMilestoneId}
                         onClick={askForPayNowConfirmation(item)}
                       />
-                      {/* <StyledButton
-                        padding="1rem 2rem"
-                        disabled={item?.milestone_id == selectedMilestoneId}
-                        onClick={askForConfirmation(item)}
-                      >
-                        Accept & Deposit
-                      </StyledButton> */}
                       <CustomButton
                         text={"Accept & Deposit"}
                         className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal  rounded-full bg-primary text-[18px]"
@@ -611,7 +580,7 @@ const Milestones = ({
             )}
 
             {item.status === "completed_by_freelancer" && (
-              <div className="mlstn-completed-notice flex items-center gap-3 mt-4 rounded-lg md:p-3 p-2">
+              <div className="flex items-center gap-3 mt-4 rounded-lg md:p-3 p-2 bg-[#FBF5E8]">
                 <span>
                   <Info />
                 </span>
@@ -625,7 +594,7 @@ const Milestones = ({
 
             {/* Deliver payment button on after accepting milestone */}
             {["paid"].includes(item.status) && (
-              <div className="bottom-buttons flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-3 flex-wrap md:justify-end justify-center">
                 {deliverPaymentBtn(item)}
               </div>
             )}
@@ -636,8 +605,8 @@ const Milestones = ({
               "completed_by_freelancer",
             ].includes(item?.status) ? (
               <>
-                <div className="divider my-4" />
-                <div className="bottom-buttons flex items-center gap-3 flex-wrap">
+                <div className="h-px bg-black bg-opacity-10 my-4" />
+                <div className="flex items-center gap-3 flex-wrap md:justify-end justify-center">
                   {item.status === "request_revision" ? (
                     /* Revisions requested */
                     <div>
@@ -665,7 +634,7 @@ const Milestones = ({
                 </div>
               </>
             ) : null}
-          </MileStoneListItem>
+          </div>
         ))}
 
       <DeclineReasonPrompt
@@ -698,7 +667,7 @@ const Milestones = ({
         toggle={closePayNowModal}
         handlePayment={onConfirmPayNow}
       />
-    </MilestonesWrapper>
+    </div>
   );
 };
 

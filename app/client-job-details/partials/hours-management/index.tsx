@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
 import toast from "react-hot-toast";
-import {
-  MilestonesWrapper,
-  MileStoneListItem,
-} from "./hours-management.styled";
+// Commenting out styled components import
+// import {
+//   MilestonesWrapper,
+//   MileStoneListItem,
+// } from "./hours-management.styled";
 import { StatusBadge } from "@/components/styled/Badges";
 import NoDataFound from "@/components/ui/NoDataFound";
 import StyledHtmlText from "@/components/ui/StyledHtmlText";
@@ -21,7 +22,7 @@ import DeclineReasonPrompt from "../DeclineReasonPrompt";
 import { usePayments } from "../../controllers/usePayments";
 import PendingHourlySubmission from "../../quick-options/PendingHourlySubmission";
 import { paymentProcessingStatusHandler } from "@/helpers/validation/common";
-import styled from "styled-components";
+// import styled from "styled-components";
 import { TcomponentConnectorRef } from "@/app/client-job-details/ClientJobDetails";
 import { getValueByPercentage } from "@/helpers/utils/helper";
 import CustomButton from "@/components/custombutton/CustomButton";
@@ -59,9 +60,10 @@ const PAYMENT_STATUS: PaymentStatusType = {
   },
 };
 
-const MilestoneHintText = styled("p")`
-  color: ${(props) => props.theme.colors.red};
-`;
+// Converted styled component to a regular component with Tailwind classes
+// const MilestoneHintText = styled("p")`
+//   color: ${(props) => props.theme.colors.red};
+// `;
 
 interface MilestoneItem {
   hourly_id: string;
@@ -268,7 +270,7 @@ const HoursManagement = ({
   };
 
   return (
-    <MilestonesWrapper>
+    <div className="mt-10 mx-auto w-[816px] max-w-full">
       {milestone?.length === 0 && (
         <NoDataFound
           className="py-5"
@@ -279,9 +281,9 @@ const HoursManagement = ({
       {milestone?.length > 0 &&
         milestoneHandler(milestone)?.map(
           (item: MilestoneItem, index: number, self: MilestoneItem[]) => (
-            <MileStoneListItem
+            <div
               key={item?.hourly_id}
-              className="flex flex-col milestone-item"
+              className="flex flex-col p-7 bg-white shadow-[0px_4px_74px_rgba(0,0,0,0.04)] mt-6 rounded-[1.25rem]"
               data-hourly-status={item.hourly_status}
             >
               <div className="flex md:flex-row flex-col justify-between md:gap-3 gap-4">
@@ -292,7 +294,7 @@ const HoursManagement = ({
                       : "Submission " + ++index}
                     : {convertToTitleCase(item.title)}
                   </div>
-                  <div className="fs-32 font-normal line-height-100-perc mt-3">
+                  <div className="fs-32 font-normal leading-[100%] mt-3">
                     {numberWithCommas(item.total_amount, "USD")}
                   </div>
                   {/* START ----------------------------------------- Showing price client has to pay including fees */}
@@ -425,10 +427,10 @@ const HoursManagement = ({
                   {/* Hint text to dont start working until milestone is approved */}
                   {item.hourly_status === "pending" &&
                     item?.failure_message && (
-                      <MilestoneHintText className="mb-0 mt-1 fs-20">
+                      <p className="mb-0 mt-1 fs-20 text-red-500">
                         <b>Payment Failed:</b> Your last payment failed because{" "}
                         {item?.failure_message}
-                      </MilestoneHintText>
+                      </p>
                     )}
                   {item?.attachments ? (
                     <div className="flex items-center justify-content-start gap-3">
@@ -491,7 +493,7 @@ const HoursManagement = ({
                   />
                 </div>
               ) : null}
-            </MileStoneListItem>
+            </div>
           )
         )}
 
@@ -524,7 +526,7 @@ const HoursManagement = ({
         loading={selectedMilestoneId !== ""}
         buttonText="Pay"
       />
-    </MilestonesWrapper>
+    </div>
   );
 };
 

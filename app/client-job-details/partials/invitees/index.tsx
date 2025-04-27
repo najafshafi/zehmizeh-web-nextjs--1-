@@ -10,7 +10,6 @@ import { StatusBadge } from "@/components/styled/Badges";
 import BlurredImage from "@/components/ui/BlurredImage";
 import PaginationComponent from "@/components/ui/Pagination";
 import NoDataFound from "@/components/ui/NoDataFound";
-import { InviteesWrapper, InviteesListItem } from "./invitees.styled";
 import useInvitees from "../../hooks/useInvitees";
 import { separateValuesWithComma } from "@/helpers/utils/misc";
 import LocationIcon from "@/public/icons/location-blue.svg";
@@ -305,7 +304,7 @@ export const Invitees = ({
   }
 
   return (
-    <InviteesWrapper className="flex flex-col">
+    <div className="flex flex-col gap-[30px] mt-10">
       {isLoading && <Loader />}
 
       {!isLoading && data?.length == 0 && (
@@ -315,24 +314,24 @@ export const Invitees = ({
       {!isLoading &&
         data?.length > 0 &&
         data?.map((item: InviteeData) => (
-          <InviteesListItem
+          <div
             key={item?.invite_id}
-            className="flex flex-wrap justify-between"
+            className="flex flex-wrap justify-between p-11 shadow-[0px_4px_74px_rgba(0,0,0,0.04)] bg-white rounded-xl gap-8 relative overflow-hidden"
           >
             {item?.edited_at && (
-              <p className="updated-on">
+              <p className="absolute top-0 left-0 right-0 text-center bg-[#FFEDD3] text-[#EE761C] py-[2px]">
                 Updated on - {formatDateAndTime(item.edited_at)}
               </p>
             )}
-            <div className="applicant-details flex gap-4 flex-wrap">
+            <div className="flex gap-4 flex-wrap max-w-[75%] break-words">
               <BlurredImage
                 src={item?.user_image || "/images/default_avatar.png"}
                 height="80px"
                 width="80px"
               />
-              <div className="main-details flex flex-col">
+              <div className="flex flex-col gap-[10px]">
                 <div className="flex items-center gap-2">
-                  <div className="fs-24 font-normal line-height-140 capitalize">
+                  <div className="fs-24 font-normal leading-[140%] capitalize">
                     <Link href={`/freelancer/${item?.user_id}`}>
                       {item?.first_name} {item?.last_name}
                     </Link>
@@ -351,22 +350,22 @@ export const Invitees = ({
                     {item?.status == "pending" ? "Unread" : item?.status}
                   </StatusBadge>
                 </div>
-                <div className="description fs-18 font-normal light-text line-height-140 capital-first-ltr">
+                <div className="fs-18 font-normal opacity-50 leading-[140%] capital-first-ltr">
                   {item?.job_title}
                 </div>
                 {item?.date_created && (
-                  <div className="light-text">
+                  <div className="opacity-50">
                     <span className="fw-500">Proposal Date:</span>{" "}
                     <span>
                       {moment(item.date_created).format("MMM DD, YYYY")}
                     </span>
                   </div>
                 )}
-                <div className="location-and-ratings flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-2 flex-wrap">
                   {(item?.location?.state || item?.location?.country_name) && (
-                    <div className="rounded-chip flex width-fit-content items-center">
+                    <div className="flex items-center bg-[#FBF5E8] py-1.5 px-3.5 rounded-2xl width-fit-content">
                       <LocationIcon />
-                      <div className="fs-1rem font-normal mx-1 light-text">
+                      <div className="fs-1rem font-normal mx-1 opacity-50">
                         {separateValuesWithComma([
                           item?.location?.state || "",
                           item?.location?.country_name || "",
@@ -374,19 +373,19 @@ export const Invitees = ({
                       </div>
                     </div>
                   )}
-                  <div className="rounded-chip flex width-fit-content items-center">
+                  <div className="flex items-center bg-[#FBF5E8] py-1.5 px-3.5 rounded-2xl width-fit-content">
                     <StarIcon />
                     <div className="fs-1rem font-normal mx-1">
                       {item?.avg_rate ? item?.avg_rate?.toFixed(1) : 0}
                     </div>
-                    <div className="fs-1rem font-normal mx-1 light-text">
+                    <div className="fs-1rem font-normal mx-1 opacity-50">
                       Ratings ({item?.feedback})
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="right-section flex flex-col justify-between items-start align-items-lg-end">
+            <div className="flex flex-col justify-between items-start lg:items-end md:gap-0 gap-5">
               <div className="fs-24 fw-700">
                 {/* {numberWithCommas(item?.proposed_budget?.amount, 'USD')} */}
                 {/* {item?.proposed_budget.type == 'hourly' ? '/hr' : ''} */}
@@ -407,7 +406,7 @@ export const Invitees = ({
                 />
               </div>
             </div>
-          </InviteesListItem>
+          </div>
         ))}
 
       {/* Pagination */}
@@ -454,6 +453,6 @@ export const Invitees = ({
           loading={editInvitationLoading}
         />
       )}
-    </InviteesWrapper>
+    </div>
   );
 };

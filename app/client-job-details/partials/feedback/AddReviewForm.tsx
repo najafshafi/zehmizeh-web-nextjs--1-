@@ -58,15 +58,15 @@ const AddReviewForm = ({
   };
 
   return (
-    <div className="content flex flex-col">
+    <div className=" gap-6 mt-11 p-8 bg-white bg-opacity-70 shadow-[0_4px_54px_rgba(0,0,0,0.04)] rounded-[1rem] flex flex-col">
       <div className="fs-24 font-normal">Give your review</div>
-      <div className="ratings flex flex-col">
-        <div className="ratings__label fs-16 font-normal">
+      <div className="border border-[#d7d7d7] p-6 px-7  gap-5 rounded-lg flex flex-col">
+        <div className="opacity-70 uppercase fs-16 font-normal">
           RATE YOUR EXPERIENCE WITH {freelancerName}
         </div>
         <div className="flex items-center">
           <div className="ratings__range-label fs-18 font-normal">Worst</div>
-          <div className="ratings__stars flex items-center mx-3">
+          <div className="flex gap-[3px]  items-center mx-3">
             {Array(5)
               .fill(1)
               .map((item: any, index) => (
@@ -88,14 +88,14 @@ const AddReviewForm = ({
         placeholder="Write your feedback here..."
         value={reviewMsg}
         onChange={(e) => setReviewMsg(e.target.value)}
-        className="feedback-message"
+        className="p-4 px-5 rounded-[7px]"
         maxLength={500}
       />
       <div className="text-end">
         <StyledButton
           padding="0.75rem 2rem"
           variant="outline-primary"
-          className="button"
+          className="bg-[#F2B420]"
           disabled={loading}
           onClick={addFeedback}
         >
