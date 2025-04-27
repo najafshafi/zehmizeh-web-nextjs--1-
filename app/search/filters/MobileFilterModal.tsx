@@ -1,6 +1,4 @@
-import { Modal, Button } from 'react-bootstrap';
-import Filters from './Filters';
-import { StyledModal } from '@/components/styled/StyledModal';
+import Filters from "./Filters";
 
 // This is a modal for displaying filters in mobile view
 
@@ -15,25 +13,33 @@ const MobileFilterModal = ({
   onClose,
   isSkillAndCategoryModalOpen,
 }: Props) => {
+  if (!show) return null;
+
   return (
-    <StyledModal
-      maxwidth={678}
-      show={show}
-      size="sm"
-      onHide={onClose}
-      $hideModal={isSkillAndCategoryModalOpen}
+    <div
+      className={`fixed inset-0 z-50 overflow-y-auto ${isSkillAndCategoryModalOpen ? "hidden" : ""}`}
     >
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={onClose}>
-          &times;
-        </Button>
+      {/* Backdrop */}
+      <div className="fixed inset-0 bg-black bg-opacity-50" onClick={onClose} />
 
-        {/* Filters */}
-        <Filters showApplyBtn onApply={onClose} />
+      {/* Modal */}
+      <div className="fixed inset-0 flex items-start justify-center p-4">
+        <div className="relative bg-white rounded-xl max-w-[678px] w-full max-h-[90vh]">
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 md:top-0 md:-right-8 md:text-white text-black hover:text-opacity-70  p-0  text-[1.75rem] font-thin border-none transform translate-x-[30px] -translate-y-[10px] hover:border-none focus:border-none active:border-none visited:border-none md:translate-x-0 md:translate-y-0"
+          >
+            &times;
+          </button>
 
-        {/*  */}
-      </Modal.Body>
-    </StyledModal>
+          {/* Modal Content */}
+          <div className="p-12">
+            <Filters showApplyBtn onApply={onClose} />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
