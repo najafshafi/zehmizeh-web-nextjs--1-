@@ -7,7 +7,7 @@ import cns from "classnames";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import Spinner from "@/components/forms/Spin/Spinner";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 import { StyledButton } from "@/components/forms/Buttons";
 import SelectJobModal from "@/components/invite-flow-modals/SelectJobModal";
 import InviteFreelancerMessageModal from "@/components/invite-flow-modals/InviteFreelancerMessageModal";

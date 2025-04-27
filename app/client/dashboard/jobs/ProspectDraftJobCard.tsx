@@ -4,7 +4,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import styled from "styled-components";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 import {
   convertToTitleCase,
   numberWithCommas,

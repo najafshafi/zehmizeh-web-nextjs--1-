@@ -1,7 +1,7 @@
 import { breakpoints } from "@/helpers/hooks/useResponsive";
 import { Container } from "react-bootstrap";
 import styled from "styled-components";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 
 export const Wrapper = styled(Container)`
   padding: 3rem 0rem 6.25rem 0rem;

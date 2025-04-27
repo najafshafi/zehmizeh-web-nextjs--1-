@@ -1,7 +1,7 @@
 import { breakpoints } from "@/helpers/hooks/useResponsive";
 import { coverImgHandler } from "@/helpers/utils/coverImgHandler";
 import styled from "styled-components";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 
 const StyledVideoPortfolioItem = styled.div<{ coverImage: string }>`
   border-radius: 0.5rem;
@@ -61,8 +61,19 @@ interface VideoPortfolioItemProps {
 
 const VideoPortfolioItem = ({ image, onClick }: VideoPortfolioItemProps) => {
   return (
-    <StyledVideoPortfolioItem coverImage={coverImgHandler(image)} onClick={onClick}>
-      <video className="video-preview" src={image} muted autoPlay loop playsInline preload="auto">
+    <StyledVideoPortfolioItem
+      coverImage={coverImgHandler(image)}
+      onClick={onClick}
+    >
+      <video
+        className="video-preview"
+        src={image}
+        muted
+        autoPlay
+        loop
+        playsInline
+        preload="auto"
+      >
         Your browser does not support the video tag.
       </video>
       <div className="cover-img" />

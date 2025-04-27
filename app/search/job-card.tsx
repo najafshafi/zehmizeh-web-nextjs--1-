@@ -7,7 +7,7 @@ import moment from "moment";
 import cns from "classnames";
 import Spinner from "@/components/forms/Spin/Spinner";
 import Link from "next/link";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 import Tooltip from "@/components/ui/Tooltip";
 import { toggleBookmarkPost } from "@/helpers/http/search";
 import { useAuth } from "@/helpers/contexts/auth-context";

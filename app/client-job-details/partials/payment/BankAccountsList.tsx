@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { StyledButton } from "@/components/forms/Buttons";
 import Loader from "@/components/Loader";
 import { getBankAccounts } from "@/helpers/http/client";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 import PaymentSummary from "./PaymentSummary";
 import { usePayments } from "../../controllers/usePayments";
 import {

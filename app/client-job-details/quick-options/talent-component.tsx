@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import cns from "classnames";
 import styled from "styled-components";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 import { StatusBadge } from "@/components/styled/Badges";
 import useResponsive, { breakpoints } from "@/helpers/hooks/useResponsive";
 import { separateValuesWithComma } from "@/helpers/utils/misc";

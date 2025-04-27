@@ -1,9 +1,8 @@
-import styled from 'styled-components';
-import { transition } from '@/styles/transitions';
-
+import styled from "styled-components";
+import { transition } from "@/styles/CssUtils";
 export const MainPortfolioWrapper = styled.div`
   box-shadow: 0px 4px 60px rgba(0, 0, 0, 0.05);
-  background: ${(props) => props.theme?.colors?.white || '#ffffff'};
+  background: ${(props) => props.theme?.colors?.white || "#ffffff"};
   border-radius: 7px;
   padding: 2rem;
   margin-bottom: 2rem;

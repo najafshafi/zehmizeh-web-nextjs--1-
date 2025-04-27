@@ -1,6 +1,6 @@
 import { coverImgHandler } from "@/helpers/utils/coverImgHandler";
 import styled from "styled-components";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 
 const StyledPortfolioListItem = styled.div<{ coverImage: string }>`
   border-radius: 0.5rem;
@@ -18,9 +18,19 @@ const StyledPortfolioListItem = styled.div<{ coverImage: string }>`
   ${() => transition()}
 `;
 
-const PortfolioListItem = ({ image, onClick }: { image: string; onClick: () => void }) => {
+const PortfolioListItem = ({
+  image,
+  onClick,
+}: {
+  image: string;
+  onClick: () => void;
+}) => {
   return (
-    <StyledPortfolioListItem coverImage={coverImgHandler(image)} className="pointer" onClick={onClick}>
+    <StyledPortfolioListItem
+      coverImage={coverImgHandler(image)}
+      className="pointer"
+      onClick={onClick}
+    >
       <div className="cover-img" />
     </StyledPortfolioListItem>
   );
