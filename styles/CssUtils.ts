@@ -1,5 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 import { myTheme } from "./theme";
+import { css } from "styled-components";
 export const CssUtils = createGlobalStyle<{ theme: typeof myTheme }>`
   .mb-2r{
     margin-bottom: 2rem;
@@ -115,4 +116,12 @@ export const CssUtils = createGlobalStyle<{ theme: typeof myTheme }>`
   order-2{
     order: 2;
   } */
+`;
+
+export const transition = (blur = 36) => css`
+  transition: all 0.2s ease-in;
+  &:hover {
+    box-shadow: 0px 8px ${() => blur}px rgba(0, 0, 0, 0.16);
+    transform: translateY(-2px);
+  }
 `;

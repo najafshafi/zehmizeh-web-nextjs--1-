@@ -7,7 +7,7 @@ import styled from "styled-components";
 import Spinner from "@/components/forms/Spin/Spinner";
 import toast from "react-hot-toast";
 import BlurredImage from "@/components/ui/BlurredImage";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 import { toggleBookmarkUser } from "@/helpers/http/search";
 import DollarCircleIcon from "@/public/icons/dollar-circle.svg";
 import StarIcon from "@/public/icons/star-yellow.svg";

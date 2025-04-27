@@ -3,7 +3,7 @@
 import styled, { css } from "styled-components";
 import { OptionButton } from "@/components/forms/OptionButton";
 import { breakpoints } from "@/helpers/hooks/useResponsive";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 
 export const MainLayout = styled.div`
   max-width: 719px;

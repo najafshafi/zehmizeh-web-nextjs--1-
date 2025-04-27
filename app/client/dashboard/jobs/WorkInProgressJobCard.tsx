@@ -4,7 +4,7 @@
 import styled from "styled-components";
 import Link from "next/link";
 import BlurredImage from "@/components/ui/BlurredImage";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 import { convertToTitleCase, numberWithCommas } from "@/helpers/utils/misc";
 import DollarCircleIcon from "@/public/icons/dollar-circle.svg";
 

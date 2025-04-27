@@ -5,7 +5,7 @@ import InfoEditModal from "./edit-info/InfoEditModal";
 import EditPictureModal from "@/components/ui/EditPictureModal";
 import { separateValuesWithComma } from "@/helpers/utils/misc";
 import { editUser } from "@/helpers/http/auth";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 import LocationIcon from "@/public/icons/location-blue.svg";
 import EditIcon from "@/public/icons/edit.svg";
 import EditBlueIcon from "@/public/icons/edit-blue-outline.svg";

@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 import DeletePrompt from "@/components/ui/DeletePropmpt";
 import { deletePortfolio } from "@/helpers/http/portfolio";
 import { capitalizeFirstLetter } from "@/helpers/utils/misc";

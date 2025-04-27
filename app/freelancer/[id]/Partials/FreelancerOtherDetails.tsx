@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import cns from "classnames";
 import StyledHtmlText from "@/components/ui/StyledHtmlText";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 import { convertToTitleCase } from "@/helpers/utils/misc";
 import Image from "next/image";
 

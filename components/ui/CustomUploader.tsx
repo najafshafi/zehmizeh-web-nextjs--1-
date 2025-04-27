@@ -3,7 +3,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
 import Spinner from "@/components/forms/Spin/Spinner";
 import styled from "styled-components";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 import ErrorMessage from "./ErrorMessage";
 import { generateAwsUrl } from "@/helpers/http/common";
 import { showErr } from "@/helpers/utils/misc";
@@ -243,7 +243,6 @@ const CustomUploader = ({
             <Spinner />
           </div>
         )}
-        
       </label>
       <input
         id="file-upload"

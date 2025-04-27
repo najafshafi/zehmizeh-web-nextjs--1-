@@ -5,7 +5,7 @@ import Loader from "@/components/Loader";
 import AddPortfolioModal from "@/components/portfolio/AddPortfolioModal";
 import NoPortfolioView from "@/components/portfolio/NoPortfolioView";
 import PortfolioListItem from "@/components/portfolio/PortfolioListItem";
-import { transition } from "@/styles/transitions";
+import { transition } from "@/styles/CssUtils";
 import PlusIcon from "@/public/icons/plus-yellow.svg";
 import { useQueryData, useRefetch } from "@/helpers/hooks/useQueryData";
 import { usePathname } from "next/navigation";
