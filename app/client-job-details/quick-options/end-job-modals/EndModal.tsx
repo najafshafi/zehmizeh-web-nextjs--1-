@@ -1,11 +1,4 @@
-/*
- * This is a modal that asks for review when ending the job
- */
-
 import { useEffect, useState } from "react";
-import { Modal, Button } from "react-bootstrap";
-import styled from "styled-components";
-import { StyledModal } from "@/components/styled/StyledModal";
 import EndJobStatus from "./EndJobStatus";
 import Feedback from "./Feedback";
 import { useQueryData } from "@/helpers/hooks/useQueryData";
@@ -28,8 +21,6 @@ type Props = {
 interface JobDetails {
   [key: string]: any;
 }
-
-const Wrapper = styled.div``;
 
 const EndModal = ({
   show,
@@ -113,8 +104,6 @@ const EndModal = ({
     ) {
       return (
         <EndJobStatus
-          show={show}
-          onClose={onCloseModal}
           endJobSelectedStatus={endJobSelectedStatus || ""}
           onContinue={onContinueWithStatus}
         />
@@ -136,34 +125,44 @@ const EndModal = ({
         />
       );
     }
-
-    // Return null as a fallback
-    return null;
   };
 
+  if (!show) return null;
+
   return (
-    <StyledModal
-      maxwidth={678}
-      show={show}
-      size="lg"
-      onHide={onCloseModal}
-      centered
+    <div
+      className="fixed inset-0 z-[60] overflow-y-auto"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
     >
-      <Modal.Body>
-        {!required && (
-          <Button
-            variant="transparent"
-            className="close"
-            onClick={onCloseModal}
-          >
-            &times;
-          </Button>
-        )}
-        <Wrapper>
-          <ModalBody />
-        </Wrapper>
-      </Modal.Body>
-    </StyledModal>
+      {/* Background backdrop */}
+      <div
+        className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+        onClick={onCloseModal}
+      ></div>
+
+      {/* Modal panel */}
+      <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <div className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6">
+          {/* Close button */}
+          {!required && (
+            <button
+              onClick={onCloseModal}
+              className="absolute right-4 top-4 text-gray-400 hover:text-gray-500 focus:outline-none"
+              aria-label="Close"
+            >
+              <span className="text-2xl">&times;</span>
+            </button>
+          )}
+
+          {/* Modal content */}
+          <div className="relative">
+            <ModalBody />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
