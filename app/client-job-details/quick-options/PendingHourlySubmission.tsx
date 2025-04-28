@@ -1,6 +1,4 @@
-import { Modal, Button } from "react-bootstrap";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { StyledButton } from "@/components/forms/Buttons";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 type Props = {
   show: boolean;
@@ -15,30 +13,55 @@ const PendingHourlySubmission = ({
   onConfirm,
   loading = false,
 }: Props) => {
+  if (!show) return null;
+
   return (
-    <StyledModal maxwidth={570} show={show} size="sm" onHide={toggle} centered>
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={toggle}>
-          &times;
-        </Button>
-
-        <div className="fs-20 font-normal text-center mb-3">
-          Cannot pay final hours until previous hours are Paid.
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+          <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-center mt-4 gap-2">
-          <StyledButton
-            className="fs-16 font-normal"
-            variant="primary"
-            padding="0.8125rem 2rem"
-            onClick={onConfirm}
-            disabled={loading}
-          >
-            Close
-          </StyledButton>
+        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+          <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div className="absolute top-0 right-0 pt-4 pr-4">
+              <button
+                onClick={toggle}
+                className="text-gray-400 hover:text-gray-500 focus:outline-none"
+              >
+                <span className="sr-only">Close</span>
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div className="text-xl font-normal text-center mb-3">
+              Cannot pay final hours until previous hours are Paid.
+            </div>
+
+            <div className="flex flex-col md:flex-row justify-center mt-4 gap-2">
+              <CustomButton
+                text="Close"
+                className={`px-8 py-4 text-base font-normal rounded-full bg-primary text-black transition-transform duration-200 hover:scale-105 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+                onClick={onConfirm}
+                disabled={loading}
+              />
+            </div>
+          </div>
         </div>
-      </Modal.Body>
-    </StyledModal>
+      </div>
+    </div>
   );
 };
 

@@ -70,30 +70,11 @@ const JobEndRequestByFreelancer = ({
             </li>
           </ul>
 
-          {/* <StyledButton
-            className="fs-16 font-normal mt-4 w-100"
-            variant="outline-dark"
-            padding="1.125rem 2.25rem"
-            onClick={onConfirm("closed")}
-          >
-            Close project and mark “Complete”
-          </StyledButton> */}
-
           <CustomButton
             text={"Close project and mark “Complete”}"}
             className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[16px]"
             onClick={onConfirm("closed")}
           />
-
-          {/* <StyledButton
-            className="fs-16 font-normal mt-3 w-100"
-            variant="outline-dark"
-            padding="1.125rem 2.25rem"
-            onClick={onConfirm("in-complete")}
-            disabled={loading}
-          >
-            Close project and mark “Incomplete”
-          </StyledButton> */}
 
           <CustomButton
             text={"Close project and mark “Incomplete”"}
@@ -101,16 +82,6 @@ const JobEndRequestByFreelancer = ({
             onClick={onConfirm("in-complete")}
             disabled={loading}
           />
-
-          {/* <StyledButton
-            className="fs-16 font-normal mt-3 w-100"
-            variant="outline-dark"
-            padding="1.125rem 2.25rem"
-            onClick={onCancelClosureRequest}
-            disabled={loading}
-          >
-            Decline closure request and discuss
-          </StyledButton> */}
 
           <CustomButton
             text={"Decline closure request and discuss"}
