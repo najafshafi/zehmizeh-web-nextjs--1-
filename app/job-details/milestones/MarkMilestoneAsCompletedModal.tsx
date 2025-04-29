@@ -1,8 +1,6 @@
-"use client";
-
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import CustomButton from "@/components/custombutton/CustomButton";
+import { StyledButton } from "@/components/forms/Buttons";
+import { breakpoints } from "@/helpers/hooks/useResponsive";
 
 type Props = {
   stateData: {
@@ -15,85 +13,59 @@ type Props = {
 
 const MarkMilestoneAsCompleted = ({ stateData, toggle, onConfirm }: Props) => {
   return (
-    <Transition appear show={stateData.show} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={toggle}>
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-black/25" />
-        </Transition.Child>
-
-        <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
+    <>
+      {stateData.show && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto  bg-black bg-opacity-50">
+          <div className="relative mx-auto max-w-[900px] rounded-md bg-white shadow-lg p-8">
+            <button
+              className="absolute -right-8 -top-4 text-3xl font-light text-white "
+              onClick={toggle}
             >
-              <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white px-4 py-8 md:p-12 shadow-xl transition-all">
-                <div className="absolute right-4 top-4 md:top-0 md:-right-8 ">
-                  <button
-                    type="button"
-                    className="rounded-md text-gray-400 md:text-white focus:outline-none"
-                    onClick={toggle}
-                  >
-                    <XMarkIcon className="h-6 w-6" />
-                  </button>
-                </div>
+              &times;
+            </button>
 
-                <div className="flex flex-col gap-6">
-                  <Dialog.Title className="text-2xl font-normal text-center md:text-3xl">
-                    You're Changing Milestone Status to 'Complete'
-                  </Dialog.Title>
+            <div className="flex flex-col gap-0 md:gap-3">
+              <div className="text-center text-xl md:font-medium md:text-2xl py-2">
+                You're Changing Milestone Status to 'Complete'
+              </div>
 
-                  <p className="text-lg text-gray-600 md:text-xl">
-                    By marking a milestone as complete, you're indicating to the
-                    client that all of the required uploads have been submitted.
-                    They'll be notified that you're ready to have your payment
-                    delivered.
-                  </p>
+              <p className="text-[1.2rem] my-2 px-3">
+                By marking a milestone as complete, you're indicating to the
+                client that all of the required uploads have been submitted.
+                They'll be notified that you're ready to have your payment
+                delivered.
+              </p>
 
-                  <div className="flex flex-col md:flex-row justify-center gap-4">
-                    <button
-                      type="button"
-                      onClick={toggle}
-                      className="inline-flex justify-center rounded-full border border-gray-800 px-8 py-4 text-base font-normal text-gray-800 hover:bg-gray-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors duration-200"
-                    >
-                      It's Not Ready - Cancel
-                    </button>
-                    <button
-                      type="button"
-                      onClick={onConfirm}
-                      disabled={stateData.loading}
-                      className="inline-flex justify-center rounded-full bg-amber-500 px-8 py-4 text-base font-normal text-white hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-                    >
-                      {stateData.loading ? (
-                        <div className="flex items-center">
-                          <div className="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                          Everything is Submitted - Mark as 'Complete'
-                        </div>
-                      ) : (
-                        "Everything is Submitted - Mark as 'Complete'"
+              <div className="flex flex-col justify-center gap-3 md:flex-row">
+                <CustomButton
+                  text="It's Not Ready - Cancel"
+                  className="px-8 py-4 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full transition-transform duration-200 hover:scale-105 hover:bg-black hover:text-white"
+                  onClick={toggle}
+                />
+
+                <CustomButton
+                  text={
+                    <span className="inline-flex items-center">
+                      {stateData.loading && (
+                        <span className="mr-2">
+                          <div className="h-4 w-4 animate-pulse rounded-full bg-white"></div>
+                        </span>
                       )}
-                    </button>
-                  </div>
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
+                      Everything is Submitted - Mark as 'Complete'
+                    </span>
+                  }
+                  className={`px-8 py-4 text-base font-normal rounded-full bg-primary text-black transition-transform duration-200 hover:scale-105 ${
+                    stateData.loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  onClick={onConfirm}
+                  disabled={stateData.loading}
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </Dialog>
-    </Transition>
+      )}
+    </>
   );
 };
 

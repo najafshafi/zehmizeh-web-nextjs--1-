@@ -21,7 +21,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 }) => {
   return (
     <button
-      className={`${className} flex justify-center items-center gap-2`}
+      className={`${className} flex justify-center items-center gap-2 disabled:opacity-50`}
       onClick={onClick}
       disabled={disabled}
     >
