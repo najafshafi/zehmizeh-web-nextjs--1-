@@ -565,7 +565,7 @@ const Milestones = ({
                       disabled={item?.milestone_id == selectedMilestoneId}
                       showSpinner={
                         item?.milestone_id == selectedMilestoneId &&
-                        showMarkMilestoneAsCompleted.show
+                        !showMarkMilestoneAsCompleted.show
                       }
                       spinnerPosition="right"
                     />

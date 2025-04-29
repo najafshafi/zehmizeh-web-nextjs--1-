@@ -9,6 +9,7 @@ import AttachmentPreview from "@/components/ui/AttachmentPreview";
 import { deleteFileFromStorage } from "@/helpers/http/common";
 import { CONSTANTS } from "@/helpers/const/constants";
 import { TCustomUploaderFile } from "@/components/ui/CustomUploader";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 export interface FileAttachment {
   fileUrl: string;
@@ -103,7 +104,7 @@ const AttachmentSubmitModal = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-[570px] transform overflow-hidden rounded-2xl bg-white p-6 shadow-xl transition-all">
                 <div className="absolute right-4 top-4">
                   <button
                     type="button"
@@ -159,21 +160,21 @@ const AttachmentSubmitModal = ({
                   </div>
 
                   <div className="flex justify-end mt-4">
-                    <button
-                      type="button"
+                    <CustomButton
+                      text={
+                        loading ? (
+                          <div className="flex items-center">
+                            <div className="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-black border-t-transparent" />
+                            Submitting...
+                          </div>
+                        ) : (
+                          "Submit Work"
+                        )
+                      }
+                      className="inline-flex justify-center rounded-full bg-primary px-8 py-4 text-base font-normal text-black   focus:ring-2  disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                       onClick={onSend}
                       disabled={loading}
-                      className="inline-flex justify-center rounded-full bg-amber-500 px-8 py-4 text-base font-normal text-white hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-                    >
-                      {loading ? (
-                        <div className="flex items-center">
-                          <div className="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                          Submitting...
-                        </div>
-                      ) : (
-                        "Submit Work"
-                      )}
-                    </button>
+                    />
                   </div>
                 </div>
               </Dialog.Panel>

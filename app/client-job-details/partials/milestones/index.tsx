@@ -610,10 +610,10 @@ const Milestones = ({
                   {item.status === "request_revision" ? (
                     /* Revisions requested */
                     <div>
-                      <CheckMark stroke="green" />
+                      {/* <CheckMark stroke="green" /> */}
                       <CustomButton
-                        text={"Revisions request sent"}
-                        className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+                        text={"✓ Revisions request sent"}
+                        className="px-[2rem] py-[1rem] font-normal  rounded-full text-[18px]  border border-[#167347] text-[#167347]"
                         disabled={true}
                         onClick={() => {}}
                       />
