@@ -102,11 +102,11 @@ const SendTipModal = ({ show, toggle, jobId, refetch }: Props) => {
                       name="amount"
                       id="amount"
                       className="block w-full rounded-md border-0 py-[0.95rem] pl-8 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary text-sm md:text-base sm:leading-6"
-                      placeholder="0.00"
+                      placeholder="0"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                       min="0"
-                      step="0.01"
+                      step="01"
                     />
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                       <span className="text-gray-500 sm:text-sm">USD</span>
