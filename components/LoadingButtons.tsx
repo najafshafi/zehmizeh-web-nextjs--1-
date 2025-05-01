@@ -1,12 +1,7 @@
-import { Spinner } from 'react-bootstrap';
-import styled from 'styled-components';
-
-const CustomSpinner = styled(Spinner)`
-  border-width: 2px;
-`;
+import Spinner from "@/components/forms/Spin/Spinner";
 
 function LoadingButtons() {
-  return <CustomSpinner animation="border" size="sm" />;
+  return <Spinner className="border-2" />;
 }
 
 export default LoadingButtons;

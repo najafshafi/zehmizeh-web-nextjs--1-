@@ -4,7 +4,7 @@ import { getJobDetails } from "@/helpers/http/jobs";
 import { isNotAllowedToSubmitReview } from "@/helpers/utils/helper";
 import { queryKeys } from "@/helpers/const/queryKeys";
 import { useAuth } from "@/helpers/contexts/auth-context";
-import { useRouter, useSearchParams } from "next/navigation"; // Replaced react-router-dom with Next.js router and useSearchParams
+import { useRouter, useSearchParams } from "next/navigation"; 
 
 // Define TypeScript types
 interface TabItem {

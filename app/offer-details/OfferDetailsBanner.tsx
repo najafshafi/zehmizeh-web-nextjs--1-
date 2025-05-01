@@ -13,7 +13,6 @@ import { useRouter, useParams } from "next/navigation";
 import { useQueryClient } from "react-query";
 import ProposalMessageModal from "@/components/jobs/ProposalMessageModal";
 import { WarningInviteesMessageModal } from "@/components/jobs/WarningInviteesMessageModal";
-import { breakpoints } from "@/helpers/hooks/useResponsive";
 import CustomButton from "@/components/custombutton/CustomButton";
 
 const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
@@ -165,7 +164,7 @@ const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
                     <div>
                       <CustomButton
                         text="Unarchive"
-                        className="px-8 py-4 text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-[#EE761C] hover:bg-black hover:text-white hover:border-none"
+                        className="px-8 py-4 text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-[#EE761C] hover:bg-black hover:text-white  "
                         onClick={onArchiveUnarchiveProposal}
                         disabled={archiving}
                       />
@@ -224,7 +223,7 @@ const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
 
                 <CustomButton
                   text={data?.threadExists ? "Go To Chat" : "Message Client"}
-                  className="px-8 py-4 w-full md:max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[18px] border border-[#EE761C] mt-3 hover:bg-black hover:text-white hover:border-none"
+                  className="px-8 py-4 w-full md:max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[18px] border border-[#EE761C] mt-3 hover:bg-black hover:text-white  "
                   onClick={() => {
                     if (data?.threadExists)
                       return router.push(
@@ -248,7 +247,7 @@ const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
                       "Decline Invite"
                     )
                   }
-                  className="px-8 py-4 text-center w-full md:max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[18px] border border-[#EE761C] mt-3 hover:bg-black hover:text-white hover:border-none"
+                  className="px-8 py-4 text-center w-full md:max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[18px] border border-[#EE761C] mt-3 hover:bg-black hover:text-white  "
                   onClick={onDeclinedProposal}
                   disabled={declineLoading}
                 />

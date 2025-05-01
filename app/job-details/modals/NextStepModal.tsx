@@ -89,7 +89,7 @@ const NextStepModal = ({ show, toggle }: Props) => {
                     <button
                       type="button"
                       onClick={toggle}
-                      className="rounded-full bg-amber-500 px-8 py-4 text-base font-normal text-white hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors duration-200"
+                      className="rounded-full bg-primary px-8 py-4 text-base font-normal text-white hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors duration-200"
                     >
                       I Understand
                     </button>

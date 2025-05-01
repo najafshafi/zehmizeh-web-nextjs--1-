@@ -468,7 +468,7 @@ const HoursManagement = ({
                 <div className="flex md:flex-row flex-col mt-3 gap-3 justify-content-md-end justify-center">
                   <CustomButton
                     text="Decline - I Want to Continue Project"
-                    className=" px-[2rem] py-[1rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white hover:border-none"
+                    className=" px-[2rem] py-[1rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white"
                     disabled={item?.hourly_id == selectedMilestoneId}
                     onClick={onDecline(item.hourly_id)}
                   />

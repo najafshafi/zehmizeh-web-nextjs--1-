@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Spinner } from "react-bootstrap";
+import Spinner from "@/components/forms/Spin/Spinner";
 import axios from "axios";
 import { pxToRem, showErr } from "@/helpers/utils/misc";
 import styled from "styled-components";
@@ -475,7 +475,7 @@ export default function CreateMessage({
           </Tooltip>
           <div className="upload-attachment">
             {uploadLoading ? (
-              <Spinner size="sm" animation="grow" />
+              <Spinner  />
             ) : (
               <>
                 <input

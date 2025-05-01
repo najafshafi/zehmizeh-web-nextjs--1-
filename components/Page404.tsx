@@ -1,4 +1,4 @@
-import { Image } from "react-bootstrap";
+import Image from "next/image";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 import { StyledButton } from "./forms/Buttons";
@@ -34,9 +34,8 @@ function Page404() {
     <Wrapper className="flex justify-center items-center flex-col">
       <Image
         src="images/notFound.png"
-        width="250px"
-        height="200px"
-        fluid
+        width={250}
+        height={200}
         alt="no-page-found"
       />
 

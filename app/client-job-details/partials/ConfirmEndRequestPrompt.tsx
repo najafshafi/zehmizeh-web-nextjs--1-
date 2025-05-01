@@ -1,9 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Modal, Button } from "react-bootstrap";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { StyledButton } from "@/components/forms/Buttons";
 import { endJob } from "@/helpers/http/jobs";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 type Props = {
   show: boolean;
@@ -48,31 +46,49 @@ const ConfirmEndRequestPrompt = ({
     });
   };
 
+  if (!show) return null;
+
   return (
-    <StyledModal maxwidth={570} show={show} size="lg" onHide={toggle} centered>
-      <Modal.Body className="flex flex-col justify-center items-center">
-        <Button variant="transparent" className="close" onClick={toggle}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm"
+        onClick={toggle}
+      />
+
+      {/* Modal */}
+      <div className="relative bg-white rounded-xl w-full max-w-[570px] mx-4 p-12 sm:mx-0">
+        {/* Close button */}
+        <button
+          className="absolute right-4 top-0 md:-right-8 md:top-0 text-2xl md:text-white text-gray-500 hover:text-gray-700"
+          onClick={toggle}
+        >
           &times;
-        </Button>
-        <div className="text-center">
-          <div className="fs-20 font-normal">
-            Are you sure you want to end this job?
-          </div>
-          <div className="mt-4 flex items-center justify-center gap-3 flex-wrap">
-            <StyledButton variant="outline-dark" onClick={toggle}>
-              Go Back
-            </StyledButton>
-            <StyledButton
-              variant="primary"
-              onClick={handleEndJob}
-              disabled={loading}
-            >
-              Confirm
-            </StyledButton>
+        </button>
+
+        <div className="flex flex-col justify-center items-center">
+          <div className="text-center">
+            <div className="text-xl font-normal">
+              Are you sure you want to end this job?
+            </div>
+            <div className="mt-4 flex items-center justify-center gap-3 flex-wrap">
+              <CustomButton
+                text="Go Back"
+                className="px-8 py-4 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full transition-transform duration-200 hover:scale-105 hover:bg-black hover:text-white"
+                onClick={toggle}
+              />
+
+              <CustomButton
+                text="Confirm"
+                className={`px-8 py-4 text-base font-normal rounded-full bg-primary text-black transition-transform duration-200 hover:scale-105`}
+                onClick={handleEndJob}
+                disabled={loading}
+              />
+            </div>
           </div>
         </div>
-      </Modal.Body>
-    </StyledModal>
+      </div>
+    </div>
   );
 };
 

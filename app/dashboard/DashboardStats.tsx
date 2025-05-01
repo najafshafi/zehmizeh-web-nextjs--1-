@@ -2,7 +2,6 @@
  * This component serves the stats the logged in freelancer
  */
 
-// import { Spinner } from 'react-bootstrap';
 import Spinner from "@/components/forms/Spin/Spinner";
 import StarIcon from "@/public/icons/starYellow.svg";
 import { numberWithCommas } from "@/helpers/utils/misc";

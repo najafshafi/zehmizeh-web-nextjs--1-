@@ -7,6 +7,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { numberWithCommas } from "@/helpers/utils/misc";
 import toast from "react-hot-toast";
 import { sendTip } from "@/helpers/http/jobs";
+import CustomButton from "../custombutton/CustomButton";
 
 interface Props {
   show: boolean;
@@ -115,14 +116,21 @@ const SendTipModal = ({ show, toggle, jobId, refetch }: Props) => {
                 </div>
 
                 <div className="mt-7 flex justify-end gap-3">
-                  <button
+                  {/* <button
                     type="button"
                     className="inline-flex justify-center rounded-full border border-transparent bg-gray-100 px-8 py-[0.85rem] text-lg font-medium text-gray-900 hover:bg-gray-900   hover:text-gray-100 transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
                     onClick={toggle}
                   >
                     Cancel
-                  </button>
-                  <button
+                  </button> */}
+
+                  <CustomButton
+                    text="Cancel"
+                    className={`px-8 py-4 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full transition-transform duration-200 hover:scale-105 hover:bg-black hover:text-white`}
+                    onClick={toggle}
+                  />
+
+                  {/* <button
                     type="button"
                     className="inline-flex justify-center rounded-full border border-transparent bg-primary px-8 py-[0.85rem] text-lg font-medium text-white hover:bg-amber-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={handleSubmit}
@@ -134,7 +142,19 @@ const SendTipModal = ({ show, toggle, jobId, refetch }: Props) => {
                     }
                   >
                     {loading ? "Sending..." : "Send Tip"}
-                  </button>
+                  </button> */}
+
+                  <CustomButton
+                    text={loading ? "Sending..." : "Send Tip"}
+                    className={`px-8 py-4 text-base font-normal rounded-full bg-primary text-black transition-transform duration-200 hover:scale-105  border-2 border-primary ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+                    onClick={handleSubmit}
+                    disabled={
+                      loading ||
+                      !amount ||
+                      isNaN(Number(amount)) ||
+                      Number(amount) <= 0
+                    }
+                  />
                 </div>
               </Dialog.Panel>
             </Transition.Child>

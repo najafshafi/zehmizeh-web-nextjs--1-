@@ -2,7 +2,6 @@ import styled, { css } from "styled-components";
 import Delete from "@/public/icons/trash.svg";
 import Edit from "@/public/icons/edit.svg";
 import CheckMark from "@/public/icons/checkmark.svg";
-// import { Button } from 'react-bootstrap';
 import { BootButton } from "./BootButton";
 import { pxToRem } from "@/helpers/utils/misc";
 import { ButtonHTMLAttributes, ReactNode } from "react";

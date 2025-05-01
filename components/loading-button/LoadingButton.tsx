@@ -1,7 +1,7 @@
-import { Spinner } from "react-bootstrap";
+import Spinner from "@/components/forms/Spin/Spinner";
 
 function LoadingButtons() {
-  return <Spinner animation="border" size="sm" className="border-2" />;
+  return <Spinner />;
 }
 
 export default LoadingButtons;

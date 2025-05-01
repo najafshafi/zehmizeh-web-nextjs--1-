@@ -1,4 +1,4 @@
-import { Spinner } from "react-bootstrap";
+import Spinner from "@/components/forms/Spin/Spinner";
 
 type LoaderProps = {
   height?: number;
@@ -10,7 +10,7 @@ function Loader({ height = 50 }: LoaderProps) {
       className="flex justify-center items-center"
       style={{ minHeight: `${height}px` }}
     >
-      <Spinner animation="border" className="w-16 h-16 text-gray-700" />
+      <Spinner className="w-16 h-16 text-gray-700" />
     </div>
   );
 }

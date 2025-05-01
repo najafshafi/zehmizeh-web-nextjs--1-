@@ -8,7 +8,6 @@ import * as C from "./client-profile.styled";
 import AccountClosureModal from "@/components/profile/AccountClosureModal";
 import BackButton from "@/components/ui/BackButton";
 import Loader from "@/components/Loader";
-import { StyledButton } from "@/components/forms/Buttons";
 import CustomButton from "@/components/custombutton/CustomButton";
 import PaymentInfo from "./partials/PaymentInfo";
 import BankAccounts from "./partials/BankAccounts";

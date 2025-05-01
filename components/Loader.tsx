@@ -1,6 +1,5 @@
 "use client"; // ✅ Required for client-side hooks
 
-// import { Spinner } from "react-bootstrap";
 import Spinner from "@/components/forms/Spin/Spinner"
 
 interface LoaderProps {

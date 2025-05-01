@@ -20,7 +20,7 @@ import { manageHours } from "@/helpers/http/jobs";
 import AttachmentPreview from "@/components/ui/AttachmentPreview";
 import classNames from "classnames";
 import { paymentProcessingStatusHandler } from "@/helpers/validation/common";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 interface HourlyStatus {
   color: string;
@@ -147,7 +147,10 @@ const HoursManagement = ({
           <NoDataFound className="pb-2" />
           <p className="mt-4 text-center">
             Check{" "}
-            <Link to="/support/faq/working_a_project" className="text-yellow-500">
+            <Link
+              href="/support/faq/working_a_project"
+              className="text-yellow-500"
+            >
               Working a Project FAQs
             </Link>{" "}
             section for more information

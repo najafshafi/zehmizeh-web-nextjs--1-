@@ -271,7 +271,7 @@ const TalentCard = ({ data }: { data?: TalentData }) => {
       return (
         <CustomButton
           text="Invite"
-          className="py-[0.75rem] w-full min-w-[100px] text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-black hover:bg-black hover:text-white hover:border-none"
+          className="py-[0.75rem] w-full min-w-[100px] text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-black hover:bg-black hover:text-white  "
           onClick={toggleJobsModal}
         />
       );
@@ -281,7 +281,7 @@ const TalentCard = ({ data }: { data?: TalentData }) => {
         customTrigger={
           <CustomButton
             text="Invite"
-            className="py-[0.75rem] w-full min-w-[100px] text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-black hover:bg-black hover:text-white hover:border-none"
+            className="py-[0.75rem] w-full min-w-[100px] text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-black hover:bg-black hover:text-white  "
             onClick={toggleJobsModal}
             disabled={true}
           />

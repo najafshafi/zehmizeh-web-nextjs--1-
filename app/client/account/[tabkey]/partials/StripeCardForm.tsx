@@ -101,20 +101,27 @@ export default function PaymentForm({ onCardAdded, onCancel }: Props) {
         <CardInput>
           <CardElement options={CARD_ELEMENT_OPTIONS} />
         </CardInput>
-        <div className="d-flex align-items-center justify-content-end mt-4 flex-wrap gap-3">
-          <StyledButton
-            disabled={loading}
+        <div className="flex items-center justify-end mt-4 flex-wrap gap-3">
+          <button
+            type="button"
             onClick={onCancel}
-            variant="outline-dark"
+            disabled={loading}
+            className={`px-8 py-4 text-base font-normal border-2 border-gray-800 text-gray-800 rounded-full transition-transform duration-200 hover:scale-105 hover:bg-black hover:text-white ${
+              loading ? "opacity-50 " : ""
+            }`}
           >
             Cancel
-          </StyledButton>
-          <StyledButton
+          </button>
+
+          <button
             type="submit"
             disabled={loading || !stripe || !elements}
+            className={`px-8 py-4 text-base font-normal rounded-full bg-primary text-black transition-transform duration-200 hover:scale-105 border-2 border-primary ${
+              loading || !stripe || !elements ? "opacity-50 " : ""
+            }`}
           >
             Save
-          </StyledButton>
+          </button>
         </div>
       </form>
     </Wrapper>
