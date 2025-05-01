@@ -228,7 +228,7 @@ export const FooterButtons = ({ params }: FooterButtonsProps = {}) => {
       return (
         <CustomButton
           text="Create New Template"
-          className={`px-[2.25rem] py-[1.125rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white hover:border-none ${
+          className={`px-[2.25rem] py-[1.125rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white   ${
             isMobile ? "w-full" : ""
           }`}
           disabled={isLoading}
@@ -242,7 +242,7 @@ export const FooterButtons = ({ params }: FooterButtonsProps = {}) => {
       return (
         <CustomButton
           text={"Save as Draft"}
-          className={`px-[2.25rem] py-[1.125rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white hover:border-none ${
+          className={`px-[2.25rem] py-[1.125rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white   ${
             isMobile ? "w-full" : ""
           }`}
           disabled={isLoading}
@@ -272,7 +272,7 @@ export const FooterButtons = ({ params }: FooterButtonsProps = {}) => {
       {step >= POST_JOB_STEPS.CHOOSE_TEMPLATE_OR_DRAFT.number && (
         <CustomButton
           text={"Previous"}
-          className={`px-[2.25rem] py-[1.125rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white hover:border-none ${
+          className={`px-[2.25rem] py-[1.125rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white   ${
             isMobile ? "w-full" : ""
           }`}
           disabled={isLoading}

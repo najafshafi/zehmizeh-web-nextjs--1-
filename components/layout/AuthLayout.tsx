@@ -1,7 +1,7 @@
 
 import { Card, CardWrapper } from "@/components/styled/Auth.styled"; // Ensure this is correctly typed
 import BackButton from "@/components/ui/BackButton";
-import Link from "next/link"; // Use Next.js Link instead of react-router-dom
+import Link from "next/link"; 
 import Image from "next/image";
 
 // Define props type

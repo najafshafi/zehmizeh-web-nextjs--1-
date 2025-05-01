@@ -22,7 +22,6 @@ import { messageDisabled } from "@/components/talkjs/MessageDisabled";
 import Note from "@/components/talkjs/Note";
 import ChatFilter from "@/components/talkjs/chatFilter";
 import ChatNavbar from "@/components/talkjs/chatNavbar";
-import { BrowserRouter } from "react-router-dom";
 
 interface Props {
   singleConversation?: string;
@@ -49,7 +48,7 @@ const TalkJS = ({ singleConversation, conversationId }: Props) => {
   const { user } = useAuth();
   const dispatch: AppDispatch = useDispatch();
   const { permission, requestPermission } = useNotification();
-  const chatAuth = useChatAuth(user.user_id);
+  const chatAuth = useChatAuth(user?.user_id);
   const { chatUsers, totalUnreadMessages } = useChatMessages(chatlist, filters);
 
   const appId = talkjsApiKey();
@@ -68,9 +67,9 @@ const TalkJS = ({ singleConversation, conversationId }: Props) => {
       ...(!isStagingEnv() ? { token: chatAuth.token } : {}),
       desktopNotificationEnabled: permission === "granted",
       appId: appId || "",
-      userId: user.user_id,
+      userId: user?.user_id,
     }),
-    [chatAuth.token, permission, user.user_id, appId]
+    [chatAuth.token, permission, user?.user_id, appId]
   );
 
   const onSelectChat = (conversation: ChatUser) => {
@@ -97,75 +96,58 @@ const TalkJS = ({ singleConversation, conversationId }: Props) => {
 
   const sendMessageDisabledText = messageDisabled({
     selectedConversation,
-    userType: user.user_type,
+    userType: user?.user_type,
   });
 
-  // Wrap everything in BrowserRouter to provide React Router context
-  // This is a temporary solution until all child components are converted to Next.js routing
   return (
-    <BrowserRouter>
-      <T.Wrapper className="xl:w-[1320px]">
-        {apiKeyError && (
-          <div style={{ color: "red", padding: "20px", textAlign: "center" }}>
-            TalkJS API key is missing. Please check your environment
-            configuration.
-          </div>
-        )}
+    <T.Wrapper className="xl:w-[1320px]">
+      {apiKeyError && (
+        <div style={{ color: "red", padding: "20px", textAlign: "center" }}>
+          TalkJS API key is missing. Please check your environment
+          configuration.
+        </div>
+      )}
 
-        {!singleConversation && (
+      {!singleConversation && (
+        <>
+          <Note />
+          <ChatSidebar
+            open={open}
+            totalUnreadMessages={totalUnreadMessages}
+            loading={loading}
+            chatUsers={chatUsers}
+            permission={permission}
+            requestPermission={requestPermission}
+            onSelectChat={onSelectChat}
+          />
+        </>
+      )}
+
+      <T.Content>
+        {!singleConversation && showChatFilter && <ChatFilter />}
+        {selectedConversation?.id && !apiKeyError ? (
           <>
-            <Note />
-            <ChatSidebar
-              open={open}
-              totalUnreadMessages={totalUnreadMessages}
-              loading={loading}
-              chatUsers={chatUsers}
-              permission={permission}
-              requestPermission={requestPermission}
-              onSelectChat={onSelectChat}
+            <ChatNavbar
+              singleConversation={singleConversation}
+              setOpen={setOpen}
+              setShowChatFilter={setShowChatFilter}
             />
-          </>
-        )}
-
-        <T.Content>
-          {!singleConversation && showChatFilter && <ChatFilter />}
-          {selectedConversation?.id && !apiKeyError ? (
-            <>
-              <ChatNavbar
-                singleConversation={singleConversation}
-                setOpen={setOpen}
-                setShowChatFilter={setShowChatFilter}
+            <T.Chatbox>
+              <ChatSession
+                sessionConfig={sessionConfig}
+                selectedConversation={selectedConversation}
+                themes={themes}
+                sendMessageDisabledText={sendMessageDisabledText}
+                chatAuth={chatAuth}
               />
-              <T.Chatbox>
-                <ChatSession
-                  sessionConfig={sessionConfig}
-                  selectedConversation={selectedConversation}
-                  themes={themes}
-                  sendMessageDisabledText={sendMessageDisabledText}
-                  chatAuth={chatAuth}
-                />
-              </T.Chatbox>
-            </>
-          ) : (
-            <EmptyChatState isDesktop={isDesktop} />
-          )}
-        </T.Content>
-      </T.Wrapper>
-    </BrowserRouter>
+            </T.Chatbox>
+          </>
+        ) : (
+          <EmptyChatState isDesktop={isDesktop} />
+        )}
+      </T.Content>
+    </T.Wrapper>
   );
 };
 
 export default TalkJS;
-
-// Server-side props to get the conversation ID from the URL
-export const getServerSideProps = async (context: {
-  params?: { conversationId?: string };
-}) => {
-  const { conversationId } = context.params || {};
-
-  return {
-    props: {
-      conversationId: conversationId || null,
-    },
-  };
-};

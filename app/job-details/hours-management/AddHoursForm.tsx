@@ -132,6 +132,7 @@ const AddHoursForm = ({
 
   const validate = (e: any) => {
     e.preventDefault();
+    setLoading(true);
     validationSchema
       .isValid({ hoursWorked, title, amount, description })
       .then((valid) => {
@@ -144,12 +145,17 @@ const AddHoursForm = ({
             .catch((err) => {
               const errors = getYupErrors(err);
               setErrors({ ...errors });
+              setLoading(false);
             });
         } else {
           setErrors({});
           // create milestone
           submitHours();
         }
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.error("Validation error:", err);
       });
   };
 
@@ -275,7 +281,7 @@ const AddHoursForm = ({
       >
         <div className="relative px-4 py-8 md:p-12">
           <button
-            className="absolute top-4 right-4 md:top-0 md:-right-8 md:text-white text-gray-500 hover:text-opacity-70 text-2xl font-light focus:outline-none"
+            className="absolute top-4 right-4 md:-top-4 md:-right-8 md:text-white text-gray-500 hover:text-opacity-70 text-2xl font-light focus:outline-none"
             onClick={closeModal}
           >
             &times;
@@ -412,14 +418,17 @@ const AddHoursForm = ({
                 <ErrorMessage message={errors.screenshot_link} />
               )}
             </div>
-            <div className="flex gap-2 mt-5 flex-wrap md:justify-end">
+            <div className="flex my-5 flex-wrap md:justify-end ">
               <CustomButton
                 className={`
-                  px-[2rem] py-[0.8125rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-base
+                  px-[2rem] py-[0.8125rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-base mx-1
                   ${isMobile ? "w-full" : ""}`}
                 text="Submit"
                 disabled={loading}
-                onClick={() => {}}
+                onClick={() => {
+                  const event = { preventDefault: () => {} };
+                  validate(event);
+                }}
               />
             </div>
           </form>

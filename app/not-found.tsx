@@ -1,5 +1,5 @@
 "use client";
-import { Image } from "react-bootstrap";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import CustomButton from "@/components/custombutton/CustomButton";
 
@@ -14,8 +14,8 @@ const Page404: React.FC = () => {
     <div className="h-screen flex justify-center items-center flex-col">
       <Image
         src="/images/notFound.png"
-        width="250px"
-        height="200px"
+        width={250}
+        height={200}
         alt="no-page-found"
       />
 

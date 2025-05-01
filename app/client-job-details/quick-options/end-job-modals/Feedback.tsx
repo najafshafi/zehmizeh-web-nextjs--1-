@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import AnimatedStar from "./AnimatedStar";
 import { endJob } from "@/helpers/http/jobs";
 import ErrorMessage from "@/components/ui/ErrorMessage";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 interface EndJobState {
   selectedStatus: string;
@@ -181,15 +182,12 @@ const Feedback = ({
           </>
         )}
         <div className="flex justify-end">
-          <button
-            className={`px-8 py-3 rounded-full bg-yellow-400 text-black transition-transform duration-200 hover:scale-105 ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+          <CustomButton
+            text="Submit Feedback & Close Project"
+            className={`px-8 py-3 rounded-full bg-primary text-black transition-transform duration-200 hover:scale-105`}
             onClick={handleEndJob}
             disabled={loading}
-          >
-            Submit Feedback & Close Project
-          </button>
+          />
         </div>
       </div>
     </div>

@@ -1,6 +1,5 @@
 import { Button } from "react-bootstrap";
 import styled from "styled-components";
-import Logo from "@/public/icons/logo.svg";
 import "./style.css";
 import { useState } from "react";
 import Image from "next/image";
@@ -144,7 +143,7 @@ export const VideoComponent = ({ videosrc }: Props) => {
       )}
 
       <ViewImageBox show={show}>
-        <Logo style={logoStyle} />
+        {/* <Logo style={logoStyle} /> */}
         <Image
           src="/images/home-play-icon.svg"
           className="play-icon pointer"

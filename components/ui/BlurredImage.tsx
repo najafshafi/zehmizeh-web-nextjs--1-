@@ -86,7 +86,7 @@ const BlurredImage = ({
           }
           style={{ height: height, width: width }}
         >
-          <Image
+          <img
             src={src}
             className="img"
             alt="user-profile-img"

@@ -1,23 +1,24 @@
-import { getStorageUser } from '@/helpers/services/auth';
-import { NavigateFunction } from 'react-router-dom';
+import { getStorageUser } from "@/helpers/services/auth";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-export const goBack = (navigate: NavigateFunction, route?: string) => {
+export const goBack = (router: AppRouterInstance, route?: string) => {
   let defaultRoute = route;
   if (!defaultRoute) {
     const user = getStorageUser();
-    if (user?.user_type === 'client') {
-      defaultRoute = '/client/dashboard';
-    } else if (user?.user_type === 'freelancer') {
-      defaultRoute = '/dashboard';
+    if (user?.user_type === "client") {
+      defaultRoute = "/client/dashboard";
+    } else if (user?.user_type === "freelancer") {
+      defaultRoute = "/dashboard";
     } else {
-      defaultRoute = '/';
+      defaultRoute = "/";
     }
   }
-  // getting history stack and checking idx if its greater than 0
-  // it means there is a page in stack else navigating to home page
-  if (window?.history?.state?.idx === 0) {
-    navigate(defaultRoute);
+
+  // In Next.js, we don't have direct access to history state index
+  // We can use the built-in back() function, or redirect to default route
+  if (window?.history?.length <= 1) {
+    router.push(defaultRoute);
   } else {
-    navigate(-1);
+    router.back();
   }
 };

@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useMemo, useState } from "react";
 import { showErr } from "@/helpers/utils/misc";
 import { budgetChangeRequest } from "@/helpers/http/proposals";
@@ -7,34 +5,16 @@ import toast from "react-hot-toast";
 import { queryKeys } from "@/helpers/const/queryKeys";
 import { useRefetch } from "@/helpers/hooks/useQueryData";
 import { IoChevronBackSharp } from "react-icons/io5";
-import { VscClose } from "react-icons/vsc";
 import { TJobDetails } from "@/helpers/types/job.type";
+import { VscClose } from "react-icons/vsc";
 
-interface Props {
+type Props = {
   show: boolean;
   toggle: () => void;
   userType: "freelancer" | "client";
   jobDetails: TJobDetails;
-}
-
+};
 type TIncOrDec = "INCREASE" | "DECREASE" | "";
-
-interface ButtonConfig {
-  text: string;
-  onClick: () => void;
-}
-
-interface TextContent {
-  headers: {
-    step1: string;
-    step2: string;
-  };
-  buttons: {
-    step1: ButtonConfig[];
-    step2: ButtonConfig;
-  };
-  note?: string;
-}
 
 const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
   const approvedBudget = jobDetails.proposal.approved_budget;
@@ -42,6 +22,7 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
   const jobTypeText =
     approvedBudget.type === "fixed" ? "budget" : "hourly rate";
 
+  /* START ----------------------------------------- Edit configuration */
   const isEdit =
     jobDetails?.proposal?.budget_change?.status === "pending" &&
     jobDetails?.proposal?.budget_change?.requested_by === userType;
@@ -52,6 +33,7 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
       Number(jobDetails?.proposal?.budget_change?.amount)
       ? "DECREASE"
       : "INCREASE";
+  /* END ------------------------------------------- Edit configuration */
 
   const { refetch } = useRefetch(queryKeys.jobDetails(jobPostId));
 
@@ -65,6 +47,7 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
     if (isEditIncreaseOrDecrease) setSelectedChange(isEditIncreaseOrDecrease);
   }, [isEdit, isEditIncreaseOrDecrease, show]);
 
+  /* START ----------------------------------------- Set budget to value state and reset state on closing modal */
   useEffect(() => {
     if (show && approvedBudget?.amount) {
       setValue(Number(approvedBudget?.amount));
@@ -74,34 +57,9 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
       setSelectedChange("");
     };
   }, [approvedBudget?.amount, show]);
+  /* END ------------------------------------------- Set budget to value state and reset state on closing modal */
 
-  // Add scroll lock effect
-  useEffect(() => {
-    if (show) {
-      // Store the current scroll position and body padding
-      const scrollY = window.scrollY;
-      const scrollbarWidth =
-        window.innerWidth - document.documentElement.clientWidth;
-      const bodyPadding =
-        parseInt(window.getComputedStyle(document.body).paddingRight) || 0;
-
-      // Prevent body scroll
-      document.body.style.position = "fixed";
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = "100%";
-      document.body.style.paddingRight = `${bodyPadding + scrollbarWidth}px`;
-
-      return () => {
-        // Restore body scroll
-        document.body.style.position = "";
-        document.body.style.top = "";
-        document.body.style.width = "";
-        document.body.style.paddingRight = "";
-        window.scrollTo(0, scrollY);
-      };
-    }
-  }, [show]);
-
+  // Check entered value is valid for increase and decrease request
   const isValid = () => {
     if (
       selectedChange === "INCREASE" &&
@@ -122,6 +80,7 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
     return true;
   };
 
+  // api call
   const apiCall = async () => {
     const body = {
       amount: Number(value),
@@ -129,6 +88,7 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
     };
     const res = await budgetChangeRequest(body);
     await refetch();
+
     return res;
   };
 
@@ -143,15 +103,13 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
         setLoading(false);
         let message = "";
         if (userType === "client") {
-          message =
-            selectedChange === "INCREASE"
-              ? `Increased ${jobTypeText} successfully`
-              : `Decrease ${jobTypeText} request sent successfully`;
+          if (selectedChange === "INCREASE")
+            message = `Increased ${jobTypeText} successfully`;
+          else message = `Decrease ${jobTypeText} request sent successfully`;
         } else {
-          message =
-            selectedChange === "INCREASE"
-              ? `Increase ${jobTypeText} request sent successfully`
-              : `Decreased ${jobTypeText} successfully`;
+          if (selectedChange === "INCREASE")
+            message = `Increase ${jobTypeText} request sent successfully`;
+          else message = `Decreased ${jobTypeText} successfully`;
         }
         return message;
       },
@@ -162,22 +120,21 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
     });
   };
 
-  const handleIncreaseOrDecrease = (type: TIncOrDec) => {
+  // change page and set type is increase or decrease
+  const handleIncreaseOrDecrease = (type: typeof selectedChange) => {
     setSelectedChange(type);
     setStep(2);
   };
 
-  const textContent = useMemo((): TextContent => {
-    let headers = {
-      step1: "",
-      step2: "",
-    };
-    let buttons = {
-      step1: [] as ButtonConfig[],
-      step2: {} as ButtonConfig,
+  const textContent = useMemo(() => {
+    let headers: { step1: string; step2: string };
+    let buttons: {
+      step1: { text: string; onClick: () => void }[];
+      step2: { text: string; onClick: () => void };
     };
     let note: string | undefined;
 
+    /* START ----------------------------------------- Client side contents */
     if (userType === "client") {
       headers = {
         step1: `Would you like to increase the ${jobTypeText} or request a decrease?`,
@@ -205,9 +162,13 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
           onClick: handleUpdate,
         },
       };
-      if (selectedChange === "DECREASE") {
-        note = `Note: Only freelancers can decrease the project ${jobTypeText}.`;
-      }
+      note =
+        selectedChange === "DECREASE"
+          ? `Note: Only freelancers can decrease the project ${jobTypeText}.`
+          : undefined;
+      /* END ------------------------------------------- Client side contents */
+
+      /* START ----------------------------------------- Freelancer side contents */
     } else {
       headers = {
         step1: `Would you like to decrease the ${jobTypeText} or request an increase?`,
@@ -219,7 +180,7 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
       buttons = {
         step1: [
           {
-            text: "Decrease",
+            text: `Decrease`,
             onClick: () => handleIncreaseOrDecrease("DECREASE"),
           },
           {
@@ -235,13 +196,16 @@ const ChangeBudgetModal = ({ show, toggle, userType, jobDetails }: Props) => {
           onClick: handleUpdate,
         },
       };
-      if (selectedChange === "INCREASE") {
-        note = `Note: Only clients can increase the project ${jobTypeText}.`;
-      }
+      note =
+        selectedChange === "INCREASE"
+          ? `Note: Only clients can increase the project ${jobTypeText}.`
+          : undefined;
     }
+    /* END ------------------------------------------- Freelancer side contents */
 
     return { headers, buttons, note };
-  }, [jobTypeText, selectedChange, userType, isEdit]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jobTypeText, selectedChange, userType, value]);
 
   if (!show) return null;
 
