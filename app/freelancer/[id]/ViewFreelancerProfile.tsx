@@ -17,7 +17,7 @@ import { Profile } from "./Tabs/Profile";
 import { JobRatings } from "./Tabs/JobRatings";
 import { Portfolio } from "./Tabs/Portfolio";
 import Tabs from "./Tabs";
-// import { usePortfolioList } from "@/controllers/usePortfolioList";
+import { usePortfolioList } from "@/controllers/usePortfolioList";
 import { useFreelancerDetails } from "@/controllers/useFreelancerDetails";
 import { hasClientAddedPaymentDetails } from "@/helpers/utils/helper";
 import CustomButton from "@/components/custombutton/CustomButton";
@@ -69,8 +69,8 @@ const ViewFreelancerProfile = () => {
   const { user } = useAuth();
   const freelancerQuery = useFreelancerDetails(freelancerId);
 
-  // We still need portfolioQuery data for the Portfolio component
-  // const portfolioQuery = usePortfolioList(freelancerId);
+  // We need portfolioQuery data for the Portfolio component
+  const portfolioQuery = usePortfolioList(freelancerId);
 
   // Track if the user is authenticated
   const isAuthenticated = !!user;
@@ -176,8 +176,8 @@ const ViewFreelancerProfile = () => {
                 user && user.user_type == "client"
                   ? "/client/dashboard"
                   : user?.user_type === "freelancer"
-                  ? "/dashboard"
-                  : "/home"
+                    ? "/dashboard"
+                    : "/home"
               }
             />
 

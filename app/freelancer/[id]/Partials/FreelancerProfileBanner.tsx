@@ -20,6 +20,7 @@ import {
 } from "@/helpers/utils/misc";
 import UnSavedIcon from "@/public/icons/unsaved.svg";
 import SavedIcon from "@/public/icons/saved.svg";
+import ShareIcon from "@/public/icons/share.svg";
 import DollarCircleIcon from "@/public/icons/dollar-circle.svg";
 import LocationIcon from "@/public/icons/location-blue.svg";
 import StarIcon from "@/public/icons/star-yellow.svg";
@@ -226,28 +227,53 @@ const FreelancerProfileBanner = ({
     if (isFreelancerLookingAtOtherFreelancers) return <></>;
 
     return (
-      <Tooltip
-        customTrigger={
-          <BookmarkIcon
-            className="flex justify-center items-center cursor-pointer"
-            onClick={onBookmarkClick}
-          >
-            {loading ? (
-              <Spinner />
-            ) : isSaved ? (
-              <SavedIcon />
-            ) : (
-              <UnSavedIcon className={user ? "" : "blurred-2px"} />
-            )}
-          </BookmarkIcon>
-        }
-      >
-        {user
-          ? !isSaved
-            ? BOOKMARK_TOOLTIPS.save
-            : BOOKMARK_TOOLTIPS.unsave
-          : BOOKMARK_TOOLTIPS.not_logged_in}
-      </Tooltip>
+      <div className="flex gap-2">
+        <Tooltip
+          customTrigger={
+            <BookmarkIcon
+              className="flex justify-center items-center cursor-pointer"
+              onClick={onBookmarkClick}
+            >
+              {loading ? (
+                <Spinner />
+              ) : isSaved ? (
+                <SavedIcon />
+              ) : (
+                <UnSavedIcon className={user ? "" : "blurred-2px"} />
+              )}
+            </BookmarkIcon>
+          }
+        >
+          {user
+            ? !isSaved
+              ? BOOKMARK_TOOLTIPS.save
+              : BOOKMARK_TOOLTIPS.unsave
+            : BOOKMARK_TOOLTIPS.not_logged_in}
+        </Tooltip>
+
+        <Tooltip
+          customTrigger={
+            <div
+              className="h-[43px] w-[43px] rounded-full flex justify-center items-center cursor-pointer"
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                toast.success("Link copied to clipboard!");
+                if (navigator.share) {
+                  navigator.share({
+                    title: `${data?.first_name || "Freelancer"} ${data?.last_name || ""}'s Profile`,
+                    text: `Check out this freelancer on Zehmizeh`,
+                    url: window.location.href,
+                  });
+                }
+              }}
+            >
+              <ShareIcon />
+            </div>
+          }
+        >
+          Share
+        </Tooltip>
+      </div>
     );
   };
 

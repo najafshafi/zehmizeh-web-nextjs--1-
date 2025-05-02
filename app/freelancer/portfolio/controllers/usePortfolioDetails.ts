@@ -3,7 +3,7 @@ import { getPortfolioDetails } from "@/helpers/http/portfolio";
 
 function usePortfolioDetails(portfolio_id: number) {
   const { data, isLoading, refetch, isRefetching } = useQuery(
-    "get-portfolio-details",
+    ["get-portfolio-details", portfolio_id],
     () => getPortfolioDetails(portfolio_id),
     { enabled: !!portfolio_id }
   );

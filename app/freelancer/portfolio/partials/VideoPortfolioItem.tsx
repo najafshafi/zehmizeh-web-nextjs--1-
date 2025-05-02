@@ -3,7 +3,7 @@ import { coverImgHandler } from "@/helpers/utils/coverImgHandler";
 import styled from "styled-components";
 import { transition } from "@/styles/CssUtils";
 
-const StyledVideoPortfolioItem = styled.div<{ coverImage: string }>`
+const StyledVideoPortfolioItem = styled.div<{ $coverImage: string }>`
   border-radius: 0.5rem;
   width: 100%;
   height: 100%;
@@ -14,7 +14,7 @@ const StyledVideoPortfolioItem = styled.div<{ coverImage: string }>`
 
   .cover-img {
     border-radius: 0.5rem;
-    background-image: ${(props) => `url(${props.coverImage})`};
+    background-image: ${(props) => `url(${props.$coverImage})`};
     width: 100%;
     height: 100%;
     position: absolute;
@@ -62,7 +62,7 @@ interface VideoPortfolioItemProps {
 const VideoPortfolioItem = ({ image, onClick }: VideoPortfolioItemProps) => {
   return (
     <StyledVideoPortfolioItem
-      coverImage={coverImgHandler(image)}
+      $coverImage={coverImgHandler(image)}
       onClick={onClick}
     >
       <video

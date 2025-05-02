@@ -1,5 +1,5 @@
 import NoPortfolio from "@/public/icons/no-portfolio.svg";
-import { StyledButton } from "@/components/forms/Buttons";
+import CustomButton from "../custombutton/CustomButton";
 
 const NoPortfolioView = ({
   onAddProject,
@@ -14,9 +14,11 @@ const NoPortfolioView = ({
 
       {allowEdit && (
         <div>
-          <StyledButton onClick={onAddProject}>
-            Add Portfolio Album
-          </StyledButton>
+          <CustomButton
+            text="Add Portfolio Album"
+            className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
+            onClick={onAddProject}
+          />
         </div>
       )}
     </div>
