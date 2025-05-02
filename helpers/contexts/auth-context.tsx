@@ -114,15 +114,15 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Debug logging for auth context
-  useEffect(() => {
-    if (pathname) {
-      console.log("Auth context pathname:", pathname);
-      console.log(
-        "Auth context isFreelancerProfileRoute:",
-        isFreelancerProfileRoute
-      );
-    }
-  }, [pathname, isFreelancerProfileRoute]);
+  // useEffect(() => {
+  //   if (pathname) {
+  //     console.log("Auth context pathname:", pathname);
+  //     console.log(
+  //       "Auth context isFreelancerProfileRoute:",
+  //       isFreelancerProfileRoute
+  //     );
+  //   }
+  // }, [pathname, isFreelancerProfileRoute]);
 
   const getUserSkills = () => {
     if (!user || user.user_type !== "freelancer" || !Array.isArray(user.skills))

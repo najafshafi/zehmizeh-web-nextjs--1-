@@ -87,8 +87,6 @@ export const Portfolio = ({
     setCount(count === initialCount ? portfolioData.length : initialCount);
   };
 
-  console.log("Portfolio data:", portfolioData);
-
   return (
     <>
       <div className="title fs-28 fw-400">
