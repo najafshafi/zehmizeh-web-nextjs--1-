@@ -195,7 +195,7 @@ const ViewFreelancerProfile = () => {
             {freelancerQuery.isLoading ? (
               <Loader />
             ) : freelancerQuery.error ? (
-              <div className="bg-red-50 p-8 rounded-md text-center flex flex-col justify-center items-center">
+              <div className=" p-8 rounded-md text-center flex flex-col justify-center items-center my-20">
                 <h3 className="text-2xl font-semibold text-red-700 mb-2">
                   Error Loading Profile
                 </h3>
@@ -210,7 +210,7 @@ const ViewFreelancerProfile = () => {
                 />
               </div>
             ) : !freelancerQuery.freelancerData ? (
-              <div className=" p-8 rounded-md text-center flex flex-col justify-center items-center my-10">
+              <div className=" p-8 rounded-md text-center flex flex-col justify-center items-center my-20">
                 <h3 className="text-2xl font-semibold text-yellow-700 mb-2">
                   Profile Not Available
                 </h3>
