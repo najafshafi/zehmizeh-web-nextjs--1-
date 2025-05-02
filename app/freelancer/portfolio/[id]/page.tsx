@@ -103,6 +103,7 @@ const PreviewerBoxAudio = styled.audio`
 
 const PortfolioDetailPage = () => {
   const params = useParams();
+  // const pathname = usePathname();
   const portfolioId = params?.id as string;
 
   const { portfolioData, isLoading, isRefetching } = usePortfolioDetails(
@@ -110,6 +111,11 @@ const PortfolioDetailPage = () => {
   );
 
   const [previewURL, setPreviewURL] = useState<string>("");
+
+  // Reset preview state when path changes
+  // useEffect(() => {
+  //   setPreviewURL("");
+  // }, [pathname, portfolioId]);
 
   const previewHandler = (val: string) => {
     setPreviewURL(val);
@@ -129,10 +135,13 @@ const PortfolioDetailPage = () => {
             </div>
           </PageHeading>
 
-          <GridContainer>
-            {!isLoading &&
-              !isRefetching &&
-              portfolioData?.image_urls?.map((item: string) => (
+          {isLoading || isRefetching ? (
+            <div className="flex justify-center items-center h-60">
+              <Spinner className="w-24 h-24 text-black" />
+            </div>
+          ) : (
+            <GridContainer>
+              {portfolioData?.image_urls?.map((item: string) => (
                 <GridItem key={item}>
                   {isVideo(item) ? (
                     <VideoPortfolioItem
@@ -147,7 +156,8 @@ const PortfolioDetailPage = () => {
                   )}
                 </GridItem>
               ))}
-          </GridContainer>
+            </GridContainer>
+          )}
         </ContentContainer>
 
         {!!previewURL && (

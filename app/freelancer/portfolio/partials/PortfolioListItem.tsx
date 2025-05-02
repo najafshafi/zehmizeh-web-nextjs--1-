@@ -2,13 +2,13 @@ import { coverImgHandler } from "@/helpers/utils/coverImgHandler";
 import styled from "styled-components";
 import { transition } from "@/styles/CssUtils";
 
-const StyledPortfolioListItem = styled.div<{ coverImage: string }>`
+const StyledPortfolioListItem = styled.div<{ $coverImage: string }>`
   border-radius: 0.5rem;
   width: 100%;
   box-shadow: rgba(0, 0, 0, 0.1) -2px 2px 6px 0px;
   .cover-img {
     border-radius: 0.5rem;
-    background-image: ${(props) => `url(${props.coverImage})`};
+    background-image: ${(props) => `url(${props.$coverImage})`};
     width: 100%;
     position: relative;
     aspect-ratio: 1;
@@ -27,8 +27,8 @@ const PortfolioListItem = ({
 }) => {
   return (
     <StyledPortfolioListItem
-      coverImage={coverImgHandler(image)}
-      className="pointer"
+      $coverImage={coverImgHandler(image)}
+      className="cursor-pointer"
       onClick={onClick}
     >
       <div className="cover-img" />

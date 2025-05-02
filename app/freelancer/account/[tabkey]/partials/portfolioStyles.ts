@@ -30,7 +30,7 @@ export const GridContainer = styled.div`
   gap: 1rem;
 `;
 
-export const PortfolioBox = styled.div<{ coverImage: string }>`
+export const PortfolioBox = styled.div<{ $coverImage: string }>`
   width: 100%;
   aspect-ratio: 1/1;
   display: flex;
@@ -42,7 +42,7 @@ export const PortfolioBox = styled.div<{ coverImage: string }>`
   box-shadow: rgba(0, 0, 0, 0.1) -2px 2px 6px 0px;
   .cover-img {
     border-radius: 0.5rem;
-    background-image: ${(props) => `url(${props.coverImage})`};
+    background-image: ${(props) => `url(${props.$coverImage})`};
     width: 100%;
     position: relative;
     aspect-ratio: 1;
@@ -52,7 +52,7 @@ export const PortfolioBox = styled.div<{ coverImage: string }>`
   ${() => transition()}
 `;
 
-export const StyledPortfolioListItem = styled.div<{ coverImage: string }>`
+export const StyledPortfolioListItem = styled.div<{ $coverImage: string }>`
   width: 100%;
   aspect-ratio: 1/1;
   display: flex;
@@ -63,7 +63,7 @@ export const StyledPortfolioListItem = styled.div<{ coverImage: string }>`
   box-shadow: rgba(0, 0, 0, 0.1) -2px 2px 6px 0px;
   .cover-img {
     border-radius: 0.5rem;
-    background-image: ${(props) => `url(${props.coverImage})`};
+    background-image: ${(props) => `url(${props.$coverImage})`};
     width: 100%;
     position: relative;
     aspect-ratio: 1;

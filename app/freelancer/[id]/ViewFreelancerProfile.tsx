@@ -17,7 +17,7 @@ import { Profile } from "./Tabs/Profile";
 import { JobRatings } from "./Tabs/JobRatings";
 import { Portfolio } from "./Tabs/Portfolio";
 import Tabs from "./Tabs";
-// import { usePortfolioList } from "@/controllers/usePortfolioList";
+import { usePortfolioList } from "@/controllers/usePortfolioList";
 import { useFreelancerDetails } from "@/controllers/useFreelancerDetails";
 import { hasClientAddedPaymentDetails } from "@/helpers/utils/helper";
 import CustomButton from "@/components/custombutton/CustomButton";
@@ -69,8 +69,8 @@ const ViewFreelancerProfile = () => {
   const { user } = useAuth();
   const freelancerQuery = useFreelancerDetails(freelancerId);
 
-  // We still need portfolioQuery data for the Portfolio component
-  // const portfolioQuery = usePortfolioList(freelancerId);
+  // We need portfolioQuery data for the Portfolio component
+  const portfolioQuery = usePortfolioList(freelancerId);
 
   // Track if the user is authenticated
   const isAuthenticated = !!user;
@@ -176,12 +176,12 @@ const ViewFreelancerProfile = () => {
                 user && user.user_type == "client"
                   ? "/client/dashboard"
                   : user?.user_type === "freelancer"
-                  ? "/dashboard"
-                  : "/home"
+                    ? "/dashboard"
+                    : "/home"
               }
             />
 
-            {!isAuthenticated && (
+            {freelancerQuery.freelancerData && !isAuthenticated && (
               <div className="w-full flex justify-center items-center px-5">
                 <div className="w-fit bg-blue-50 p-4 rounded-md shadow mt-4 flex justify-between items-center">
                   <p className="text-blue-800">
@@ -195,8 +195,8 @@ const ViewFreelancerProfile = () => {
             {freelancerQuery.isLoading ? (
               <Loader />
             ) : freelancerQuery.error ? (
-              <div className="bg-red-50 p-8 rounded-md text-center">
-                <h3 className="text-xl font-semibold text-red-700 mb-2">
+              <div className="bg-red-50 p-8 rounded-md text-center flex flex-col justify-center items-center">
+                <h3 className="text-2xl font-semibold text-red-700 mb-2">
                   Error Loading Profile
                 </h3>
                 <p className="text-gray-700 mb-4">
@@ -206,12 +206,12 @@ const ViewFreelancerProfile = () => {
                 <CustomButton
                   text="Try Again"
                   onClick={() => freelancerQuery.refetch()}
-                  className="bg-primary text-white mx-auto"
+                  className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-base"
                 />
               </div>
             ) : !freelancerQuery.freelancerData ? (
-              <div className="bg-yellow-50 p-8 rounded-md text-center">
-                <h3 className="text-xl font-semibold text-yellow-700 mb-2">
+              <div className=" p-8 rounded-md text-center flex flex-col justify-center items-center my-10">
+                <h3 className="text-2xl font-semibold text-yellow-700 mb-2">
                   Profile Not Available
                 </h3>
                 <p className="text-gray-700 mb-4">
@@ -221,7 +221,7 @@ const ViewFreelancerProfile = () => {
                 <CustomButton
                   text="Back to Home"
                   onClick={() => router.push("/home")}
-                  className="bg-primary text-white mx-auto"
+                  className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-base"
                 />
               </div>
             ) : (

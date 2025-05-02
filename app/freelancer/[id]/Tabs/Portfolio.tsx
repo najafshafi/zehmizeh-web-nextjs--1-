@@ -7,10 +7,11 @@ import NoPortfolioView from "@/components/portfolio/NoPortfolioView";
 import PortfolioListItem from "@/components/portfolio/PortfolioListItem";
 import { transition } from "@/styles/CssUtils";
 import PlusIcon from "@/public/icons/plus-yellow.svg";
-import { useQueryData, useRefetch } from "@/helpers/hooks/useQueryData";
 import { usePathname } from "next/navigation";
 import { queryKeys } from "@/helpers/const/queryKeys";
 import CustomButton from "@/components/custombutton/CustomButton";
+import { useQuery } from "react-query";
+import { getFreelancerPortfolio } from "@/helpers/http/portfolio";
 
 const AddNewBlock = styled.div`
   background: ${(props) => props.theme.colors.white};
@@ -48,14 +49,19 @@ export const Portfolio = ({
   const [showAddPortfolioModal, setShowAddPortfolioModal] =
     useState<boolean>(false);
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const portfolioData =
-    useQueryData<PortfolioItem[]>(
-      queryKeys.getFreelancerPortfolio(freelancerId)
-    ) || [];
-  const { refetch } = useRefetch(
-    queryKeys.getFreelancerPortfolio(freelancerId)
+  // Use React Query directly to fetch portfolio data
+  const { data, isLoading, refetch } = useQuery(
+    queryKeys.getFreelancerPortfolio(freelancerId),
+    () => getFreelancerPortfolio(freelancerId),
+    {
+      enabled: !!freelancerId,
+      retry: false,
+    }
   );
+
+  // Extract portfolio data from the response
+  const portfolioData = data?.data || [];
+
   const initialCount = 6;
   const [count, setCount] = useState(initialCount);
 
@@ -115,11 +121,11 @@ export const Portfolio = ({
       )}
 
       {!isLoading && portfolioData.length > 0 && (
-        <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 mt-4`}>
+        <div className={`  grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 `}>
           {allowEdit && (
             <div className="mb-4">
               <AddNewBlock
-                className="flex flex-col items-center justify-center fs-1rem fw-400 cursor-pointer"
+                className="flex flex-col items-center justify-center fs-1rem fw-400 cursor-pointer "
                 onClick={toggleAddPortfolioModal}
               >
                 <PlusIcon className="mb-3" />
