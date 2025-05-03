@@ -50,7 +50,7 @@ const ClientProfileTabs = ({ currentTab }: Prop) => {
 
   return (
     <C.ClientTabWrapper className="tab-wrapper">
-      <C.ClientTab>
+      <C.ClientTab className="jaxk">
         {tabs.map((tb) => (
           <C.ClientTitle
             onClick={() => {

@@ -4,10 +4,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
-import { Modal, Button, Container, Row, Col, Form } from "react-bootstrap";
 import { StyledFormGroup, EditFormWrapper } from "./info-edit.styled";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { StyledButton } from "@/components/forms/Buttons";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import CountryDropdown from "@/components/forms/country-dropdown/CountryDropdown";
 import StatesDropdopwn from "@/components/forms/state-picker/StatePicker";
@@ -226,77 +223,85 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
     return typeof current === "string" ? current : undefined;
   };
 
-  return (
-    <StyledModal maxwidth={678} show={show} size="sm" onHide={onClose} centered>
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={onClose}>
-          &times;
-        </Button>
-        <EditFormWrapper>
-          <div className="content">
-            <h3 className="fs-36 fw-700">Edit Profile Details</h3>
-            <Container className="form">
-              {/* START ----------------------------------------- Username */}
-              <Row>
-                <Col>
-                  <StyledFormGroup>
-                    <div className="fs-sm fw-400">
-                      First Name<span className="mandatory">&nbsp;*</span>
-                    </div>
-                    <Form.Control
-                      placeholder="Enter your first name"
-                      className="form-input"
-                      value={formState?.first_name}
-                      maxLength={35}
-                      onChange={(e) =>
-                        handleChange(
-                          "first_name",
-                          onlyCharacters(e.target.value)
-                        )
-                      }
-                    />
-                    {getErrorMessage("first_name") && (
-                      <ErrorMessage
-                        message={getErrorMessage("first_name") as string}
-                      />
-                    )}
-                  </StyledFormGroup>
-                </Col>
-                <Col>
-                  <StyledFormGroup>
-                    <div className="fs-sm fw-400">
-                      Last Name<span className="mandatory">&nbsp;*</span>
-                    </div>
-                    <Form.Control
-                      placeholder="Enter your last name"
-                      className="form-input"
-                      value={formState?.last_name}
-                      maxLength={35}
-                      onChange={(e) =>
-                        handleChange(
-                          "last_name",
-                          onlyCharacters(e.target.value)
-                        )
-                      }
-                    />
-                    {getErrorMessage("last_name") && (
-                      <ErrorMessage
-                        message={getErrorMessage("last_name") as string}
-                      />
-                    )}
-                  </StyledFormGroup>
-                </Col>
-              </Row>
-              {/* END ------------------------------------------- Username */}
+  if (!show) return null;
 
-              {/* START ----------------------------------------- Company name */}
-              <Row>
-                <Col>
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-black bg-opacity-50">
+      <div className="relative w-full max-w-[678px] mx-auto">
+        <div className="bg-white rounded-lg shadow-lg p-6 relative">
+          <button
+            className="absolute top-4 right-4 text-3xl font-bold text-gray-400 hover:text-gray-600"
+            onClick={onClose}
+          >
+            &times;
+          </button>
+          <EditFormWrapper>
+            <div className="content">
+              <h3 className="text-3xl font-bold mb-6">Edit Profile Details</h3>
+              <div className="form w-full px-2">
+                {/* START ----------------------------------------- Username */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <StyledFormGroup>
+                      <div className="text-sm font-normal">
+                        First Name<span className="text-red-500">&nbsp;*</span>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Enter your first name"
+                        className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={formState?.first_name}
+                        maxLength={35}
+                        onChange={(e) =>
+                          handleChange(
+                            "first_name",
+                            onlyCharacters(e.target.value)
+                          )
+                        }
+                      />
+                      {getErrorMessage("first_name") && (
+                        <ErrorMessage
+                          message={getErrorMessage("first_name") as string}
+                        />
+                      )}
+                    </StyledFormGroup>
+                  </div>
+                  <div>
+                    <StyledFormGroup>
+                      <div className="text-sm font-normal">
+                        Last Name<span className="text-red-500">&nbsp;*</span>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Enter your last name"
+                        className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={formState?.last_name}
+                        maxLength={35}
+                        onChange={(e) =>
+                          handleChange(
+                            "last_name",
+                            onlyCharacters(e.target.value)
+                          )
+                        }
+                      />
+                      {getErrorMessage("last_name") && (
+                        <ErrorMessage
+                          message={getErrorMessage("last_name") as string}
+                        />
+                      )}
+                    </StyledFormGroup>
+                  </div>
+                </div>
+                {/* END ------------------------------------------- Username */}
+
+                {/* START ----------------------------------------- Company name */}
+                <div className="mb-4">
                   <StyledFormGroup>
-                    <div className="fs-sm fw-400">Company Name</div>
-                    <Form.Control
+                    <div className="text-sm font-normal">Company Name</div>
+                    <input
+                      type="text"
                       placeholder="Enter your company name"
-                      className="form-input"
+                      className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       value={formState?.company_name}
                       maxLength={255}
                       onChange={(e) =>
@@ -304,16 +309,14 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
                       }
                     />
                   </StyledFormGroup>
-                </Col>
-              </Row>
-              {/* END ------------------------------------------- Company name */}
+                </div>
+                {/* END ------------------------------------------- Company name */}
 
-              {/* START ----------------------------------------- Country */}
-              <Row>
-                <Col>
+                {/* START ----------------------------------------- Country */}
+                <div className="mb-4">
                   <StyledFormGroup>
-                    <div className="fs-sm fw-400 mb-1">
-                      Country<span className="mandatory">&nbsp;*</span>
+                    <div className="text-sm font-normal mb-1">
+                      Country<span className="text-red-500">&nbsp;*</span>
                     </div>
                     <CountryDropdown
                       selectedCountry={getCountryOptionFromLocation()}
@@ -327,19 +330,18 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
                       />
                     )}
                   </StyledFormGroup>
-                </Col>
-              </Row>
-              {/* END ------------------------------------------- Country */}
+                </div>
+                {/* END ------------------------------------------- Country */}
 
-              {/* START ----------------------------------------- State */}
-              {!CONSTANTS.COUNTRIES_SHORT_NAME_WITHOUT_STATE.includes(
-                formState?.location?.country_short_name
-              ) && (
-                <Row>
-                  <Col>
+                {/* START ----------------------------------------- State */}
+                {!CONSTANTS.COUNTRIES_SHORT_NAME_WITHOUT_STATE.includes(
+                  formState?.location?.country_short_name
+                ) && (
+                  <div className="mb-4">
                     <StyledFormGroup>
-                      <div className="fs-sm fw-400 mb-1">
-                        State/Region<span className="mandatory">&nbsp;*</span>
+                      <div className="text-sm font-normal mb-1">
+                        State/Region
+                        <span className="text-red-500">&nbsp;*</span>
                       </div>
                       <StatesDropdopwn
                         countryCode={formState?.location?.country_short_name}
@@ -352,32 +354,31 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
                         />
                       )}
                     </StyledFormGroup>
-                  </Col>
-                </Row>
-              )}
-              {/* END ------------------------------------------- State */}
-            </Container>
+                  </div>
+                )}
+                {/* END ------------------------------------------- State */}
+              </div>
 
-            <div className="bottom-buttons d-flex">
-              <StyledButton
-                padding="1.125rem 2.25rem"
-                variant="primary"
-                disabled={loading}
-                onClick={handleUpdate}
-              >
-                Update
-              </StyledButton>
+              <div className="flex mt-6 justify-end">
+                <button
+                  className="px-9 py-4 bg-primary text-black rounded-full font-normal hover:bg-primary/90 transition-colors"
+                  disabled={loading}
+                  onClick={handleUpdate}
+                >
+                  Update
+                </button>
+              </div>
             </div>
-          </div>
-          <EmailEditModal
-            show={showEditEmailModal}
-            existingEmail={data?.u_email_id}
-            onClose={toggleEditModal}
-            onUpdateEmail={onUpdateEmail}
-          />
-        </EditFormWrapper>
-      </Modal.Body>
-    </StyledModal>
+            <EmailEditModal
+              show={showEditEmailModal}
+              existingEmail={data?.u_email_id}
+              onClose={toggleEditModal}
+              onUpdateEmail={onUpdateEmail}
+            />
+          </EditFormWrapper>
+        </div>
+      </div>
+    </div>
   );
 };
 

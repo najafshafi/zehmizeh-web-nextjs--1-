@@ -355,6 +355,7 @@ const NavbarProfile = () => {
                   src={user?.user_image}
                   width={40}
                   height={40}
+                  className="rounded-full"
                   alt="User avatar"
                   priority
                 />
