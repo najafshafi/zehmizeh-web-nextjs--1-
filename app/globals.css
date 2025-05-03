@@ -95,8 +95,31 @@
   overflow: hidden;
   text-overflow: ellipsis;
 
-.modal-backdrop.show {
-  opacity: 0.4 !important;
-
+  .modal-backdrop.show {
+    opacity: 0.4 !important;
+  }
 }
+
+.common-phone-number-input input {
+  font-size: 14px !important;
+  border: none;
+  outline: none;
+  padding-left: 1rem;
+}
+
+.common-phone-number-input
+  .PhoneInputCountryIcon.PhoneInputCountryIcon--border {
+  width: 16px !important;
+  height: 11px !important;
+  border: none;
+  box-shadow: unset !important;
+}
+
+.common-phone-number-input {
+  padding-bottom: 0.6rem;
+}
+
+.PhoneInputCountrySelect option {
+  font-size: 14px;
+  color: #252525;
 }

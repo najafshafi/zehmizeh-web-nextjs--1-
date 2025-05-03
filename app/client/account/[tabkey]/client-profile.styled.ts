@@ -51,21 +51,33 @@ export const ClientProfileWrapper = styled.div`
     .email-input-wrapper,
   }
 `;
-
 export const ClientTabWrapper = styled.div`
   flex: none;
   min-width: 160px;
+
   @media (max-width: 768px) {
     padding: 2rem;
     position: sticky;
     top: 0px;
     left: 0px;
     width: 100%;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
     background-color: rgb(255 255 255);
     border-bottom: 1px solid rgb(226, 226, 226);
     min-width: unset;
-    z-index: 999;
+    z-index: 20;
+
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none;
+
+    /* Hide scrollbar for IE and Edge */
+    -ms-overflow-style: none;
+  }
+  .jaxk {
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 `;
 

@@ -739,36 +739,19 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                       {/* START ----------------------------------------- Phone number */}
                       <div className="w-full px-3">
                         <StyledFormGroup className="relative">
-                          <div className="text-sm font-normal">
-                            Phone<span className="mandatory">&nbsp;*</span>
+                          <div className="text-sm font-normal mb-1">
+                            Phone<span className="text-red-500">&nbsp;*</span>
                           </div>
                           <PhoneInputWrapper className="phone-input-wrapper ">
-                            <div
-                              style={{
-                                pointerEvents:
-                                  inputFieldLoading === "phone number"
-                                    ? "none"
-                                    : "auto",
-                                opacity:
-                                  inputFieldLoading === "phone number"
-                                    ? "0.7"
-                                    : "1",
-                              }}
-                            >
+                            <div>
                               <PhoneNumberInput
                                 initialValue={formData?.formatted_phonenumber}
                                 onChange={(phone, formattedValue) => {
-                                  if (
-                                    phone !== formData.phone_number ||
-                                    formattedValue !==
-                                      formData.formatted_phonenumber
-                                  ) {
-                                    setFormData((prev) => ({
-                                      ...prev,
-                                      phone_number: phone,
-                                      formatted_phonenumber: formattedValue,
-                                    }));
-                                  }
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    phone_number: phone,
+                                    formatted_phonenumber: formattedValue,
+                                  }));
                                 }}
                               />
                             </div>

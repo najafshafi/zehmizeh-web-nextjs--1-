@@ -337,7 +337,7 @@ const NavbarProfile = () => {
 
       {isMobileMenuOpen && (
         <nav
-          className="absolute top-full h-screen left-0 w-full bg-secondary shadow-md flex flex-col gap-4 py-4 md:pl-[100px] pl-[15px] border-b border-customYellow animate-slide-down"
+          className="z-50 absolute top-full h-screen left-0 w-full bg-secondary shadow-md flex flex-col gap-4 py-4 md:pl-[100px] pl-[15px] border-b border-customYellow animate-slide-down"
           aria-label="Mobile navigation"
         >
           <div className="flex items-center justify-between pr-4">
@@ -355,6 +355,7 @@ const NavbarProfile = () => {
                   src={user?.user_image}
                   width={40}
                   height={40}
+                  className="rounded-full"
                   alt="User avatar"
                   priority
                 />

@@ -264,10 +264,10 @@ const EmailEditModal = ({
             <label className="flex items-center text-gray-700">
               New Email<span className="text-red-500">&nbsp;*</span>
             </label>
-            <div className="flex flex-col md:flex-row items-center relative gap-3 mt-2">
+            <div className="flex flex-col md:flex-row items-center relative gap-3 mt-2 ">
               <input
                 placeholder="Enter new email"
-                className="w-full px-5 py-4 border rounded-md focus:outline-none border-black focus:ring-4 focus:ring-[#0d6efd40] transition-all"
+                className="w-[72%]  px-5 py-4 border rounded-md focus:outline-none border-black focus:ring-4 focus:ring-[#0d6efd40] transition-all"
                 maxLength={255}
                 {...register("email_id")}
                 disabled={isOtpSent}
@@ -276,7 +276,7 @@ const EmailEditModal = ({
               {isOtpSent ? (
                 <button
                   type="button"
-                  className="w-full md:w-fit bg-[#F2B420] text-[#212529] px-10 py-[1.15rem] hover:scale-105 duration-300 text-lg rounded-full disabled:bg-[#F2A420]"
+                  className="px-9 py-4 bg-primary text-black rounded-full font-normal hover:bg-primary/90 transition-colors"
                   onClick={handleToggleEmail}
                 >
                   Change
@@ -286,7 +286,7 @@ const EmailEditModal = ({
               {!isOtpSent ? (
                 <button
                   type="submit"
-                  className="w-full md:w-fit bg-[#F2B420] text-[#212529] px-10 py-[1.15rem] hover:scale-105 duration-300 text-lg rounded-full disabled:bg-[#F2A420]"
+                  className="px-9 py-4 bg-primary text-black rounded-full font-normal hover:bg-primary/90 transition-colors"
                   disabled={loading}
                 >
                   Submit
