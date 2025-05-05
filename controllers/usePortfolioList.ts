@@ -7,7 +7,7 @@ export const usePortfolioList = (freelancerId: string) => {
     queryKeys.getFreelancerPortfolio(freelancerId),
     () =>
       getFreelancerPortfolio(freelancerId).catch((err) => {
-        console.log("Error fetching portfolio:", err);
+        console.log("Error fetching portfolio: ", err);
         // Return empty array instead of throwing
         return { data: [] };
       }),

@@ -11,9 +11,10 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { generateAwsUrl } from "@/helpers/http/common";
 import useResponsive from "@/helpers/hooks/useResponsive";
-import LoadingButtons from "@/components/LoadingButtons";
+
 import { VscClose } from "react-icons/vsc";
 import Image from "next/image";
+import CustomButton from "../custombutton/CustomButton";
 
 interface Props {
   show: boolean;
@@ -298,15 +299,16 @@ const EditPictureModal = ({ show, onClose, onUpdate, profilePic }: Props) => {
             </button>
 
             {currentImage && (
-              <button
-                className={`flex items-center px-6 py-2.5 rounded-full bg-[#F7B500] text-[#1d1e1b] hover:bg-[#e5a800] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F7B500] ${
+              <CustomButton
+                text="Save"
+                className={`px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] ${
                   isMobile ? "w-full" : ""
                 }`}
                 onClick={validateFile}
                 disabled={uploading}
-              >
-                Save {uploading && <LoadingButtons />}
-              </button>
+                showSpinner={uploading}
+                spinnerPosition="right"
+              />
             )}
           </div>
         </div>

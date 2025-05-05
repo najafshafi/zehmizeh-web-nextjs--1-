@@ -246,7 +246,7 @@ export const ProjectPreferences = () => {
                       <input
                         type="text"
                         placeholder="Add links to similar projects here."
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
                         value={referenceLink}
                         onChange={(e) => {
                           if (e.target.value.length > 200) return;

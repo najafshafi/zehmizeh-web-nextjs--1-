@@ -23,14 +23,13 @@ export interface TEditJobTemplatePathParams {
 }
 import {
   AddEditTemplate,
-  TAddEditTemplatePayload,
   manageTemplate,
+  TAddEditTemplatePayload,
 } from "@/helpers/http/templates";
 import { CONSTANTS, POST_JOB_STEPS } from "@/helpers/const/constants";
 import { useIsAllowedToPostProject } from "@/helpers/hooks/useIsAllowedToPostProject";
-import { StyledModal } from "@/components/styled/StyledModal";
-import { StyledButton } from "@/components/forms/Buttons";
 import { editUser } from "@/helpers/http/auth";
+import CustomButton from "@/components/custombutton/CustomButton";
 
 type TContextType = {
   step: number;
@@ -588,49 +587,52 @@ const PostJobContextProvider = ({
   };
 
   // Confirmation modal to stop user from navigating away when files are uploading
-  const navigateAwayConfirmationModal = (
-    <StyledModal
-      maxwidth={718}
-      show={showConfirmationModal || isNavigationBlocked}
-      size="lg"
-      centered
-    >
-      <div className="p-4">
-        <div className="text-center">
-          <h5 className="text-lg font-medium mb-4">
-            File upload in progress. Leaving this page will interrupt the
-            upload. Do you want to continue?
-          </h5>
-          <div className="mt-4 flex justify-center gap-4">
-            <StyledButton
-              className="text-base font-normal"
-              variant="secondary"
-              padding="0.8125rem 2rem"
-              onClick={() => {
-                setIsNavigationBlocked(false);
-                setShowConfirmationModal(false);
-                confirmationModalCallbackRef.current = undefined;
-              }}
-            >
-              Cancel
-            </StyledButton>
-            <StyledButton
-              className="text-base font-normal"
-              variant="danger"
-              padding="0.8125rem 2rem"
-              onClick={() => {
-                setIsNavigationBlocked(false);
-                confirmationModalCallbackRef.current?.();
-                setShowConfirmationModal(false);
-                confirmationModalCallbackRef.current = undefined;
-              }}
-            >
-              Confirm
-            </StyledButton>
+  const navigateAwayConfirmationModal = (showConfirmationModal ||
+    isNavigationBlocked) && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden">
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        onClick={() => {
+          setIsNavigationBlocked(false);
+          setShowConfirmationModal(false);
+          confirmationModalCallbackRef.current = undefined;
+        }}
+      ></div>
+      <div className="relative max-w-[718px] w-full mx-auto my-6 z-10">
+        <div className="relative bg-white rounded-xl shadow-lg">
+          <div className="p-4">
+            <div className="text-center">
+              <h5 className="text-lg font-medium mb-4">
+                File upload in progress. Leaving this page will interrupt the
+                upload. Do you want to continue?
+              </h5>
+              <div className="mt-4 flex justify-center gap-4">
+                <CustomButton
+                  text="Cancel"
+                  className=" px-8 py-4  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  border border-black hover:bg-black hover:text-white text-[18px]"
+                  onClick={() => {
+                    setIsNavigationBlocked(false);
+                    setShowConfirmationModal(false);
+                    confirmationModalCallbackRef.current = undefined;
+                  }}
+                />
+
+                <CustomButton
+                  text="Confirm"
+                  className={`px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-white rounded-full bg-[#C82333] text-[18px]`}
+                  onClick={() => {
+                    setIsNavigationBlocked(false);
+                    confirmationModalCallbackRef.current?.();
+                    setShowConfirmationModal(false);
+                    confirmationModalCallbackRef.current = undefined;
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </StyledModal>
+    </div>
   );
 
   if (!isAllowedToPostProject) {

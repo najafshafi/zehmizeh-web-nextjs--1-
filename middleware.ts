@@ -16,7 +16,6 @@ export function middleware(request: NextRequest) {
     pathname === "/forgot-password" ||
     pathname === "/reset-password" ||
     pathname === "/2fa" ||
-    pathname === "/terms" ||
     pathname === "/customer-support" ||
     pathname === "/finding-us" ||
     pathname === "/cookies" ||
