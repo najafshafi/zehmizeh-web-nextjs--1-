@@ -1,24 +1,9 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import styled from "styled-components";
-import { Form, Modal, Button, Row, Col } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import ErrorMessage from "@/components/ui/ErrorMessage";
-import { StyledButton } from "@/components/forms/Buttons";
-import { StyledModal } from "@/components/styled/StyledModal";
 import { verifyBankAccountForACH } from "@/helpers/http/client";
-
-const StyledFormGroup = styled.div`
-  margin-top: 1.25rem;
-  .form-input {
-    margin-top: 6px;
-    padding: 1rem 1.25rem;
-    border-radius: 7px;
-    border: 1px solid ${(props) => props.theme.colors.gray6};
-  }
-`;
 
 type Props = {
   show: boolean;
@@ -89,76 +74,82 @@ const VerifyBankAccount = ({
   };
 
   const { errors } = formState;
+
+  if (!show) return null;
+
   return (
-    <StyledModal
-      maxwidth={726}
-      show={show}
-      size="sm"
-      onHide={onModalClose}
-      centered
-    >
-      <Modal.Body>
-        <Button variant="transparent" className="close" onClick={onModalClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black bg-opacity-50">
+      <div className="relative w-full max-w-[726px] mx-auto rounded-lg bg-white p-6">
+        <button
+          className="absolute -top-4 -right-8 text-3xl font-light text-white "
+          onClick={onModalClose}
+        >
           &times;
-        </Button>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <div className="fs-28 fw-400 mb-3">Verify Bank Account</div>
-          <div className="fs-sm fw-400">
-            {/* Enter the two small amounts that has been credited to your bank
-            account. */}
+        </button>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="text-[28px] font-normal mb-3">
+            Verify Bank Account
+          </div>
+          <div className="text-sm font-normal">
             Enter the two small amounts that Stripe has deposited to this bank
             account <b>in cents.</b>
           </div>
 
-          <div className="account-form">
-            <Row>
-              <Col md={6}>
-                <StyledFormGroup>
-                  <label className="fs-14 fw-400">
-                    Deposit 1<span className="mandatory">&nbsp;*</span>
-                  </label>
-                  <Form.Control
-                    placeholder="Enter amount"
-                    type="number"
-                    step="0.01"
-                    className="form-input"
-                    maxLength={5}
-                    {...register("amount1")}
-                  />
-                  {errors?.amount1 && (
-                    <ErrorMessage>{errors.amount1?.message}</ErrorMessage>
-                  )}
-                </StyledFormGroup>
-              </Col>
-              <Col md={6}>
-                <StyledFormGroup>
-                  <label className="fs-14 fw-400">
-                    Deposit 2<span className="mandatory">&nbsp;*</span>
-                  </label>
-                  <Form.Control
-                    placeholder="Enter amount"
-                    type="number"
-                    step="0.01"
-                    className="form-input"
-                    {...register("amount2")}
-                    maxLength={5}
-                  />
-                  {errors?.amount2 && (
-                    <ErrorMessage>{errors.amount2?.message}</ErrorMessage>
-                  )}
-                </StyledFormGroup>
-              </Col>
-            </Row>
+          <div className="mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="mt-5">
+                <label className="text-sm font-normal">
+                  Deposit 1<span className="text-red-500">&nbsp;*</span>
+                </label>
+                <input
+                  placeholder="Enter amount"
+                  type="number"
+                  step="0.01"
+                  className="w-full mt-1.5 p-4 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  maxLength={5}
+                  {...register("amount1")}
+                />
+                {errors?.amount1 && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.amount1?.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="mt-5">
+                <label className="text-sm font-normal">
+                  Deposit 2<span className="text-red-500">&nbsp;*</span>
+                </label>
+                <input
+                  placeholder="Enter amount"
+                  type="number"
+                  step="0.01"
+                  className="w-full mt-1.5 p-4 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  maxLength={5}
+                  {...register("amount2")}
+                />
+                {errors?.amount2 && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.amount2?.message}
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
 
-          <div className="d-flex justify-content-center justify-content-md-end mt-4">
-            <StyledButton disabled={loading} type="submit">
+          <div className="flex justify-center md:justify-end mt-4">
+            <button
+              disabled={loading}
+              type="submit"
+              className="px-[2rem] py-[1rem]  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[16px]"
+            >
               Verify
-            </StyledButton>
+            </button>
           </div>
-        </Form>
-      </Modal.Body>
-    </StyledModal>
+        </form>
+      </div>
+    </div>
   );
 };
 

@@ -4,7 +4,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
-import { StyledFormGroup, EditFormWrapper } from "./info-edit.styled";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import CountryDropdown from "@/components/forms/country-dropdown/CountryDropdown";
 import StatesDropdopwn from "@/components/forms/state-picker/StatePicker";
@@ -235,14 +234,14 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
           >
             &times;
           </button>
-          <EditFormWrapper>
-            <div className="content">
+          <div>
+            <div>
               <h3 className="text-3xl font-bold mb-6">Edit Profile Details</h3>
               <div className="form w-full px-2">
                 {/* START ----------------------------------------- Username */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <StyledFormGroup>
+                    <div className="mt-5">
                       <div className="text-sm font-normal">
                         First Name<span className="text-red-500">&nbsp;*</span>
                       </div>
@@ -264,10 +263,10 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
                           message={getErrorMessage("first_name") as string}
                         />
                       )}
-                    </StyledFormGroup>
+                    </div>
                   </div>
                   <div>
-                    <StyledFormGroup>
+                    <div className="mt-5">
                       <div className="text-sm font-normal">
                         Last Name<span className="text-red-500">&nbsp;*</span>
                       </div>
@@ -289,14 +288,14 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
                           message={getErrorMessage("last_name") as string}
                         />
                       )}
-                    </StyledFormGroup>
+                    </div>
                   </div>
                 </div>
                 {/* END ------------------------------------------- Username */}
 
                 {/* START ----------------------------------------- Company name */}
                 <div className="mb-4">
-                  <StyledFormGroup>
+                  <div className="mt-5">
                     <div className="text-sm font-normal">Company Name</div>
                     <input
                       type="text"
@@ -308,13 +307,13 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
                         handleChange("company_name", e.target.value)
                       }
                     />
-                  </StyledFormGroup>
+                  </div>
                 </div>
                 {/* END ------------------------------------------- Company name */}
 
                 {/* START ----------------------------------------- Country */}
                 <div className="mb-4">
-                  <StyledFormGroup>
+                  <div className="mt-5">
                     <div className="text-sm font-normal mb-1">
                       Country<span className="text-red-500">&nbsp;*</span>
                     </div>
@@ -329,7 +328,7 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
                         }
                       />
                     )}
-                  </StyledFormGroup>
+                  </div>
                 </div>
                 {/* END ------------------------------------------- Country */}
 
@@ -338,7 +337,7 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
                   formState?.location?.country_short_name
                 ) && (
                   <div className="mb-4">
-                    <StyledFormGroup>
+                    <div className="mt-5">
                       <div className="text-sm font-normal mb-1">
                         State/Region
                         <span className="text-red-500">&nbsp;*</span>
@@ -353,7 +352,7 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
                           message={getErrorMessage("location.state") as string}
                         />
                       )}
-                    </StyledFormGroup>
+                    </div>
                   </div>
                 )}
                 {/* END ------------------------------------------- State */}
@@ -375,7 +374,7 @@ const InfoEditModal = ({ show, onClose, onUpdate, data }: Props) => {
               onClose={toggleEditModal}
               onUpdateEmail={onUpdateEmail}
             />
-          </EditFormWrapper>
+          </div>
         </div>
       </div>
     </div>

@@ -12,7 +12,6 @@ import {
   editUser,
 } from "@/helpers/http/auth";
 import { queryKeys } from "@/helpers/const/queryKeys";
-import { StyledFormGroup } from "../edit-modals/edit-modals.styled";
 import classNames from "classnames";
 import PhoneInputWrapper from "@/components/styled/PhoneInputWrapper";
 import PhoneNumberInput from "@/components/forms/phone-number-input";
@@ -310,13 +309,13 @@ export const AccountSettings = () => {
         {/* START ----------------------------------------- Username */}
         <div className="flex flex-wrap">
           <div className="w-full lg:w-1/2 px-3">
-            <StyledFormGroup className="relative">
+            <div className="relative mt-5">
               <div className="text-sm font-normal">
-                First Name<span className="mandatory">&nbsp;*</span>
+                First Name<span className="text-red-500">&nbsp;*</span>
               </div>
               <input
                 placeholder="Enter first name"
-                className="w-full px-3 py-2 border rounded"
+                className="w-full px-3 py-3 border rounded"
                 value={formData?.first_name}
                 onChange={(e) => {
                   setFormData((prev) => ({
@@ -327,17 +326,17 @@ export const AccountSettings = () => {
                 maxLength={35}
               />
               {SaveButtonUI("first name", "first_name")}
-            </StyledFormGroup>
+            </div>
             {errors?.first_name && <ErrorMessage message={errors.first_name} />}
           </div>
           <div className="w-full lg:w-1/2 px-3">
-            <StyledFormGroup className="relative">
+            <div className="relative mt-5   ">
               <div className="text-sm font-normal">
-                Last Name<span className="mandatory">&nbsp;*</span>
+                Last Name<span className="text-red-500">&nbsp;*</span>
               </div>
               <input
                 placeholder="Enter last name"
-                className="w-full px-3 py-2 border rounded"
+                className="w-full px-3 py-3 border rounded"
                 value={formData?.last_name}
                 onChange={(e) => {
                   setFormData((prev) => ({
@@ -348,7 +347,7 @@ export const AccountSettings = () => {
                 maxLength={35}
               />
               {SaveButtonUI("last name", "last_name")}
-            </StyledFormGroup>
+            </div>
             {errors?.last_name && <ErrorMessage message={errors.last_name} />}
           </div>
         </div>
@@ -356,10 +355,10 @@ export const AccountSettings = () => {
         {/* START ----------------------------------------- Freelancer type */}
         <div className="flex flex-wrap">
           <div className="w-full lg:w-1/2 px-3">
-            <StyledFormGroup>
+            <div className="mt-5">
               <div className="text-sm font-normal">
                 Freelancer Type
-                <span className="mandatory">&nbsp;*</span>
+                <span className="text-red-500">&nbsp;*</span>
               </div>
               <div className="flex mt-2">
                 <div
@@ -403,46 +402,15 @@ export const AccountSettings = () => {
                   <span>Agency</span>
                 </div>
               </div>
-            </StyledFormGroup>
+            </div>
           </div>
-          {/* <div className="w-full lg:w-1/2 px-3">
-            <StyledFormGroup className="relative">
-              <div className="text-sm font-normal">
-                Phone<span className="mandatory">&nbsp;*</span>
-              </div>
-              <PhoneInputWrapper className="phone-input-wrapper">
-                <PhoneNumberInput
-                  initialValue={formData?.phone_number}
-                  formattedValue={formData?.formatted_phonenumber}
-                  onChange={(phone, formattedValue) => {
-                    if (
-                      phone !== formData.phone_number ||
-                      formattedValue !== formData.formatted_phonenumber
-                    ) {
-                      setFormData((prev) => ({
-                        ...prev,
-                        phone_number: phone,
-                        formatted_phonenumber: formattedValue,
-                      }));
-                    }
-                  }}
-                />
-                {SaveButtonUI("phone number", "formatted_phonenumber", 30, {
-                  phone_number: formData.phone_number,
-                })}
-              </PhoneInputWrapper>
-            </StyledFormGroup>
-            {errors?.formatted_phonenumber && (
-              <ErrorMessage message={errors.formatted_phonenumber} />
-            )}
-          </div>
-        </div> */}
+
           <div className="w-full lg:w-1/2 px-3">
-            <StyledFormGroup className="relative">
+            <div className="relative mt-5">
               <div className="text-sm font-normal">
-                Phone<span className="mandatory">&nbsp;*</span>
+                Phone<span className="text-red-500">&nbsp;*</span>
               </div>
-              <PhoneInputWrapper className="phone-input-wrapper">
+              <PhoneInputWrapper className="border border-black pl-0">
                 <PhoneNumberInput
                   initialValue={formData?.formatted_phonenumber}
                   onChange={(phone, formattedValue) => {
@@ -462,7 +430,7 @@ export const AccountSettings = () => {
                   phone_number: formData.phone_number,
                 })}
               </PhoneInputWrapper>
-            </StyledFormGroup>
+            </div>
             {errors?.formatted_phonenumber && (
               <ErrorMessage message={errors.formatted_phonenumber} />
             )}
@@ -473,9 +441,9 @@ export const AccountSettings = () => {
         <div className="flex flex-wrap">
           {/* START ----------------------------------------- Country */}
           <div className="w-full lg:w-1/2 px-3">
-            <StyledFormGroup>
+            <div className="mt-5">
               <div className="text-sm font-normal mb-1">
-                Country<span className="mandatory">&nbsp;*</span>
+                Country<span className="text-red-500">&nbsp;*</span>
               </div>
               <CountryDropdown
                 selectedCountry={
@@ -506,7 +474,7 @@ export const AccountSettings = () => {
                   message={errors.location.country_name as string}
                 />
               )}
-            </StyledFormGroup>
+            </div>
           </div>
           {/* END ------------------------------------------- Country */}
           {/* START ----------------------------------------- State and region */}
@@ -514,9 +482,9 @@ export const AccountSettings = () => {
             formData?.location?.country_short_name
           ) && (
             <div className="w-full lg:w-1/2 px-3">
-              <StyledFormGroup>
+              <div className="mt-5">
                 <div className="text-sm font-normal mb-1">
-                  State/Region<span className="mandatory">&nbsp;*</span>
+                  State/Region<span className="text-red-500">&nbsp;*</span>
                 </div>
                 <StateDropdown
                   countryCode={formData?.location?.country_short_name}
@@ -533,7 +501,7 @@ export const AccountSettings = () => {
                 {errors?.location?.state && (
                   <ErrorMessage message={errors.location.state as string} />
                 )}
-              </StyledFormGroup>
+              </div>
             </div>
           )}
           {/* END ----------------------------------------- State and region */}
@@ -542,19 +510,19 @@ export const AccountSettings = () => {
         <div className="flex flex-wrap">
           {/* START ----------------------------------------- Email */}
           <div className="w-full lg:w-1/2 px-3">
-            <StyledFormGroup>
+            <div className="mt-5">
               <div className="text-sm font-normal">
-                Email<span className="mandatory">&nbsp;*</span>
+                Email<span className="text-red-500">&nbsp;*</span>
               </div>
-              <div className="email-input-wrapper">
+              <div className="relative">
                 <input
                   placeholder="Enter your email"
-                  className="w-full px-3 py-4 border rounded email-input "
+                  className="w-full px-3 py-4 border rounded pr-[100px] "
                   value={formData?.u_email_id}
                   disabled={true}
                 />
                 <div
-                  className="edit-button flex items-center gap-2 cursor-pointer"
+                  className="absolute right-4 top-[35%] flex items-center gap-2 cursor-pointer"
                   onClick={() => setShowEditEmailModal((prev) => !prev)}
                 >
                   <EditIcon
@@ -564,26 +532,26 @@ export const AccountSettings = () => {
                   <div className="text-base font-normal">Edit</div>
                 </div>
               </div>
-            </StyledFormGroup>
+            </div>
           </div>
           {/* END ------------------------------------------- Email */}
 
           {/* START ----------------------------------------- Password */}
           <div className="w-full lg:w-1/2 px-3">
-            <StyledFormGroup className="form-group-wapper flex items-center">
-              <div className="email-input-wrapper  w-full">
+            <div className="form-group-wapper flex items-center mt-5">
+              <div className="relative  w-full">
                 <div className="text-sm font-normal relative">
                   Password
-                  <span className="mandatory">&nbsp;*</span>
+                  <span className="text-red-500">&nbsp;*</span>
                 </div>
                 <input
                   placeholder="Enter your email"
-                  className="w-full px-3 py-4 border rounded email-input"
+                  className="w-full px-3 py-4 border rounded pr-[100px] "
                   value={"***"}
                   disabled={true}
                 />
                 <div
-                  className="edit-button flex items-center gap-2 cursor-pointer bottom-[10%]"
+                  className="absolute right-4 top-[35%] flex items-center gap-2 cursor-pointer bottom-[10%]"
                   onClick={() => router.push("/change-password")}
                 >
                   <EditIcon
@@ -593,7 +561,7 @@ export const AccountSettings = () => {
                   <div className="text-base font-normal">Reset</div>
                 </div>
               </div>
-            </StyledFormGroup>
+            </div>
           </div>
           {/* END ------------------------------------------- Password */}
         </div>
@@ -603,7 +571,7 @@ export const AccountSettings = () => {
         <div className="flex flex-wrap">
           {/* START ----------------------------------------- Frequency of project board emails */}
           <div className="w-full lg:w-1/2 px-3">
-            <StyledFormGroup>
+            <div className="mt-5">
               <div className="text-sm font-normal mb-1">
                 Frequency of Project Board Emails{" "}
                 <Tooltip customTrigger={<InfoIcon />} className="inline-block">
@@ -634,12 +602,12 @@ export const AccountSettings = () => {
                 defaultOptions={true}
                 key={formData?.notification_email}
               />
-            </StyledFormGroup>
+            </div>
           </div>
           {/* END ------------------------------------------- Frequency of project board emails */}
           {/* START ----------------------------------------- Unread Messages Notifications Settings */}
           <div className="w-full lg:w-1/2 px-3">
-            <StyledFormGroup>
+            <div className="mt-5">
               <div className="text-sm font-normal mb-1">
                 Unread Messages Notifications Settings
                 <Tooltip customTrigger={<InfoIcon />} className="inline-block">
@@ -670,7 +638,7 @@ export const AccountSettings = () => {
                 defaultOptions={true}
                 key={formData?.new_message_email_notification}
               />
-            </StyledFormGroup>
+            </div>
           </div>
         </div>
         {/* END ------------------------------------------- Unread Messages Notifications Settings */}

@@ -54,7 +54,7 @@ const PhoneNumberInput = ({ onChange = () => {}, initialValue }: Props) => {
           defaultCountry={countries[0]}
           international
           countryCallingCodeEditable={false}
-          className="common-phone-number-input "
+          className="common-phone-number-input h-[58px] "
           limitMaxLength
         />
       )}

@@ -1,36 +1,11 @@
 /*
  * This is the card that displays the details of ..Work In Progress.. Job
  */
-import styled from "styled-components";
+
 import Link from "next/link";
 import BlurredImage from "@/components/ui/BlurredImage";
-import { transition } from "@/styles/CssUtils";
 import { convertToTitleCase, numberWithCommas } from "@/helpers/utils/misc";
 import DollarCircleIcon from "@/public/icons/dollar-circle.svg";
-
-const Wrapper = styled.div`
-  border: 1px solid #d9d9d9;
-  border-radius: 0.5rem;
-  padding: 1.25rem;
-  word-break: break-word;
-  .divider {
-    height: 2rem;
-    width: 1px;
-    background-color: #d9d9d9;
-  }
-  .light-text {
-    opacity: 0.5;
-  }
-  .budget {
-    background-color: #fbf5e8;
-    border-radius: 1rem;
-    padding: 0.375rem 0.75rem;
-  }
-  .details {
-    margin-top: 0.75rem;
-  }
-  ${() => transition()}
-`;
 
 interface JobData {
   job_post_id: string | number;
@@ -54,12 +29,12 @@ const WorkInProgressJobCard = ({ data }: { data: JobData }) => {
       href={`/client-job-details/${data?.job_post_id}`}
       className="no-hover-effect"
     >
-      <Wrapper className="mt-3 cursor-pointer">
+      <div className="mt-3 cursor-pointer border border-[#d9d9d9] rounded-lg p-5 break-words transition-all duration-200 ease-in hover:shadow-[0_8px_36px_rgba(0,0,0,0.16)] hover:-translate-y-[2px]">
         <div className="text-lg font-normal">
           {convertToTitleCase(data?.job_title)}
         </div>
 
-        <div className="flex items-center gap-4 flex-wrap details ">
+        <div className="flex items-center gap-4 flex-wrap mt-3 ">
           {/* Freelancer profile and name */}
           <div className="flex items-center gap-2">
             <BlurredImage
@@ -77,11 +52,11 @@ const WorkInProgressJobCard = ({ data }: { data: JobData }) => {
             </div>
           </div>
 
-          <div className="divider" />
+          <div className="h-8 w-px bg-[#d9d9d9]" />
 
           {/* Freelancer costing (budget) */}
 
-          <div className="flex items-center text-base font-normal budget">
+          <div className="flex items-center text-base font-normal bg-[#fbf5e8] rounded-2xl px-3 py-1.5">
             <DollarCircleIcon />
             <span className="ms-1">
               {data?.proposal?.approved_budget?.amount
@@ -92,13 +67,13 @@ const WorkInProgressJobCard = ({ data }: { data: JobData }) => {
                 : " - "}
             </span>
             {data?.proposal?.approved_budget?.type == "fixed" ? (
-              <span className="light-text ml-1">Budget</span>
+              <span className="opacity-50 ml-1">Budget</span>
             ) : (
-              <span className="light-text">/hr</span>
+              <span className="opacity-50">/hr</span>
             )}
           </div>
         </div>
-      </Wrapper>
+      </div>
     </Link>
   );
 };

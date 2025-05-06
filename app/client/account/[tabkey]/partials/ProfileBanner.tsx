@@ -1,76 +1,13 @@
 import { useState } from "react";
-import styled from "styled-components";
 import toast from "react-hot-toast";
 import InfoEditModal from "./edit-info/InfoEditModal";
 import EditPictureModal from "@/components/ui/EditPictureModal";
 import { separateValuesWithComma } from "@/helpers/utils/misc";
 import { editUser } from "@/helpers/http/auth";
-import { transition } from "@/styles/CssUtils";
 import LocationIcon from "@/public/icons/location-blue.svg";
 import EditIcon from "@/public/icons/edit.svg";
 import EditBlueIcon from "@/public/icons/edit-blue-outline.svg";
 import Image from "next/image";
-
-const StyledBanner = styled.div`
-  box-shadow: 0px 4px 60px rgba(0, 0, 0, 0.05);
-  background: ${(props) => props.theme.colors.white};
-  border: ${(props) => `1px solid ${props.theme.colors.yellow}`};
-  margin: 2.25rem 0rem 0rem 0rem;
-  border-radius: 12px;
-  word-break: break-word;
-  .client-profile-name--company {
-    word-break: break-word;
-  }
-  .profile__img {
-    height: 9.5625rem;
-    width: 9.5625rem;
-    min-width: 9.5625rem;
-    border-radius: 50%;
-    border: 1px solid ${(props) => props.theme.colors.gray5};
-    position: relative;
-  }
-  .img {
-    height: 100%;
-    width: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  .edit-picture-btn {
-    position: absolute;
-    background: #f7faff;
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
-    bottom: 0px;
-    right: 0px;
-    ${() => transition()}
-  }
-  .client-profile--company {
-    color: #999999;
-  }
-  .client-profile--contact {
-    opacity: 0.8;
-  }
-  .divider {
-    width: 1px;
-    background: #d6d6d6;
-    height: 20px;
-  }
-  .client-profile--location {
-    background-color: ${(props) => props.theme.colors.body2};
-    border-radius: 2rem;
-    padding: 0.375rem 0.875rem;
-    float: left;
-  }
-  .edit-btn {
-    border: 1px solid #f2b420;
-    padding: 0.75rem 1.25rem;
-    border-radius: 1.75rem;
-    background: #f2b420;
-    color: white;
-    ${() => transition()};
-  }
-`;
 
 const ProfileBanner = ({
   data,
@@ -114,40 +51,40 @@ const ProfileBanner = ({
   };
 
   return (
-    <StyledBanner className="p-2">
-      <div className="p-4 flex flex-col md:flex-row  justify-between gap-3 ">
-        <div className="md:w-10/12 ">
+    <div className="bg-white shadow-[0px_4px_60px_rgba(0,0,0,0.05)] border border-primary rounded-xl mt-9 p-2 break-words">
+      <div className="p-4 flex flex-col md:flex-row justify-between gap-3">
+        <div className="md:w-10/12">
           <div className="flex flex-col md:flex-row gap-3">
             <div className="md:w-3/12 flex justify-center items-center">
               <div
-                className="profile__img pointer"
+                className="h-[9.5625rem] w-[9.5625rem] min-w-[9.5625rem] rounded-full border border-gray-300 relative cursor-pointer"
                 onClick={togglePictureModal}
               >
                 <Image
-                  className="img"
+                  className="h-full w-full rounded-full object-cover"
                   src={data?.user_image || "/images/default_avatar.png"}
                   alt="freelancer-profile"
                   width={100}
                   height={100}
                 />
-                <div className="edit-picture-btn flex items-center justify-center">
+                <div className="absolute bottom-0 right-0 bg-[#f7faff] h-10 w-10 rounded-full flex items-center justify-center transition-all duration-300">
                   <EditBlueIcon />
                 </div>
               </div>
             </div>
 
             <div className="md:w-9/12">
-              <div className="client-profile-name--company">
+              <div className="break-words">
                 <div className="text-[1.75rem] font-normal capitalize">
                   {data?.first_name} {data?.last_name}
                 </div>
-                <div className="client-profile--company text-[1.125rem] font-normal mt-2">
+                <div className="text-[#999999] text-[1.125rem] font-normal mt-2">
                   {data?.company_name ? <div>{data?.company_name}</div> : null}
                 </div>
               </div>
 
               {(data?.location?.state || data?.location?.country_name) && (
-                <div className="client-profile--location mt-3 flex items-center gap-1">
+                <div className="bg-[#f7faff] rounded-full py-1.5 px-3.5 mt-3 inline-flex items-center gap-1">
                   <LocationIcon />
                   <div className="text-base font-normal">
                     {separateValuesWithComma([
@@ -161,9 +98,9 @@ const ProfileBanner = ({
           </div>
         </div>
 
-        <div className="flex md:justify-end  h-fit ">
+        <div className="flex md:justify-end h-fit">
           <div
-            className="edit-btn flex items-center gap-2 cursor-pointer"
+            className="border border-[#f2b420] bg-[#f2b420] text-white py-3 px-5 rounded-[1.75rem] flex items-center gap-2 cursor-pointer transition-all duration-300"
             onClick={toggleEditModal}
           >
             <EditIcon stroke="#fff" />
@@ -185,7 +122,7 @@ const ProfileBanner = ({
         data={data}
         onUpdate={onUpdate}
       />
-    </StyledBanner>
+    </div>
   );
 };
 

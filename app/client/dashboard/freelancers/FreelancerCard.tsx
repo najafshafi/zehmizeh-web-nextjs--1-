@@ -3,55 +3,14 @@
  */
 "use client";
 import { useState } from "react";
-import styled from "styled-components";
 import Spinner from "@/components/forms/Spin/Spinner";
 import toast from "react-hot-toast";
 import BlurredImage from "@/components/ui/BlurredImage";
-import { transition } from "@/styles/CssUtils";
 import { toggleBookmarkUser } from "@/helpers/http/search";
 import DollarCircleIcon from "@/public/icons/dollar-circle.svg";
 import StarIcon from "@/public/icons/star-yellow.svg";
 import BookmarkIcon from "@/public/icons/saved.svg";
 import { numberWithCommas } from "@/helpers/utils/misc";
-
-const Wrapper = styled.div`
-  border: 1px solid #d9d9d9;
-  border-radius: 0.5rem;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  .freelancer-context {
-    padding: 1.25rem;
-  }
-  .designation {
-    color: #999999;
-    word-break: break-word;
-  }
-  .light-text {
-    opacity: 0.5;
-  }
-  .budget {
-    background-color: #fbf5e8;
-    border-radius: 1rem;
-    padding: 0.375rem 0.75rem;
-    min-width: 4.5rem;
-  }
-  .details {
-    margin-top: 0.75rem;
-  }
-  ${() => transition()};
-`;
-
-export const Bookmark = styled.div`
-  height: 43px;
-  width: 43px;
-  border-radius: 2rem;
-  background: ${(props) => props.theme.colors.yellow};
-  color: #fff;
-  position: absolute;
-  top: 1.2rem;
-  right: 1.2rem;
-`;
 
 // Define the FreelancerData interface to fix the any type issue
 interface FreelancerData {
@@ -112,17 +71,12 @@ const WorkInProgressJobCard = ({
   };
 
   return (
-    <Wrapper
-      className="cursor-pointer flex flex-wrap gap-4 mt-3 justify-between no-hover-effect "
-      // to={`/freelancer/${
-      //   activeTabKey === 'saved' ? data?._bm_user_id : data?._freelancer_user_id
-      // }`}
-      // onClick={goToFreelancerProfile}
+    <div
+      className="cursor-pointer flex flex-wrap gap-4 mt-3 justify-between 
+                border border-[#d9d9d9] rounded-lg h-full relative overflow-hidden
+                transition-all duration-300"
     >
-      <div
-        className="flex gap-4 w-100 freelancer-context"
-        onClick={() => profileHandler()}
-      >
+      <div className="flex gap-4 w-full p-5" onClick={() => profileHandler()}>
         {/* Profile picture */}
         <BlurredImage
           src={data?.user_image || "/images/default_avatar.png"}
@@ -133,28 +87,28 @@ const WorkInProgressJobCard = ({
 
         <div>
           {/* Name and designation */}
-          <div className="text-base font-normal title text-capitalize">
+          <div className="text-base font-normal capitalize">
             {data?.first_name} {data?.last_name}
           </div>
-          <div className="text-base font-normal mt-1 designation capital-first-ltr  md:pr-8 pr-7">
+          <div className="text-base font-normal mt-1 text-[#999999] break-words capitalize md:pr-8 pr-7">
             {data?.job_title}
           </div>
 
           {/* Hourly rate and ratings */}
-          <div className="flex gap-2 items-center mt-2 flex-wrap">
-            <div className="budget text-base font-normal flex items-center">
+          <div className="flex gap-2 items-center mt-3 flex-wrap">
+            <div className="bg-[#fbf5e8] rounded-2xl py-1.5 px-3 min-w-[4.5rem] text-base font-normal flex items-center">
               <DollarCircleIcon className="mr-1" />
               {data?.hourly_rate ? (
                 <>
                   {numberWithCommas(data?.hourly_rate, "USD")}{" "}
-                  <span className="light-text">/hr</span>
+                  <span className="opacity-50">/hr</span>
                 </>
               ) : (
-                <span className="light-text">n/a</span>
+                <span className="opacity-50">n/a</span>
               )}
             </div>
 
-            <div className="budget text-base font-normal flex items-center gap-1">
+            <div className="bg-[#fbf5e8] rounded-2xl py-1.5 px-3 min-w-[4.5rem] text-base font-normal flex items-center gap-1">
               <StarIcon /> {data?.avg_rate?.toFixed(1)}
             </div>
           </div>
@@ -163,14 +117,15 @@ const WorkInProgressJobCard = ({
 
       {/* Saved Icon */}
       {activeTabKey == "saved" && (
-        <Bookmark
-          className="flex justify-center items-center pointer"
+        <div
+          className="h-[43px] w-[43px] rounded-full bg-primary text-white absolute top-5 right-5
+                    flex justify-center items-center cursor-pointer"
           onClick={onBookmark}
         >
           {loading ? <Spinner /> : <BookmarkIcon />}
-        </Bookmark>
+        </div>
       )}
-    </Wrapper>
+    </div>
   );
 };
 
