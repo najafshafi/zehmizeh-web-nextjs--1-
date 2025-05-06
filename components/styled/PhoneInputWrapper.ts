@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 const PhoneInputWrapper = styled.div`
   border: 1px solid #ced4da;
+
   position: relative;
   padding: 0 1rem;
   border-radius: 4px;
@@ -16,16 +17,13 @@ const PhoneInputWrapper = styled.div`
   }
   .react-tel-input {
     input {
-      height: 44px;
+      height: 58px;
       width: 100%;
       border: none;
       outline: none;
       box-shadow: none !important;
-      outline: none;
+      outline: none !important;
     }
   }
-
-  
 `;
 export default PhoneInputWrapper;
-

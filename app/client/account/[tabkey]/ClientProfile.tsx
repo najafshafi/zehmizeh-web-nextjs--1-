@@ -26,7 +26,6 @@ import AboutUsEditModal from "@/app/freelancer/account/[tabkey]/edit-modals/Abou
 import NewPaymentInfoModal from "./partials/NewPaymentInfoModal";
 import Tooltip from "@/components/ui/Tooltip";
 import ClientProfileTabs from "./ClientProfileTabs";
-import { StyledFormGroup } from "./partials/edit-info/info-edit.styled";
 import { myTheme } from "@/styles/theme";
 import EditIcon from "@/public/icons/edit-blue.svg";
 import EmailEditModal from "@/components/profile/EmailEditModal";
@@ -173,7 +172,7 @@ const SaveButtonUI = ({
 
   return (
     <div
-      className={`edit-button flex items-center gap-2 cursor-pointer absolute right-2 top-1/2 -translate-y-1/2 ${
+      className={` flex items-center gap-2 cursor-pointer absolute right-2 top-1/2 -translate-y-1/2 ${
         show ? "opacity-100" : "opacity-0"
       } transition-opacity duration-200`}
       onClick={() => setShow(true)}
@@ -527,7 +526,10 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                         title={
                           <div className="flex items-center gap-1">
                             {"About Me"}
-                            <Tooltip>
+                            <Tooltip
+                              customTrigger={<InfoIcon />}
+                              className="inline-block"
+                            >
                               The &quot;About Me&quot; section is the primary
                               place to introduce yourself to freelancers. You
                               can share whatever you like - your work history,
@@ -608,7 +610,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                     {/* START ----------------------------------------- First name and last name */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <StyledFormGroup className="relative">
+                        <div className="relative mt-5">
                           <div className="text-sm font-normal">
                             First Name
                             <span className="text-red-500">&nbsp;*</span>
@@ -616,7 +618,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                           <input
                             type="text"
                             placeholder="Enter your first name"
-                            className="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="mt-1.5 p-4  border-black w-full px-3 py-3 border  rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value={formData?.first_name}
                             maxLength={35}
                             onChange={(e) =>
@@ -627,13 +629,13 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                             }
                           />
                           {renderSaveButtonUI("first name", "first_name")}
-                        </StyledFormGroup>
+                        </div>
                         {errors?.first_name && (
                           <ErrorMessage message={errors.first_name} />
                         )}
                       </div>
                       <div>
-                        <StyledFormGroup className="relative">
+                        <div className="relative mt-5">
                           <div className="text-sm font-normal">
                             Last Name
                             <span className="text-red-500">&nbsp;*</span>
@@ -641,7 +643,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                           <input
                             type="text"
                             placeholder="Enter your last name"
-                            className="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="mt-1.5 p-4 rounded-[7px] border border-black w-full px-3 py-3   focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value={formData?.last_name}
                             maxLength={35}
                             onChange={(e) =>
@@ -652,7 +654,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                             }
                           />
                           {renderSaveButtonUI("last name", "last_name")}
-                        </StyledFormGroup>
+                        </div>
                         {errors?.last_name && (
                           <ErrorMessage message={errors.last_name} />
                         )}
@@ -663,7 +665,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                     {/* START ----------------------------------------- Country */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
-                        <StyledFormGroup className="relative">
+                        <div className="relative mt-5">
                           <div className="text-sm font-normal mb-1">
                             Country<span className="text-red-500">&nbsp;*</span>
                           </div>
@@ -688,7 +690,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                               message={errors?.location?.country_name}
                             />
                           )}
-                        </StyledFormGroup>
+                        </div>
                       </div>
                       {/* END ------------------------------------------- Country */}
 
@@ -697,7 +699,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                         formData?.location?.country_short_name
                       ) && (
                         <div>
-                          <StyledFormGroup>
+                          <div className="mt-5">
                             <div className="text-sm font-normal mb-1">
                               State/Region
                               <span className="text-red-500">&nbsp;*</span>
@@ -731,30 +733,19 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                             {errors?.location?.state && (
                               <ErrorMessage message={errors.location.state} />
                             )}
-                          </StyledFormGroup>
+                          </div>
                         </div>
                       )}
                       {/* END ------------------------------------------- State / region */}
 
                       {/* START ----------------------------------------- Phone number */}
-                      <div className="w-full px-3">
-                        <StyledFormGroup className="relative">
+                      <div className="w-full  px-3">
+                        <div className="relative mt-5">
                           <div className="text-sm font-normal">
-                            Phone<span className="mandatory">&nbsp;*</span>
+                            Phone<span className="text-red-500">&nbsp;*</span>
                           </div>
-                          <PhoneInputWrapper className="phone-input-wrapper ">
-                            <div
-                              style={{
-                                pointerEvents:
-                                  inputFieldLoading === "phone number"
-                                    ? "none"
-                                    : "auto",
-                                opacity:
-                                  inputFieldLoading === "phone number"
-                                    ? "0.7"
-                                    : "1",
-                              }}
-                            >
+                          <PhoneInputWrapper className="border border-black pl-0 ">
+                            <div>
                               <PhoneNumberInput
                                 initialValue={formData?.formatted_phonenumber}
                                 onChange={(phone, formattedValue) => {
@@ -781,7 +772,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                               }
                             )}
                           </PhoneInputWrapper>
-                        </StyledFormGroup>
+                        </div>
                         {errors?.formatted_phonenumber && (
                           <ErrorMessage
                             message={errors.formatted_phonenumber}
@@ -794,11 +785,8 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* START ----------------------------------------- Email */}
                       <div>
-                        <StyledFormGroup
-                          className="flex items-center"
-                          style={{ gap: "4rem" }}
-                        >
-                          <div className="email-input-wrapper flex-1">
+                        <div className="flex items-center mt-5">
+                          <div className="relative flex-1">
                             <div className="text-sm font-normal">
                               Email
                               <span className="text-red-500">&nbsp;*</span>
@@ -806,12 +794,12 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                             <input
                               type="email"
                               placeholder="Enter your email"
-                              className="form-input email-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="mt-1.5 p-4 border border-black pr-[100px] w-full px-3 py-3   rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                               value={profileData?.u_email_id}
                               disabled={true}
                             />
                             <div
-                              className="edit-button flex items-center gap-2 cursor-pointer bottom-0"
+                              className="absolute right-4 top-[35%] flex items-center gap-2 cursor-pointer bottom-0"
                               onClick={toggleEditModal}
                             >
                               <EditIcon
@@ -821,17 +809,17 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                               <div className="text-base font-normal">Edit</div>
                             </div>
                           </div>
-                        </StyledFormGroup>
+                        </div>
                       </div>
                       {/* END ------------------------------------------- Email */}
 
                       {/* START ----------------------------------------- Password */}
                       <div>
-                        <StyledFormGroup
-                          className="flex items-center"
+                        <div
+                          className="flex items-center mt-5"
                           style={{ gap: "1.7rem" }}
                         >
-                          <div className="email-input-wrapper flex-1">
+                          <div className="relative flex-1">
                             <div className="text-sm font-normal">
                               Password
                               <span className="text-red-500">&nbsp;*</span>
@@ -839,12 +827,12 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                             <input
                               type="password"
                               placeholder="Enter your password"
-                              className="form-input email-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="mt-1.5 p-4  border-black pr-[100px] w-full px-3 py-3 border  rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                               value="***"
                               disabled={true}
                             />
                             <div
-                              className="edit-button flex items-center gap-2 cursor-pointer bottom-0"
+                              className="absolute right-4 top-[35%] flex items-center gap-2 cursor-pointer bottom-0"
                               onClick={() => router.push("/change-password")}
                             >
                               <EditIcon
@@ -854,7 +842,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                               <div className="text-base font-normal">Reset</div>
                             </div>
                           </div>
-                        </StyledFormGroup>
+                        </div>
                       </div>
                       {/* END ------------------------------------------- Password */}
                     </div>
@@ -862,7 +850,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                     <div>
                       {/* START ----------------------------------------- Unread Messages Notifications Settings */}
                       <div>
-                        <StyledFormGroup>
+                        <div className="mt-5">
                           <div className="flex items-center text-sm font-normal mb-1">
                             Unread Messages Notifications Settings
                             <Tooltip
@@ -898,7 +886,7 @@ const ClientProfile = ({ currentTab }: ClientProfileProps) => {
                             )}
                             defaultOptions={true}
                           />
-                        </StyledFormGroup>
+                        </div>
                       </div>
                       {/* END ------------------------------------------- Unread Messages Notifications Settings */}
                     </div>

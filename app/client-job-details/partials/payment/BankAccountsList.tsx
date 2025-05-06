@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
-import styled from "styled-components";
-import { StyledButton } from "@/components/forms/Buttons";
 import Loader from "@/components/Loader";
 import { getBankAccounts } from "@/helpers/http/client";
-import { transition } from "@/styles/CssUtils";
 import PaymentSummary from "./PaymentSummary";
 import { usePayments } from "../../controllers/usePayments";
 import {
@@ -12,40 +9,7 @@ import {
   formatingAccountNumber,
 } from "@/helpers/utils/helper";
 import toast from "react-hot-toast";
-
-const Wrapper = styled.div`
-  .listings {
-    max-height: 300px;
-    overflow-y: auto;
-  }
-  .payable-label {
-    color: ${(props) => props.theme.colors.darkText};
-  }
-  .selected {
-    border: 2px solid ${(props) => props.theme.font.color.heading};
-  }
-  .payable-label {
-    color: ${(props) => props.theme.colors.gray8};
-  }
-  .fees-calculation,
-  .total-amount {
-    border-top: 1px solid ${(props) => props.theme.colors.gray6};
-  }
-`;
-
-const StyledBankItem = styled.div`
-  border: 1px solid ${(props) => props.theme.colors.gray6};
-  border-radius: 0.875rem;
-  ${() => transition()}
-  .bank-table {
-    border-collapse: separate;
-    border-spacing: 0.5rem;
-    table-layout: fixed;
-  }
-  .acc-info--label {
-    color: ${(props) => props.theme.colors.gray8};
-  }
-`;
+import CustomButton from "@/components/custombutton/CustomButton";
 
 type Props = {
   onPay: (e: any) => void;
@@ -93,19 +57,7 @@ const BankAccountsList = ({ onPay, processingPayment }: Props) => {
 
   if (showMaintenanceMessage) {
     return (
-      <p
-        style={{
-          color: "#ff0000",
-          fontSize: "1.2rem",
-          fontWeight: "bold",
-          textAlign: "center",
-          padding: "20px",
-          border: "1px solid #ff0000",
-          borderRadius: "5px",
-          backgroundColor: "#ffe6e6",
-          margin: "20px 0",
-        }}
-      >
+      <p className="text-[#ff0000] text-[1.2rem] font-bold text-center p-5 border border-[#ff0000] rounded-md bg-[#ffe6e6] my-5">
         Please note that our bank account payment processing system is currently
         undergoing maintenance. During this time, we kindly request that you use
         your credit card for any payments.
@@ -114,28 +66,29 @@ const BankAccountsList = ({ onPay, processingPayment }: Props) => {
   }
 
   return (
-    <Wrapper>
-      <div className="fs-20 font-normal mt-3">Select Account</div>
+    <div>
+      <div className="text-xl font-normal mt-3">Select Account</div>
       {isLoading && <Loader />}
-      <div className="listings">
+      <div className="max-h-[300px] overflow-y-auto">
         {!isLoading &&
           data?.data?.length > 0 &&
           data?.data?.map((item: BankAccount) => (
-            <StyledBankItem
+            <div
               key={item?.user_bank_id}
-              className={`p-3 mt-3 pointer ${
-                selectedAccountId === item?.stripe_bank_account_id
-                  ? "selected"
-                  : ""
-              }`}
+              className={`p-3 mt-3 cursor-pointer border transition-all duration-300 rounded-[0.875rem]
+                          ${
+                            selectedAccountId === item?.stripe_bank_account_id
+                              ? "border-2 border-black"
+                              : "border-gray-300"
+                          }`}
               onClick={onSelect(item?.stripe_bank_account_id)}
             >
               <div>
-                <table className="bank-table">
+                <table className="border-separate border-spacing-2 table-fixed">
                   <tbody>
-                    <tr className="fs-1rem font-normal">
+                    <tr className="text-base font-normal">
                       <td>
-                        <span className="acc-info--label">
+                        <span className="text-gray-600">
                           Name on Account: &nbsp;
                         </span>
                       </td>
@@ -143,28 +96,28 @@ const BankAccountsList = ({ onPay, processingPayment }: Props) => {
                         {item?.account_holder_name}
                       </td>
                     </tr>
-                    <tr className="fs-1rem font-normal">
+                    <tr className="text-base font-normal">
                       <td>
-                        <span className="acc-info--label">
+                        <span className="text-gray-600">
                           Account Type: &nbsp;
                         </span>
                       </td>
-                      <td className="capital-first-ltr">
+                      <td className="capitalize">
                         {item?.account_holder_type}
                       </td>
                     </tr>
-                    <tr className="fs-1rem font-normal">
+                    <tr className="text-base font-normal">
                       <td>
-                        <span className="acc-info--label">
+                        <span className="text-gray-600">
                           Account Number: &nbsp;
                         </span>
                       </td>
                       <td>{formatingAccountNumber(item?.last_4_digit)}</td>
                     </tr>
                     {item?.routing_number && (
-                      <tr className="fs-1rem font-normal">
+                      <tr className="text-base font-normal">
                         <td>
-                          <span className="acc-info--label">
+                          <span className="text-gray-600">
                             Routing Number: &nbsp;
                           </span>
                         </td>
@@ -174,7 +127,7 @@ const BankAccountsList = ({ onPay, processingPayment }: Props) => {
                   </tbody>
                 </table>
               </div>
-            </StyledBankItem>
+            </div>
           ))}
       </div>
 
@@ -184,15 +137,14 @@ const BankAccountsList = ({ onPay, processingPayment }: Props) => {
         Note: Payments via bank can take 4-5 business days to process
       </p>
       <div className="flex justify-center">
-        <StyledButton
+        <CustomButton
+          text={jobType === "hourly" ? "Pay" : "Deposit Milestone Payment"}
           disabled={processingPayment}
           onClick={onContinuePay}
-          className="mt-3 w-100"
-        >
-          {jobType === "hourly" ? "Pay" : "Deposit Milestone Payment"}
-        </StyledButton>
+          className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-base mt-3 w-full"
+        />
       </div>
-    </Wrapper>
+    </div>
   );
 };
 

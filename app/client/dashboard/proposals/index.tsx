@@ -16,28 +16,6 @@ const ProposalDetailsModal = dynamic(
   { ssr: false }
 );
 
-const Wrapper = styled.div`
-  border-radius: 0.75rem;
-  box-shadow: 0px 4px 74px rgba(0, 0, 0, 0.08);
-  background: ${(props) => props.theme.colors.white};
-  padding: 2rem;
-  min-height: 600px;
-  .list {
-    height: 500px;
-    overflow-y: auto;
-  }
-  .view-alll-link {
-    color: ${(props) => props.theme.colors.lightBlue};
-    &:hover {
-      transition: all 0.2s ease-in-out;
-      transform: translateY(-2px);
-    }
-  }
-  @media (max-width: 768px) {
-    padding: 1rem;
-  }
-`;
-
 const Proposals = () => {
   const { proposals, isLoading, refetch, isRefetching } = useProposals();
 
@@ -67,20 +45,20 @@ const Proposals = () => {
   };
 
   return (
-    <Wrapper>
-      <div className="d-flex align-items-center justify-content-between flex-wrap gap-2">
-        <div className="stat-label fs-24 fw-700">Proposals Received</div>
+    <div className="rounded-xl shadow-[0_4px_74px_rgba(0,0,0,0.08)] bg-white p-8 min-h-[600px] md:p-4">
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <div className="stat-label text-2xl font-bold">Proposals Received</div>
 
         <Link
           href="/client/proposals"
-          className="view-alll-link fs-1rem fw-400 pointer"
+          className="text-blue-400 hover:transition-all hover:duration-200 hover:ease-in-out hover:-translate-y-[2px] fs-1rem fw-400 cursor-pointer"
         >
           View All Proposals
         </Link>
       </div>
 
       {/* Proposals list */}
-      <div className="list mt-2">
+      <div className="h-[500px] overflow-y-auto mt-2">
         {(isLoading || isRefetching) && <Loader />}
 
         {!isLoading && !isRefetching && proposals?.length == 0 && (
@@ -108,7 +86,7 @@ const Proposals = () => {
         refetch={onRefetch}
         replyOnProjectPageBtn
       />
-    </Wrapper>
+    </div>
   );
 };
 

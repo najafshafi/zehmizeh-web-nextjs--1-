@@ -3,8 +3,6 @@
  */
 import { useMemo } from "react";
 import Link from "next/link";
-import styled from "styled-components";
-import { transition } from "@/styles/CssUtils";
 import {
   convertToTitleCase,
   numberWithCommas,
@@ -12,35 +10,6 @@ import {
 } from "@/helpers/utils/misc";
 import DollarCircleIcon from "@/public/icons/dollar-circle.svg";
 import ProspectsIcon from "@/public/icons/prospects.svg";
-
-const Wrapper = styled.div`
-  border: 1px solid #d9d9d9;
-  border-radius: 0.5rem;
-  padding: 1.25rem;
-  word-break: break-word;
-  .avatar {
-    height: 42px;
-    width: 42px;
-    border-radius: 50%;
-  }
-  .divider {
-    height: 2rem;
-    width: 1px;
-    background-color: #d9d9d9;
-  }
-  .light-text {
-    opacity: 0.5;
-  }
-  .budget {
-    background-color: #fbf5e8;
-    border-radius: 1.5rem;
-    padding: 0.375rem 0.75rem;
-  }
-  .details {
-    margin-top: 0.75rem;
-  }
-  ${() => transition()}
-`;
 
 const ProspectJobCard = ({
   data,
@@ -79,15 +48,15 @@ const ProspectJobCard = ({
       href={`/client-job-details/${data?.job_post_id}/applicants`}
       className="no-hover-effect"
     >
-      <Wrapper className="mt-3 cursor-pointer">
+      <div className="mt-3 cursor-pointer border border-[#d9d9d9] rounded-lg p-5 break-words transition-all duration-200 ease-in hover:shadow-[0_8px_36px_rgba(0,0,0,0.16)] hover:-translate-y-[2px]">
         <div className="text-lg font-normal">
           {convertToTitleCase(data?.job_title)}
         </div>
 
-        <div className="flex items-center gap-3 flex-wrap details">
+        <div className="flex items-center gap-3 flex-wrap mt-3">
           {/* Job budget */}
 
-          <div className="budget text-base font-normal flex items-center gap-1">
+          <div className="bg-[#fbf5e8] rounded-3xl px-3 py-1.5 text-base font-normal flex items-center gap-1">
             <DollarCircleIcon />
             {getBudget}
           </div>
@@ -95,14 +64,14 @@ const ProspectJobCard = ({
           {/* Location */}
 
           {activeTabKey == "prospects" && (
-            <div className="budget text-base font-normal flex items-center gap-1">
+            <div className="bg-[#fbf5e8] rounded-3xl px-3 py-1.5 text-base font-normal flex items-center gap-1">
               <ProspectsIcon />
               {numberWithCommas(data?.applicants)}
-              <span className="mx-1 light-text">Applicants</span>
+              <span className="mx-1 opacity-50">Applicants</span>
             </div>
           )}
         </div>
-      </Wrapper>
+      </div>
     </Link>
   );
 };

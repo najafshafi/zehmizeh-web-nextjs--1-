@@ -1,9 +1,6 @@
 import { useState, useCallback } from "react";
 import toast from "react-hot-toast";
-import { Form, Row, Col } from "react-bootstrap";
-import styled from "styled-components";
 import ErrorMessage from "@/components/ui/ErrorMessage";
-import { StyledButton } from "@/components/forms/Buttons";
 import { addBankAccountValidationHandler } from "@/helpers/validation/common";
 import { getYupErrors } from "@/helpers/utils/misc";
 import { managePayment } from "@/helpers/http/freelancer";
@@ -15,16 +12,6 @@ import Select, {
   OptionProps,
   SingleValue,
 } from "react-select";
-
-const StyledFormGroup = styled.div`
-  margin-top: 1.25rem;
-  .form-input {
-    margin-top: 6px;
-    padding: 1rem 1.25rem;
-    border-radius: 7px;
-    border: 1px solid ${(props) => props.theme.colors.gray6};
-  }
-`;
 
 interface AccountHolderType {
   label: string;
@@ -38,7 +25,6 @@ const MultiSelectCustomStyle: StylesConfig<AccountHolderType, false> = {
   ) => ({
     ...base,
     minHeight: 60,
-    // border: '1px solid #000',
     borderRadius: "7px",
   }),
   indicatorSeparator: () => ({
@@ -69,7 +55,6 @@ const MultiSelectCustomStyle: StylesConfig<AccountHolderType, false> = {
     _state: OptionProps<AccountHolderType, false>
   ) => ({
     ...provided,
-    // backgroundColor: state.isSelected ? 'rgba(209, 229, 255,1)' : 'white',
     color: "#000",
     padding: "1rem 1rem",
     cursor: "pointer",
@@ -200,7 +185,7 @@ const AddBankAccount = ({ onCancel, onBankAccountAdded }: Props) => {
   return (
     <div>
       <div className="account-form">
-        <StyledFormGroup>
+        <div className="mt-5">
           <Select<AccountHolderType>
             styles={MultiSelectCustomStyle}
             options={accountHolderTypeOptions}
@@ -218,69 +203,63 @@ const AddBankAccount = ({ onCancel, onBankAccountAdded }: Props) => {
           {errors?.accountHolderType && (
             <ErrorMessage message={errors.accountHolderType as string} />
           )}
-        </StyledFormGroup>
+        </div>
 
-        <Row>
-          <Col>
-            <StyledFormGroup>
-              <label>
-                First Name
-                <span className="mandatory">&nbsp;*</span>
-              </label>
-              <Form.Control
-                placeholder={
-                  formState?.accountHolderType === "company"
-                    ? "First Name/Business Name"
-                    : "First Name"
-                }
-                className="form-input"
-                value={formState?.accountHolderFirstName}
-                onChange={(e) =>
-                  handleChange("accountHolderFirstName", e.target.value)
-                }
-                maxLength={60}
-              />
-              {errors?.accountHolderFirstName && (
-                <ErrorMessage
-                  message={errors.accountHolderFirstName as string}
-                />
-              )}
-            </StyledFormGroup>
-          </Col>
-          <Col>
-            <StyledFormGroup>
-              <label>
-                Last Name<span className="mandatory">&nbsp;*</span>
-              </label>
-              <Form.Control
-                placeholder={
-                  formState?.accountHolderType === "company"
-                    ? "Last Name (Optional)"
-                    : "Last Name"
-                }
-                className="form-input"
-                value={formState?.accountHolderLastName}
-                onChange={(e) =>
-                  handleChange("accountHolderLastName", e.target.value)
-                }
-                maxLength={60}
-              />
-              {errors?.accountHolderLastName && (
-                <ErrorMessage
-                  message={errors.accountHolderLastName as string}
-                />
-              )}
-            </StyledFormGroup>
-          </Col>
-        </Row>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="mt-5">
+            <label className="block">
+              First Name
+              <span className="text-red-500">&nbsp;*</span>
+            </label>
+            <input
+              placeholder={
+                formState?.accountHolderType === "company"
+                  ? "First Name/Business Name"
+                  : "First Name"
+              }
+              className="w-full mt-1.5 p-4 rounded-md border border-gray-300"
+              value={formState?.accountHolderFirstName}
+              onChange={(e) =>
+                handleChange("accountHolderFirstName", e.target.value)
+              }
+              maxLength={60}
+            />
+            {errors?.accountHolderFirstName && (
+              <ErrorMessage message={errors.accountHolderFirstName as string} />
+            )}
+          </div>
+          <div className="mt-5">
+            <label className="block">
+              Last Name<span className="text-red-500">&nbsp;*</span>
+            </label>
+            <input
+              placeholder={
+                formState?.accountHolderType === "company"
+                  ? "Last Name (Optional)"
+                  : "Last Name"
+              }
+              className="w-full mt-1.5 p-4 rounded-md border border-gray-300"
+              value={formState?.accountHolderLastName}
+              onChange={(e) =>
+                handleChange("accountHolderLastName", e.target.value)
+              }
+              maxLength={60}
+            />
+            {errors?.accountHolderLastName && (
+              <ErrorMessage message={errors.accountHolderLastName as string} />
+            )}
+          </div>
+        </div>
 
         {/* Israel and  Belgium takes IBAN number as account number  */}
-        <StyledFormGroup>
-          <label>Bank Account Number</label>
-          <span className="mandatory">&nbsp;*</span>
-          <Form.Control
+        <div className="mt-5">
+          <label className="block">
+            Bank Account Number
+            <span className="text-red-500">&nbsp;*</span>
+          </label>
+          <input
             placeholder={"Account Number"}
-            className="form-input"
+            className="w-full mt-1.5 p-4 rounded-md border border-gray-300"
             value={formState?.accountNumber}
             onChange={(e) => handleChange("accountNumber", e.target.value)}
             maxLength={20}
@@ -288,17 +267,17 @@ const AddBankAccount = ({ onCancel, onBankAccountAdded }: Props) => {
           {errors?.accountNumber && (
             <ErrorMessage message={errors.accountNumber as string} />
           )}
-        </StyledFormGroup>
+        </div>
 
         {/* Israel and  Belgium does not accept routing number for bank account*/}
 
-        <StyledFormGroup>
-          <label>
-            Routing Number<span className="mandatory">&nbsp;*</span>
+        <div className="mt-5">
+          <label className="block">
+            Routing Number<span className="text-red-500">&nbsp;*</span>
           </label>
-          <Form.Control
+          <input
             placeholder="Routing Number"
-            className="form-input"
+            className="w-full mt-1.5 p-4 rounded-md border border-gray-300"
             value={formState?.routingNumber}
             maxLength={20}
             onChange={(e) => handleChange("routingNumber", e.target.value)}
@@ -306,20 +285,24 @@ const AddBankAccount = ({ onCancel, onBankAccountAdded }: Props) => {
           {errors?.routingNumber && (
             <ErrorMessage message={errors.routingNumber as string} />
           )}
-        </StyledFormGroup>
+        </div>
       </div>
 
       <div className="flex justify-center md:justify-end mt-4 gap-3">
-        <StyledButton
-          variant="outline-dark"
+        <button
+          className="px-[2rem] py-[1rem] border border-gray-300 rounded-full text-[16px] transition-transform duration-200 hover:scale-105"
           disabled={loading}
           onClick={onCancel}
         >
           Cancel
-        </StyledButton>
-        <StyledButton disabled={loading} onClick={validateForm}>
+        </button>
+        <button
+          className="px-[2rem] py-[1rem] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[16px]"
+          disabled={loading}
+          onClick={validateForm}
+        >
           Add
-        </StyledButton>
+        </button>
       </div>
     </div>
   );

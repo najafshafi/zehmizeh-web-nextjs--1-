@@ -1,23 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-import styled from "styled-components";
 import toast from "react-hot-toast";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { StyledButton } from "@/components/forms/Buttons";
 import { addCard } from "@/helpers/http/client";
 import { showErr } from "@/helpers/utils/misc";
-
-const Wrapper = styled.div`
-  .payable-label {
-    opacity: 0.8;
-  }
-`;
-
-const CardInput = styled.div`
-  border: 1px solid #e6e6e6;
-  padding: 1rem;
-  border-radius: 5px;
-`;
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -96,11 +82,11 @@ export default function PaymentForm({ onCardAdded, onCancel }: Props) {
   };
 
   return (
-    <Wrapper>
+    <div>
       <form onSubmit={handleSubmit}>
-        <CardInput>
+        <div className="border border-[#e6e6e6] p-4 rounded-[5px]">
           <CardElement options={CARD_ELEMENT_OPTIONS} />
-        </CardInput>
+        </div>
         <div className="flex items-center justify-end mt-4 flex-wrap gap-3">
           <button
             type="button"
@@ -124,6 +110,6 @@ export default function PaymentForm({ onCardAdded, onCancel }: Props) {
           </button>
         </div>
       </form>
-    </Wrapper>
+    </div>
   );
 }

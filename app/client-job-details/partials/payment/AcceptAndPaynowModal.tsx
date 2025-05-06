@@ -50,12 +50,10 @@ export const AcceptAndPaynowModal: React.FC<Props> = ({
     };
   }, [show]);
 
-
-  const clientAcceptedMilestoneAmount =
-    data?.milestone?.reduce((sum: number, item: Milestone) => {
+  const clientAcceptedMilestoneAmount = data?.milestone?.reduce(
+    (sum: number, item: Milestone) => {
       if (item.status === "paid" || item.status === "released") {
         return sum + item.amount;
-
       }
       return sum;
     },
@@ -65,8 +63,8 @@ export const AcceptAndPaynowModal: React.FC<Props> = ({
   const remainingBudget = data?.proposal?.approved_budget?.amount
     ? data.proposal.approved_budget.amount - clientAcceptedMilestoneAmount
     : data?.budget?.amount
-    ? data.budget.amount - clientAcceptedMilestoneAmount
-    : 0;
+      ? data.budget.amount - clientAcceptedMilestoneAmount
+      : 0;
 
   const remainingAmount = `${numberWithCommas(remainingBudget, "USD")}`;
   const isOverBudget = remainingBudget - amount < 0;
@@ -146,7 +144,7 @@ export const AcceptAndPaynowModal: React.FC<Props> = ({
               </button>
               <button
                 type="button"
-                className="px-8 py-[0.9rem] text-lg font-normal rounded-full bg-[#F2B420] text-[#212529] hover:scale-105 duration-300 transition-transform"
+                className="px-8 py-[0.9rem] text-lg font-normal rounded-full bg-primary text-black hover:scale-105 duration-300 transition-transform"
                 onClick={handlePayment}
               >
                 Send Payment

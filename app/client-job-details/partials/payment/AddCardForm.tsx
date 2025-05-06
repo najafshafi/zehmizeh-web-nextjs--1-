@@ -7,18 +7,6 @@ import { showErr } from "@/helpers/utils/misc";
 import PaymentSummary from "./PaymentSummary";
 import { usePayments } from "../../controllers/usePayments";
 
-const Wrapper = styled.div`
-  .payable-label {
-    opacity: 0.8;
-  }
-`;
-
-const CardInput = styled.div`
-  border: 1px solid #e6e6e6;
-  padding: 1rem;
-  border-radius: 5px;
-`;
-
 type Props = {
   onPay: (e: any) => void;
   processingPayment: boolean;
@@ -81,11 +69,11 @@ export default function AddCardForm({
   };
 
   return (
-    <Wrapper>
+    <div>
       <form onSubmit={handleSubmit}>
-        <CardInput>
+        <div className="border border-[#e6e6e6] p-4 rounded-[5px]">
           <CardElement options={CARD_ELEMENT_OPTIONS} />
-        </CardInput>
+        </div>
 
         <div>
           <PaymentSummary />
@@ -106,6 +94,6 @@ export default function AddCardForm({
           </div>
         </div>
       </form>
-    </Wrapper>
+    </div>
   );
 }

@@ -51,6 +51,7 @@ export const ClientProfileWrapper = styled.div`
     .email-input-wrapper,
   }
 `;
+
 export const ClientTabWrapper = styled.div`
   flex: none;
   min-width: 160px;

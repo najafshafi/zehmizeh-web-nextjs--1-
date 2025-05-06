@@ -2,48 +2,11 @@
  * This is the proposal card that display received proposal details
  */
 
-import styled from "styled-components";
 import BlurredImage from "@/components/ui/BlurredImage";
-import { transition } from "@/styles/CssUtils";
 import { convertToTitleCase, numberWithCommas } from "@/helpers/utils/misc";
 import DollarCircleIcon from "@/public/icons/dollar-circle.svg";
 import moment from "moment";
 import { formatDateAndTime } from "@/helpers/utils/formatter";
-
-const Wrapper = styled.div`
-  border: 1px solid #d9d9d9;
-  border-radius: 0.5rem;
-  padding: 1.25rem;
-  word-break: break-word;
-  position: relative;
-  overflow: hidden;
-  .divider {
-    height: 6rem;
-    width: 1px;
-    background-color: #d9d9d9;
-  }
-  .light-text {
-    opacity: 0.5;
-  }
-  .budget {
-    background-color: #fbf5e8;
-    border-radius: 1rem;
-    padding: 0.375rem 0.75rem;
-  }
-  .updated-on {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    text-align: center;
-    background-color: #ffedd3;
-    color: #ee761c;
-    padding: 2px 0px;
-  }
-  ${() => transition()} .details {
-    margin-top: 0.75rem;
-  }
-`;
 
 type Props = {
   data: any;
@@ -52,17 +15,21 @@ type Props = {
 
 const ProposalCard = ({ data, onSelect }: Props) => {
   return (
-    <Wrapper className="mt-3 cursor-pointer" onClick={onSelect}>
+    <div
+      className="mt-3 cursor-pointer border border-[#d9d9d9] rounded-lg p-5 break-words 
+                relative overflow-hidden transition-all duration-300"
+      onClick={onSelect}
+    >
       {data?.edited_at && (
-        <p className="updated-on">
+        <p className="absolute top-0 left-0 right-0 text-center bg-[#ffedd3] text-[#ee761c] py-0.5">
           Updated on {formatDateAndTime(data.edited_at)}
         </p>
       )}
-      <div className={`fs-18 fw-400 ${data?.edited_at ? "mt-3" : ""}`}>
+      <div className={`text-lg font-normal ${data?.edited_at ? "mt-3" : ""}`}>
         {convertToTitleCase(data?.job_title)}
       </div>
 
-      <div className="flex items-center details gap-4 flex-wrap">
+      <div className="flex items-center mt-3 gap-4 flex-wrap">
         {/* Freelancer image and name */}
         <div className="flex items-center gap-2">
           <BlurredImage
@@ -73,16 +40,18 @@ const ProposalCard = ({ data, onSelect }: Props) => {
             type="small"
           />
           <div>
-            <div className="light-text fs-sm fw-400">Proposed by:</div>
-            <div className="fs-1rem fw-400 text-capitalize">
+            <div className="text-sm font-normal opacity-50">Proposed by:</div>
+            <div className="text-base font-normal capitalize">
               {data?.first_name} {data?.last_name}
             </div>
 
             {/* Proposal date */}
             {data?.applied_on && (
               <div className="mt-2">
-                <div className="light-text fs-sm fw-400">Proposal Date:</div>
-                <div className="fs-1rem fw-400 text-capitalize">
+                <div className="text-sm font-normal opacity-50">
+                  Proposal Date:
+                </div>
+                <div className="text-base font-normal capitalize">
                   {moment(data?.applied_on).format("MMM DD, YYYY")}
                 </div>
               </div>
@@ -91,22 +60,22 @@ const ProposalCard = ({ data, onSelect }: Props) => {
         </div>
 
         {/* Divider */}
-        <div className="divider" />
+        <div className="h-24 w-px bg-[#d9d9d9]" />
 
         {/* Budget */}
-        <div className="flex items-center fs-1rem fw-400 budget">
+        <div className="flex items-center text-base font-normal bg-[#fbf5e8] rounded-2xl py-1.5 px-3">
           <DollarCircleIcon />
-          <span className="ms-1">
+          <span className="ml-1">
             {numberWithCommas(data?.proposed_budget?.amount, "USD")}
           </span>
           {data?.proposed_budget?.type == "fixed" ? (
-            <span className="light-text ms-1">Cost estimation</span>
+            <span className="opacity-50 ml-1">Cost estimation</span>
           ) : (
-            <span className="light-text">/hr</span>
+            <span className="opacity-50">/hr</span>
           )}
         </div>
       </div>
-    </Wrapper>
+    </div>
   );
 };
 

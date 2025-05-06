@@ -9,38 +9,6 @@ import ProspectDraftJobCard from "./ProspectDraftJobCard";
 import useDashboardJobs from "./use-dashboard-jobs";
 import PlusBlueIcon from "@/public/icons/plus-blue.svg";
 
-const Wrapper = styled.div`
-  border-radius: 0.75rem;
-  box-shadow: 0px 4px 74px rgba(0, 0, 0, 0.08);
-  background: ${(props) => props.theme.colors.white};
-  padding: 2rem;
-  min-height: 600px;
-  .list {
-    height: 426px;
-    overflow-y: auto;
-  }
-  .view-alll-link {
-    color: ${(props) => props.theme.colors.lightBlue};
-    &:hover {
-      transition: all 0.2s ease-in-out;
-      transform: translateY(-2px);
-    }
-  }
-  .tabs-container {
-    .tab {
-      font-size: 1rem;
-      padding: 0.5rem;
-      height: 48px;
-    }
-    .active {
-      box-shadow: 0px 4px 26px rgba(0, 0, 0, 0.09);
-    }
-  }
-  @media (max-width: 768px) {
-    padding: 1rem;
-  }
-`;
-
 const Jobs = () => {
   const [activeTab, setActiveTab] = useState<string>("active");
 
@@ -72,13 +40,13 @@ const Jobs = () => {
   }, [activeTab, refetch]);
 
   return (
-    <Wrapper>
-      <div className="d-flex align-items-center justify-content-between flex-wrap gap-2">
-        <div className="stat-label fs-24 fw-700">Projects</div>
+    <div className="rounded-xl shadow-[0_4px_74px_rgba(0,0,0,0.08)] bg-white p-8 min-h-[600px] md:p-4">
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <div className="stat-label text-2xl font-bold">Projects</div>
 
         <Link
           href="/client-jobs"
-          className="view-alll-link fs-1rem fw-400 pointer"
+          className="text-blue-400 hover:transition-all hover:duration-200 hover:ease-in-out hover:-translate-y-[2px] fs-1rem fw-400 cursor-pointer"
         >
           View All Projects
         </Link>
@@ -99,7 +67,7 @@ const Jobs = () => {
         <div className="mt-3">
           <Link
             href="/template/create"
-            className="view-alll-link fs-1rem fw-400 pointer d-flex align-items-center"
+            className="text-blue-400 hover:transition-all hover:duration-200 hover:ease-in-out hover:-translate-y-[2px] fs-1rem fw-400 cursor-pointer flex items-center"
           >
             <PlusBlueIcon />
             <div className="mx-1">Create New Template</div>
@@ -108,7 +76,7 @@ const Jobs = () => {
       )}
 
       {/* Jobs list */}
-      <div className="list mt-2">
+      <div className="h-[426px] overflow-y-auto mt-2">
         {(isLoading || isRefetching) && <Loader />}
 
         {!isLoading && !isRefetching && jobs?.length == 0 && <NoDataFound />}
@@ -128,7 +96,7 @@ const Jobs = () => {
             </div>
           ))}
       </div>
-    </Wrapper>
+    </div>
   );
 };
 
