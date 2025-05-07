@@ -173,7 +173,7 @@ export const ProjectDescription = () => {
           <p className="text-sm text-gray-600 text-left">
             Choose a clear, precise title.{" "}
             <SeeMore
-              $fontSize="0.9rem"
+              fontSize="0.9rem"
               onClick={() =>
                 setSeeMore((prev) => (prev === "TITLE" ? "" : "TITLE"))
               }
@@ -221,7 +221,7 @@ export const ProjectDescription = () => {
             provide here, the more likely you are to get precise price quotes
             and find the right freelancer for your project.{" "}
             <SeeMore
-              $fontSize="0.9rem"
+              fontSize="0.9rem"
               onClick={() =>
                 setSeeMore((prev) =>
                   prev === "DESCRIPTION" ? "" : "DESCRIPTION"
