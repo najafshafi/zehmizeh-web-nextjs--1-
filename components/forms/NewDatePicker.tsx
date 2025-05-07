@@ -1,15 +1,7 @@
 import React, { forwardRef } from "react";
 import DatePicker from "react-datepicker";
-import styled from "styled-components";
 import CalendarIcon from "@/public/icons/calendar.svg";
 import "react-datepicker/dist/react-datepicker.css";
-
-const DateInputWrapper = styled.div<{ value?: string }>`
-  padding: 1rem 0.8rem;
-  border-radius: 7px;
-  border: 1px solid lightgray;
-  color: ${(props) => (props.value ? "#000" : "lightgray")};
-`;
 
 // Use generic type to allow all DatePicker props
 const NewCustomDatePicker = (props: any) => {
@@ -104,15 +96,16 @@ interface CustomInputProps {
 
 const CustomInput = forwardRef<HTMLDivElement, CustomInputProps>(
   ({ value, placeholder, onClick }, ref) => (
-    <DateInputWrapper
-      className="date-input flex items-center justify-between pointer"
+    <div
+      className={`date-input flex items-center justify-between cursor-pointer py-4 px-3 rounded-md border border-gray-300 ${
+        value ? "text-black" : "text-gray-300"
+      }`}
       onClick={onClick}
       ref={ref}
-      value={value}
     >
       <div>{value || placeholder}</div>
       {value ? "" : <CalendarIcon />}
-    </DateInputWrapper>
+    </div>
   )
 );
 

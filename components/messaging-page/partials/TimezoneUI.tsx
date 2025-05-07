@@ -1,6 +1,3 @@
-// import { breakpoints } from "@/helpers/hooks/useResponsive";
-// import { pxToRem } from "@/helpers/utils/misc";
-// import styled from "styled-components";
 import moment from "moment";
 import Clock from "@/public/icons/clock.svg";
 import { UserData } from "@/store/redux/slices/chat.interface";

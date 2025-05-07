@@ -1,11 +1,4 @@
-import styled from "styled-components";
 import NoDataFoundIcon from "@/public/icons/nodatafound.svg";
-
-const NoDataWrapper = styled.div`
-  .description {
-    margin-top: 0rem;
-  }
-`;
 
 interface Prop {
   className?: string;
@@ -14,15 +7,13 @@ interface Prop {
 
 const NoDataFound = ({ className, title }: Prop) => {
   return (
-    <NoDataWrapper
-      className={`flex flex-col justify-center items-center ${className}`}
-    >
+    <div className={`flex flex-col justify-center items-center ${className}`}>
       <NoDataFoundIcon />
 
-      <div className="description text-base font-normal text-center">
+      <div className="mt-0 text-base font-normal text-center">
         {title || "No data found"}
       </div>
-    </NoDataWrapper>
+    </div>
   );
 };
 

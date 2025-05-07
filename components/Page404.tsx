@@ -1,27 +1,6 @@
 import Image from "next/image";
-import styled from "styled-components";
 import { useRouter } from "next/router";
 import { StyledButton } from "./forms/Buttons";
-
-const Wrapper = styled.div`
-  height: 100vh;
-`;
-
-const Page404Title = styled.div`
-  font-size: 3.25rem;
-  margin-top: 2.5rem;
-  color: ${(props) => props.theme.colors.yellow};
-`;
-const NotFoundText = styled.div`
-  opacity: 0.9;
-  margin-bottom: 0.938rem;
-  margin-top: 1.25rem;
-  font-size: 2rem;
-`;
-const NotFoundDescription = styled.div`
-  color: ${(props) => props.theme.colors.black};
-  margin-bottom: 2.25rem;
-`;
 
 function Page404() {
   const router = useRouter();
@@ -31,7 +10,7 @@ function Page404() {
   };
 
   return (
-    <Wrapper className="flex justify-center items-center flex-col">
+    <div className="h-screen flex justify-center items-center flex-col">
       <Image
         src="images/notFound.png"
         width={250}
@@ -39,13 +18,15 @@ function Page404() {
         alt="no-page-found"
       />
 
-      <Page404Title className="fw-bold">404</Page404Title>
-      <NotFoundText className="fw-bold">Page not found!</NotFoundText>
-      <NotFoundDescription className="fw-500 fs-1rem text-center">
+      <div className="text-[3.25rem] mt-10 text-yellow font-bold">40s4</div>
+      <div className="opacity-90 mb-[0.938rem] mt-5 text-4xl font-bold">
+        Page not found!
+      </div>
+      <div className="text-black mb-9 font-medium text-base text-center">
         The page you are looking for doesn&apos;t exist or is unavailable.
-      </NotFoundDescription>
+      </div>
       <StyledButton onClick={goBack}>Go back</StyledButton>
-    </Wrapper>
+    </div>
   );
 }
 

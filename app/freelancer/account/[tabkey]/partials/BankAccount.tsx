@@ -4,21 +4,10 @@ import toast from "react-hot-toast";
 import { StatusBadge } from "@/components/styled/Badges";
 import MoreButton from "./MoreButton";
 import { managePayment } from "@/helpers/http/freelancer";
-import styled from "styled-components";
 import {
   formatRoutingNumber,
   formatingAccountNumber,
 } from "@/helpers/utils/helper";
-
-const StyledBankItem = styled.div`
-  border: ${(props) => `1px solid ${props.theme.colors.gray6}`};
-  border-radius: 0.875rem;
-  .bank-table {
-    border-collapse: separate;
-    border-spacing: 0 0.5rem;
-    table-layout: fixed;
-  }
-`;
 
 const BankAccount = ({
   item,
@@ -87,8 +76,8 @@ const BankAccount = ({
   };
 
   return (
-    <StyledBankItem
-      className="flex justify-between mb-2 gap-2 p-4"
+    <div
+      className="flex justify-between mb-2 gap-2 p-4 border border-gray-300 rounded-[0.875rem]"
       key={item?.user_bank_id}
     >
       <div>
@@ -100,35 +89,37 @@ const BankAccount = ({
         ) : null}
 
         {/* Account details */}
-        <table className="mt-3 bank-table">
-          <tr className="fs-1rem font-normal">
-            <td>
-              <span className="acc-info--label">Name on Account: &nbsp;</span>
-            </td>
-            <td>{item?.account_holder_name}</td>
-          </tr>
-          <tr className="fs-1rem font-normal">
-            <td>
-              <span className="acc-info--label">Account Type: &nbsp;</span>
-            </td>
-            <td className="capitalize">
-              {item?.account_holder_type === "individual"
-                ? "Individual"
-                : "Business"}
-            </td>
-          </tr>
-          <tr className="fs-1rem font-normal">
-            <td>
-              <span className="acc-info--label">Account Number: &nbsp;</span>
-            </td>
-            <td>{formatingAccountNumber(item?.last_4_digit)}</td>
-          </tr>
-          <tr className="fs-1rem font-normal">
-            <td>
-              <span className="acc-info--label">Routing Number: &nbsp;</span>
-            </td>
-            <td>{formatRoutingNumber(item?.routing_number)}</td>
-          </tr>
+        <table className="mt-3 border-separate [border-spacing:0_0.5rem] table-fixed">
+          <tbody>
+            <tr className="text-base font-normal">
+              <td>
+                <span className="acc-info--label">Name on Account: &nbsp;</span>
+              </td>
+              <td>{item?.account_holder_name}</td>
+            </tr>
+            <tr className="text-base font-normal">
+              <td>
+                <span className="acc-info--label">Account Type: &nbsp;</span>
+              </td>
+              <td className="capitalize">
+                {item?.account_holder_type === "individual"
+                  ? "Individual"
+                  : "Business"}
+              </td>
+            </tr>
+            <tr className="text-base font-normal">
+              <td>
+                <span className="acc-info--label">Account Number: &nbsp;</span>
+              </td>
+              <td>{formatingAccountNumber(item?.last_4_digit)}</td>
+            </tr>
+            <tr className="text-base font-normal">
+              <td>
+                <span className="acc-info--label">Routing Number: &nbsp;</span>
+              </td>
+              <td>{formatRoutingNumber(item?.routing_number)}</td>
+            </tr>
+          </tbody>
         </table>
       </div>
 
@@ -140,7 +131,7 @@ const BankAccount = ({
           disabled={loading}
         />
       )}
-    </StyledBankItem>
+    </div>
   );
 };
 

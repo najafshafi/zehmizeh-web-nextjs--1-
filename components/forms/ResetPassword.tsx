@@ -6,8 +6,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ReactOtpInput from "react-otp-input";
 import { useForm } from "react-hook-form";
-import styled from "styled-components";
 import * as yup from "yup";
+import Spinner from "@/components/forms/Spin/Spinner";
 import YupPassword from "yup-password";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { StyledButton } from "@/components/forms/Buttons";
@@ -21,18 +21,6 @@ import { showErr, showMsg } from "@/helpers/utils/misc";
 import auth from "@/helpers/http/auth";
 import useStartPageFromTop from "@/helpers/hooks/useStartPageFromTop";
 import EyeIcon from "@/public/icons/eyeicon.svg";
-
-const Wrapper = styled.div`
-  .otp-input {
-    input {
-      border: 0 !important;
-      outline: 0 !important;
-      background: ${(props) => props.theme.colors.lightGray};
-      font-family: ${(props) => props.theme.font.primary};
-      font-size: 1.5rem;
-    }
-  }
-`;
 
 YupPassword(yup);
 
@@ -250,7 +238,7 @@ export default function ResetPassword() {
             disabled={loading}
             background="#F2B420"
           >
-            {loading ? <LoadingButtons /> : "Reset"}
+            {loading ? <Spinner /> : "Reset"}
           </StyledButton>
           <h4 className="self-center mt-4">
             <Link href="/login" className="yellow-link">
@@ -267,7 +255,7 @@ export default function ResetPassword() {
       <h2>Enter 6-digit code sent to &apos;{user?.email_id}&apos;</h2>
 
       <form className="mt-4" onSubmit={handleOTP}>
-        <Wrapper className="flex justify-center">
+        <div className="flex justify-center [&_.otp-input_input]:border-0 [&_.otp-input_input]:outline-0 [&_.otp-input_input]:bg-lightGray [&_.otp-input_input]:font-primary [&_.otp-input_input]:text-2xl">
           <ReactOtpInput
             value={otp}
             onChange={onChange}
@@ -284,12 +272,14 @@ export default function ResetPassword() {
             shouldAutoFocus
             renderInput={(props) => <input {...props} />}
           />
-        </Wrapper>
+        </div>
 
         {timer > 0 ? (
-          <h4 className="mt-5 flex items-center justify-center  mb-10">
+          <h4 className="mt-5 flex items-center justify-center mb-10">
             You can resend a new OTP in&nbsp;
-            <span className="fw-700">00:{timer > 9 ? timer : `0${timer}`}</span>
+            <span className="font-bold">
+              00:{timer > 9 ? timer : `0${timer}`}
+            </span>
           </h4>
         ) : (
           <h4 className="mt-10 flex items-center justify-center gap-1">
