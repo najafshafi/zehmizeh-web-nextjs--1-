@@ -22,7 +22,6 @@ import DeclineReasonPrompt from "../DeclineReasonPrompt";
 import { usePayments } from "../../controllers/usePayments";
 import PendingHourlySubmission from "../../quick-options/PendingHourlySubmission";
 import { paymentProcessingStatusHandler } from "@/helpers/validation/common";
-// import styled from "styled-components";
 import { TcomponentConnectorRef } from "@/app/client-job-details/ClientJobDetails";
 import { getValueByPercentage } from "@/helpers/utils/helper";
 import CustomButton from "@/components/custombutton/CustomButton";

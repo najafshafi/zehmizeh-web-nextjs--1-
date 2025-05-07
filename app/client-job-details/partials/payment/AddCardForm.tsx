@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-import styled from "styled-components";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { StyledButton } from "@/components/forms/Buttons";
 import { showErr } from "@/helpers/utils/misc";

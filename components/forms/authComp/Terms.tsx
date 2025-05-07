@@ -1,9 +1,7 @@
 "use client";
 import React from "react";
-import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { StyledButton } from "@/components/forms/Buttons";
 import GradientText from "@/components/styled/GradientText";
 import { Card } from "@/components/styled/Auth.styled";
 import CheckMark from "@/public/icons/check-mark.svg";
@@ -36,13 +34,6 @@ export default function Terms() {
               Mazal tov - your account has been created successfully!
             </h2>
             <Link href="/complete-profile" className="block">
-              {/* <StyledButton className="mt-4" height={56}>
-                {user.user_type == 'client'
-                  ? 'Go to Profile'
-                  : 'Start Setting Profile'}
-                Continue to Set Profile
-              </StyledButton> */}
-
               <CustomButton
                 text={"Continue to Set Profile"}
                 className="px-8 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5"

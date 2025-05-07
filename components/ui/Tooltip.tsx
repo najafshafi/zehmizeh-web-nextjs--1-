@@ -1,33 +1,33 @@
-import { useRef } from 'react';
-import Tooltip from 'rc-tooltip';
-import styled from 'styled-components';
+import { useRef } from "react";
+import Tooltip from "rc-tooltip";
 import Info from "../../public/icons/info-circle-gray.svg";
-import 'rc-tooltip/assets/bootstrap.css';
+import "rc-tooltip/assets/bootstrap.css";
 
-const TooltipContent = styled.div`
-  box-shadow: 0px 4px 22px rgba(0, 0, 0, 0.25);
-  background: ${(props) => props.theme.colors.blue};
-  padding: 0.5rem;
-  text-align: left;
-  max-width: 250px;
-  font-size: 0.875rem;
-  font-family: ${(props) => props.theme.font.primary};
-  a {
-    color: ${(props) => props.theme.colors.primary};
-  }
-`;
+// Define styles as objects for reuse
+const tooltipContentStyle = {
+  boxShadow: "0px 4px 22px rgba(0, 0, 0, 0.25)",
+  background: "#1D1E1B",
+  padding: "0.5rem",
+  textAlign: "left" as const,
+  maxWidth: "250px",
+  fontSize: "0.875rem",
+  fontFamily: "Helvetica, sans-serif",
+};
 
-const Wrapper = styled.div`
-  .title {
-    padding: 0px !important;
-  }
-  .tooltip-inner {
-    box-shadow: 0px 4px 22px rgba(0, 0, 0, 0.25);
-    background: ${(props) => props.theme.colors.blue};
-    padding: 1rem;
-    text-align: left;
-  }
-`;
+// Custom CSS classes for tooltip styling
+const tooltipStyles = {
+  tooltip: {
+    ".rc-tooltip-inner": {
+      boxShadow: "0px 4px 22px rgba(0, 0, 0, 0.25)",
+      background: "#1D1E1B",
+      padding: "1rem",
+      textAlign: "left" as const,
+    },
+    ".rc-tooltip-title": {
+      padding: "0px !important",
+    },
+  },
+};
 
 function UITooltip({
   title,
@@ -43,24 +43,29 @@ function UITooltip({
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Wrapper className={className} ref={containerRef}>
+    <div
+      className={className}
+      ref={containerRef}
+      style={{ position: "relative" }}
+    >
       <Tooltip
         placement="top"
-        overlay={<TooltipContent>{children}</TooltipContent>}
+        overlay={<div style={tooltipContentStyle}>{children}</div>}
         arrowContent={<div className="rc-tooltip-arrow-inner"></div>}
         destroyTooltipOnHide={true}
+        overlayInnerStyle={tooltipStyles.tooltip[".rc-tooltip-inner"]}
       >
         <span className="cursor-pointer inline-block">
           {customTrigger ? (
             customTrigger
           ) : (
             <span className="flex items-center">
-              {title || ''} <Info />
+              {title || ""} <Info />
             </span>
           )}
         </span>
       </Tooltip>
-    </Wrapper>
+    </div>
   );
 }
 

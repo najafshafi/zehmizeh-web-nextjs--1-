@@ -2,7 +2,6 @@
  * This component displays the banner of job details page
  */
 import { useMemo, useState } from "react";
-import { useTheme } from "styled-components";
 import moment from "moment";
 import { StatusBadge } from "@/components/styled/Badges";
 import BlurredImage from "@/components/ui/BlurredImage";
@@ -38,7 +37,6 @@ const JobDetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
   const [changeBudgetDeleteModal, setChangeBudgetDeleteModal] = useState(false);
   const [editDueDateModal, setEditDueDateModal] = useState<boolean>(false);
   const [sendTipModal, setSendTipModal] = useState<boolean>(false);
-  const theme = useTheme();
   /* This will format the date label to be displayed */
   const dateLabel = useMemo(() => {
     if (data?.status == "draft") {
@@ -193,7 +191,7 @@ const JobDetailsBanner = ({ data, refetch }: DetailsBannerProps) => {
                       className="cursor-pointer"
                       onClick={toggleEditDueDateModal}
                     >
-                      <Edit stroke={theme.colors.primary} />
+                      <Edit stroke="#F2B420" />
                     </span>
                   </div>
                 </div>

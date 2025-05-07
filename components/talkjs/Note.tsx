@@ -1,44 +1,22 @@
-import { breakpoints } from "@/helpers/hooks/useResponsive";
 import Link from "next/link";
-import styled from "styled-components";
-
-export const NoteWrap = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 0.5rem;
-  background: #f8f9fa;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  text-align: center;
-  color: blue;
-  font-weight: bold;
-  z-index: 1000;
-  @media ${breakpoints.mobile} {
-    font-size: 0.8rem;
-    background: white;
-    z-index: 1000;
-  }
-
-  a {
-    color: #f2b420 !important;
-  }
-`;
+import useResponsive from "@/helpers/hooks/useResponsive";
 
 export default function Note() {
+  const { isMobile } = useResponsive();
+
   return (
-    <NoteWrap>
+    <div
+      className={`
+      fixed bottom-0 left-0 w-full p-2 text-center font-bold z-[1000]
+      ${isMobile ? "text-sm bg-white" : "text-[0.9rem] bg-[#f8f9fa] rounded"}
+      text-[#0000FF]
+    `}
+    >
       Payments must be made through Zehmizeh. Paying outside violates our Terms
       and is against Halacha.{" "}
-      <Link
-        href="/terms-of-service#13"
-        style={{
-          color: "black",
-        }}
-      >
+      <Link href="/terms-of-service#13" className="text-[#f2b420]">
         View Terms
       </Link>
-    </NoteWrap>
+    </div>
   );
 }

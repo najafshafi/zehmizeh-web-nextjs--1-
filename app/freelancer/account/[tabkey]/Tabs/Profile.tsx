@@ -6,7 +6,6 @@ import ProfileDetailSection from "../partials/ProfileDetailSection";
 import StyledHtmlText from "@/components/ui/StyledHtmlText";
 import { useQueryData, useRefetch } from "@/helpers/hooks/useQueryData";
 import { convertToTitleCase } from "@/helpers/utils/misc";
-import styled from "styled-components";
 import EditIcon from "@/public/icons/edit-blue-outline.svg";
 import DeleteIcon from "@/public/icons/trash.svg";
 import cns from "classnames";
@@ -23,21 +22,6 @@ import { queryKeys } from "@/helpers/const/queryKeys";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
 import { getCategories, getSkills } from "@/helpers/utils/helper";
 import Image from "next/image";
-
-const SkillItem = styled.div`
-  padding: 0.625rem 0.75rem;
-  background: #f6f6f6;
-  border-radius: 0.5rem;
-  text-transform: capitalize;
-`;
-
-const EducationItem = styled.div`
-  border: ${(props) => `1px solid ${props.theme.colors.gray6}`};
-  border-radius: 0.875rem;
-  .education-content {
-    word-break: break-word;
-  }
-`;
 
 interface Category {
   category_id?: number;
@@ -313,17 +297,23 @@ export const Profile = () => {
               details={
                 <div className="flex flex-wrap items-center gap-2.5">
                   {categories?.map((skill, index) => (
-                    <SkillItem key={`skll-${index}`}>
+                    <div
+                      key={`skll-${index}`}
+                      className="py-2.5 px-3 bg-[#f6f6f6] rounded-lg capitalize"
+                    >
                       <div>{skill.category_name}</div>
-                    </SkillItem>
+                    </div>
                   ))}
 
                   {data?.skills?.map(
                     (skill) =>
                       skill?.skill_id && (
-                        <SkillItem key={skill.skill_id}>
+                        <div
+                          key={skill.skill_id}
+                          className="py-2.5 px-3 bg-[#f6f6f6] rounded-lg capitalize"
+                        >
                           <div>{skill.skill_name}</div>
-                        </SkillItem>
+                        </div>
                       )
                   )}
                   {!data?.skills?.length && (
@@ -353,9 +343,12 @@ export const Profile = () => {
               details={
                 <div className="flex flex-wrap items-center gap-2.5">
                   {data?.languages?.map((language: Language) => (
-                    <SkillItem key={`key-${language.id}`}>
+                    <div
+                      key={`key-${language.id}`}
+                      className="py-2.5 px-3 bg-[#f6f6f6] rounded-lg capitalize"
+                    >
                       <div>{language.name}</div>
-                    </SkillItem>
+                    </div>
                   ))}
                 </div>
               }
@@ -377,8 +370,8 @@ export const Profile = () => {
                   data?.education?.length > 0 && (
                     <div className="flex flex-col gap-3 max-h-[300px] overflow-y-auto">
                       {data?.education?.map((eduItem: EducationItem) => (
-                        <EducationItem
-                          className="flex p-3 gap-2"
+                        <div
+                          className="flex p-3 gap-2 border border-gray-300 rounded-[0.875rem]"
                           key={eduItem?.education_id}
                         >
                           <div className="flex items-center flex-1 gap-4">
@@ -389,7 +382,7 @@ export const Profile = () => {
                               width={40}
                               height={40}
                             />
-                            <div className="flex-1">
+                            <div className="flex-1 break-words">
                               <div className="text-xl font-normal capitalize">
                                 {convertToTitleCase(eduItem?.course_name)}
                               </div>
@@ -432,7 +425,7 @@ export const Profile = () => {
                               )}
                             </button>
                           </div>
-                        </EducationItem>
+                        </div>
                       ))}
                     </div>
                   )
@@ -451,9 +444,9 @@ export const Profile = () => {
                     <div className="flex flex-col gap-3 max-h-[300px] overflow-y-auto">
                       {data?.certificate_course?.map(
                         (courseItem: CourseItem) => (
-                          <EducationItem
+                          <div
                             className={cns(
-                              "p-4 flex justify-between items-center gap-2",
+                              "p-4 flex justify-between items-center gap-2 border border-gray-300 rounded-[0.875rem]",
                               { "cursor-pointer": courseItem?.certificate_link }
                             )}
                             key={courseItem?.course_id}
@@ -462,7 +455,7 @@ export const Profile = () => {
                               openCertificate(courseItem.certificate_link)
                             }
                           >
-                            <div className="flex-1">
+                            <div className="flex-1 break-words">
                               <div className="text-xl font-normal capitalize">
                                 {convertToTitleCase(courseItem?.course_name)}
                               </div>
@@ -500,7 +493,7 @@ export const Profile = () => {
                                 )}
                               </button>
                             </div>
-                          </EducationItem>
+                          </div>
                         )
                       )}
                     </div>

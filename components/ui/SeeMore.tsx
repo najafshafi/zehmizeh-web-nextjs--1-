@@ -1,9 +1,25 @@
-import styled from 'styled-components';
+import React from "react";
 
-export const SeeMore = styled.span<{ $fontSize?: string }>`
-  color: ${(props) => props.theme.colors.primary};
-  display: inline;
-  cursor: pointer;
-  font-weight: 400;
-  font-size: ${(props) => (props.$fontSize ? props.$fontSize : '0.8rem')};
-`;
+interface SeeMoreProps {
+  children: React.ReactNode;
+  fontSize?: string;
+  className?: string;
+  onClick?: () => void;
+}
+
+export const SeeMore: React.FC<SeeMoreProps> = ({
+  children,
+  fontSize = "0.8rem",
+  className = "",
+  ...props
+}) => {
+  return (
+    <span
+      className={`text-primary inline cursor-pointer font-normal ${className}`}
+      style={{ fontSize }}
+      {...props}
+    >
+      {children}
+    </span>
+  );
+};
