@@ -223,8 +223,12 @@ const FreelancerProfileBanner = ({
   };
 
   const bookmarkUI = () => {
-    // Because freelancer can't add another freelancer as favourite 🤫
-    if (isFreelancerLookingAtOtherFreelancers) return <></>;
+    // Hide bookmark and share buttons if user is viewing their own profile
+    if (
+      isFreelancerLookingAtOtherFreelancers ||
+      user?.user_id === data?.user_id
+    )
+      return <></>;
 
     return (
       <div className="flex gap-2">
@@ -279,7 +283,11 @@ const FreelancerProfileBanner = ({
 
   const inviteButtonUI = () => {
     // Because freelancer can't invite freelancer 😃
-    if (isFreelancerLookingAtOtherFreelancers) return <></>;
+    if (
+      isFreelancerLookingAtOtherFreelancers ||
+      user?.user_id === data?.user_id
+    )
+      return <></>;
 
     // For non-authenticated users, direct them to login with current URL as return destination
     const redirectToLogin = () => {
@@ -329,14 +337,27 @@ const FreelancerProfileBanner = ({
           <div>
             <div className="talent-details--content flex align-center flex-wrap gap-3">
               <div className="profile-name fs-28 fw-400 capitalize">
-                {user?.user_id === data?.user_id
-                  ? `${data?.first_name || ""} ${data?.last_name || ""} `
-                  : `${data?.first_name || "Freelancer"} ${
-                      data?.last_name || ""
-                    }`}
-                {user?.user_id === data?.user_id && (
-                  <span className="ml-2 text-base text-gray-500">(You)</span>
+                {user?.user_id === data?.user_id ? (
+                  // Own profile
+                  `${user?.first_name || ""} ${user?.last_name || ""} `
+                ) : (
+                  // Another user's profile
+                  <>
+                    {isFreelancerLookingAtOtherFreelancers ? (
+                      // Freelancer viewing another freelancer - apply blur
+                      <span className="blur-[5px]">
+                        {`${data?.first_name || "John Doe"} ${data?.last_name || ""}`}
+                      </span>
+                    ) : (
+                      // Regular view
+                      `${data?.first_name || "Freelancer"} ${data?.last_name || ""}`
+                    )}
+                  </>
                 )}
+                {/* Commented out "You" indicator */}
+                {/* {user?.user_id === data?.user_id && (
+                  <span className="ml-2 text-base text-gray-500">(You)</span>
+                )} */}
               </div>
               {data?.is_agency ? (
                 <StatusBadge color="blue">Agency</StatusBadge>
