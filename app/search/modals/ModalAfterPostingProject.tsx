@@ -1,8 +1,8 @@
-import { StyledModal } from "@/components/styled/StyledModal";
+import { Dialog, Transition } from "@headlessui/react";
 import useClientProfile from "@/controllers/useClientProfile";
 import { CONSTANTS } from "@/helpers/const/constants";
 import { editUser } from "@/helpers/http/auth";
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useSearchParams } from "next/navigation";
 import CustomButton from "@/components/custombutton/CustomButton";
@@ -53,58 +53,93 @@ export const ModalAfterPostingProject = () => {
   };
 
   return (
-    <StyledModal
-      show={modalAfterPostingProject}
-      size="lg"
-      centered
-      onHide={() => setModalAfterPostingProject(false)}
-    >
-      <div className="relative p-6">
-        <button
-          className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 text-2xl"
-          onClick={() => setModalAfterPostingProject(false)}
+    <Transition appear show={modalAfterPostingProject} as={Fragment}>
+      <Dialog
+        as="div"
+        className="relative z-10"
+        onClose={() => setModalAfterPostingProject(false)}
+      >
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
         >
-          &times;
-        </button>
-        <div className="flex flex-col items-center text-center mb-6">
-          <h3 className="mb-4 text-xl font-bold">
-            You can now invite freelancers to your project!
-          </h3>
-          <ul className="list-disc text-left pl-6 space-y-2">
-            <li>
-              Freelancers you invite will know you&apos;re interested in their
-              proposals
-            </li>
-            <li>Click their name from the list to see their profile details</li>
-            <li>Use the filters on the left to find your ideal candidates!</li>
-          </ul>
-        </div>
-        {/* START ----------------------------------------- Do not show again checkbox */}
-        {Number(profileData?.settings?.posted_project_count || 0) >=
-          CONSTANTS.VALUE_TO_SHOW_POSTED_PROJECT_MODAL_CHECKBOX && (
-          <div className="flex items-center justify-center mb-6">
-            <label className="flex items-center space-x-2 cursor-pointer select-none">
-              <input
-                type="checkbox"
-                className="h-4 w-4"
-                checked={isCheckedDoNotShowAgain}
-                onChange={(e) => {
-                  setIsCheckedDoNotShowAgain(e.target.checked);
-                }}
-              />
-              <span>Please do not show this notice again</span>
-            </label>
+          <div className="fixed inset-0 bg-black/30" />
+        </Transition.Child>
+
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <Dialog.Panel className="w-full max-w-lg transform  rounded-lg bg-white text-left align-middle shadow-xl transition-all">
+                <div className="relative p-6">
+                  <button
+                    className="absolute -right-8 -top-4 text-white  text-3xl"
+                    onClick={() => setModalAfterPostingProject(false)}
+                  >
+                    &times;
+                  </button>
+                  <div className="flex flex-col items-center text-center mb-6">
+                    <h3 className="mb-4 text-xl font-bold">
+                      You can now invite freelancers to your project!
+                    </h3>
+                    <ul className="list-disc text-left pl-6 space-y-2">
+                      <li>
+                        Freelancers you invite will know you&apos;re interested
+                        in their proposals
+                      </li>
+                      <li>
+                        Click their name from the list to see their profile
+                        details
+                      </li>
+                      <li>
+                        Use the filters on the left to find your ideal
+                        candidates!
+                      </li>
+                    </ul>
+                  </div>
+                  {/* START ----------------------------------------- Do not show again checkbox */}
+                  {Number(profileData?.settings?.posted_project_count || 0) >=
+                    CONSTANTS.VALUE_TO_SHOW_POSTED_PROJECT_MODAL_CHECKBOX && (
+                    <div className="flex items-center justify-center mb-6">
+                      <label className="flex items-center space-x-2 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4"
+                          checked={isCheckedDoNotShowAgain}
+                          onChange={(e) => {
+                            setIsCheckedDoNotShowAgain(e.target.checked);
+                          }}
+                        />
+                        <span>Please do not show this notice again</span>
+                      </label>
+                    </div>
+                  )}
+                  {/* END ------------------------------------------- Do not show again checkbox */}
+                  <div className="flex justify-center">
+                    <CustomButton
+                      text={"Okay"}
+                      className={`px-[2.5rem] py-[1.125rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white `}
+                      onClick={handleOkay}
+                    />
+                  </div>
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
           </div>
-        )}
-        {/* END ------------------------------------------- Do not show again checkbox */}
-        <div className="flex justify-center">
-          <CustomButton
-            text={"Okay"}
-            className={`px-[2.5rem] py-[1.125rem] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-base border border-black hover:bg-black hover:text-white hover:border-none my-[10px] mx-[4px]`}
-            onClick={handleOkay}
-          />
         </div>
-      </div>
-    </StyledModal>
+      </Dialog>
+    </Transition>
   );
 };

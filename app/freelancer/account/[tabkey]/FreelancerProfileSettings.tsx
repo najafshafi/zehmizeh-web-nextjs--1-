@@ -21,6 +21,9 @@ import { AccountSettings } from "./Tabs/AccountSettings";
 import { FREELANCER_PROFILE_TABS } from "@/helpers/const/tabs";
 import { StyledButton } from "@/components/forms/Buttons";
 import { useTheme } from "styled-components";
+import ShareIcon from "@/public/icons/share.svg";
+import Tooltip from "@/components/ui/Tooltip";
+import toast from "react-hot-toast";
 
 const INTERCOM_APP_ID = process.env.NEXT_PUBLIC_INTERCOM_APP_ID || "";
 
@@ -126,17 +129,46 @@ const FreelancerProfileSettings = () => {
               {isRefetching ? <Spinner className="ms-1" /> : null}
             </BackButton>
 
-            <StyledButton
-              className="hover:scale-105 transition-all duration-300 hover:shadow-sm"
-              background="white"
-              variant="light"
-              onClick={() => {
-                router.push("/search?type=freelancers");
-              }}
-              style={{ border: `1px solid ${theme.colors.primary} ` }}
-            >
-              See Other Freelancer Profiles
-            </StyledButton>
+            <div className="flex items-center gap-2">
+              <StyledButton
+                className="hover:scale-105 transition-all duration-300 hover:shadow-sm"
+                background="white"
+                variant="light"
+                onClick={() => {
+                  router.push("/search?type=freelancers");
+                }}
+                style={{ border: `1px solid ${theme.colors.primary} ` }}
+              >
+                See Other Freelancer Profiles
+              </StyledButton>
+
+              <Tooltip
+                customTrigger={
+                  <div
+                    className="h-[43px] w-[43px] flex justify-center items-center cursor-pointer  border-2 border-primary rounded-full"
+                    onClick={() => {
+                      // Construct the freelancer profile URL with the freelancer's ID
+                      const origin = window.location.origin; // Gets base URL (e.g., http://localhost:5005)
+                      const freelancerProfileUrl = `${origin}/freelancer/${profileData?.user_id}`;
+
+                      navigator.clipboard.writeText(freelancerProfileUrl);
+                      toast.success("Link copied to clipboard!");
+                      if (navigator.share) {
+                        navigator.share({
+                          title: `${profileData?.first_name || "Freelancer"} ${profileData?.last_name || ""}'s Profile`,
+                          text: `Check out this freelancer on Zehmizeh`,
+                          url: freelancerProfileUrl,
+                        });
+                      }
+                    }}
+                  >
+                    <ShareIcon />
+                  </div>
+                }
+              >
+                Share
+              </Tooltip>
+            </div>
           </div>
 
           {isLoading && <Loader />}

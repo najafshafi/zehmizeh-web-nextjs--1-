@@ -4,13 +4,11 @@
 import { useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { useQuery } from "react-query";
-import styled from "styled-components";
 import CustomButton from "@/components/custombutton/CustomButton";
 import Loader from "@/components/Loader";
 import TalentComponent from "./talent-component";
 import PaginationComponent from "@/components/ui/Pagination";
 import { getRecommendedFreelancers } from "@/helpers/http/search";
-import { breakpoints } from "@/helpers/hooks/useResponsive";
 import NoDataFound from "@/components/ui/NoDataFound";
 
 type Props = {
@@ -21,36 +19,6 @@ type Props = {
 };
 
 const RECORDS_PER_PAGE = 10;
-
-const Wrapper = styled.div`
-  .search-box {
-    max-width: 100% !important;
-    margin-top: 2.5rem;
-  }
-  .list {
-    height: 50vh;
-    overflow-y: auto;
-    padding: 0rem 1rem;
-    @media ${breakpoints.mobile} {
-      padding: 0;
-    }
-  }
-  .job-item {
-    padding: 1.5rem;
-    margin: 1.25rem 0 0 0;
-    border-radius: 14px;
-    border: ${(props) => `2px solid ${props.theme.colors.gray5}`};
-  }
-  .job-item__details__description {
-    opacity: 0.7;
-  }
-  .skills {
-    margin-top: 0.875rem;
-  }
-  .job-item__budget {
-    margin-top: 1.25rem;
-  }
-`;
 
 const InviteFreelancer = ({ show, jobPostId, toggle, onNext }: Props) => {
   const [selectedFreelancers, setSelectedFreelancers] = useState<any>([]);
@@ -153,14 +121,14 @@ const InviteFreelancer = ({ show, jobPostId, toggle, onNext }: Props) => {
               </button>
             </div>
 
-            <Wrapper id="main-container">
+            <div id="main-container">
               <div className="my-jobs">
                 <h3 className="text-4xl font-bold">Recommended Freelancers</h3>
                 {isLoading && <Loader />}
                 <div
                   ref={listContainerRef}
                   id="list"
-                  className="list"
+                  className="h-[50vh] overflow-y-auto px-4 sm:px-0"
                   onScroll={onScroll}
                 >
                   {data?.data?.length
@@ -196,7 +164,7 @@ const InviteFreelancer = ({ show, jobPostId, toggle, onNext }: Props) => {
                   onClick={onContinue}
                 />
               </div>
-            </Wrapper>
+            </div>
           </div>
         </div>
       </div>

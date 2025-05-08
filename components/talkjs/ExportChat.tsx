@@ -1,6 +1,5 @@
 import { talkjsApiKey, talkjsSecretKey } from "@/helpers/utils/helper";
 import React, { useState } from "react";
-import styled from "styled-components";
 import Download from "@/public/icons/download-message.svg";
 
 interface User {
@@ -269,61 +268,26 @@ const ExportChat: React.FC<ExportChatProps> = ({ conversationId }) => {
   };
 
   return (
-    <HoverWrapper>
-      <div className="export-icon">
+    <div className="relative group">
+      <div className="p-2 rounded-md cursor-pointer hover:bg-gray-200">
         <Download width={33} />
       </div>
-      <div className="hover-menu">
-        <div className="option" onClick={() => handleExport("csv")}>
+      <div className="hidden group-hover:block hover:block absolute right-[-100%] top-full mt-0 bg-white rounded-lg min-w-[150px] shadow-md z-[1000]">
+        <div
+          className="py-3 px-4 cursor-pointer hover:bg-gray-200"
+          onClick={() => handleExport("csv")}
+        >
           {loading ? "Loading..." : "Export as CSV"}
         </div>
-        <div className="option" onClick={() => handleExport("json")}>
+        <div
+          className="py-3 px-4 cursor-pointer hover:bg-gray-200"
+          onClick={() => handleExport("json")}
+        >
           {loading ? "Loading..." : "Export as JSON"}
         </div>
       </div>
-    </HoverWrapper>
+    </div>
   );
 };
 
 export default ExportChat;
-
-const HoverWrapper = styled.div`
-  position: relative;
-
-  .export-icon {
-    padding: 0.5rem;
-    border-radius: 7px;
-    cursor: pointer;
-    &:hover {
-      background: ${(props) => props.theme.colors.gray2};
-      & + .hover-menu {
-        display: block;
-      }
-    }
-  }
-
-  .hover-menu {
-    display: none;
-    position: absolute;
-    right: -100%;
-    top: 100%;
-    margin-top: 0;
-    background: white;
-    border-radius: 8px;
-    min-width: 150px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-
-    &:hover {
-      display: block;
-    }
-
-    .option {
-      padding: 0.75rem 1rem;
-      cursor: pointer;
-      &:hover {
-        background: ${(props) => props.theme.colors.gray2};
-      }
-    }
-  }
-`;
