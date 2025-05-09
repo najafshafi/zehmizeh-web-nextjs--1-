@@ -1,27 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import Spinner from "@/components/forms/Spin/Spinner";
-const Wrapper = styled.div`
-  .input {
-    padding: 0.875rem 1rem;
-    border-radius: 7px;
-  }
-  .search-result {
-    margin-top: 0.5rem;
-    max-height: 200px;
-    overflow-y: scroll;
-    box-shadow: 0px 4px 36px rgba(0, 0, 0, 0.08);
-    border-radius: 7px;
-  }
-  .search-option {
-    border-bottom: 1px solid #f0f0f0;
-    padding: 0.875rem;
-    text-transform: capitalize;
-  }
-  .loader {
-    padding: 0.875rem;
-  }
-`;
 
 const SearchableDropdown = ({
   placeholder,
@@ -67,7 +45,7 @@ const SearchableDropdown = ({
     };
   }, []);
   return (
-    <Wrapper>
+    <div>
       <input
         type="text"
         onFocus={() => {
@@ -79,13 +57,13 @@ const SearchableDropdown = ({
         autoFocus={true}
         placeholder={placeholder || "Search"}
         value={searchQuery}
-        className="w-full text-sm font-light input searchable-input px-4 py-3.5 border-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full text-sm font-light px-4 py-3.5 border-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 searchable-input"
         onChange={(e) => setSearchQuery(e.target.value)}
       />
       {((searchQuery !== null && searchQuery !== "") || suggest) && (
-        <div className="search-result">
+        <div className="mt-2 max-h-[200px] overflow-y-scroll shadow-[0px_4px_36px_rgba(0,0,0,0.08)] rounded-md">
           {fetching ? (
-            <div className="loader fs-sm flex ">
+            <div className="p-3.5 text-sm flex">
               <Spinner /> &nbsp;Searching...
             </div>
           ) : showOptions ? (
@@ -93,19 +71,21 @@ const SearchableDropdown = ({
               searchResults.map((item: any, index) => (
                 <div
                   key={`common-searchable-dropdown-${index}`}
-                  className="search-option text-base cursor-pointer"
+                  className="border-b border-[#f0f0f0] p-3.5 text-base cursor-pointer capitalize"
                   onClick={() => onClick(item)}
                 >
                   {item.label}
                 </div>
               ))
             ) : (
-              <div className="search-option text-sm">No result found</div>
+              <div className="border-b border-[#f0f0f0] p-3.5 text-sm">
+                No result found
+              </div>
             )
           ) : null}
         </div>
       )}
-    </Wrapper>
+    </div>
   );
 };
 

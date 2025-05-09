@@ -1,6 +1,5 @@
 "use client";
 import { useEffect } from "react";
-import styled from "styled-components";
 import SearchTypeDropdown from "./SearchTypeDropdown";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import SearchIcon from "@/public/icons/search.svg";
@@ -22,12 +21,6 @@ interface FormEvent extends React.FormEvent<HTMLFormElement> {
 interface InputEvent extends React.ChangeEvent<HTMLInputElement> {
   target: HTMLInputElement;
 }
-
-const Wrapper = styled.div`
-  max-width: 822px;
-  margin: auto;
-  margin-top: 1rem;
-`;
 
 const SearchBox = ({ fetching, onSubmit, searchType }: SearchBoxProps) => {
   const { user } = useAuth();
@@ -71,7 +64,7 @@ const SearchBox = ({ fetching, onSubmit, searchType }: SearchBoxProps) => {
   }, [searchTerm]);
 
   return (
-    <Wrapper>
+    <div className="w-full max-w-[822px] mx-auto mt-4">
       <form onSubmit={handleSubmit(searchTerm, searchTypeForNameOrProfile)}>
         <div className="flex items-center justify-between rounded-lg bg-white shadow-[0px_6px_29px_rgba(229,226,221,0.74)] h-[4.4375rem] pl-6">
           <div className="flex-1 flex items-center">
@@ -119,7 +112,7 @@ const SearchBox = ({ fetching, onSubmit, searchType }: SearchBoxProps) => {
           {searchType === "freelancers" ? "Find Freelancer" : "Find Projects"}
         </div>
       </form>
-    </Wrapper>
+    </div>
   );
 };
 

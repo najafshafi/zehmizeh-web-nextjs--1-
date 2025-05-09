@@ -129,7 +129,7 @@ const FreelancerProfileSettings = () => {
               {isRefetching ? <Spinner className="ms-1" /> : null}
             </BackButton>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 md:gap-4">
               <StyledButton
                 className="hover:scale-105 transition-all duration-300 hover:shadow-sm"
                 background="white"
@@ -142,32 +142,38 @@ const FreelancerProfileSettings = () => {
                 See Other Freelancer Profiles
               </StyledButton>
 
-              <Tooltip
-                customTrigger={
-                  <div
-                    className="h-[43px] w-[43px] flex justify-center items-center cursor-pointer  border-2 border-primary rounded-full"
-                    onClick={() => {
-                      // Construct the freelancer profile URL with the freelancer's ID
-                      const origin = window.location.origin; // Gets base URL (e.g., http://localhost:5005)
-                      const freelancerProfileUrl = `${origin}/freelancer/${profileData?.user_id}`;
+              {profileData?.user_id ? (
+                <Tooltip
+                  customTrigger={
+                    <div
+                      className="h-[45px] w-[45px] flex justify-center items-center cursor-pointer border-2 border-primary rounded-full"
+                      onClick={() => {
+                        // Construct the freelancer profile URL with the freelancer's ID
+                        const origin = window.location.origin;
+                        const freelancerProfileUrl = `${origin}/freelancer/${profileData.user_id}`;
 
-                      navigator.clipboard.writeText(freelancerProfileUrl);
-                      toast.success("Link copied to clipboard!");
-                      if (navigator.share) {
-                        navigator.share({
-                          title: `${profileData?.first_name || "Freelancer"} ${profileData?.last_name || ""}'s Profile`,
-                          text: `Check out this freelancer on Zehmizeh`,
-                          url: freelancerProfileUrl,
-                        });
-                      }
-                    }}
-                  >
-                    <ShareIcon />
-                  </div>
-                }
-              >
-                Share
-              </Tooltip>
+                        navigator.clipboard.writeText(freelancerProfileUrl);
+                        toast.success("Link copied to clipboard!");
+                        if (navigator.share) {
+                          navigator.share({
+                            title: `${profileData.first_name || "Freelancer"} ${profileData.last_name || ""}'s Profile`,
+                            text: `Check out this freelancer on Zehmizeh`,
+                            url: freelancerProfileUrl,
+                          });
+                        }
+                      }}
+                    >
+                      <ShareIcon />
+                    </div>
+                  }
+                >
+                  Share
+                </Tooltip>
+              ) : (
+                <div className="h-[43px] w-[43px] flex justify-center items-center border-2 border-primary rounded-full">
+                  <Spinner className="w-3 h-3" />
+                </div>
+              )}
             </div>
           </div>
 

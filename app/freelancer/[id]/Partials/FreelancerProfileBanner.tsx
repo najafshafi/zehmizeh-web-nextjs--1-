@@ -3,7 +3,6 @@
  */
 
 import { useState } from "react";
-import styled from "styled-components";
 import Spinner from "@/components/forms/Spin/Spinner";
 import toast from "react-hot-toast";
 
@@ -34,54 +33,6 @@ import classNames from "classnames";
 import CustomButton from "@/components/custombutton/CustomButton";
 import { useRouter } from "next/navigation";
 import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
-
-const StyledprofileCard = styled.div`
-  margin-top: 2rem;
-  padding: 2rem;
-  border-radius: 0.875rem;
-  background: ${(props) => props.theme.colors.white};
-  .content {
-    max-width: 80%;
-    @media ${breakpoints.mobile} {
-      max-width: 100%;
-    }
-  }
-  .talent__details {
-    max-width: 80%;
-    @media ${breakpoints.mobile} {
-      max-width: 100%;
-    }
-  }
-  .talent__details__post {
-    /* line-height: 1rem; */
-    opacity: 0.6;
-  }
-  .profile-name {
-    word-wrap: break-word;
-    max-width: 100%;
-  }
-  .budget {
-    background: ${(props) => props.theme.colors.body2};
-    padding: 0.375rem 0.75rem;
-    border-radius: 1rem;
-  }
-  .budget-label {
-    opacity: 0.63;
-    letter-spacing: 0.02em;
-  }
-  .light-text {
-    opacity: 0.63;
-  }
-  .blur {
-    filter: blur(5px);
-  }
-`;
-
-export const BookmarkIcon = styled.div`
-  height: 43px;
-  width: 43px;
-  border-radius: 2rem;
-`;
 
 interface FreelancerProfileBannerProps {
   data: IFreelancerDetails;
@@ -223,15 +174,19 @@ const FreelancerProfileBanner = ({
   };
 
   const bookmarkUI = () => {
-    // Because freelancer can't add another freelancer as favourite 🤫
-    if (isFreelancerLookingAtOtherFreelancers) return <></>;
+    // Hide bookmark and share buttons if user is viewing their own profile
+    if (
+      isFreelancerLookingAtOtherFreelancers ||
+      user?.user_id === data?.user_id
+    )
+      return <></>;
 
     return (
       <div className="flex gap-2">
         <Tooltip
           customTrigger={
-            <BookmarkIcon
-              className="flex justify-center items-center cursor-pointer"
+            <div
+              className="h-[43px] w-[43px] rounded-full flex justify-center items-center cursor-pointer"
               onClick={onBookmarkClick}
             >
               {loading ? (
@@ -241,7 +196,7 @@ const FreelancerProfileBanner = ({
               ) : (
                 <UnSavedIcon className={user ? "" : "blurred-2px"} />
               )}
-            </BookmarkIcon>
+            </div>
           }
         >
           {user
@@ -279,7 +234,11 @@ const FreelancerProfileBanner = ({
 
   const inviteButtonUI = () => {
     // Because freelancer can't invite freelancer 😃
-    if (isFreelancerLookingAtOtherFreelancers) return <></>;
+    if (
+      isFreelancerLookingAtOtherFreelancers ||
+      user?.user_id === data?.user_id
+    )
+      return <></>;
 
     // For non-authenticated users, direct them to login with current URL as return destination
     const redirectToLogin = () => {
@@ -292,7 +251,7 @@ const FreelancerProfileBanner = ({
         {user ? (
           <CustomButton
             text="Invite"
-            className="py-[0.75rem] w-full min-w-[100px] text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-black hover:bg-black hover:text-white "
+            className="py-[0.75rem] w-full min-w-[100px] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[18px] border border-black hover:bg-black hover:text-white"
             onClick={toggleJobsModal}
           />
         ) : (
@@ -300,7 +259,7 @@ const FreelancerProfileBanner = ({
             customTrigger={
               <CustomButton
                 text="Invite"
-                className="py-[0.75rem] w-full min-w-[100px] text-center  transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full  text-[18px] border border-black hover:bg-black hover:text-white "
+                className="py-[0.75rem] w-full min-w-[100px] text-center transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full text-[18px] border border-black hover:bg-black hover:text-white"
                 onClick={redirectToLogin}
               />
             }
@@ -313,9 +272,9 @@ const FreelancerProfileBanner = ({
   };
 
   return (
-    <StyledprofileCard className="flex gap-4 flex-wrap justify-between ">
+    <div className="mt-8 p-8 rounded-[0.875rem] bg-white flex gap-4 flex-wrap justify-between">
       {/* Image and other details */}
-      <div className="content flex gap-4 flex-wrap flex-col">
+      <div className="max-w-[80%] sm:max-w-full flex gap-4 flex-wrap flex-col">
         {/* Profile image with overlay */}
         <BlurredImage
           src={data?.user_image || "/images/default_avatar.png"}
@@ -324,59 +283,69 @@ const FreelancerProfileBanner = ({
           allowToUnblur={true}
         />
 
-        <div className="talent__details ">
+        <div className="max-w-[80%] sm:max-w-full">
           {/* Name and designation */}
           <div>
             <div className="talent-details--content flex align-center flex-wrap gap-3">
-              <div className="profile-name fs-28 fw-400 capitalize">
-                {user?.user_id === data?.user_id
-                  ? `${data?.first_name || ""} ${data?.last_name || ""} `
-                  : `${data?.first_name || "Freelancer"} ${
-                      data?.last_name || ""
-                    }`}
-                {user?.user_id === data?.user_id && (
-                  <span className="ml-2 text-base text-gray-500">(You)</span>
+              <div className="profile-name fs-28 fw-400 capitalize break-words max-w-full">
+                {user?.user_id === data?.user_id ? (
+                  // Own profile
+                  `${user?.first_name || ""} ${user?.last_name || ""} `
+                ) : (
+                  // Another user's profile
+                  <>
+                    {isFreelancerLookingAtOtherFreelancers ? (
+                      // Freelancer viewing another freelancer - apply blur
+                      <span className="blur-[5px]">
+                        {`${data?.first_name || "John Doe"} ${data?.last_name || ""}`}
+                      </span>
+                    ) : (
+                      // Regular view
+                      `${data?.first_name || "Freelancer"} ${data?.last_name || ""}`
+                    )}
+                  </>
                 )}
+                {/* {user?.user_id === data?.user_id && (
+                  <span className="ml-2 text-base text-gray-500">(You)</span>
+                )} */}
               </div>
               {data?.is_agency ? (
                 <StatusBadge color="blue">Agency</StatusBadge>
               ) : null}
             </div>
             {data?.agency_name && (
-              <div className="talent__details__post fs-18 fw-400 mt-2 capital-first-ltr">
+              <div className="fs-18 fw-400 mt-2 capital-first-ltr opacity-60">
                 {data.agency_name}
               </div>
             )}
-            <div className="talent__details__post fs-18 fw-400 mt-3 capital-first-ltr line-break">
+            <div className="fs-18 fw-400 mt-3 capital-first-ltr line-break opacity-60">
               {data.job_title}
             </div>
           </div>
 
           {/* Freelancer hourly rate, location, ratings and invite button */}
-          <div className="talent__other-details mt-3 flex align-center flex-wrap gap-2">
-            {/* Houlry rate */}
-
-            <div className="flex budget w-fit align-center">
+          <div className="mt-3 flex align-center flex-wrap gap-2">
+            {/* Hourly rate */}
+            <div className="flex w-fit items-center rounded-2xl py-1.5 px-3 bg-[#FBF5E8]">
               <DollarCircleIcon />
               <div className="fs-1rem fw-400 flex mx-1">
                 {data?.hourly_rate ? (
                   <>
                     {numberWithCommas(data?.hourly_rate, "USD")}
-                    <div className="budget-label fs-1rem fw-300">/hr</div>
+                    <div className="fs-1rem fw-300 opacity-60">/hr</div>
                   </>
                 ) : (
-                  <div className="budget-label fs-1rem fw-300 ms-1">n/a</div>
+                  <div className="fs-1rem fw-300 ms-1 opacity-60">n/a</div>
                 )}
               </div>
             </div>
 
             {/* Location */}
-
             {(data?.location?.state || data?.location?.country_name) && (
-              <div className="flex budget align-center w-fit">
+              <div className="flex items-center w-fit rounded-2xl py-1.5 px-3 bg-[#FBF5E8]">
                 <LocationIcon />
                 &nbsp;
-                <div className="flex fs-1rem fw-400 light-text">
+                <div className="flex fs-1rem fw-400 opacity-60">
                   {separateValuesWithComma([
                     data?.location?.state,
                     data?.location?.country_name,
@@ -387,26 +356,29 @@ const FreelancerProfileBanner = ({
 
             {/* Ratings */}
             <div
-              className={classNames("flex budget align-center w-fit", {
-                pointer: data?.feedback_count,
-              })}
+              className={classNames(
+                "flex items-center w-fit rounded-2xl py-1.5 px-3 bg-[#FBF5E8]",
+                {
+                  "cursor-pointer": data?.feedback_count,
+                }
+              )}
               onClick={handleRatingClick}
             >
               {data?.feedback_count ? <StarIcon /> : <BsStar color="#f2b420" />}
-              <div className="flex mx-1 align-center fs-1rem fw-400">
+              <div className="flex mx-1 items-center fs-1rem fw-400">
                 {data?.avg_rating?.toFixed(1) ?? 0}
-                <div className="mx-1 budget-label fs-sm fw-300">
+                <div className="mx-1 fs-sm fw-300 opacity-60">
                   Ratings ({numberWithCommas(data?.feedback_count) || 0})
                 </div>
               </div>
             </div>
 
             {/* Total jobs done */}
-            <div className="flex budget align-center w-fit">
+            <div className="flex items-center w-fit rounded-2xl py-1.5 px-3 bg-[#FBF5E8]">
               <JobsDoneIcon />
-              <div className="flex mx-1 align-center fs-1rem fw-400">
+              <div className="flex mx-1 items-center fs-1rem fw-400">
                 {numberWithCommas(data.completedJobCount)}
-                <div className="mx-1 budget-label fs-sm fw-300">
+                <div className="mx-1 fs-sm fw-300 opacity-60">
                   Projects done
                 </div>
               </div>
@@ -415,14 +387,13 @@ const FreelancerProfileBanner = ({
         </div>
       </div>
 
-      {/* Boomark and invite button */}
+      {/* Bookmark and invite button */}
       <div className="flex flex-col justify-between md:items-end gap-4">
         {bookmarkUI()}
         {inviteButtonUI()}
       </div>
 
       {/* Select job modal for inviting freeancer */}
-
       {showJobsModal && (
         <SelectJobModal
           show={showJobsModal}
@@ -434,7 +405,6 @@ const FreelancerProfileBanner = ({
       )}
 
       {/* Invite mesage modal - to send a message with invite*/}
-
       <InviteFreelancerMessageModal
         show={showInviteMessageModal}
         toggle={toggleInviteMessageModal}
@@ -452,7 +422,7 @@ const FreelancerProfileBanner = ({
           setProposalExistModal((prev) => !prev);
         }}
       />
-    </StyledprofileCard>
+    </div>
   );
 };
 

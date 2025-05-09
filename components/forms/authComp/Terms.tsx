@@ -2,7 +2,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import GradientText from "@/components/styled/GradientText";
+
 import { Card } from "@/components/styled/Auth.styled";
 import CheckMark from "@/public/icons/check-mark.svg";
 import Logo from "@/public/zehmizeh-logo.svg";
@@ -55,9 +55,11 @@ export default function Terms() {
         <h1>Accept Terms</h1>
         <p className="terms-description">
           You understand that it is against Jewish law and our{" "}
-          <GradientText>terms and conditions</GradientText> to leave outside the
-          ZehMizeh platform to acquire a freelancer whom you found on the
-          platform.
+          <span className="inline-block text-[#F2B420] text-base">
+            terms and conditions
+          </span>{" "}
+          to leave outside the ZehMizeh platform to acquire a freelancer whom
+          you found on the platform.
         </p>
         <footer className="flex justify-end gap-4 mt-4">
           <CustomButton
