@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import { fileIsAnImage } from "@/helpers/utils/misc";
 import CrossIcon from "@/public/icons/cross-icon.svg";
 import { useState } from "react";
@@ -46,45 +45,6 @@ const getFileDetails = (file: string) => {
   const fileIcon = FILE_PATHS[fileExtension.toLowerCase()] || FILE_PATHS.doc;
   return { fileExtension, fileName, fileIcon };
 };
-
-const PreviewWrapper = styled.div`
-  border-radius: 0.75rem;
-  img {
-    border: 1px solid ${(props) => props.theme.colors.gray6};
-    border-radius: 0.75rem;
-    object-fit: cover;
-  }
-  .doctype-preview {
-    padding: 0.5rem 0rem;
-    .file-title {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .extension {
-      color: ${(props) => props.theme.colors.gray8};
-    }
-    .doctype-preview-details {
-      width: 9.5rem;
-    }
-  }
-  .delete-preview {
-    top: -5px;
-    right: -5px;
-    background-color: ${(props) => props.theme.colors.black};
-    z-index: 9999;
-    height: 25px;
-    width: 25px;
-    border-radius: 50%;
-    border: 2px solid ${(props) => props.theme.colors.white};
-  }
-  .loader {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateY(-50%);
-  }
-`;
 
 /** @function This function will download the sample csv file - works across all browsers */
 const downloadSampleFile = (
@@ -140,8 +100,8 @@ const AttachmentPreview = ({
   const isImage = uploadedFile ? fileIsAnImage(uploadedFile) : false;
 
   return (
-    <PreviewWrapper
-      className={`flex attachment-preview position-relative ${
+    <div
+      className={`flex rounded-[0.75rem] attachment-preview relative ${
         isLoading ? "shimmer-loading" : ""
       }`}
       title={fileName || fileDetails?.fileName || ""}
@@ -156,12 +116,12 @@ const AttachmentPreview = ({
             alt="uploaded"
             height={100}
             width={100}
-            className="object-cover h-[100px] w-[100px]"
+            className="object-cover h-[100px] w-[100px] border border-[#d9d9d9] rounded-[0.75rem]"
           />
         ) : (
           <div
             className={classNames("text-center flex items-center", {
-              "doctype-preview": shouldShowFileNameAndExtension,
+              "py-2": shouldShowFileNameAndExtension,
             })}
           >
             <Image
@@ -169,14 +129,14 @@ const AttachmentPreview = ({
               alt="uploaded"
               height={100}
               width={100}
-              className="object-cover h-[100px] w-[100px]"
+              className="object-cover h-[100px] w-[100px] border border-[#d9d9d9] rounded-[0.75rem]"
             />
             {shouldShowFileNameAndExtension && (
-              <div className="doctype-preview-details ms-2">
-                <div className="file-title text-start capitalize font-medium">
+              <div className="w-[9.5rem] ms-2">
+                <div className="whitespace-nowrap overflow-hidden text-ellipsis text-start capitalize font-medium">
                   {fileName || fileDetails?.fileName || ""}
                 </div>
-                <div className="extension text-start text-uppercase text-sm">
+                <div className="text-start uppercase text-sm text-[#858585]">
                   {fileDetails?.fileExtension || ""}
                 </div>
               </div>
@@ -186,14 +146,19 @@ const AttachmentPreview = ({
       </div>
       {removable && (
         <div
-          className="delete-preview position-absolute flex items-center justify-center cursor-pointer"
+          className="absolute top-[-5px] right-[-5px] bg-black z-[9999] h-[25px] w-[25px] rounded-full border-2 border-white flex items-center justify-center cursor-pointer"
           onClick={onDelete}
           title="Delete attachment"
         >
           <CrossIcon />
         </div>
       )}
-    </PreviewWrapper>
+      {isLoading && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-y-1/2 loader">
+          {/* Loader content would go here */}
+        </div>
+      )}
+    </div>
   );
 };
 
