@@ -34,7 +34,7 @@ export default function FreelancerDashboard() {
       <div className="max-w-[1170px] mx-auto min-h-[70vh] relative">
         {/* Title and top rated badge */}
         <div
-          className={`flex justify-between items-center ${
+          className={`flex justify-between items-center mb-8 ${
             dashboardStats?.ratings?.average <= 4.5 ? "mt-5" : ""
           }`}
         >

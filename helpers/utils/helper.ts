@@ -196,22 +196,16 @@ export const isStagingEnv = () => {
 
 export const pusherApiKey = () =>
   isStagingEnv()
-    ? process.env.NEXT_PUBLIC_PUSHER_API_KEY ||
-      process.env.REACT_APP_PUSHER_API_KEY
-    : process.env.NEXT_PUBLIC_PUSHER_API_KEY_PROD ||
-      process.env.REACT_APP_PUSHER_API_KEY_PROD;
+    ? process.env.NEXT_PUBLIC_PUSHER_API_KEY
+    : process.env.NEXT_PUBLIC_PUSHER_API_KEY_PROD;
 
 export const talkjsApiKey = () => {
   const isStaging = isStagingEnv();
   const key = isStaging
-    ? process.env.NEXT_PUBLIC_TALKJS_APP_ID ||
-      process.env.REACT_APP_TALKJS_APP_ID
-    : process.env.NEXT_PUBLIC_TALKJS_APP_ID_PROD ||
-      process.env.REACT_APP_TALKJS_APP_ID_PROD;
+    ? process.env.NEXT_PUBLIC_TALKJS_APP_ID
+    : process.env.NEXT_PUBLIC_TALKJS_APP_ID_PROD;
 
   console.log("TalkJS Environment:", isStaging ? "Staging" : "Production");
-  // console.log("TalkJS API Key:", key);
-  console.log("Backend API:", process.env.NEXT_PUBLIC_BACKEND_API);
   console.log(
     "Hostname:",
     typeof window !== "undefined" ? window.location.hostname : "server-side"
@@ -222,10 +216,8 @@ export const talkjsApiKey = () => {
 
 export const talkjsSecretKey = () =>
   isStagingEnv()
-    ? process.env.NEXT_PUBLIC_TALKJS_APP_SECRET_KEY ||
-      process.env.REACT_APP_TALKJS_APP_SECRET_KEY
-    : process.env.NEXT_PUBLIC_TALKJS_APP_SECRET_KEY_PROD ||
-      process.env.REACT_APP_TALKJS_APP_SECRET_KEY_PROD;
+    ? process.env.NEXT_PUBLIC_TALKJS_APP_SECRET_KEY
+    : process.env.NEXT_PUBLIC_TALKJS_APP_SECRET_KEY_PROD;
 
 export const hasClientAddedPaymentDetails = (user: IClientDetails) => {
   const isCardAdded = user?.carddata?.length > 0;
