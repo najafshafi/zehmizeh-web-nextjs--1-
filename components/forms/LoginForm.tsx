@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
 import { IoEyeOutline } from "react-icons/io5";
 import CustomButton from "@/components/custombutton/CustomButton";
-import {  useSelector } from "react-redux";
-import { RootState } from '@/store/store'; // Adjust path to your store
-import { useAuth } from '@/helpers/contexts/auth-context'; // Adjust path to AuthContext
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store"; // Adjust path to your store
+import { useAuth } from "@/helpers/contexts/auth-context"; // Adjust path to AuthContext
 import Spinner from "./Spin/Spinner";
 // import ErrorMessage from '@/components/ui/ErrorMessage';
 
@@ -28,8 +28,6 @@ const LoginForm = () => {
   const { isLoading } = useSelector((state: RootState) => state.auth);
 
   // Local state for UI interactions
-  const [isFocusedEmail, setIsFocusedEmail] = useState(false);
-  const [isFocusedPassword, setIsFocusedPassword] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   // Add direct state for visual feedback even if Redux is slow
@@ -78,18 +76,18 @@ const LoginForm = () => {
     if (isValid) {
       // Set local loading state immediately for visual feedback
       setLocalLoading(true);
-      
+
       const formData = {
         email_id: email, // Match expected API key
         password,
         terms_agreement: isChecked,
         stay_signedin: false, // Default value
       };
-      
+
       // Call signin
       try {
         signin(formData);
-        
+
         // Set a timeout to reset loading after 2 seconds if Redux state doesn't update
         setTimeout(() => {
           setLocalLoading(false);
@@ -104,7 +102,7 @@ const LoginForm = () => {
 
   // Use either Redux loading state or local loading state
   const showLoading = isLoading || localLoading;
-  
+
   // For debugging
   useEffect(() => {
     console.log("Redux isLoading changed:", isLoading);
@@ -127,72 +125,50 @@ const LoginForm = () => {
         <p className="font-bold text-[30px] leading-none">Log in to ZehMizeh</p>
         <div className="flex flex-col gap-1 w-full max-w-[600px] md:px-0 px-6">
           {/* Email Input */}
-          <div
-            className={`p-1 rounded-lg transition-all duration-300 ${
-              isFocusedEmail ? "bg-blue-500/40 border" : "border-transparent"
-            }`}
-            onClick={() => emailRef.current?.focus()}
-          >
-            <div className="relative p-4 rounded-md border border-gray-300 bg-white cursor-text">
-              <input
-                type="email"
-                placeholder=" "
-                ref={emailRef}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onFocus={() => setIsFocusedEmail(true)}
-                onBlur={() => setIsFocusedEmail(false)}
-                className="peer block w-full text-gray-900 bg-transparent focus:outline-none placeholder-transparent"
-              />
-              <label
-                className="cursor-text absolute left-4 text-gray-400 transition-all
-                peer-focus:-top-[1px] peer-focus:text-[14px] peer-focus:text-gray-400 
-                peer-placeholder-shown:top-4 peer-placeholder-shown:text-gray-500 peer-placeholder-shown:text-[17px]
-                -top-1 text-[14px] font-light"
-              >
-                Email Address
-              </label>
-              
-            </div>
+          <div className="relative mb-3">
+            <input
+              type="email"
+              className="peer m-0 block h-[58px] w-full rounded border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-4 text-base font-normal leading-tight text-black transition duration-200 ease-linear placeholder:text-transparent focus:border-blue-500 focus:ring-2 focus:pb-[0.625rem] focus:pt-[1.625rem] focus:text-black focus:outline-none    [&:not(:placeholder-shown)]:pb-[0.625rem] [&:not(:placeholder-shown)]:pt-[1.625rem]"
+              id="floatingInput"
+              placeholder="name@example.com"
+              ref={emailRef}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <label
+              htmlFor="floatingInput"
+              className="pointer-events-none absolute left-0 top-0 origin-[0_0] border border-solid border-transparent px-3 py-4 text-neutral-500 transition-[opacity,_transform] duration-200 ease-linear peer-focus:-translate-y-2 peer-focus:translate-x-[0.15rem] peer-focus:scale-[0.85] peer-focus:text-neutral-500 peer-[:not(:placeholder-shown)]:-translate-y-2 peer-[:not(:placeholder-shown)]:translate-x-[0.15rem] peer-[:not(:placeholder-shown)]:scale-[0.85] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-neutral-500"
+            >
+              Email Address
+            </label>
           </div>
           {emailError && (
             <p className="text-red-600 text-[15px] pl-1">{emailError}</p>
           )}
 
-
           {/* Password Input */}
-          <div
-            className={`p-1 rounded-lg transition-all duration-300 ${
-              isFocusedPassword ? "bg-blue-500/40 border" : "border-transparent"
-            }`}
-            onClick={() => passwordRef.current?.focus()}
-          >
-            <div className="flex flex-row items-center justify-between relative p-4 rounded-md border border-gray-300 bg-white cursor-text">
-              <input
-                type={passwordVisible ? "text" : "password"}
-                placeholder=" "
-                ref={passwordRef}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onFocus={() => setIsFocusedPassword(true)}
-                onBlur={() => setIsFocusedPassword(false)}
-                className="peer block w-full text-gray-900 bg-transparent focus:outline-none placeholder-transparent"
-              />
-              <IoEyeOutline
-                onClick={togglePasswordVisibility}
-                className={`cursor-pointer text-[24px] ${
-                  passwordVisible ? "text-black" : "text-gray-400"
-                }`}
-              />
-              <label
-                className="cursor-text absolute left-4 text-gray-400 transition-all
-                peer-focus:-top-[1px] peer-focus:text-[14px] peer-focus:text-gray-400 
-                peer-placeholder-shown:top-4 peer-placeholder-shown:text-gray-500 peer-placeholder-shown:text-[17px]
-                -top-1 text-[14px] font-light"
-              >
-                Password
-              </label>
-            </div>
+          <div className="relative mb-3">
+            <input
+              type={passwordVisible ? "text" : "password"}
+              className="peer m-0 block h-[58px] w-full rounded border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-4 text-base font-normal leading-tight text-black transition duration-200 ease-linear placeholder:text-transparent focus:border-blue-500 focus:ring-2 focus:pb-[0.625rem] focus:pt-[1.625rem] focus:text-black focus:outline-none    [&:not(:placeholder-shown)]:pb-[0.625rem] [&:not(:placeholder-shown)]:pt-[1.625rem]"
+              id="floatingPassword"
+              placeholder="Password"
+              ref={passwordRef}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <label
+              htmlFor="floatingPassword"
+              className="pointer-events-none absolute left-0 top-0 origin-[0_0] border border-solid border-transparent px-3 py-4 text-neutral-500 transition-[opacity,_transform] duration-200 ease-linear peer-focus:-translate-y-2 peer-focus:translate-x-[0.15rem] peer-focus:scale-[0.85] peer-focus:text-neutral-500 peer-[:not(:placeholder-shown)]:-translate-y-2 peer-[:not(:placeholder-shown)]:translate-x-[0.15rem] peer-[:not(:placeholder-shown)]:scale-[0.85] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-neutral-500"
+            >
+              Password
+            </label>
+            <IoEyeOutline
+              onClick={togglePasswordVisibility}
+              className={`absolute right-3 top-4 cursor-pointer text-[24px] ${
+                passwordVisible ? "text-black" : "text-gray-400"
+              }`}
+            />
           </div>
           {passwordError && (
             <p className="text-red-600 text-[15px] pl-1">{passwordError}</p>
@@ -238,7 +214,7 @@ const LoginForm = () => {
           {/* Login Button */}
           <div className="flex flex-col items-center justify-center">
             <CustomButton
-              text={showLoading ? <Spinner className="w-5 h-5"/> : "Log In"}
+              text={showLoading ? <Spinner className="w-5 h-5" /> : "Log In"}
               className="px-9 py-4 w-full max-w-[200px] transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px] mt-5"
               onClick={onLoginClick}
               disabled={showLoading}
@@ -260,4 +236,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-
