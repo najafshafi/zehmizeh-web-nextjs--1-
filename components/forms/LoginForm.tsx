@@ -6,13 +6,19 @@ import { useRef, useState, useEffect } from "react";
 import { IoEyeOutline } from "react-icons/io5";
 import CustomButton from "@/components/custombutton/CustomButton";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store"; // Adjust path to your store
-import { useAuth } from "@/helpers/contexts/auth-context"; // Adjust path to AuthContext
+import { RootState } from "@/store/store";
+import { useAuth } from "@/helpers/contexts/auth-context";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import Spinner from "./Spin/Spinner";
-// import ErrorMessage from '@/components/ui/ErrorMessage';
+import { apiClient } from "@/helpers/http";
 
 const LoginForm = () => {
-  const { signin } = useAuth();
+  const router = useRouter();
+  const { data: session } = useSession();
+  const { signin: contextSignIn, isLoading: contextLoading } = useAuth();
+
   // Local state for form inputs and validation errors
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,12 +31,15 @@ const LoginForm = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const { isLoading } = useSelector((state: RootState) => state.auth);
+  // Get loading state from Redux
+  const { isLoading: reduxLoading } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   // Local state for UI interactions
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  // Add direct state for visual feedback even if Redux is slow
+  // Direct state for visual feedback
   const [localLoading, setLocalLoading] = useState(false);
 
   // Handle checkbox toggle
@@ -47,7 +56,7 @@ const LoginForm = () => {
   };
 
   // Handle login submission
-  const onLoginClick = () => {
+  const onLoginClick = async () => {
     let isValid = true;
 
     // Local validation
@@ -72,41 +81,64 @@ const LoginForm = () => {
       setCheckboxError("");
     }
 
-    // If valid, dispatch login action via Redux
+    // If valid, proceed with login
     if (isValid) {
       // Set local loading state immediately for visual feedback
       setLocalLoading(true);
 
-      const formData = {
-        email_id: email, // Match expected API key
-        password,
-        terms_agreement: isChecked,
-        stay_signedin: false, // Default value
-      };
-
-      // Call signin
       try {
-        signin(formData);
+        console.log("Attempting login with:", { email_id: email });
 
-        // Set a timeout to reset loading after 2 seconds if Redux state doesn't update
-        setTimeout(() => {
-          setLocalLoading(false);
-        }, 2000);
-      } catch (error) {
+        // First, use our existing auth context to login
+        // This will handle the legacy authentication system
+        const loginData = {
+          email_id: email,
+          password: password,
+          stay_signedin: true,
+          terms_agreement: true,
+        };
+
+        // Call the signin method from the auth context
+        // This handles setting localStorage and user state
+        await contextSignIn(loginData);
+
+        // Also authenticate with NextAuth for future compatibility
+        const nextAuthResult = await signIn("credentials", {
+          email_id: email,
+          email: email,
+          password: password,
+          redirect: false,
+        });
+
+        if (nextAuthResult?.error) {
+          console.warn("NextAuth login warning:", nextAuthResult.error);
+          // Continue anyway since we have the direct token
+        }
+
+        // Toast is already shown by contextSignIn
+        console.log("Login successful");
+
+        // Navigation is handled by contextSignIn
+        // No need to manually navigate
+      } catch (error: any) {
         console.error("Error during login:", error);
-        // Reset loading on error
+        toast.error(
+          error?.response?.data?.message || "Login failed. Please try again."
+        );
         setLocalLoading(false);
       }
     }
   };
 
-  // Use either Redux loading state or local loading state
-  const showLoading = isLoading || localLoading;
+  // Use any of the loading states
+  const showLoading = reduxLoading || contextLoading || localLoading;
 
-  // For debugging
+  // Focus management
   useEffect(() => {
-    console.log("Redux isLoading changed:", isLoading);
-  }, [isLoading]);
+    if (emailRef.current) {
+      emailRef.current.focus(); // Focus on Email field first
+    }
+  }, []);
 
   return (
     <div className="flex flex-col gap-2 max-w-[730px] w-full mt-[100px] px-0 md:px-10">
@@ -134,6 +166,7 @@ const LoginForm = () => {
               ref={emailRef}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoFocus
             />
             <label
               htmlFor="floatingInput"
@@ -156,10 +189,15 @@ const LoginForm = () => {
               ref={passwordRef}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  onLoginClick();
+                }
+              }}
             />
             <label
               htmlFor="floatingPassword"
-              className="pointer-events-none absolute left-0 top-0 origin-[0_0] border border-solid border-transparent px-3 py-4 text-neutral-500 transition-[opacity,_transform] duration-200 ease-linear peer-focus:-translate-y-2 peer-focus:translate-x-[0.15rem] peer-focus:scale-[0.85] peer-focus:text-neutral-500 peer-[:not(:placeholder-shown)]:-translate-y-2 peer-[:not(:placeholder-shown)]:translate-x-[0.15rem] peer-[:not(:placeholder-shown)]:scale-[0.85] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-neutral-500"
+              className="pointer-events-none absolute left-0 top-0 origin-[0_0] border border-solid border-transparent px-3 py-4 text-neutral-500 transition-[opacity,_transform] duration-200 ease-linear peer-focus:-translate-y-2 peer-focus:translate-x-[0.15rem] peer-focus:scale-[0.85] peer-focus:text-neutral-500 peer-[:not(:placeholder-shown)]:-translate-y-2 peer-[:not(:placeholder-shown)]:translate-x-[0.15rem] peer-[:not(:placeholder-shown)]:scale-[0.85] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-neutral-500 "
             >
               Password
             </label>

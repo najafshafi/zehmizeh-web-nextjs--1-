@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useChatMessages } from "@/helpers/hooks/useChatMessages";
 import { fetchMyConversation } from "@/store/redux/slices/talkjsSlice";
 import { AppDispatch } from "@/store/redux/store";
+import { useSession } from "next-auth/react";
 
 // Types for better type safety
 interface NavigationItem {
@@ -28,6 +29,7 @@ interface MenuItem {
 
 const NavbarProfile = () => {
   const { signout, user } = useAuth();
+  const { data: session } = useSession();
   const pathname = usePathname() || ""; // Handle null pathname
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -156,9 +158,11 @@ const NavbarProfile = () => {
 
     // Use the global logout function if available, otherwise fall back to context signout
     if (typeof window !== "undefined" && "handleGlobalLogout" in window) {
+      console.log("Using global logout function");
       // @ts-expect-error - Global function added by NavbarLogin
       window.handleGlobalLogout();
     } else {
+      console.log("Fallback: using context signout");
       // Fallback to original logout logic
       signout();
       // Add small delay before navigation to ensure auth state updates

@@ -1,25 +1,25 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { IFreelancerDetails } from '@/helpers/types/freelancer.type';
-import { IClientDetails } from '@/helpers/types/client.type';
-import { getStorageUser, getToken } from '@/helpers/services/auth';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+import { IClientDetails } from "@/helpers/types/client.type";
+import { getStorageUser, getToken } from "@/helpers/services/auth";
 
 // Add bootstrapUser thunk
 export const bootstrapUser = createAsyncThunk(
-  'auth/bootstrapUser',
+  "auth/bootstrapUser",
   async (_, { dispatch }) => {
     try {
       const user = getStorageUser();
       const token = getToken();
-      
+
       if (user && token) {
         dispatch(setUser(user));
         dispatch(setToken(token));
       }
-      
-      dispatch(setBootstraping(false));
+
+      return { success: true };
     } catch (error) {
-      console.error('Error bootstrapping user:', error);
-      dispatch(setBootstraping(false));
+      console.error("Error bootstrapping user:", error);
+      throw error;
     }
   }
 );
@@ -39,7 +39,7 @@ const initialState: AuthState = {
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     setUser: (state, action) => {
@@ -63,6 +63,18 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(bootstrapUser.pending, (state) => {
+        state.isBootstrapping = true;
+      })
+      .addCase(bootstrapUser.fulfilled, (state) => {
+        state.isBootstrapping = false;
+      })
+      .addCase(bootstrapUser.rejected, (state) => {
+        state.isBootstrapping = false;
+      });
   },
 });
 

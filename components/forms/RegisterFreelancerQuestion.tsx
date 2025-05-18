@@ -1,8 +1,7 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import CustomButton from "../custombutton/CustomButton";
-import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface FreelancerQuestionData {
@@ -16,24 +15,33 @@ interface RegisterFreelancerQuestionProps {
 
 const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = ({
   onNext,
-  //initialData,
+  initialData = { accountType: "freelancer" },
 }) => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const type = pathname ? pathname.split("/")[2] : "";
+  const [accountType, setAccountType] = useState(initialData.accountType);
+  const [pathType, setPathType] = useState<string>("");
+
+  // Use effect to get the path from window location
+  useEffect(() => {
+    const path = window.location.pathname;
+    const pathSegments = path.split("/");
+    const type = pathSegments.length > 2 ? pathSegments[2] : "";
+    setPathType(type);
+  }, []);
 
   const clientAccount = () => {
-    router.push("/register/employer");
+    setAccountType("employer");
+    window.location.href = "/register/employer";
   };
 
   const freelancerAccount = () => {
-    router.push("/register/freelancer");
+    setAccountType("freelancer");
+    window.location.href = "/register/freelancer";
   };
 
   const handleNext = () => {
     // Return the account type data to the parent component
     onNext({
-      accountType: type || "freelancer",
+      accountType: pathType || "freelancer",
     });
   };
 
@@ -67,7 +75,7 @@ const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = ({
           <CustomButton
             text="Client - I Want to Hire Freelancers"
             className={`px-3 py-4 rounded-2xl text-black ${
-              type === "employer"
+              pathType === "employer"
                 ? "border-2 border-black"
                 : "border border-gray-300"
             } md:text-[18px] text-[16px]`}
@@ -76,7 +84,7 @@ const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = ({
           <CustomButton
             text="Freelancer - I Want to Be Hired"
             className={`px-3 py-4 rounded-2xl text-black ${
-              type === "employer"
+              pathType === "employer"
                 ? "border border-gray-300"
                 : " border-2 border-black"
             } md:text-[18px] text-[16px]`}

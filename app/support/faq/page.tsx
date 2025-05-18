@@ -1,9 +1,5 @@
-import Support from "../Support";
+import FaqClientWrapper from "./FaqClientWrapper";
 
 export default function SupportFaqPage() {
-  return (
-    <div className="pt-[110px] bg-secondary flex flex-col items-center">
-      <Support />
-    </div>
-  );
+  return <FaqClientWrapper />;
 }
