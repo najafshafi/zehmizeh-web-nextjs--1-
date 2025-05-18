@@ -1,11 +1,7 @@
-import Support from "../../Support";
+import FaqClientWrapper from "../FaqClientWrapper";
 
 export default function SupportFaqSection() {
-  return (
-    <div className="pt-[110px] bg-secondary flex flex-col items-center">
-      <Support />
-    </div>
-  );
+  return <FaqClientWrapper />;
 }
 
 export async function generateStaticParams() {

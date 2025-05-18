@@ -6,17 +6,6 @@ import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css"; // Import default styles
 import CustomButton from "../custombutton/CustomButton";
 
-interface RegisterEmployerDetailsProps {
-  onNext: (data: EmployerDetailsData) => void;
-  onBack: () => void;
-}
-
-interface CountryData {
-  id: string;
-  name: string;
-  states: string[];
-}
-
 interface EmployerDetailsData {
   firstName: string;
   lastName: string;
@@ -26,7 +15,19 @@ interface EmployerDetailsData {
   country: string;
   state: string;
   phone: string;
-  companyName?: string;
+  companyName: string;
+}
+
+interface RegisterEmployerDetailsProps {
+  onNext: (data: EmployerDetailsData) => void;
+  onBack: () => void;
+  initialData: EmployerDetailsData;
+}
+
+interface CountryData {
+  id: string;
+  name: string;
+  states: string[];
 }
 
 const countryStates: CountryData[] = [
@@ -285,16 +286,19 @@ const countryStates: CountryData[] = [
 const RegisterEmployerDetails: React.FC<RegisterEmployerDetailsProps> = ({
   onNext,
   onBack,
+  initialData,
 }) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [selectedState, setSelectedState] = useState("");
-  const [phone, setPhone] = useState<string | undefined>("");
+  const [firstName, setFirstName] = useState(initialData.firstName);
+  const [lastName, setLastName] = useState(initialData.lastName);
+  const [companyName, setCompanyName] = useState(initialData.companyName);
+  const [email, setEmail] = useState(initialData.email);
+  const [password, setPassword] = useState(initialData.password);
+  const [confirmPassword, setConfirmPassword] = useState(
+    initialData.confirmPassword
+  );
+  const [selectedCountry, setSelectedCountry] = useState(initialData.country);
+  const [selectedState, setSelectedState] = useState(initialData.state);
+  const [phone, setPhone] = useState<string | undefined>(initialData.phone);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
@@ -419,8 +423,8 @@ const RegisterEmployerDetails: React.FC<RegisterEmployerDetailsProps> = ({
         confirmPassword,
         country: selectedCountry,
         state: selectedState,
-        phone: phone || '',
-        companyName: companyName || undefined
+        phone: phone || "",
+        companyName: companyName || "",
       };
       onNext(formData);
     }
@@ -748,7 +752,9 @@ const RegisterEmployerDetails: React.FC<RegisterEmployerDetailsProps> = ({
             </label>
           </div>
           {confirmPasswordError && (
-            <p className="text-red-600 text-[15px] pl-1">{confirmPasswordError}</p>
+            <p className="text-red-600 text-[15px] pl-1">
+              {confirmPasswordError}
+            </p>
           )}
         </div>
 

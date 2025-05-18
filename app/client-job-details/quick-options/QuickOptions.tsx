@@ -16,6 +16,7 @@ import useResponsive from "@/helpers/hooks/useResponsive";
 import { isNotAllowedToSubmitReview } from "@/helpers/utils/helper";
 import { TcomponentConnectorRef } from "../ClientJobDetails";
 import CustomButton from "@/components/custombutton/CustomButton";
+import PropTypes from "prop-types";
 
 // Import the components that might use browser APIs with SSR disabled
 const SelectJobModal = dynamic(
@@ -873,6 +874,33 @@ const QuickOptions: React.FC<Props> = ({
       />
     </>
   );
+};
+
+QuickOptions.propTypes = {
+  jobData: PropTypes.shape({
+    jobType: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+    is_completed: PropTypes.number,
+    job_reason: PropTypes.string,
+    milestones: PropTypes.array.isRequired,
+    openEndJobStatusModal: PropTypes.bool,
+    endJobStatus: PropTypes.string,
+    jobPostId: PropTypes.string.isRequired,
+    freelancerUserId: PropTypes.string.isRequired,
+    activeTab: PropTypes.string,
+    closureReqBy: PropTypes.string,
+    isClosureRequest: PropTypes.number,
+    isFinalMilestonePosted: PropTypes.bool,
+    enableEndJobButton: PropTypes.bool,
+    freelancerData: PropTypes.shape({
+      first_name: PropTypes.string.isRequired,
+      last_name: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  refetch: PropTypes.func.isRequired,
+  goToMilestonesTab: PropTypes.func.isRequired,
+  onEndJobModal: PropTypes.func.isRequired,
+  componentConnectorRef: PropTypes.object,
 };
 
 export default QuickOptions;

@@ -40,8 +40,10 @@ function Payments() {
           setIsLoading(false);
         }
       });
+    } else {
+      setIsLoading(false);
     }
-  }, []);
+  }, [user?.user_type]);
 
   // convert currency with their currency symbol
   const numberWithCommas = (value: number) => {

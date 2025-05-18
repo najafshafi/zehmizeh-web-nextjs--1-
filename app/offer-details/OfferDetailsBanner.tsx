@@ -112,8 +112,7 @@ const OfferDetailsBanner = ({ data, updateProposalSubmitted }: any) => {
 
   useEffect(() => {
     setWarningPopupCount(getMessageInvitePopupCount(data.job_post_id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  });
+  }, [getMessageInvitePopupCount, data.job_post_id]);
 
   return (
     <>
