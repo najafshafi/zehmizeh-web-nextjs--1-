@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
 // This middleware will run on all routes specified in the matcher
-export function middleware(request: NextRequest) {
-  // Get the token from the cookies
-  const token = request.cookies.get("token")?.value;
+export async function middleware(request: NextRequest) {
+  // Get the path
   const { pathname } = request.nextUrl;
 
   // Allow access to public routes without authentication
@@ -25,29 +25,54 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/home");
 
   // Special case for freelancer profiles - allow viewing without authentication
-  // Use a more permissive pattern to match freelancer profiles
   const isFreelancerProfileRoute = pathname.includes("/freelancer/");
 
-  // // Log the path and whether it's a freelancer profile for debugging
-  // console.log(`Middleware Path: ${pathname}`);
-  // console.log(`Is Public Route: ${isPublicRoute}`);
-  // console.log(`Is Freelancer Profile: ${isFreelancerProfileRoute}`);
-  // console.log(`Has Token: ${!!token}`);
+  // API routes should be handled by NextAuth directly
+  const isApiAuthRoute = pathname.startsWith("/api/auth");
+
+  if (isApiAuthRoute) {
+    return NextResponse.next();
+  }
+
+  // Check for authentication - first try NextAuth token
+  const session = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+
+  // Check for legacy token in cookie
+  const legacyToken = request.cookies.get("token")?.value;
+
+  // Remove client-side code from middleware, which only runs server-side
+  // We'll handle localStorage in a useEffect in the app
+
+  // User is authenticated if they have either a NextAuth session or a legacy token
+  const isAuthenticated = !!session || !!legacyToken;
 
   // If the user is not authenticated and trying to access a protected route
-  if (!token && !isPublicRoute && !isFreelancerProfileRoute) {
-    // Log the redirect
-    // console.log(`Redirecting to login from ${pathname}`);
-
+  if (!isAuthenticated && !isPublicRoute && !isFreelancerProfileRoute) {
     // Create the URL for the login page with a redirect parameter
     const url = new URL("/login", request.url);
     url.searchParams.set("from", pathname);
     return NextResponse.redirect(url);
   }
 
-  // Log that we're allowing access
-  // console.log(`Allowing access to ${pathname}`);
-  return NextResponse.next();
+  // Pass the request through
+  const response = NextResponse.next();
+
+  // If user is authenticated with NextAuth but doesn't have a legacy token cookie,
+  // add it for compatibility with legacy code
+  if (session?.apiToken && !legacyToken) {
+    response.cookies.set({
+      name: "token",
+      value: session.apiToken as string,
+      path: "/",
+      maxAge: 30 * 24 * 60 * 60, // 30 days
+      sameSite: "lax",
+    });
+  }
+
+  return response;
 }
 
 // Configure paths that should trigger this middleware

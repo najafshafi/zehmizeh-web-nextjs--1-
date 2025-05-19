@@ -21,6 +21,7 @@ import { isStagingEnv } from "@/helpers/utils/helper";
 import { setCookie } from "@/helpers/utils/cookieHelper";
 import { Toaster } from "react-hot-toast";
 import AppLayout from "../layout/AppLayout";
+import { AnyAction } from "@reduxjs/toolkit";
 
 // Constants
 const INTERCOM_APP_ID = process.env.NEXT_PUBLIC_INTERCOM_APP_ID || "";
@@ -79,7 +80,7 @@ function ClientBootstrap({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     setIsClient(true);
-    dispatch(bootstrapUser() as any);
+    dispatch(bootstrapUser() as unknown as AnyAction);
   }, [dispatch]);
 
   useEffect(() => {

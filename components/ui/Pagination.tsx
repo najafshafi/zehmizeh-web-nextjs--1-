@@ -3,6 +3,7 @@
 
 import ChevronUp from "@/public/icons/chevronUp.svg";
 import ChevronDown from "@/public/icons/chevronDown.svg";
+
 interface PaginationProps {
   total: number;
   currentPage: number;
@@ -45,7 +46,7 @@ export default function PaginationComponent({
         <div className="previous-next">
           <button
             onClick={() => handlePageClick(Math.max(currentPage - 1, 1))}
-            className="btn flex justify-center items-center border-none shadow-none"
+            className="btn flex justify-center items-center border-none shadow-none transform -rotate-90"
             disabled={currentPage === 1}
           >
             <ChevronUp />
@@ -58,7 +59,11 @@ export default function PaginationComponent({
               <li className={currentPage === 1 ? "active" : ""}>
                 <button
                   onClick={() => handlePageClick(1)}
-                  className="relative flex items-center justify-center h-12 w-12 rounded-[10px] border-none bg-white mr-2.5 shadow-[0px_4.8px_28.8px_rgba(0,0,0,0.08)] text-[#999] hover:scale-110 hover:transition-all hover:duration-200 hover:ease-in-out"
+                  className={`relative flex items-center justify-center h-12 w-12 rounded-[10px] border-none bg-white mr-2.5 shadow-[0px_4.8px_28.8px_rgba(0,0,0,0.08)] hover:scale-110 hover:transition-all hover:duration-200 hover:ease-in-out ${
+                    currentPage === 1
+                      ? "bg-[#343a40] text-white"
+                      : "text-[#999]"
+                  }`}
                 >
                   1
                 </button>
@@ -78,7 +83,11 @@ export default function PaginationComponent({
               <li key={page} className={currentPage === page ? "active" : ""}>
                 <button
                   onClick={() => handlePageClick(page)}
-                  className="relative flex items-center justify-center h-12 w-12 rounded-[10px] border-none bg-white mr-2.5 shadow-[0px_4.8px_28.8px_rgba(0,0,0,0.08)] text-[#999] hover:scale-110 hover:transition-all hover:duration-200 hover:ease-in-out"
+                  className={`relative flex items-center justify-center h-12 w-12 rounded-[10px] border-none bg-white mr-2.5 shadow-[0px_4.8px_28.8px_rgba(0,0,0,0.08)] hover:scale-110 hover:transition-all hover:duration-200 hover:ease-in-out ${
+                    currentPage === page
+                      ? "bg-[#343a40] text-white"
+                      : "text-[#999]"
+                  }`}
                 >
                   {page}
                 </button>
@@ -86,37 +95,23 @@ export default function PaginationComponent({
             )
           )}
 
-          {end < totalPages - 1 && (
-            <>
-              <li>
-                <button className="relative flex items-center justify-center h-12 w-12 rounded-[10px] border-none bg-white mr-2.5 shadow-[0px_4.8px_28.8px_rgba(0,0,0,0.08)] text-[#999] cursor-default">
-                  ...
-                </button>
-              </li>
-              <li className={currentPage === totalPages - 1 ? "active" : ""}>
-                <button
-                  onClick={() => handlePageClick(totalPages - 1)}
-                  className="relative flex items-center justify-center h-12 w-12 rounded-[10px] border-none bg-white mr-2.5 shadow-[0px_4.8px_28.8px_rgba(0,0,0,0.08)] text-[#999] hover:scale-110 hover:transition-all hover:duration-200 hover:ease-in-out"
-                >
-                  {totalPages - 1}
-                </button>
-              </li>
-              <li className={currentPage === totalPages ? "active" : ""}>
-                <button
-                  onClick={() => handlePageClick(totalPages)}
-                  className="relative flex items-center justify-center h-12 w-12 rounded-[10px] border-none bg-white mr-2.5 shadow-[0px_4.8px_28.8px_rgba(0,0,0,0.08)] text-[#999] hover:scale-110 hover:transition-all hover:duration-200 hover:ease-in-out"
-                >
-                  {totalPages}
-                </button>
-              </li>
-            </>
+          {end < totalPages && end < totalPages - 1 && (
+            <li>
+              <button className="relative flex items-center justify-center h-12 w-12 rounded-[10px] border-none bg-white mr-2.5 shadow-[0px_4.8px_28.8px_rgba(0,0,0,0.08)] text-[#999] cursor-default">
+                ...
+              </button>
+            </li>
           )}
 
-          {end === totalPages - 1 && (
+          {end < totalPages && (
             <li className={currentPage === totalPages ? "active" : ""}>
               <button
                 onClick={() => handlePageClick(totalPages)}
-                className="relative flex items-center justify-center h-12 w-12 rounded-[10px] border-none bg-white mr-2.5 shadow-[0px_4.8px_28.8px_rgba(0,0,0,0.08)] text-[#999] hover:scale-110 hover:transition-all hover:duration-200 hover:ease-in-out"
+                className={`relative flex items-center justify-center h-12 w-12 rounded-[10px] border-none bg-white mr-2.5 shadow-[0px_4.8px_28.8px_rgba(0,0,0,0.08)] hover:scale-110 hover:transition-all hover:duration-200 hover:ease-in-out ${
+                  currentPage === totalPages
+                    ? "bg-[#343a40] text-white"
+                    : "text-[#999]"
+                }`}
               >
                 {totalPages}
               </button>
@@ -129,31 +124,13 @@ export default function PaginationComponent({
             onClick={() =>
               handlePageClick(Math.min(currentPage + 1, totalPages))
             }
-            className="next btn flex justify-center items-center border-none shadow-none"
+            className="next btn flex justify-center items-center border-none shadow-none transform rotate-90"
             disabled={currentPage === totalPages}
           >
             <ChevronDown />
           </button>
         </div>
       </div>
-
-      <style jsx>{`
-        .active button {
-          background-color: #343a40 !important;
-          border-color: #343a40;
-          color: #fff !important;
-        }
-        .next {
-          transform: rotate(90deg);
-        }
-        .btn {
-          margin: auto;
-          padding: 0;
-          border: none;
-          transform: rotate(-90deg);
-          cursor: pointer;
-        }
-      `}</style>
     </div>
   );
 }

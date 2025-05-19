@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import ClientProvider from "../components/ClientProvider/ClientProvider";
-import { Providers } from "@/store/provider";
+import { Toaster } from "react-hot-toast";
+import AuthProvider from "@/providers/AuthProvider";
+import UnifiedQueryProvider from "@/providers/UnifiedQueryProvider";
+import ReduxProvider from "@/providers/reduxProvider";
+import IntercomProvider from "@/providers/IntercomProvider";
+import ThemeProvider from "@/providers/ThemeProvider";
+import ClientLayout from "@/components/layout/ClientLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,9 +35,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>
-          <ClientProvider>{children}</ClientProvider>
-        </Providers>
+        <IntercomProvider>
+          <AuthProvider>
+            <UnifiedQueryProvider>
+              <ReduxProvider>
+                <ThemeProvider>
+                  <ClientLayout>{children}</ClientLayout>
+                  <Toaster position="top-center" />
+                </ThemeProvider>
+              </ReduxProvider>
+            </UnifiedQueryProvider>
+          </AuthProvider>
+        </IntercomProvider>
       </body>
     </html>
   );
