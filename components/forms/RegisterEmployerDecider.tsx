@@ -46,7 +46,8 @@ const DynamicRegisterEmployerDetails = dynamic(
   { ssr: false, loading: () => <FormLoading /> }
 );
 
-const RegisterEmployerDecider = () => {
+// Client component with all the logic
+const RegisterEmployerDeciderClient = () => {
   const [currentPage, setCurrentPage] = useState(1);
   // State to hold form data from each step
   const [formData, setFormData] = useState<EmployerFormData>({
@@ -170,6 +171,15 @@ const RegisterEmployerDecider = () => {
         {renderCurrentPage()}
       </div>
     </div>
+  );
+};
+
+// Main wrapper component with Suspense
+const RegisterEmployerDecider = () => {
+  return (
+    <Suspense fallback={<FormLoading />}>
+      <RegisterEmployerDeciderClient />
+    </Suspense>
   );
 };
 

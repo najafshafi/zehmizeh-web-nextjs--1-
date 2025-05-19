@@ -3,7 +3,7 @@ import { FAQ_QUESTIONS } from "@/helpers/const/faqQuestions";
 import BackButton from "@/components/ui/BackButton";
 import styled from "styled-components";
 import { breakpoints } from "@/helpers/hooks/useResponsive";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import CustomButton from "@/components/custombutton/CustomButton";
 
@@ -77,7 +77,16 @@ const AccordionItem = ({ item }: { item: FaqItem }) => {
   );
 };
 
-const FaqForm = () => {
+// Loading component for Suspense fallback
+const FaqLoading = () => (
+  <div className="flex justify-center items-center p-8">
+    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+    <p className="ml-2">Loading FAQ content...</p>
+  </div>
+);
+
+// Client component that uses the navigation hooks
+const FaqFormClient = () => {
   const { user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -182,6 +191,15 @@ const FaqForm = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+// Main component wrapped in Suspense boundary
+const FaqForm = () => {
+  return (
+    <Suspense fallback={<FaqLoading />}>
+      <FaqFormClient />
+    </Suspense>
   );
 };
 

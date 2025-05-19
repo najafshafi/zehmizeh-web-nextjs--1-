@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useRef, useState, Suspense } from "react";
 import { IoEyeOutline } from "react-icons/io5";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css"; // Import default styles
@@ -288,21 +288,34 @@ const countryStates: CountryData[] = [
   },
 ];
 
-const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
-  onNext,
-  onBack,
-  initialData,
-}) => {
-  const [firstName, setFirstName] = useState(initialData?.firstName || "");
+// Loading component for Suspense fallback
+const DetailsLoading = () => (
+  <div className="flex justify-center items-center p-8">
+    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+    <p className="ml-2">Loading form details...</p>
+  </div>
+);
+
+// Client component
+const RegisterFreelancerDetailsClient: React.FC<
+  RegisterFreelancerDetailsProps
+> = ({ onNext, onBack, initialData }) => {
   const [isAgency, setIsAgency] = useState(initialData?.isAgency || false);
+  const [agencyName, setAgencyName] = useState(initialData?.agencyName || "");
+  const [firstName, setFirstName] = useState(initialData?.firstName || "");
   const [lastName, setLastName] = useState(initialData?.lastName || "");
   const [email, setEmail] = useState(initialData?.email || "");
   const [password, setPassword] = useState(initialData?.password || "");
-  const [confirmPassword, setConfirmPassword] = useState(initialData?.confirmPassword || "");
-  const [selectedCountry, setSelectedCountry] = useState(initialData?.country || "");
+  const [confirmPassword, setConfirmPassword] = useState(
+    initialData?.confirmPassword || ""
+  );
+  const [selectedCountry, setSelectedCountry] = useState(
+    initialData?.country || ""
+  );
   const [selectedState, setSelectedState] = useState(initialData?.state || "");
-  const [phone, setPhone] = useState<string | undefined>(initialData?.phone || "");
-  const [agencyName, setAgencyName] = useState(initialData?.agencyName || "");
+  const [phone, setPhone] = useState<string | undefined>(
+    initialData?.phone || ""
+  );
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
@@ -311,19 +324,18 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
-  const agencyNameRef = useRef<HTMLInputElement>(null);
 
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
+  const agencyNameRef = useRef<HTMLInputElement>(null);
 
   const [isFocusedFirstName, setIsFocusedFirstName] = useState(false);
   const [isFocusedLastName, setIsFocusedLastName] = useState(false);
-  const [isFocusedAgencyName, setIsFocusedAgencyName] = useState(false);
-
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
   const [isFocusedConfirmPassword, setIsFocusedConfirmPassword] =
     useState(false);
+  const [isFocusedAgencyName, setIsFocusedAgencyName] = useState(false);
 
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
@@ -333,9 +345,18 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
   const [countryError, setCountryError] = useState("");
   const [stateError, setStateError] = useState("");
   const [phoneError, setPhoneError] = useState("");
+  const [agencyNameError, setAgencyNameError] = useState("");
 
   const validateForm = () => {
     let isValid = true;
+
+    if (isAgency && !agencyName) {
+      setAgencyNameError("Agency name is required.");
+      isValid = false;
+    } else {
+      setAgencyNameError("");
+    }
+
     if (!firstName) {
       setFirstNameError("First name is required.");
       isValid = false;
@@ -401,13 +422,11 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
     return isValid;
   };
 
-
   const handleNext = () => {
     if (validateForm()) {
-      // Prepare data to send back to parent component
-      const detailsData: FreelancerDetailsData = {
+      const formData: FreelancerDetailsData = {
         isAgency,
-        agencyName: isAgency ? agencyName : undefined,
+        agencyName: isAgency ? agencyName : "",
         firstName,
         lastName,
         email,
@@ -417,9 +436,7 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
         state: selectedState,
         phone: phone || "",
       };
-      
-      console.log("Form is valid", detailsData);
-      onNext(detailsData);
+      onNext(formData);
     }
   };
 
@@ -649,7 +666,7 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
           />
           <style jsx>{`
             .PhoneInputCountryIcon {
-              width: 15px !important; 
+              width: 15px !important;
               height: 15px !important;
             }
             input {
@@ -663,7 +680,6 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
               box-shadow: none !important;
             }
           `}</style>
-           
         </div>
         {phoneError && (
           <p className="text-red-600 text-[15px] pl-1">{phoneError}</p>
@@ -828,6 +844,17 @@ const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = ({
         </div>
       </div>
     </div>
+  );
+};
+
+// Main component wrapped in Suspense boundary
+const RegisterFreelancerDetails: React.FC<RegisterFreelancerDetailsProps> = (
+  props
+) => {
+  return (
+    <Suspense fallback={<DetailsLoading />}>
+      <RegisterFreelancerDetailsClient {...props} />
+    </Suspense>
   );
 };
 

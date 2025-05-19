@@ -31,6 +31,15 @@ const nextConfig = {
         });
         return config;
     },
+    // Config for production server
+    poweredByHeader: false,
+    logging: {
+        fetches: {
+            fullUrl: true,
+        },
+    },
+    // Improve production performance
+    reactStrictMode: false, // Disable strict mode for production
 };
 
 module.exports = nextConfig; 

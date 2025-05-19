@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import CustomButton from "../custombutton/CustomButton";
 import Link from "next/link";
 
@@ -13,10 +13,18 @@ interface RegisterEmployerQuestionProps {
   initialData?: EmployerQuestionData;
 }
 
-const RegisterEmployerQuestion: React.FC<RegisterEmployerQuestionProps> = ({
-  onNext,
-  initialData = { accountType: "employer" },
-}) => {
+// Loading component for Suspense fallback
+const QuestionLoading = () => (
+  <div className="flex justify-center items-center p-8">
+    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+    <p className="ml-2">Loading registration question...</p>
+  </div>
+);
+
+// Client component
+const RegisterEmployerQuestionClient: React.FC<
+  RegisterEmployerQuestionProps
+> = ({ onNext, initialData = { accountType: "employer" } }) => {
   const [accountType, setAccountType] = useState(initialData.accountType);
   const [pathType, setPathType] = useState<string>("");
 
@@ -103,6 +111,17 @@ const RegisterEmployerQuestion: React.FC<RegisterEmployerQuestionProps> = ({
         </div>
       </div>
     </div>
+  );
+};
+
+// Main component wrapped in Suspense boundary
+const RegisterEmployerQuestion: React.FC<RegisterEmployerQuestionProps> = (
+  props
+) => {
+  return (
+    <Suspense fallback={<QuestionLoading />}>
+      <RegisterEmployerQuestionClient {...props} />
+    </Suspense>
   );
 };
 

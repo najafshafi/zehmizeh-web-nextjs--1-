@@ -1,19 +1,27 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import Spinner from "@/components/forms/Spin/Spinner";
 
-// Loading component for Suspense fallback
+// Loading component
 const RegisterLoading = () => (
   <div className="flex flex-col w-full items-center justify-center bg-secondary min-h-[70vh] pt-[110px]">
-    <Spinner className="w-8 h-8" />
+    <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
     <p className="mt-4 text-gray-600">Loading registration form...</p>
   </div>
 );
 
-// ClientSide wrapper to handle useSearchParams
-const RegisterEmployerClientComponent = () => {
+// Dynamically import with no SSR
+const DynamicRegisterEmployerWrapper = dynamic(
+  () => import("./RegisterEmployerWrapper"),
+  {
+    ssr: false,
+    loading: () => <RegisterLoading />,
+  }
+);
+
+// Client-side wrapper component
+const RegisterEmployerClient = () => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -24,23 +32,14 @@ const RegisterEmployerClientComponent = () => {
     return <RegisterLoading />;
   }
 
-  return <DynamicRegisterEmployerDecider />;
+  return <DynamicRegisterEmployerWrapper />;
 };
-
-// Dynamically import RegisterEmployerDecider with no SSR
-const DynamicRegisterEmployerDecider = dynamic(
-  () => import("@/components/forms/RegisterEmployerDecider"),
-  {
-    ssr: false,
-    loading: () => <RegisterLoading />,
-  }
-);
 
 export default function RegisterEmployerPage() {
   return (
     <div className="flex flex-col w-full items-center bg-secondary min-h-[140vh]">
       <Suspense fallback={<RegisterLoading />}>
-        <RegisterEmployerClientComponent />
+        <RegisterEmployerClient />
       </Suspense>
     </div>
   );

@@ -15,6 +15,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
 import { bootstrapUser, setBootstraping } from "@/store/redux/slices/authSlice";
 import Loader from "@/components/Loader";
+import { IFreelancerDetails } from "@/helpers/types/freelancer.type";
+import { IClientDetails } from "@/helpers/types/client.type";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -63,34 +65,46 @@ export default function ClientLayout({
   const { loading: loginAsUserLoading } = useIsLoginAsUser();
   const [forceReady, setForceReady] = useState(false);
   const [isAosInitialized, setIsAosInitialized] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Mark when component is mounted on client
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Bootstrap the user when the component mounts
   useEffect(() => {
-    dispatch(bootstrapUser() as any);
+    if (isClient) {
+      dispatch(bootstrapUser() as any);
 
-    // Safety timeout - force continue after 2 seconds even if bootstrapping gets stuck
-    const timer = setTimeout(() => {
-      setForceReady(true);
-      dispatch(setBootstraping(false));
-    }, 2000);
+      // Safety timeout - force continue after 1 second even if bootstrapping gets stuck
+      const timer = setTimeout(() => {
+        setForceReady(true);
+        dispatch(setBootstraping(false));
+      }, 1000);
 
-    return () => clearTimeout(timer);
-  }, [dispatch]);
+      return () => clearTimeout(timer);
+    }
+  }, [dispatch, isClient]);
 
   // Initialize AOS
   useEffect(() => {
-    if (!isAosInitialized && typeof window !== "undefined") {
-      AOS.init(AOS_CONFIG);
-      setIsAosInitialized(true);
+    if (!isAosInitialized && isClient) {
+      try {
+        AOS.init(AOS_CONFIG);
+        setIsAosInitialized(true);
+      } catch (error) {
+        console.error("Error initializing AOS:", error);
+      }
     }
-  }, [isAosInitialized]);
+  }, [isAosInitialized, isClient]);
 
   // Scroll to top on route change
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (isClient) {
       window.scrollTo(0, 0);
     }
-  }, [pathname]);
+  }, [pathname, isClient]);
 
   // Define routes where header and footer should be hidden
   const hideHeaderFooter = React.useMemo(() => {
@@ -112,17 +126,25 @@ export default function ClientLayout({
     );
   }, [pathname]);
 
-  // Loading state handling
-  const isLoading = (isBootstrapping || loginAsUserLoading) && !forceReady;
+  // Get user from localStorage if Redux state is not available (but only on client)
+  const actualUser = isClient ? user || getStorageUser() : null;
 
-  // Get user from localStorage if Redux state is not available
-  const actualUser = user || getStorageUser();
+  // Loading state handling - show spinner only briefly during bootstrapping
+  const isLoading =
+    isClient && (isBootstrapping || loginAsUserLoading) && !forceReady;
 
-  // Show a loader while bootstrapping
+  // Check if user is a freelancer
+  const isFreelancer = actualUser?.user_type === "freelancer";
+
+  // Get token
+  const token = isClient ? getToken() : null;
+
+  // Show a loader while bootstrapping, but only on client
   if (isLoading) {
     return <Loader height={300} />;
   }
 
+  // In SSR or initial render, show content without additional checks
   return (
     <div className="App">
       {!hideHeaderFooter && <NavbarLogin />}
@@ -131,9 +153,9 @@ export default function ClientLayout({
       <main className="fade-enter-active fade-enter-done">{children}</main>
 
       {!hideHeaderFooter && <Footer />}
-      {actualUser?.user_type === "freelancer" &&
-        !!getToken() &&
-        !hideHeaderFooter && <GetStarted user={actualUser} isLoading={false} />}
+      {isClient && isFreelancer && token && !hideHeaderFooter && (
+        <GetStarted user={actualUser as IFreelancerDetails} isLoading={false} />
+      )}
     </div>
   );
 }

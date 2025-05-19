@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Spinner from "@/components/forms/Spin/Spinner";
 
@@ -18,11 +18,26 @@ const DynamicJobs = dynamic(() => import("./Jobs"), {
   loading: () => <JobsLoading />,
 });
 
+// Client-side wrapper component
+const JobsClient = () => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return <JobsLoading />;
+  }
+
+  return <DynamicJobs />;
+};
+
 export default function JobsPage() {
   return (
     <div className="pt-[110px] bg-secondary flex flex-col items-center">
       <Suspense fallback={<JobsLoading />}>
-        <DynamicJobs />
+        <JobsClient />
       </Suspense>
     </div>
   );

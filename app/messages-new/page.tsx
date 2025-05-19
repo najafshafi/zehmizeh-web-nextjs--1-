@@ -1,16 +1,3 @@
-// "use client";
-
-// import NewMessagingPage from "@/pages/newmessaging-page";
-// import { Suspense } from "react";
-
-// export default function MessagesNew() {
-//   return (
-//     <Suspense fallback={<div>Loading new messaging interface...</div>}>
-//       <NewMessagingPage />
-//     </Suspense>
-//   );
-// }
-
 import React from "react";
 import TalkJS from "@/components/talkjs/talk-js";
 

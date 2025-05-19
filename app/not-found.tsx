@@ -1,36 +1,41 @@
 "use client";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import CustomButton from "@/components/custombutton/CustomButton";
 
-const Page404: React.FC = () => {
-  const router = useRouter();
+import { Suspense, useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 
-  const goBack = () => {
-    router.back();
-  };
+// Loading component
+const NotFoundLoading = () => (
+  <div className="h-screen flex justify-center items-center flex-col">
+    <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+    <p className="mt-4 text-gray-600">Loading...</p>
+  </div>
+);
 
-  return (
-    <div className="h-screen flex justify-center items-center flex-col">
-      <Image
-        src="/images/notFound.png"
-        width={250}
-        height={200}
-        alt="no-page-found"
-      />
+// Dynamically import 404 component with no SSR
+const Dynamic404 = dynamic(() => import("./NotFoundContent"), {
+  ssr: false,
+  loading: () => <NotFoundLoading />,
+});
 
-      <div className="text-yellow-500 text-5xl font-bold mt-10">404</div>
-      <div className="font-bold text-2xl mt-5 opacity-90">Page not found!</div>
-      <div className="text-black text-center text-lg mb-10">
-        The page you are looking for doesn&apos;t exist or is unavailable.
-      </div>
-      <CustomButton
-        text="Go back"
-        className="px-9 py-4 transition-transform duration-200 hover:scale-105 font-normal text-black rounded-full bg-primary text-[18px]"
-        onClick={goBack}
-      />
-    </div>
-  );
+// Client-side only wrapper component
+const NotFoundClient = () => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return <NotFoundLoading />;
+  }
+
+  return <Dynamic404 />;
 };
 
-export default Page404;
+export default function NotFound() {
+  return (
+    <Suspense fallback={<NotFoundLoading />}>
+      <NotFoundClient />
+    </Suspense>
+  );
+}

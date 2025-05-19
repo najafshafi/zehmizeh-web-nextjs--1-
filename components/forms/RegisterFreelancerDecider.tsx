@@ -47,7 +47,8 @@ const DynamicRegisterFreelancerDetails = dynamic(
   { ssr: false, loading: () => <FormLoading /> }
 );
 
-const RegisterFreelancerDecider = () => {
+// Client component with all the logic
+const RegisterFreelancerDeciderClient = () => {
   const [currentPage, setCurrentPage] = useState(1);
   // State to hold form data from each step
   const [formData, setFormData] = useState<FreelancerFormData>({
@@ -171,6 +172,15 @@ const RegisterFreelancerDecider = () => {
         {renderCurrentPage()}
       </div>
     </div>
+  );
+};
+
+// Main wrapper component with Suspense
+const RegisterFreelancerDecider = () => {
+  return (
+    <Suspense fallback={<FormLoading />}>
+      <RegisterFreelancerDeciderClient />
+    </Suspense>
   );
 };
 

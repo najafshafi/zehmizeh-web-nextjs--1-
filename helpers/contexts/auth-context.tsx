@@ -1,9 +1,9 @@
 "use client";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useQuery, QueryClient, QueryClientProvider } from "react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useRouter, usePathname, useSearchParams } from "next/navigation"; // Next.js navigation hooks
+import { useRouter, usePathname } from "next/navigation"; // Next.js navigation hooks
 import { apiClient } from "@/helpers/http";
 import Loader from "@/components/Loader";
 import { getToken, saveAuthStorage } from "@/helpers/services/auth";
@@ -18,6 +18,30 @@ import {
   isStagingEnv,
   stripeIntercomStatusHandler,
 } from "@/helpers/utils/helper";
+
+// Safely use useSearchParams
+import { useSearchParams as useNextSearchParams } from "next/navigation";
+
+// Create a hook that safely uses useSearchParams only on the client side
+function useSafeSearchParams() {
+  const [searchParams, setSearchParams] = useState<URLSearchParams | null>(
+    null
+  );
+  const [isClient, setIsClient] = useState(false);
+
+  // Only call this on the client side
+  const nextSearchParams =
+    typeof window !== "undefined" ? useNextSearchParams() : null;
+
+  useEffect(() => {
+    setIsClient(true);
+    if (nextSearchParams) {
+      setSearchParams(nextSearchParams);
+    }
+  }, [nextSearchParams]);
+
+  return isClient ? nextSearchParams : null;
+}
 
 // Create dummy Intercom hooks for when IntercomProvider isn't available
 const dummyIntercom: Partial<IntercomContextValues> = {
@@ -96,7 +120,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const router = useRouter();
     const pathname = usePathname();
-    const searchParams = useSearchParams();
+    const searchParams = useSafeSearchParams();
 
     const signout = useCallback(() => {
       logoutApi();

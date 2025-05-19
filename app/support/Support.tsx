@@ -5,6 +5,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { Suspense } from "react";
 import DisputeForm from "./DisputeForm";
 import GeneralInquiryForm from "./GeneralInquiryForm";
 import Tabs from "@/components/ui/Tabs";
@@ -21,7 +22,16 @@ const TABS = [
   //FAQs
 ];
 
-const Support = () => {
+// Loading component
+const SupportLoading = () => (
+  <div className="flex justify-center items-center p-8">
+    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+    <p className="ml-2">Loading support content...</p>
+  </div>
+);
+
+// Client component that uses navigation hooks
+const SupportClient = () => {
   const router = useRouter();
   const pathname = usePathname();
   // Extract the type from the pathname
@@ -77,6 +87,15 @@ const Support = () => {
         )}
       </div>
     </div>
+  );
+};
+
+// Main component that wraps the client component in Suspense
+const Support = () => {
+  return (
+    <Suspense fallback={<SupportLoading />}>
+      <SupportClient />
+    </Suspense>
   );
 };
 

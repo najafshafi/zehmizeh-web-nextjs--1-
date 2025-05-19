@@ -18,7 +18,7 @@ export default function UnifiedQueryProvider({
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 60 * 1000, // 1 minute
+            // staleTime: 60 * 1000, // 1 minute
             gcTime: 5 * 60 * 1000, // 5 minutes
             retry: 1,
             refetchOnWindowFocus: false,
@@ -33,7 +33,7 @@ export default function UnifiedQueryProvider({
       new LegacyQueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 60 * 1000,
+            // staleTime: 60 * 1000,
             cacheTime: 5 * 60 * 1000,
             retry: 1,
             refetchOnWindowFocus: false,

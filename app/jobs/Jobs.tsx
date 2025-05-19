@@ -3,7 +3,7 @@
  */
 
 "use client";
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import cns from "classnames";
 import Loader from "@/components/Loader";
@@ -24,7 +24,8 @@ import PageTitle from "@/components/styled/PageTitle";
 
 const RECORDS_PER_PAGE = 10;
 
-const Jobs = () => {
+// Client component that uses useSearchParams
+const JobsClient = () => {
   useStartPageFromTop();
 
   const { user } = useAuth();
@@ -221,6 +222,23 @@ const Jobs = () => {
         </div>
       )}
     </div>
+  );
+};
+
+// Loading component for Suspense fallback
+const JobsLoading = () => (
+  <div className="flex justify-center items-center p-8">
+    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+    <p className="ml-2">Loading jobs content...</p>
+  </div>
+);
+
+// Main component that wraps the client component in Suspense
+const Jobs = () => {
+  return (
+    <Suspense fallback={<JobsLoading />}>
+      <JobsClient />
+    </Suspense>
   );
 };
 
