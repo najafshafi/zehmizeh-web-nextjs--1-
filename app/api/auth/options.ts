@@ -48,6 +48,7 @@ export const authOptions: NextAuthOptions = {
           // Use the email_id if provided, otherwise fall back to email
           const email = credentials.email_id || credentials.email;
 
+
           // Use the server-side axios instance to avoid client-side interceptors
           const response = await serverApiClient.post("/auth/login", {
             email_id: email,

@@ -16,6 +16,7 @@ import { isStagingEnv } from "@/helpers/utils/helper";
 import { setCookie } from "@/helpers/utils/cookieHelper";
 import { Toaster } from "react-hot-toast";
 import AppLayout from "../layout/AppLayout";
+import { AnyAction } from "@reduxjs/toolkit";
 
 // Constants
 const GA_TRACKING_CODE = process.env.NEXT_PUBLIC_GA_TRACKING_CODE;
@@ -73,7 +74,7 @@ function ClientBootstrap({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     setIsClient(true);
-    dispatch(bootstrapUser() as any);
+    dispatch(bootstrapUser() as unknown as AnyAction);
   }, [dispatch]);
 
   useEffect(() => {

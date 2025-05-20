@@ -35,11 +35,47 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:5005](http://localhost:5005) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Recent Fixes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### useSearchParams Issue Resolved
+
+The application previously had issues during the production build with errors related to the `useSearchParams()` hook:
+
+```
+useSearchParams() should be wrapped in a suspense boundary at page "/[page]"
+```
+
+This has been fixed by:
+
+1. Creating a safe wrapper for `useSearchParams()` in the auth-context.tsx file:
+
+   ```typescript
+   function useSafeSearchParams() {
+     const [searchParams, setSearchParams] = useState<URLSearchParams | null>(
+       null
+     );
+     const [isClient, setIsClient] = useState(false);
+
+     // Only call this on the client side
+     const nextSearchParams =
+       typeof window !== "undefined" ? useNextSearchParams() : null;
+
+     useEffect(() => {
+       setIsClient(true);
+       if (nextSearchParams) {
+         setSearchParams(nextSearchParams);
+       }
+     }, [nextSearchParams]);
+
+     return isClient ? nextSearchParams : null;
+   }
+   ```
+
+2. Adding proper client-side wrappers with Suspense boundaries for pages that access client-side hooks (like the customer-support page).
+
+The production build now works correctly!
 
 ## Learn More
 
@@ -51,7 +87,5 @@ To learn more about Next.js, take a look at the following resources:
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
 ## Deployed on Netlify - [Link](https://zehmizeh.netlify.app/home)
-
-
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import match from "@/public/match.png";
 
 type MatchCardProps = {
   title: string;
@@ -10,10 +11,10 @@ const MatchCard: React.FC<MatchCardProps> = ({ title, count }) => {
     <div className="w-[306px] flex bg-white flex-col items-center justify-between rounded-2xl shadow-md">
       <div className="flex mt-10 flex-col items-center justify-center gap-2">
         <Image
-          src={"/match.png"}
+          src={match}
           alt={title}
-          width={80}
-          height={80}
+          width={100}
+          height={100}
           quality={100}
           loading="lazy"
         />

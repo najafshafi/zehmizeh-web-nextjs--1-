@@ -1,6 +1,14 @@
-import React from "react";
+import PropTypes from "prop-types";
 
-const Spinner = ({ className = "", loadingText = "Loading..." }) => {
+interface SpinnerProps {
+  className?: string;
+  loadingText?: string;
+}
+
+const Spinner = ({
+  className = "",
+  loadingText = "Loading...",
+}: SpinnerProps) => {
   const defaultClasses =
     "w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-white";
   const svgClasses = `${defaultClasses} ${className}`;
@@ -26,6 +34,11 @@ const Spinner = ({ className = "", loadingText = "Loading..." }) => {
       <span className="sr-only bg-black">{loadingText}</span>
     </div>
   );
+};
+
+Spinner.propTypes = {
+  className: PropTypes.string,
+  loadingText: PropTypes.string,
 };
 
 export default Spinner;

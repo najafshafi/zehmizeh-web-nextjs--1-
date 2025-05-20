@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { BsCheck2 } from "react-icons/bs";
 import CrossIcon from "../../public/icons/cross-black.svg";
 import classNames from "classnames";
+import PropTypes from "prop-types";
 
 interface Option {
   label: string;
@@ -67,7 +68,8 @@ const CustomSelect: React.FC<SelectProps> = ({
         className={classNames(
           "flex items-center w-full p-3 border rounded-md",
           {
-            "bg-gray-100": defaultValue && defaultValue.value !== selectedOption.value,
+            "bg-gray-100":
+              defaultValue && defaultValue.value !== selectedOption.value,
           }
         )}
         onClick={() => setShow(!show)}
@@ -94,7 +96,9 @@ const CustomSelect: React.FC<SelectProps> = ({
               }`}
               onClick={() => onClickOption(option)}
             >
-              {selectedOption.value === option.value && <BsCheck2 className="mr-2" />}
+              {selectedOption.value === option.value && (
+                <BsCheck2 className="mr-2" />
+              )}
               <span>{option.label}</span>
             </div>
           ))}
@@ -102,6 +106,23 @@ const CustomSelect: React.FC<SelectProps> = ({
       )}
     </div>
   );
+};
+
+CustomSelect.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
+    })
+  ).isRequired,
+  title: PropTypes.string.isRequired,
+  selected: PropTypes.number,
+  defaultValue: PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  }),
 };
 
 export default CustomSelect;

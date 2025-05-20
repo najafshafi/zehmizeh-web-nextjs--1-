@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { getPaymentFees } from "@/helpers/http/common";

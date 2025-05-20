@@ -1,0 +1,38 @@
+"use client";
+
+import React, { useState, useEffect, Suspense } from "react";
+import Spinner from "@/components/forms/Spin/Spinner";
+import dynamic from "next/dynamic";
+
+// Loading component for client-side state
+const JobPostingLoading = () => (
+  <div className="flex flex-col items-center justify-center min-h-[50vh]">
+    <Spinner className="w-8 h-8" />
+    <p className="mt-4 text-gray-600">Loading job posting form...</p>
+  </div>
+);
+
+// Dynamic import the NewJob component with SSR disabled
+const DynamicNewJob = dynamic(() => import("./NewJob"), {
+  ssr: false,
+  loading: () => <JobPostingLoading />,
+});
+
+// Client-side only wrapper component
+export default function PostJobClientWrapper() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return <JobPostingLoading />;
+  }
+
+  return (
+    <Suspense fallback={<JobPostingLoading />}>
+      <DynamicNewJob params={{}} />
+    </Suspense>
+  );
+}

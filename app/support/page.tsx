@@ -1,4 +1,4 @@
-import Support from "./Support";
+import Support from "@/app/support/Support";
 
 export default function SupportPage() {
   return (

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "@/helpers/contexts/auth-context";
 import { AppDispatch } from "@/store/redux/store";
@@ -36,7 +36,16 @@ interface TalkJsState {
   themes: any;
 }
 
-const TalkJS = ({ singleConversation, conversationId }: Props) => {
+// Loading component for Suspense fallback
+const TalkJSLoading = () => (
+  <div className="flex justify-center items-center p-8">
+    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+    <p className="ml-2">Loading chat...</p>
+  </div>
+);
+
+// Client component that uses the hooks
+const TalkJSClient = ({ singleConversation, conversationId }: Props) => {
   const [open, setOpen] = useState<boolean>(true);
   const [showChatFilter, setShowChatFilter] = useState<boolean>(true);
   const [apiKeyError, setApiKeyError] = useState<boolean>(false);
@@ -147,6 +156,15 @@ const TalkJS = ({ singleConversation, conversationId }: Props) => {
         )}
       </T.Content>
     </T.Wrapper>
+  );
+};
+
+// Main component wrapped in Suspense boundary
+const TalkJS = (props: Props) => {
+  return (
+    <Suspense fallback={<TalkJSLoading />}>
+      <TalkJSClient {...props} />
+    </Suspense>
   );
 };
 

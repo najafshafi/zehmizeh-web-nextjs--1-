@@ -1,9 +1,22 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
-import RegisterEmployerQuestion from "./RegisterEmployerQuestion";
-import RegisterEmployerDetails from "./RegisterEmployerDetails";
+import { useState, Suspense } from "react";
+import dynamic from "next/dynamic";
 import RegisterEmployerAgreement from "./RegisterEmployerAgreement";
+import Spinner from "@/components/forms/Spin/Spinner";
+
+// Loading component for forms
+const FormLoading = () => (
+  <div className="flex justify-center items-center p-8">
+    <Spinner className="w-6 h-6" />
+    <p className="ml-2">Loading form...</p>
+  </div>
+);
+
+// Define types for our form data
+interface EmployerQuestionData {
+  accountType: string;
+}
 
 interface EmployerDetailsData {
   firstName: string;
@@ -14,17 +27,60 @@ interface EmployerDetailsData {
   country: string;
   state: string;
   phone: string;
+  companyName: string;
 }
 
-const RegisterEmployerDecider = () => {
+interface EmployerFormData {
+  questionData: EmployerQuestionData;
+  detailsData: EmployerDetailsData;
+}
+
+// Dynamically import components that might use useSearchParams
+const DynamicRegisterEmployerQuestion = dynamic(
+  () => import("./RegisterEmployerQuestion"),
+  { ssr: false, loading: () => <FormLoading /> }
+);
+
+const DynamicRegisterEmployerDetails = dynamic(
+  () => import("./RegisterEmployerDetails"),
+  { ssr: false, loading: () => <FormLoading /> }
+);
+
+// Client component with all the logic
+const RegisterEmployerDeciderClient = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [formData, setFormData] = useState<EmployerDetailsData | null>(null);
+  // State to hold form data from each step
+  const [formData, setFormData] = useState<EmployerFormData>({
+    questionData: {
+      accountType: "employer", // Default value
+    },
+    detailsData: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      country: "",
+      state: "",
+      phone: "",
+      companyName: "",
+    },
+  });
 
-  // const router = useRouter();
+  // Functions to update form data
+  const updateQuestionData = (data: EmployerQuestionData) => {
+    setFormData({
+      ...formData,
+      questionData: data,
+    });
+  };
 
-  // const onNextClick = () => {
-  //   console.log("SAdsd");
-  // };
+  const updateDetailsData = (data: EmployerDetailsData) => {
+    setFormData({
+      ...formData,
+      detailsData: data,
+    });
+  };
 
   const goToNextPage = () => {
     if (currentPage < 3) {
@@ -38,46 +94,74 @@ const RegisterEmployerDecider = () => {
     }
   };
 
-  const handleDetailsSubmit = (data: EmployerDetailsData) => {
-    setFormData(data);
-    goToNextPage();
-  };
-
-  const handleAgreementSubmit = (data: EmployerDetailsData) => {
-    console.log("Final submission data:", data);
-    // Handle any post-registration logic here
-  };
-
   const renderCurrentPage = () => {
     switch (currentPage) {
       case 1:
-        return <RegisterEmployerQuestion onNext={goToNextPage} />;
+        return (
+          <Suspense fallback={<FormLoading />}>
+            <DynamicRegisterEmployerQuestion
+              onNext={(data: EmployerQuestionData) => {
+                updateQuestionData(data);
+                goToNextPage();
+              }}
+              initialData={formData.questionData}
+            />
+          </Suspense>
+        );
       case 2:
         return (
-          <RegisterEmployerDetails
-            onNext={handleDetailsSubmit}
-            onBack={goToPreviousPage}
-          />
+          <Suspense fallback={<FormLoading />}>
+            <DynamicRegisterEmployerDetails
+              onNext={(data: EmployerDetailsData) => {
+                updateDetailsData(data);
+                goToNextPage();
+              }}
+              onBack={goToPreviousPage}
+              initialData={formData.detailsData}
+            />
+          </Suspense>
         );
       case 3:
         return (
-          <RegisterEmployerAgreement
-            onBack={goToPreviousPage}
-            onNext={handleAgreementSubmit}
-            detailsData={formData!}
-          />
+          <Suspense fallback={<FormLoading />}>
+            <RegisterEmployerAgreement
+              onNext={(data) => {
+                // Handle the final submission with all data
+                console.log("Final submission data:", {
+                  ...formData,
+                  detailsData: data,
+                });
+                // You can add your API call here
+              }}
+              onBack={goToPreviousPage}
+              detailsData={formData.detailsData}
+            />
+          </Suspense>
         );
       default:
-        return <RegisterEmployerQuestion onNext={goToNextPage} />;
+        return (
+          <Suspense fallback={<FormLoading />}>
+            <DynamicRegisterEmployerQuestion
+              onNext={(data: EmployerQuestionData) => {
+                updateQuestionData(data);
+                goToNextPage();
+              }}
+              initialData={formData.questionData}
+            />
+          </Suspense>
+        );
     }
   };
 
   return (
     <div className="flex flex-col gap-2 max-w-[730px] w-full mt-[100px] md:px-0 px-10 h-[110vh]">
-      <Link href={"/home"} className="text-customYellow font-normal text-[16px]">
+      <Link
+        href={"/home"}
+        className="text-customYellow font-normal text-[16px]"
+      >
         Go To Home
       </Link>
-      <div className="bg-white rounded-xl py-5 flex flex-col  items-center justify-center w-full">
+      <div className="bg-white rounded-xl py-5 flex flex-col items-center justify-center w-full">
         <div className="flex justify-end w-full pr-6">
           <div className="px-6 py-2 bg-[#FBF5E8] rounded-lg">
             <p className="text-[#F4BA20]">Page: {currentPage}/3</p>
@@ -87,6 +171,15 @@ const RegisterEmployerDecider = () => {
         {renderCurrentPage()}
       </div>
     </div>
+  );
+};
+
+// Main wrapper component with Suspense
+const RegisterEmployerDecider = () => {
+  return (
+    <Suspense fallback={<FormLoading />}>
+      <RegisterEmployerDeciderClient />
+    </Suspense>
   );
 };
 

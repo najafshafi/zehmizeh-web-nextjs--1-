@@ -1,37 +1,14 @@
-import { useMutation, useQuery } from "react-query";
-import { apiClient, setRefreshToken } from "@/helpers/http/index";
-import {
-  saveAuthStorage,
-  getToken,
-  getStorageUser,
-  clearAuthStorage,
-} from "@/helpers/services/auth";
-import { useDispatch } from "react-redux";
-import { setUser, setToken, clearAuth } from "@/store/redux/slices/authSlice";
-import { AppDispatch } from "@/store/store";
+import { useSession, signIn, signOut } from "next-auth/react";
+import { useMutation } from "@tanstack/react-query";
+import { apiClient } from "@/helpers/http/index";
+import toast from "react-hot-toast";
+import { getToken } from "@/helpers/services/auth";
 
 interface LoginPayload {
   email_id: string;
   password: string;
-  stay_signedin: boolean;
-  terms_agreement: boolean;
-}
-
-interface RegisterPayload {
-  email_id: string;
-  password: string;
-  name: string;
-  terms_agreement: boolean;
-}
-
-interface TwoFactorPayload {
-  formdata: {
-    email_id: string;
-    otp: string;
-    action: string;
-    type: string;
-  };
-  email: string;
+  stay_signedin?: boolean;
+  terms_agreement?: boolean;
 }
 
 // Query key factory
@@ -40,104 +17,104 @@ export const authKeys = {
   user: () => [...authKeys.all, "user"] as const,
 };
 
-// React Query hooks
-export const useLogin = () => {
-  const dispatch = useDispatch<AppDispatch>();
+export function useAuth() {
+  const { data: session, status } = useSession();
 
-  return useMutation({
-    mutationFn: async (payload: LoginPayload) => {
-      const response = await apiClient.post("/auth/login", payload);
-      if (response.data.status) {
-        const { user, token, refresh_token, expires_in } = response.data.data;
-        if (token && user) {
-          // Save refresh token if provided
-          if (refresh_token) {
-            setRefreshToken(refresh_token);
-          }
-
-          // Save token expiration if provided
-          if (expires_in) {
-            const expirationTime = Date.now() + expires_in * 1000;
-            localStorage.setItem("token_expiration", expirationTime.toString());
-          }
-
-          saveAuthStorage({ token, user });
-          dispatch(setUser(user));
-          dispatch(setToken(token));
-        }
-        return response.data.data;
-      }
-      throw new Error(response.data.message || "Login failed");
-    },
-  });
-};
-
-export const useRegister = () => {
-  const dispatch = useDispatch<AppDispatch>();
-
-  return useMutation({
-    mutationFn: async (payload: RegisterPayload) => {
-      const response = await apiClient.post("/auth/register", payload);
-      if (response.data.status) {
-        const { user, token } = response.data.data;
-        if (token && user) {
-          saveAuthStorage({ token, user });
-          dispatch(setUser(user));
-          dispatch(setToken(token));
-        }
-        return response.data.data;
-      }
-      throw new Error(response.data.message || "Registration failed");
-    },
-  });
-};
-
-export const useLogout = () => {
-  const dispatch = useDispatch<AppDispatch>();
-
-  return useMutation({
-    mutationFn: async () => {
+  const login = useMutation({
+    mutationFn: async (credentials: LoginPayload) => {
       try {
-        await apiClient.get("/auth/logout");
-      } catch (error) {
-        console.error("Logout error:", error);
-      } finally {
-        clearAuthStorage();
-        dispatch(clearAuth());
-      }
-    },
-  });
-};
+        // Use NextAuth signIn method with credentials
+        const result = await signIn("credentials", {
+          email: credentials.email_id,
+          password: credentials.password,
+          redirect: false,
+        });
 
-export const useTwoFactor = () => {
-  const dispatch = useDispatch<AppDispatch>();
-
-  return useMutation({
-    mutationFn: async ({ formdata, email }: TwoFactorPayload) => {
-      formdata.email_id = email;
-      const response = await apiClient.post("/auth/otp", formdata);
-      if (response.data.status) {
-        const { user, token } = response.data.data;
-        if (token && user) {
-          saveAuthStorage({ token, user });
-          dispatch(setUser(user));
-          dispatch(setToken(token));
+        if (result?.error) {
+          throw new Error(result.error);
         }
-        return response.data.data;
+
+        return result;
+      } catch (error: any) {
+        toast.error(error.message || "Login failed");
+        throw error;
       }
-      throw new Error(
-        response.data.message || "Two-factor authentication failed"
-      );
     },
   });
-};
+
+  const logout = async () => {
+    await signOut({ callbackUrl: "/" });
+  };
+
+  const register = useMutation({
+    mutationFn: async (userData: any) => {
+      try {
+        // Keep using your existing registration API
+        const response = await apiClient.post("/auth/register", userData);
+
+        if (response.data.status) {
+          // After registration, we can automatically sign in the user
+          // or redirect to 2FA if needed
+          if (response.data.data.token) {
+            // Direct login after registration if token is available
+            await signIn("credentials", {
+              email: userData.email_id,
+              password: userData.password,
+              redirect: false,
+            });
+          }
+          return response.data.data;
+        } else {
+          throw new Error(response.data.message);
+        }
+      } catch (error: any) {
+        toast.error(error.message || "Registration failed");
+        throw error;
+      }
+    },
+  });
+
+  const twoFactor = useMutation({
+    mutationFn: async ({
+      formdata,
+      email,
+    }: {
+      formdata: any;
+      email: string;
+    }) => {
+      try {
+        formdata.email_id = email;
+        const response = await apiClient.post("/auth/otp", formdata);
+
+        if (response.data.status) {
+          toast.success(response.data.message);
+          return response.data;
+        } else {
+          throw new Error(response.data.message);
+        }
+      } catch (error: any) {
+        toast.error(error.message || "Two-factor authentication failed");
+        throw error;
+      }
+    },
+  });
+
+  return {
+    user: session?.user,
+    isAuthenticated: !!session?.user,
+    isLoading: status === "loading",
+    login,
+    logout,
+    register,
+    twoFactor,
+  };
+}
 
 export const useUser = () => {
   const token = getToken();
 
-  return useQuery({
-    queryKey: authKeys.user(),
-    queryFn: async () => {
+  return useMutation({
+    mutationFn: async () => {
       if (!token) return null;
 
       const response = await apiClient.get("/user/get");
@@ -146,8 +123,5 @@ export const useUser = () => {
       }
       return response.data;
     },
-    enabled: !!token,
-    staleTime: 5 * 60 * 1000, // Consider data stale after 5 minutes
-    cacheTime: 30 * 60 * 1000, // Keep data in cache for 30 minutes
   });
 };

@@ -1,8 +1,7 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import CustomButton from "../custombutton/CustomButton";
-import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface FreelancerQuestionData {
@@ -14,26 +13,43 @@ interface RegisterFreelancerQuestionProps {
   initialData?: FreelancerQuestionData;
 }
 
-const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = ({
-  onNext,
-  //initialData,
-}) => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const type = pathname ? pathname.split("/")[2] : "";
+// Loading component for Suspense fallback
+const QuestionLoading = () => (
+  <div className="flex justify-center items-center p-8">
+    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+    <p className="ml-2">Loading registration question...</p>
+  </div>
+);
+
+// Client component
+const RegisterFreelancerQuestionClient: React.FC<
+  RegisterFreelancerQuestionProps
+> = ({ onNext, initialData = { accountType: "freelancer" } }) => {
+  const [accountType, setAccountType] = useState(initialData.accountType);
+  const [pathType, setPathType] = useState<string>("");
+
+  // Use effect to get the path from window location
+  useEffect(() => {
+    const path = window.location.pathname;
+    const pathSegments = path.split("/");
+    const type = pathSegments.length > 2 ? pathSegments[2] : "";
+    setPathType(type);
+  }, []);
 
   const clientAccount = () => {
-    router.push("/register/employer");
+    setAccountType("employer");
+    window.location.href = "/register/employer";
   };
 
   const freelancerAccount = () => {
-    router.push("/register/freelancer");
+    setAccountType("freelancer");
+    window.location.href = "/register/freelancer";
   };
 
   const handleNext = () => {
     // Return the account type data to the parent component
     onNext({
-      accountType: type || "freelancer",
+      accountType: pathType || "freelancer",
     });
   };
 
@@ -67,7 +83,7 @@ const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = ({
           <CustomButton
             text="Client - I Want to Hire Freelancers"
             className={`px-3 py-4 rounded-2xl text-black ${
-              type === "employer"
+              pathType === "employer"
                 ? "border-2 border-black"
                 : "border border-gray-300"
             } md:text-[18px] text-[16px]`}
@@ -76,7 +92,7 @@ const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = ({
           <CustomButton
             text="Freelancer - I Want to Be Hired"
             className={`px-3 py-4 rounded-2xl text-black ${
-              type === "employer"
+              pathType === "employer"
                 ? "border border-gray-300"
                 : " border-2 border-black"
             } md:text-[18px] text-[16px]`}
@@ -98,6 +114,17 @@ const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = ({
         </div>
       </div>
     </div>
+  );
+};
+
+// Main component wrapped in Suspense boundary
+const RegisterFreelancerQuestion: React.FC<RegisterFreelancerQuestionProps> = (
+  props
+) => {
+  return (
+    <Suspense fallback={<QuestionLoading />}>
+      <RegisterFreelancerQuestionClient {...props} />
+    </Suspense>
   );
 };
 
