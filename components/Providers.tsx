@@ -27,17 +27,17 @@ export function Providers({ children }: PropsWithChildren) {
 
   return (
     // <Suspense fallback={<ProvidersFallback />}>
-      <SessionProvider>
-        <ReactQueryProvider>
-          <IntercomProvider
-            appId={INTERCOM_APP_ID}
-            autoBoot={isClient && !isStagingEnv()}
-          >
-            <ReduxProviders>
-              <AuthProvider>{children}</AuthProvider>
-            </ReduxProviders>
-          </IntercomProvider>
-        </ReactQueryProvider>
+    <SessionProvider>
+      <ReactQueryProvider>
+        <IntercomProvider
+          appId={INTERCOM_APP_ID}
+          autoBoot={isClient && !isStagingEnv()}
+        >
+          <ReduxProviders>
+            <AuthProvider>{children}</AuthProvider>
+          </ReduxProviders>
+        </IntercomProvider>
+      </ReactQueryProvider>
     </SessionProvider>
     // </Suspense>
   );
