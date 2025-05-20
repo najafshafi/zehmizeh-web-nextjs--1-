@@ -3,7 +3,7 @@ import React, { useCallback, useEffect } from "react";
 import { useQuery } from "react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useRouter, usePathname, useSearchParams } from "next/navigation"; // Next.js navigation hooks
+import { useRouter, usePathname } from "next/navigation"; // Next.js navigation hooks
 import { apiClient } from "@/helpers/http";
 import Loader from "@/components/Loader";
 import { getToken, saveAuthStorage } from "@/helpers/services/auth";
@@ -51,7 +51,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const router = useRouter(); // Replace useNavigate with useRouter
   const pathname = usePathname(); // Replace useLocation for current path
-  const searchParams = useSearchParams(); // Replace useLocation for query params
 
   const signout = useCallback(() => {
     logoutApi();
@@ -112,17 +111,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     const token = getToken();
     if (!token) setIsBootstraping(false);
   }, []);
-
-  // Debug logging for auth context
-  // useEffect(() => {
-  //   if (pathname) {
-  //     console.log("Auth context pathname:", pathname);
-  //     console.log(
-  //       "Auth context isFreelancerProfileRoute:",
-  //       isFreelancerProfileRoute
-  //     );
-  //   }
-  // }, [pathname, isFreelancerProfileRoute]);
 
   const getUserSkills = () => {
     if (!user || user.user_type !== "freelancer" || !Array.isArray(user.skills))
@@ -196,6 +184,15 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     intercomHandler();
   }, [user]);
 
+  // Helper function to safely get search params without using the hook directly
+  const getSearchParam = useCallback((param: string): string | null => {
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(param);
+    }
+    return null;
+  }, []);
+
   const signin = async (formdata: any) => {
     if (typeof formdata === "string") {
       setIsLoading(true);
@@ -227,9 +224,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
           user: userAllData,
         });
 
-        const fromPath = searchParams?.get("from")
-          ? `${pathname}${searchParams.toString()}`
-          : null;
+        const fromPath = getSearchParam("from");
         if (fromPath) {
           router.push(fromPath); // Use router.push
         } else if (response.data?.data?.user_type === "client") {
@@ -299,7 +294,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
               editUser({ timezone: currentTimezone });
             }
 
-            const fromPath = searchParams?.get("from");
+            const fromPath = getSearchParam("from");
             if (fromPath) {
               router.push(fromPath);
             } else if (res.data?.data?.user_type === "client") {

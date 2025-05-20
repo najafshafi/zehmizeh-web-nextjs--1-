@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store"; // Adjust path to your store
 import { useAuth } from "@/helpers/contexts/auth-context"; // Adjust path to AuthContext
 import Spinner from "./Spin/Spinner";
+import { signIn } from "next-auth/react";
 // import ErrorMessage from '@/components/ui/ErrorMessage';
 
 const LoginForm = () => {
@@ -20,6 +21,7 @@ const LoginForm = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [checkboxError, setCheckboxError] = useState("");
+  const [authError, setAuthError] = useState("");
 
   // Refs for input focus
   const emailRef = useRef<HTMLInputElement>(null);
@@ -47,8 +49,9 @@ const LoginForm = () => {
   };
 
   // Handle login submission
-  const onLoginClick = () => {
+  const onLoginClick = async () => {
     let isValid = true;
+    setAuthError("");
 
     // Local validation
     if (!email) {
@@ -72,7 +75,7 @@ const LoginForm = () => {
       setCheckboxError("");
     }
 
-    // If valid, dispatch login action via Redux
+    // If valid, proceed with authentication
     if (isValid) {
       // Set local loading state immediately for visual feedback
       setLocalLoading(true);
@@ -84,19 +87,31 @@ const LoginForm = () => {
         stay_signedin: false, // Default value
       };
 
-      // Call signin
       try {
-        signin(formData);
+        // Use NextAuth signIn method
+        const result = await signIn("credentials", {
+          email_id: email,
+          password: password,
+          redirect: false,
+        });
 
-        // Set a timeout to reset loading after 2 seconds if Redux state doesn't update
-        setTimeout(() => {
+        if (result?.error) {
+          setAuthError(result.error);
           setLocalLoading(false);
-        }, 2000);
+        } else if (result?.ok) {
+          // If NextAuth is successful, also use the existing auth context for compatibility
+          signin(formData);
+        }
       } catch (error) {
         console.error("Error during login:", error);
-        // Reset loading on error
+        setAuthError("An unexpected error occurred. Please try again.");
         setLocalLoading(false);
       }
+
+      // Set a timeout to reset loading after 2 seconds if Redux state doesn't update
+      setTimeout(() => {
+        setLocalLoading(false);
+      }, 2000);
     }
   };
 
@@ -172,6 +187,11 @@ const LoginForm = () => {
           </div>
           {passwordError && (
             <p className="text-red-600 text-[15px] pl-1">{passwordError}</p>
+          )}
+
+          {/* Authentication Error */}
+          {authError && (
+            <p className="text-red-600 text-[15px] pl-1 mb-2">{authError}</p>
           )}
 
           <div className="flex justify-end mt-3">

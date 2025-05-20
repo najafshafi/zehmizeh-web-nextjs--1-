@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useChatMessages } from "@/helpers/hooks/useChatMessages";
 import { fetchMyConversation } from "@/store/redux/slices/talkjsSlice";
 import { AppDispatch } from "@/store/redux/store";
+import { signOut } from "next-auth/react";
 
 // Types for better type safety
 interface NavigationItem {
@@ -34,6 +35,7 @@ const NavbarProfile = () => {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Get unread conversations using TalkJS hook
 
@@ -150,21 +152,38 @@ const NavbarProfile = () => {
     };
   }, [handleResize, handleClickOutside]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // Prevent multiple clicks
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+
     // Close dropdown
     setIsProfileDropdownOpen(false);
 
-    // Use the global logout function if available, otherwise fall back to context signout
-    if (typeof window !== "undefined" && "handleGlobalLogout" in window) {
-      // @ts-expect-error - Global function added by NavbarLogin
-      window.handleGlobalLogout();
-    } else {
-      // Fallback to original logout logic
-      signout();
+    try {
+      // Sign out from NextAuth first
+      await signOut({ redirect: false });
+
+      // Use the global logout function if available, otherwise fall back to context signout
+      if (typeof window !== "undefined" && "handleGlobalLogout" in window) {
+        // @ts-expect-error - Global function added by NavbarLogin
+        window.handleGlobalLogout();
+      } else {
+        // Fallback to original logout logic
+        signout();
+      }
+
       // Add small delay before navigation to ensure auth state updates
       setTimeout(() => {
         router.replace("/home");
-      }, 50);
+      }, 100);
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Fallback if NextAuth signOut fails
+      signout();
+      router.replace("/home");
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
@@ -321,8 +340,9 @@ const NavbarProfile = () => {
                     <button
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
+                      disabled={isLoggingOut}
                     >
-                      Logout
+                      {isLoggingOut ? "Logging out..." : "Logout"}
                     </button>
                   </li>
                 </ul>
@@ -392,8 +412,9 @@ const NavbarProfile = () => {
                       <button
                         onClick={handleLogout}
                         className="w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
+                        disabled={isLoggingOut}
                       >
-                        Logout
+                        {isLoggingOut ? "Logging out..." : "Logout"}
                       </button>
                     </li>
                   </ul>
