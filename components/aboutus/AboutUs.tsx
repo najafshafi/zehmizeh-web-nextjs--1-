@@ -82,7 +82,7 @@ const AboutUs = () => {
             </p>
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <p className="text-[20px] font-bold">So are you ready?</p>
             <p className="text-[18px] font-normal leading-7">
               You could get your projects done the old way: ask the receptionist
